@@ -23,7 +23,7 @@ class PaginaRegistroEstudiante(FormView):
     template_name = 'usuario/registro_estudiantes.html'
     form_class = UserCreationForm
     redirect_authenticated_user = True
-    success_url = reverse_lazy('usuario')
+    success_url = reverse_lazy('login')
 
     def form_valid(self, form):
         Usuarios = form.save()
@@ -33,7 +33,7 @@ class PaginaRegistroEstudiante(FormView):
 
     def get(self, *args, **kwargs):
         if self.request.user.is_authenticated:
-            return redirect('usuario')
+            return redirect('crear-tarea')
         return super(PaginaRegistroEstudiante, self).get(*args, **kwargs)
 
 class PaginaRegistroProfesor(FormView):
@@ -46,11 +46,11 @@ class PaginaRegistroProfesor(FormView):
         Usuarios = form.save()
         if Usuarios is not None:
             login(self.request, Usuarios)
-        return super(PaginaRegistro, self).form_valid(form)
+        return super(PaginaRegistroProfesor, self).form_valid(form)
 
     def get(self, *args, **kwargs):
         if self.request.user.is_authenticated:
-            return redirect('Usuario')
+            return redirect('usuario')
         return super(PaginaRegistroProfesor, self).get(*args, **kwargs)
 
 #
@@ -70,22 +70,22 @@ class PaginaRegistroProfesor(FormView):
 #         return context
 
 
-# class DetalleTarea(LoginRequiredMixin, DetailView):
-#     model = Usuarios
-#     context_object_name = 'usuario'
-#     template_name = 'usuario/usuario.html'
-#
-#
-# class CrearTarea(LoginRequiredMixin, CreateView):
-#     model = Usuarios
-#     fields = ['titulo', 'descripcion', 'completo']
-#     success_url = reverse_lazy('tareas')
-#
-#     def form_valid(self, form):
-#         form.instance.usuario = self.request.user
-#         return super(CrearTarea, self).form_valid(form)
-#
-#
+class DetalleUsuario(LoginRequiredMixin, ListView):
+    model = usuarios
+    context_object_name = 'prueba'
+    template_name = 'usuario/prueba.html'
+
+
+class CrearUsuario(LoginRequiredMixin, CreateView):
+    model = usuarios
+    fields = ['nombre', 'primer_apellido', 'segundo_apellido','segundo_apellido']
+    success_url = reverse_lazy('usuario')
+
+    def form_valid(self, form):
+        form.instance.usuario = self.request.user
+        return super(CrearUsuario, self).form_valid(form)
+
+
 # class EditarTarea(LoginRequiredMixin, UpdateView):
 #     model = Usuarios
 #     fields = ['titulo', 'descripcion', 'completo']
