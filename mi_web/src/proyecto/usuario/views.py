@@ -23,7 +23,7 @@ class PaginaRegistroEstudiante(FormView):
     template_name = 'usuario/registro_estudiantes.html'
     form_class = UserCreationForm
     redirect_authenticated_user = True
-    success_url = reverse_lazy('login')
+    success_url = reverse_lazy('usuario')
 
     def form_valid(self, form):
         Usuarios = form.save()
@@ -33,14 +33,14 @@ class PaginaRegistroEstudiante(FormView):
 
     def get(self, *args, **kwargs):
         if self.request.user.is_authenticated:
-            return redirect('crear-tarea')
+            return redirect('usuario')
         return super(PaginaRegistroEstudiante, self).get(*args, **kwargs)
 
 class PaginaRegistroProfesor(FormView):
     template_name = 'usuario/registro_profesor.html'
     form_class = UserCreationForm
     redirect_authenticated_user = True
-    success_url = reverse_lazy('usuario')
+    success_url = reverse_lazy('usuario_profesor')
 
     def form_valid(self, form):
         Usuarios = form.save()
@@ -50,7 +50,7 @@ class PaginaRegistroProfesor(FormView):
 
     def get(self, *args, **kwargs):
         if self.request.user.is_authenticated:
-            return redirect('usuario')
+            return redirect('usuario_profesor')
         return super(PaginaRegistroProfesor, self).get(*args, **kwargs)
 
 #
@@ -70,10 +70,15 @@ class PaginaRegistroProfesor(FormView):
 #         return context
 
 
-class DetalleUsuario(LoginRequiredMixin, ListView):
+class DetalleUsuarioEstudiante(LoginRequiredMixin, ListView):
     model = usuarios
     context_object_name = 'prueba'
     template_name = 'usuario/prueba.html'
+    
+class DetalleUsuarioProfesor(LoginRequiredMixin, ListView):
+    model = usuarios
+    context_object_name = 'prueba'
+    template_name = 'usuario/prueba_profesor.html'
 
 
 class CrearUsuario(LoginRequiredMixin, CreateView):
