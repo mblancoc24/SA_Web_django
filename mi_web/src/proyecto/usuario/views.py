@@ -23,9 +23,18 @@ class PaginaRegistroEstudiante(FormView):
     template_name = 'usuario/registro_estudiantes.html'
     form_class = UserCreationForm
     redirect_authenticated_user = True
-    success_url = reverse_lazy('login')
+    success_url = reverse_lazy('usuario')
 
     def form_valid(self, form):
+        username_estudiantes = form.cleaned_data['username']
+        password_estudiantes = form.cleaned_data['password2']
+        nombre_estudiante = self.request.POST.get('nombre')
+        primerapellido = self.request.POST.get('primerapellido')
+        segundoapellido = self.request.POST.get('segundoapellido')
+        fecha = self.request.POST.get('fechanacimiento')
+        telefono = self.request.POST.get('telefono')
+        correo = self.request.POST.get('correo')
+        
         Usuarios = form.save()
         if Usuarios is not None:
             login(self.request, Usuarios)
@@ -33,7 +42,7 @@ class PaginaRegistroEstudiante(FormView):
 
     def get(self, *args, **kwargs):
         if self.request.user.is_authenticated:
-            return redirect('crear-tarea')
+            return redirect('usuario')
         return super(PaginaRegistroEstudiante, self).get(*args, **kwargs)
 
 class PaginaRegistroProfesor(FormView):
