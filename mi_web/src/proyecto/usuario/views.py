@@ -69,6 +69,8 @@ class PaginaRegistroProfesor(FormView):
         if self.request.user.is_authenticated:
             return redirect('usuario')
         return super(PaginaRegistroProfesor, self).get(*args, **kwargs)
+    
+    
 
 #
 # class ListaPendientes(LoginRequiredMixin, ListView):
