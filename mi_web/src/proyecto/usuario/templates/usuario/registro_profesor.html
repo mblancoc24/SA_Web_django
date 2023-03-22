@@ -9,14 +9,31 @@
 <div class="cuerpo-tarjeta">
     <form method="POST">
     {% csrf_token %}
-    <label>{{form.username.label}}</label>
-        {{form.username}}
+    
+    <label>Identificacion</label>
+    <input type="text" class="form-control" name="username">
 
-    <label>{{form.password1.label}}</label>
-        {{form.password1}}
+    <label>Nombre</label>
+        <input type="text" class="form-control" name="nombre">
+            
+    <label>Prime Apellido</label>
+        <input type="text" class="form-control" name="primerapellido">
+    
+    <label>Segundo Apellido</label>
+        <input type="text" class="form-control"name="segundoapellido">
+    
+    <label>Correo Electronico</label>
+        <input type="email" placeholder="name@example.com" class="form-control" name="correo">
 
-    <label>{{form.password2.label}}</label>
-        {{form.password2}}
+    <label>Puesto Educativo</label>
+        <input type="text" class="form-control"name="puestoeducativo">
+        
+    <label>Contrasena</label>
+        <input type="password" class="form-control" name="password1">
+
+    <label>Confiramr Contrasena</label>
+        <input type="password" class="form-control" name="password2">
+
     <input style="margin-top: 10px" class='boton' type="submit" value="Registrar">
 </form>
     <p>¿Ya tienes una cuenta? <a href="{% url 'login' %}">Ingresa</a></p>

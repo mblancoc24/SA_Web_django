@@ -1,12 +1,14 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
+from .forms import FormularioEstudiantes, FormularioUsuario, FormularioProfesor
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
+from django.contrib.auth.models import User
 from .models import usuarios
 
 
@@ -16,17 +18,27 @@ class Logueo(LoginView):
     redirect_authenticated_user = True
 
     def get_success_url(self):
-        return reverse_lazy('usuario')
+        username = self.request.POST.get('username')
+        user = User.objects.get(username=username)
+        user_id = user.pk
+        
+        login = get_object_or_404(usuarios, id=user_id)
+        
+        if login.Tipo == '1':
+            return reverse_lazy('usuario_profesor')
+        
+        elif login.Tipo == '2':
+            return reverse_lazy('usuario_estudiante')
 
 
 class PaginaRegistroEstudiante(FormView):
     template_name = 'usuario/registro_estudiantes.html'
     form_class = UserCreationForm
     redirect_authenticated_user = True
-    success_url = reverse_lazy('login')
+    success_url = reverse_lazy('usuario_estudiante')
 
     def form_valid(self, form):
-        username_estudiantes = form.cleaned_data['username']
+        username = form.cleaned_data['username']
         password_estudiantes = form.cleaned_data['password2']
         nombre_estudiante = self.request.POST.get('nombre')
         primerapellido = self.request.POST.get('primerapellido')
@@ -34,31 +46,88 @@ class PaginaRegistroEstudiante(FormView):
         fecha = self.request.POST.get('fechanacimiento')
         telefono = self.request.POST.get('telefono')
         correo = self.request.POST.get('correo')
-        Usuarios = form.save()
+
+        Usuarios = form.save() # type: ignore
+        
+        user = User.objects.get(username=username)
+        user_id = user.pk
+        
+        datos_usuario = ['2', True, user_id]
+        
+        form = FormularioUsuario({'Tipo': datos_usuario[0], 'estado': datos_usuario[1], 'usuarios': datos_usuario[2]})
+        
+        if form.is_valid():
+            form.save()
+        
+        id_usuario = get_object_or_404(usuarios, id=user_id)
+        
+        datos_estudiante = [username, nombre_estudiante, primerapellido, 
+                            segundoapellido, fecha, telefono, correo,
+                            password_estudiantes, False, False, id_usuario]
+        
+        form = FormularioEstudiantes({'Cedula': datos_estudiante[0], 'nombre': datos_estudiante[1], 'primer_apellido': datos_estudiante[2],
+                                      'segundo_apellido': datos_estudiante[3], 'fecha_nacimiento': datos_estudiante[4], 'phone_tutor': datos_estudiante[5],
+                                      'correo_estudiante': datos_estudiante[6], 'password': datos_estudiante[7], 'pago_realizado': datos_estudiante[8],
+                                      'documentos_presentados': datos_estudiante[9], 'user': datos_estudiante[10]})
+        if form.is_valid():
+            form.save()
+            
         if Usuarios is not None:
             login(self.request, Usuarios)
         return super(PaginaRegistroEstudiante, self).form_valid(form)
 
     def get(self, *args, **kwargs):
         if self.request.user.is_authenticated:
-            return redirect('crear-tarea')
+            return redirect('usuario_estudiante')
         return super(PaginaRegistroEstudiante, self).get(*args, **kwargs)
 
 class PaginaRegistroProfesor(FormView):
     template_name = 'usuario/registro_profesor.html'
     form_class = UserCreationForm
     redirect_authenticated_user = True
-    success_url = reverse_lazy('usuario')
+    success_url = reverse_lazy('usuario_profesor')
+    
 
     def form_valid(self, form):
-        Usuarios = form.save()
+        username = form.cleaned_data['username']
+        password_profesor = form.cleaned_data['password2']
+        nombre_profesor = self.request.POST.get('nombre')
+        primerapellido = self.request.POST.get('primerapellido')
+        segundoapellido = self.request.POST.get('segundoapellido')
+        puestoeducativo = self.request.POST.get('puestoeducativo')
+        correo = self.request.POST.get('correo')
+        
+        Usuarios = form.save() # type: ignore
+        
+        user = User.objects.get(username=username)
+        user_id = user.pk
+        
+        datos_usuario = ['1', True, user_id]
+        
+        form = FormularioUsuario({'Tipo': datos_usuario[0], 'estado': datos_usuario[1], 'usuarios': datos_usuario[2]})
+        
+        if form.is_valid():
+            form.save()
+        
+        id_usuario = get_object_or_404(usuarios, id=user_id)
+        
+        datos_profesor = [username, nombre_profesor, primerapellido, 
+                            segundoapellido, correo, puestoeducativo, password_profesor, id_usuario]
+        
+        form = FormularioProfesor({'Cedula': datos_profesor[0], 'nombre': datos_profesor[1], 'primer_apellido': datos_profesor[2],
+                                'segundo_apellido': datos_profesor[3], 'correo_profesor': datos_profesor[4], 'puesto_educativo': datos_profesor[5],
+                                'password': datos_profesor[6], 'user': datos_profesor[7]})
+        
+        if form.is_valid():
+            form.save()
+            
         if Usuarios is not None:
             login(self.request, Usuarios)
         return super(PaginaRegistroProfesor, self).form_valid(form)
 
     def get(self, *args, **kwargs):
         if self.request.user.is_authenticated:
-            return redirect('usuario')
+            return redirect('usuario_profesor')
         return super(PaginaRegistroProfesor, self).get(*args, **kwargs)
 
 #
@@ -78,10 +147,15 @@ class PaginaRegistroProfesor(FormView):
 #         return context
 
 
-class DetalleUsuario(LoginRequiredMixin, ListView):
+class DetalleUsuarioEstudiante(LoginRequiredMixin, ListView):
     model = usuarios
     context_object_name = 'prueba'
     template_name = 'usuario/prueba.html'
+    
+class DetalleUsuarioProfesor(LoginRequiredMixin, ListView):
+    model = usuarios
+    context_object_name = 'prueba_profesor'
+    template_name = 'usuario/prueba_profesor.html'
 
 
 class CrearUsuario(LoginRequiredMixin, CreateView):
