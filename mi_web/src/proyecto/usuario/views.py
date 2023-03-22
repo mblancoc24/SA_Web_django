@@ -26,6 +26,14 @@ class PaginaRegistroEstudiante(FormView):
     success_url = reverse_lazy('login')
 
     def form_valid(self, form):
+        username_estudiantes = form.cleaned_data['username']
+        password_estudiantes = form.cleaned_data['password2']
+        nombre_estudiante = self.request.POST.get('nombre')
+        primerapellido = self.request.POST.get('primerapellido')
+        segundoapellido = self.request.POST.get('segundoapellido')
+        fecha = self.request.POST.get('fechanacimiento')
+        telefono = self.request.POST.get('telefono')
+        correo = self.request.POST.get('correo')
         Usuarios = form.save()
         if Usuarios is not None:
             login(self.request, Usuarios)
