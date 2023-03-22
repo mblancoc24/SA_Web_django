@@ -1,0 +1,61 @@
+{% extends 'usuario/principal.html' %}
+
+{% block content %}
+
+<!-- <div class="container-fluid px-1 py-5 mx-auto">
+    <div class="row d-flex justify-content-center">
+        <div class="col-xl-7 col-lg-8 col-md-9 col-11 text-center">
+            <h3>Registrar Estudiante</h3>
+            <div class="card">
+                <form class="form-card" method="POST">
+                    <div class="row justify-content-between text-left">
+                        <div class="form-group col-sm-6 flex-column d-flex"> <label class="form-control-label px-3">{{form.username.label}}<span class="text-danger"> *</span></label> {{form.username}} </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+    </div>
+</div> -->
+
+
+<div class="barra-superior">
+    <h1>Registrar Estudiante</h1>
+</div>
+
+<div class="cuerpo-tarjeta">
+    <form method="POST">
+    {% csrf_token %}
+    <label>{{form.username.label}}</label>
+        {{form.username}}
+    
+    <label>Nombre</label>
+        <input type="text" class="form-control" name="nombre">
+            
+    <label>Prime Apellido</label>
+        <input type="text" class="form-control" name="primerapellido">
+    
+    <label>Segundo Apellido</label>
+        <input type="text" class="form-control"name="segundoapellido">
+
+    <label>Fecha de Nacimiento</label>
+        <input type="date" class="form-control" name="fechanacimiento">
+    
+    <label>Numero Telefonico</label>
+        <input type="number" class="form-control" name="telefono">
+    
+    <label>Correo Electronico</label>
+        <input type="email" placeholder="name@example.com" class="form-control" name="correo">
+        
+    <label>{{form.password1.label}}</label>
+        {{form.password1}}
+
+    <label>{{form.password2.label}}</label>
+        {{form.password2}}
+
+    <input style="margin-top: 10px" class='boton' type="submit" value="Registrar">
+</form>
+    <p>¿Ya tienes una cuenta? <a href="{% url 'login' %}">Ingresa</a></p>
+</div>
+
+{% endblock content %}
