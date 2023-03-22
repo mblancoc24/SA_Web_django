@@ -2,24 +2,83 @@
 
 {% block content %}
 
-<div class="barra-superior">
-    <h1>Registrar Profesor</h1>
+<div class="row">
+    <div class="col-sm-9 col-md-7 col-lg-7 mx-auto">
+        <div class="card border-0 shadow rounded-3 my-5">
+            <div class="card-body p-4 p-sm-5">
+                <h5 class="card-title text-center mb-5 fw-light fs-5">Registrar Estudiante</h5>
+                <form class="row g-3" method="POST">
+                    {% csrf_token %}
+                    <div class="form-floating mb-3 col-md-6">
+                        <input type="text" class="form-control" id="identificacion" placeholder="Identificación"
+                            name="username">
+                        <label for="identificacion">Identificación</label>
+                    </div>
+                    <div class="form-floating mb-3 col-md-6">
+                        <input type="text" class="form-control" id="nombre" placeholder="Nombre" name="nombre">
+                        <label for="nombre">Nombre</label>
+                    </div>
+
+                    <div class="form-floating mb-3 col-md-6">
+                        <input type="text" class="form-control" id="primerapellido" placeholder="Primer Apellido"
+                            name="primerapellido">
+                        <label for="primerapellido">Primer Apellido</label>
+                    </div>
+
+                    <div class="form-floating mb-3 col-md-6">
+                        <input type="text" class="form-control" id="segundoapellido" placeholder="Segundo Apellido"
+                            name="segundoapellido">
+                        <label for="segundoapellido">Segundo Apellido</label>
+                    </div>
+
+                    <div class="form-floating mb-3 col-md-6">
+                        <input type="text" class="form-control" id="telefono" placeholder="Número Telefónico"
+                            name="telefono">
+                        <label for="telefono">Número Telefónico</label>
+                    </div>
+
+                    <div class="form-floating mb-3 col-md-6">
+                        <input type="date" class="form-control" id="fechanacimiento" placeholder="Fecha de nacimiento"
+                            name="fechanacimiento">
+                        <label for="fechanacimiento">Fecha de nacimiento</label>
+                    </div>
+
+                    <div class="form-floating mb-3 col-md-6">
+                        <input type="email" class="form-control" id="correo" placeholder="Correo" name="correo">
+                        <label for="correo">Correo</label>
+                    </div>
+
+                    <div class="form-floating mb-3 col-md-6">
+                        <input type="text" class="form-control" id="puestoeducativo" placeholder="Correo" name="puestoeducativo">
+                        <label for="puestoeducativo">Puesto Educativo</label>
+                    </div>
+
+                    <div class="form-floating mb-3 col-md-6">
+                        <input type="password" class="form-control" id="password1" placeholder="Contraseña"
+                            name="password1">
+                        <label for="password1">Contraseña</label>
+                    </div>
+
+                    <div class="form-floating mb-3 col-md-6">
+                        <input type="password" class="form-control" id="password2" placeholder="Confirmar contraseña"
+                            name="password2">
+                        <label for="password2">Confirmar contraseña</label>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit"
+                            class="btn btn-primary btn-login text-uppercase fw-bold">Registrar</button>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="d-grid mb-2">
+                        <span class="ml-auto">¿Ya tienes una cuenta? <a href="{% url 'login' %}"
+                                class="text-info">Ingresa</a></span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
-
-<div class="cuerpo-tarjeta">
-    <form method="POST">
-    {% csrf_token %}
-    <label>{{form.username.label}}</label>
-        {{form.username}}
-
-    <label>{{form.password1.label}}</label>
-        {{form.password1}}
-
-    <label>{{form.password2.label}}</label>
-        {{form.password2}}
-    <input style="margin-top: 10px" class='boton' type="submit" value="Registrar">
-</form>
-    <p>¿Ya tienes una cuenta? <a href="{% url 'login' %}">Ingresa</a></p>
-</div>
-
 {% endblock content %}
