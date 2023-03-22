@@ -17,6 +17,24 @@
 
     <label>{{form.password2.label}}</label>
         {{form.password2}}
+
+        <label>Nombre</label>
+        <input type="text" class="form-control" name="nombre">
+
+        <label>Prime Apellido</label>
+        <input type="text" class="form-control" name="primerapellido">
+    
+        <label>Segundo Apellido</label>
+        <input type="text" class="form-control"name="segundoapellido">
+    
+        <label>Fecha de Nacimiento</label>
+        <input type="date" class="form-control" name="fechanacimiento">
+    
+        <label>Numero Telefonico</label>
+        <input type="number" class="form-control" name="telefono">
+            
+        <label>Correo Electronico</label>
+        <input type="email" placeholder="name@example.com" class="form-control" name="correo">
     <input style="margin-top: 10px" class='boton' type="submit" value="Registrar">
 </form>
     <p>¿Ya tienes una cuenta? <a href="{% url 'login' %}">Ingresa</a></p>
