@@ -185,15 +185,11 @@ class CrearUsuario(LoginRequiredMixin, CreateView):
 
 
 def obtener_datos(request):
-    cedula = request.GET.get("cedula")
-    url = 'https://api.hacienda.go.cr/fe/ae?identificacion=' + cedula
+    identificiacion = request.GET.get("cedula")
+    url = 'https://api.hacienda.go.cr/fe/ae?identificacion=' + identificiacion
     response = requests.get(url)
     
     data_usuario = json.loads(response.text)
-    
-    # response = '{ "name":"MANUEL ANTONIO DE LA TRINIDAD FERNANDEZ MADRIZ"}'
-    
-    # data_usuario = json.loads(response)
     
     data_nombre = data_usuario["nombre"]
     
