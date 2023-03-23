@@ -13,6 +13,11 @@ import requests
 from django.http import HttpResponse
 import json
 from django.http import JsonResponse
+from django.urls import reverse
+from django.core.mail import send_mail
+from django.conf import settings
+from django.shortcuts import render, redirect
+from django.contrib.auth.forms import PasswordResetForm
 
 
 class Logueo(LoginView):
@@ -144,3 +149,28 @@ def obtener_datos(request):
     data = [nombre, primer_apellido, segundo_apellido]
     data_completa = json.dumps(data)
     return JsonResponse(data_completa, safe=False)
+
+
+def password_reset_view(request):
+    if request.method == 'POST':
+        form = PasswordResetForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            user = User.objects.get(email=email)
+            uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+            token = default_token_generator.make_token(user)
+            http = 'http'
+            domain = '127.0.0.1:8000'
+            reset_url = reverse('password_reset_confirm', kwargs={'uidb64': uidb64, 'token': token})
+            reset_link = '{}://{}{}'.format(http, domain, reset_url)
+            send_mail(
+                'Password Reset Request',
+                'Follow the link to reset your password: {}'.format(reset_link),
+                settings.DEFAULT_FROM_EMAIL,
+                [email],
+                fail_silently=False,
+            )
+            return redirect('password_reset_done')
+    else:
+        form = PasswordResetForm()
+    return render(request, 'password_reset_form.html', {'form': form, 'http': 'http', 'domain': '127.0.0.1:8000'})
