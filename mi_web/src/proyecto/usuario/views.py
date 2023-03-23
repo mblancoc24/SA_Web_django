@@ -24,7 +24,7 @@ class PaginaRegistroEstudiante(FormView):
     template_name = 'usuario/registro_estudiantes.html'
     form_class = UserCreationForm
     redirect_authenticated_user = True
-    success_url = reverse_lazy('login')
+    success_url = reverse_lazy('usuario')
 
     def form_valid(self, form):
         username_estudiantes = form.cleaned_data['username']
