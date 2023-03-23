@@ -28,10 +28,14 @@
                         <span class="ml-auto">Registrate como <a href="{% url 'registro_estudiantes' %}" class="text-info">Estudiante</a></span>
                             
                     </div>
-                    <div class="d-grid">
+                    <div class="d-grid mb-2">
                         <span class="ml-auto">Registrate como <a href="{% url 'registro_profesor' %}" class="text-info">Profesor</a></span>
                     </div>
-                    <p class="text-center">Olvido su contraseña <a href="{%url 'password-reset'%}">Restablecer contraseña</a></p>
+
+                    <div class="d-grid">
+                        <span class="ml-auto">Olvido su contraseña <a href="{%url 'password_reset'%}" class="text-info">Restablecer contraseña</a></span>
+                    </div>
+
                 </form>
             </div>
         </div>

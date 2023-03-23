@@ -1,3 +1,0 @@
-function miFuncion(){
-    alert('hola');
-}

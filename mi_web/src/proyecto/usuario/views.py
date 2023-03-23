@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
@@ -8,12 +8,19 @@ from .forms import FormularioEstudiantes, FormularioUsuario, FormularioProfesor
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.contrib.auth.models import User
-from .models import usuarios, estudiantes, profesor
+from .models import usuarios
 import requests
 import json
 from django.http import JsonResponse
-
+from django.urls import reverse
+from django.core.mail import send_mail
+from django.conf import settings
+from django.shortcuts import render, redirect
+from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth.models import User
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.contrib.auth.tokens import default_token_generator
 
 class Logueo(LoginView):
     template_name = 'usuario/login.html'
@@ -203,3 +210,37 @@ def obtener_datos(request):
     data = [nombre, primer_apellido, segundo_apellido]
     data_completa = json.dumps(data)
     return JsonResponse(data_completa, safe=False)
+
+
+def password_reset_view(request):
+    if request.method == 'POST':
+        correo = ''
+        form = PasswordResetForm(request.POST)
+        if form.is_valid():
+            cedula = form.cleaned_data['Cedula']
+            user = User.objects.get(username=cedula)
+            user_id = user.pk
+            login = get_object_or_404(usuarios, id=user_id)            
+        if login.Tipo == '1':
+            profesordata = get_object_or_404(profesor, id_profesor=login.id)
+            correo = profesordata.correo_profesor         
+        elif login.Tipo == '2':
+            estudiantedata = get_object_or_404(estudiantes, id_estudiante=login.id)
+            correo = estudiantedata.correo_estudiante            
+        uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+        token = default_token_generator.make_token(user)
+        http = 'http'
+        domain = '127.0.0.1:8000'
+        reset_url = reverse('password_reset_confirm', kwargs={'uidb64': uidb64, 'token': token})
+        reset_link = '{}://{}{}'.format(http, domain, reset_url)
+        send_mail(
+            'Password Reset Request',
+            'Follow the link to reset your password: {}'.format(reset_link),
+            settings.DEFAULT_FROM_EMAIL,
+            [correo],
+            fail_silently=False,
+            )
+        return redirect('password_reset_send')
+    else:
+        form = PasswordResetForm()
+    return render(request, 'registration/password_reset.html', {'form': form, 'http': 'http', 'domain': '127.0.0.1:8000'})
