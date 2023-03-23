@@ -17,7 +17,7 @@ function change(){
         }
         input.value = '';
         input.removeAttribute('disabled');
-        input.setAttribute('minLength', '10');
+        input.setAttribute('minLength', '11');
         input.setAttribute('maxLength', '12');
     } else if (selectValue.value === 'Pasaporte'){
 
@@ -37,6 +37,17 @@ function change(){
         input.removeAttribute('disabled');
         input.setAttribute('minLength', '11');
         input.setAttribute('maxLength', '11');
+    }
+
+    else if (selectValue.value === 'Nite'){
+
+        input.oninput = function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        }
+        input.value = '';
+        input.removeAttribute('disabled');
+        input.setAttribute('minLength', '10');
+        input.setAttribute('maxLength', '10');
     }
 }
 
