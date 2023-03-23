@@ -79,7 +79,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres',
-        'USER': 'postgres',
+        'USER': 'odoo',
         'PASSWORD': '1502',
         'HOST': 'localhost',
         'PORT': '5432',
@@ -101,6 +101,9 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
+]
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 
@@ -127,10 +130,10 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-EMAIL_HOST = 'smtp.office365.com'
-EMAIL_HOST_PORT = 995
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'mblancoc@uia.ac.cr'
-EMAIL_HOST_PASSWORD = 'Zom46743'
-
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_PORT = 465
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER = 'correouianoreply@gmail.com'
+EMAIL_HOST_PASSWORD = 'admin1818'
