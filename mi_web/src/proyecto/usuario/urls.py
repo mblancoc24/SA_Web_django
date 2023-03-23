@@ -9,10 +9,10 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
                path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
                path('crear-usuario/', CrearUsuario.as_view(), name='crear-usuario'),
                path('usuario/', DetalleUsuario.as_view(), name='usuario'),
-               path('password-reset/', PasswordResetView.as_view(template_name='usuario/registration/password-reset.html',html_email_template_name='usuario/registration/password-reset-email.html'),name='password-reset'),
-               path('password-reset-send/', PasswordResetDoneView.as_view(template_name='usuario/registration/password-reset-send.html'),name='password-reset-send'),
-               path('password-reset-confirm/<uidb64>/<token>/', PasswordResetConfirmView.as_view(template_name='usuario/templates/registration/password_reset_confirm.html'),name='password_reset_confirm'),
-               path('password-reset-complete/',PasswordResetCompleteView.as_view(template_name='usuario/templates/registration/password_reset_complete.html'),name='password_reset_complete'),   ]
+               path('password-reset/', PasswordResetView.as_view(template_name='registration/password-reset.html',html_email_template_name='registration/password-reset-email.html'),name='password-reset'),
+               path('password-reset-send/', PasswordResetDoneView.as_view(template_name='registration/password-reset-send.html'),name='password-reset-send'),
+               path('password-reset-confirm/<uidb64>/<token>/', PasswordResetConfirmView.as_view(template_name='registration/password_reset_confirm.html'),name='password-reset-confirm'),
+               path('password-reset-complete/',PasswordResetCompleteView.as_view(template_name='registration/password_reset_complete.html'),name='password-reset-complete'),   ]
 
                # path('editar-tarea/<int:pk>', EditarTarea.as_view(), name='editar-tarea'),
                # path('eliminar-tarea/<int:pk>', EliminarTarea.as_view(), name='eliminar-tarea')]
