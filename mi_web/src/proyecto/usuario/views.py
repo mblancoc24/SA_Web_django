@@ -199,13 +199,9 @@ def obtener_datos(request):
     
     nombre_completo = data_nombre.split()
     
-    nombre = nombre_completo[0].title()
-    segundo_nombre = nombre_completo[1].title()
-    primer_apellido = nombre_completo[2].title()
-    segundo_apellido = nombre_completo[3].title()
-    # segundo_apellido = nombre_completo[3].title()
-    # segundo_apellido = nombre_completo[3].title()
-    # segundo_apellido = nombre_completo[3].title()
+    nombre = ' '.join(nombre_completo[:-2]).title()
+    primer_apellido = nombre_completo[-2].title()
+    segundo_apellido = nombre_completo[-1].title()
     
     data = [nombre, primer_apellido, segundo_apellido]
     data_completa = json.dumps(data)
