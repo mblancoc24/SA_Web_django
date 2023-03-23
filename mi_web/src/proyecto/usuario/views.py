@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
@@ -8,9 +8,10 @@ from .forms import FormularioEstudiantes, FormularioUsuario, FormularioProfesor
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from .models import usuarios
+from .models import usuarios, profesor, estudiantes
 import requests
 import json
+import django
 from django.http import JsonResponse
 from django.urls import reverse
 from django.core.mail import send_mail
@@ -193,6 +194,7 @@ class CrearUsuario(LoginRequiredMixin, CreateView):
 
 
 def obtener_datos(request):
+    print(django.get_version())
     identificiacion = request.GET.get("identificacion")
     url = 'https://api.hacienda.go.cr/fe/ae?identificacion=' + identificiacion
     response = requests.get(url)
@@ -203,11 +205,19 @@ def obtener_datos(request):
     
     nombre_completo = data_nombre.split()
     
-    nombre = ' '.join(nombre_completo[:-2]).title()
-    primer_apellido = nombre_completo[-2].title()
-    segundo_apellido = nombre_completo[-1].title()
-    
-    data = [nombre, primer_apellido, segundo_apellido]
+    if len(identificiacion) == 9:
+        nombre = ' '.join(nombre_completo[:-2]).title()
+        primer_apellido = nombre_completo[-2].title()
+        segundo_apellido = nombre_completo[-1].title()
+        data = [nombre, primer_apellido, segundo_apellido]
+        
+    elif len(identificiacion) >= 10 and len(identificiacion) <= 12 and len(nombre_completo) == 2:
+        nombre = nombre_completo[0].title()
+        primer_apellido = nombre_completo[-1].title()
+        data = [nombre, primer_apellido, 'N/A']
+    else:
+        data = []
+        
     data_completa = json.dumps(data)
     return JsonResponse(data_completa, safe=False)
 
@@ -216,29 +226,33 @@ def password_reset_view(request):
     if request.method == 'POST':
         correo = ''
         form = PasswordResetForm(request.POST)
+        cedula = '117580049'
+        
         if form.is_valid():
-            cedula = form.cleaned_data['Cedula']
+            # cedula = request.GET.('username')
             user = User.objects.get(username=cedula)
             user_id = user.pk
-            login = get_object_or_404(usuarios, id=user_id)            
-        if login.Tipo == '1':
-            profesordata = get_object_or_404(profesor, id_profesor=login.id)
-            correo = profesordata.correo_profesor         
-        elif login.Tipo == '2':
-            estudiantedata = get_object_or_404(estudiantes, id_estudiante=login.id)
-            correo = estudiantedata.correo_estudiante            
-        uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
-        token = default_token_generator.make_token(user)
-        http = 'http'
-        domain = '127.0.0.1:8000'
-        reset_url = reverse('password_reset_confirm', kwargs={'uidb64': uidb64, 'token': token})
-        reset_link = '{}://{}{}'.format(http, domain, reset_url)
-        send_mail(
-            'Password Reset Request',
-            'Follow the link to reset your password: {}'.format(reset_link),
-            settings.DEFAULT_FROM_EMAIL,
-            [correo],
-            fail_silently=False,
+            login = get_object_or_404(usuarios, id=user_id) 
+            
+            if login.Tipo == '1':
+                profesordata = get_object_or_404(profesor, id_profesor=login.id)
+                correo = profesordata.correo_profesor         
+            elif login.Tipo == '2':
+                estudiantedata = get_object_or_404(estudiantes, id_estudiante=login.id)
+                correo = estudiantedata.correo_estudiante   
+                         
+            uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+            token = default_token_generator.make_token(user)
+            http = 'http'
+            domain = '127.0.0.1:8000'
+            reset_url = reverse('password_reset_confirm', kwargs={'uidb64': uidb64, 'token': token})
+            reset_link = '{}://{}{}'.format(http, domain, reset_url)
+            send_mail(
+                'Password Reset Request',
+                'Follow the link to reset your password: {}'.format(reset_link),
+                settings.DEFAULT_FROM_EMAIL,
+                [correo],
+                fail_silently=False,
             )
         return redirect('password_reset_send')
     else:
