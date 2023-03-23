@@ -11,7 +11,7 @@
                     {% csrf_token %}
                     <div class="form-floating mb-3 col-md-6">
                         <input type="text" class="form-control" id="identificacion" placeholder="Identificación"
-                            name="username">
+                            name="username" onkeyup="datacedula()">
                         <label for="identificacion">Identificación</label>
                     </div>
                     <div class="form-floating mb-3 col-md-6">

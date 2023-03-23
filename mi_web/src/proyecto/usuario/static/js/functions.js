@@ -1,0 +1,3 @@
+function miFuncion(){
+    alert('hola');
+}

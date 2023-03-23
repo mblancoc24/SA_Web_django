@@ -10,6 +10,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
 from .models import usuarios
+import requests
+from django.http import HttpResponse
+import json
+from django.http import JsonResponse
 
 
 class Logueo(LoginView):
@@ -178,3 +182,31 @@ class CrearUsuario(LoginRequiredMixin, CreateView):
 #     model = Usuarios
 #     context_object_name = 'usuario'
 #     success_url = reverse_lazy('tareas')
+
+
+def obtener_datos(request):
+    cedula = request.GET.get("cedula")
+    url = 'https://api.hacienda.go.cr/fe/ae?identificacion=' + cedula
+    response = requests.get(url)
+    
+    data_usuario = json.loads(response.text)
+    
+    # response = '{ "name":"MANUEL ANTONIO DE LA TRINIDAD FERNANDEZ MADRIZ"}'
+    
+    # data_usuario = json.loads(response)
+    
+    data_nombre = data_usuario["nombre"]
+    
+    nombre_completo = data_nombre.split()
+    
+    nombre = nombre_completo[0].title()
+    segundo_nombre = nombre_completo[1].title()
+    primer_apellido = nombre_completo[2].title()
+    segundo_apellido = nombre_completo[3].title()
+    # segundo_apellido = nombre_completo[3].title()
+    # segundo_apellido = nombre_completo[3].title()
+    # segundo_apellido = nombre_completo[3].title()
+    
+    data = [nombre, primer_apellido, segundo_apellido]
+    data_completa = json.dumps(data)
+    return JsonResponse(data_completa, safe=False)
