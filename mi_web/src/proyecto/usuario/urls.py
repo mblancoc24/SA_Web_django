@@ -10,6 +10,5 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
                path('usuario-estudiante/', DetalleUsuarioEstudiante.as_view(), name='usuario_estudiante'),
                path('usuario-profesor/', DetalleUsuarioProfesor.as_view(), name='usuario_profesor'),
                path('obtener-datos/', obtener_datos, name='obtener_datos')]
-
                # path('editar-tarea/<int:pk>', EditarTarea.as_view(), name='editar-tarea'),
                # path('eliminar-tarea/<int:pk>', EliminarTarea.as_view(), name='eliminar-tarea')]
