@@ -3,40 +3,39 @@
 {% block content %}
 
 <div class="row">
-    <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+    <div class="col-sm-9 col-md-7 col-lg-5 mx-auto mt-5">
         <div class="card border-0 shadow rounded-3 my-5">
             <div class="card-body p-4 p-sm-5">
-                <h5 class="card-title text-center mb-5 fw-light fs-5">Login</h5>
+                <h5 class="card-title text-center mb-5 fw-light fs-5 fw-bold">Login</h5>
                 <form method="POST">
                     {% csrf_token %}
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control" id="floatingInput" placeholder="Identificación"
                             name="username">
-                        <label for="floatingInput">Identificación</label>
+                        <label for="floatingInput" style="opacity: .65;">Identificación</label>
                     </div>
                     <div class="form-floating mb-3">
 
                         <input type="password" class="form-control" id="floatingPassword" placeholder="Contraseña"
                             name="password">
-                        <label for="floatingPassword">{{form.password.label}}</label>
-                    </div>
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-primary btn-login text-uppercase fw-bold">Ingresar</button>
-                    </div>
-                    <hr class="my-4">
-                    <div class="d-grid mb-2">
-                        <span class="ml-auto">Registrate como <a href="{% url 'registro_estudiantes' %}" class="text-info">Estudiante</a></span>
-                            
+                        <label for="floatingPassword" style="opacity: .65;">{{form.password.label}}</label>
                     </div>
                     <div class="d-grid mb-2">
-                        <span class="ml-auto">Registrate como <a href="{% url 'registro_profesor' %}" class="text-info">Profesor</a></span>
+                        <button type="submit" class="btn btn-primary btn-login fw-bold">Ingresar</button>
                     </div>
-
                     <div class="d-grid">
-                        <span class="ml-auto">Olvido su contraseña <a href="{%url 'password_reset'%}" class="text-info">Restablecer contraseña</a></span>
+                        <a href="{%url 'password_reset'%}" class="" style="text-decoration: none;">Olvido su
+                            contraseña</a></span>
                     </div>
-
                 </form>
+                <hr class="my-4">
+                <div class="d-flex text-center justify-content-center">
+                    <div class="d-inline-block m-1">
+                        <a href="{% url 'registro_estudiantes' %}"
+                            class="btn btn-primary btn-sm rounded fw-bold">Registrarse</a>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
