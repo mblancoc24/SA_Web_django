@@ -93,10 +93,15 @@ class PaginaRegistroProfesor(FormView):
 #         return context
 
 
-class DetalleUsuario(LoginRequiredMixin, ListView):
+class DetalleUsuarioEstudiante(LoginRequiredMixin, ListView):
     model = usuarios
     context_object_name = 'prueba'
     template_name = 'usuario/prueba.html'
+    
+class DetalleUsuarioProfesor(LoginRequiredMixin, ListView):
+    model = usuarios
+    context_object_name = 'prueba_profesor'
+    template_name = 'usuario/prueba_profesor.html'
 
 
 class CrearUsuario(LoginRequiredMixin, CreateView):
