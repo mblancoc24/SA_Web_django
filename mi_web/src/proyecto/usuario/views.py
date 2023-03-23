@@ -18,7 +18,10 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import PasswordResetForm
-
+from django.contrib.auth.models import User
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.contrib.auth.tokens import default_token_generator
 
 class Logueo(LoginView):
     template_name = 'usuario/login.html'
@@ -170,7 +173,7 @@ def password_reset_view(request):
                 [email],
                 fail_silently=False,
             )
-            return redirect('password_reset_done')
+            return redirect('password_reset_send')
     else:
         form = PasswordResetForm()
-    return render(request, 'password_reset_form.html', {'form': form, 'http': 'http', 'domain': '127.0.0.1:8000'})
+    return render(request, 'registration/password_reset.html', {'form': form, 'http': 'http', 'domain': '127.0.0.1:8000'})
