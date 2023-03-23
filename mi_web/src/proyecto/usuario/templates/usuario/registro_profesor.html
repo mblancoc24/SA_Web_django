@@ -6,9 +6,19 @@
     <div class="col-sm-9 col-md-7 col-lg-7 mx-auto">
         <div class="card border-0 shadow rounded-3 my-5">
             <div class="card-body p-4 p-sm-5">
-                <h5 class="card-title text-center mb-5 fw-light fs-5">Registrar Estudiante</h5>
+                <h5 class="card-title text-center mb-5 fw-light fs-5">Registrar Profesor</h5>
                 <form class="row g-3" method="POST">
                     {% csrf_token %}
+                    <div class="form-floating mb-3 col-md-6">
+                        <select id="tipo" class="form-select" onchange="change();">
+                            <option value="" disabled selected hidden>Tipo de identificación</option>
+                            <option>Cedula</option>
+                            <option>Dimex</option>
+                            <option>Pasaporte</option>
+                            <option>Juridico</option>
+                        </select>
+                        <label for="tipo">Tipo</label>
+                    </div>
                     <div class="form-floating mb-3 col-md-6">
                         <input type="text" class="form-control" id="identificacion" placeholder="Identificación"
                             name="username">
@@ -44,13 +54,13 @@
                     </div>
 
                     <div class="form-floating mb-3 col-md-6">
-                        <input type="email" class="form-control" id="correo" placeholder="Correo" name="correo">
-                        <label for="correo">Correo</label>
-                    </div>
-
-                    <div class="form-floating mb-3 col-md-6">
                         <input type="text" class="form-control" id="puestoeducativo" placeholder="Correo" name="puestoeducativo">
                         <label for="puestoeducativo">Puesto Educativo</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input type="email" class="form-control" id="correo" placeholder="Correo" name="correo">
+                        <label for="correo">Correo</label>
                     </div>
 
                     <div class="form-floating mb-3 col-md-6">

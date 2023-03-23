@@ -10,6 +10,16 @@
                 <form class="row g-3" method="POST">
                     {% csrf_token %}
                     <div class="form-floating mb-3 col-md-6">
+                        <select id="tipo" class="form-select" onchange="change();">
+                            <option value="" disabled selected hidden>Tipo de identificación</option>
+                            <option value="Cédula">Cédula</option>
+                            <option value="Dimex">Dimex</option>
+                            <option value="Pasaporte">Pasaporte</option>
+                            <option value="Cédula Jurídica">Cédula Jurídica</option>
+                        </select>
+                        <label for="tipo">Tipo</label>
+                    </div>
+                    <div class="form-floating mb-3 col-md-6">
                         <input type="text" class="form-control" id="identificacion" placeholder="Identificación"
                             name="username">
                         <label for="identificacion">Identificación</label>
@@ -43,7 +53,7 @@
                         <label for="fechanacimiento">Fecha de nacimiento</label>
                     </div>
 
-                    <div class="form-floating mb-3">
+                    <div class="form-floating mb-3 col-md-6">
                         <input type="email" class="form-control" id="correo" placeholder="Correo" name="correo">
                         <label for="correo">Correo</label>
                     </div>
