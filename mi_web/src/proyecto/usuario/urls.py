@@ -1,11 +1,10 @@
 from django.urls import path
-from .views import  Logueo, PaginaRegistroEstudiante,PaginaRegistroProfesor,CrearUsuario, DetalleUsuarioEstudiante, DetalleUsuarioProfesor, obtener_datos,password_reset_view
+from .views import  Logueo, PaginaRegistroEstudiante,CrearUsuario, DetalleUsuarioEstudiante, DetalleUsuarioProfesor, obtener_datos,password_reset_view
 from django.contrib.auth.views import LogoutView
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [path('', Logueo.as_view(), name='login'),
                path('registro_estudiantes/', PaginaRegistroEstudiante.as_view(), name='registro_estudiantes'),
-               path('registro_profesor/', PaginaRegistroProfesor.as_view(), name='registro_profesor'),
                path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
                path('crear-usuario/', CrearUsuario.as_view(), name='crear-usuario'),
                path('password_reset/', password_reset_view, name='password_reset'),
