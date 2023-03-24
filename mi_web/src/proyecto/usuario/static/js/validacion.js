@@ -59,3 +59,11 @@ document.addEventListener("keyup", function (event) {
     segundo.removeAttribute("readonly");
   }
 });
+
+$(document).ready(function () {
+    $('#tipo').change(function() {
+        $('#nombre').val('');
+        $('#primerapellido').val('');
+        $('#segundoapellido').val('');
+    }); 
+});
