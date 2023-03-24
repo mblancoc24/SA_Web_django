@@ -56,7 +56,7 @@
                     </div>
 
                     <div class="form-floating mb-3 col-md-6">
-                        <input type="email" class="form-control" id="correo" placeholder="Correo" name="correo" required>
+                        <input type="email" class="form-control" id="correo" placeholder="Correo" name="correo" required pattern="(?![_.-])((?![_.-][_.-])[a-zA-Z\d_.-]){0,63}[a-zA-Z\d]@((?!-)((?!--)[a-zA-Z\d-]){0,63}[a-zA-Z\d]\.){1,2}([a-zA-Z]{2,14}\.)?[a-zA-Z]{2,14}">
                         <label for="correo" style="opacity: .65;">Correo</label>
                     </div>
 
@@ -70,6 +70,7 @@
                         <input type="password" class="form-control" id="password2" placeholder="Confirmar contraseña"
                             name="password2" required>
                         <label for="password2" style="opacity: .65;">Confirmar contraseña</label>
+                        <span id='message'></span>
                     </div>
 
                     <div class="d-grid">
