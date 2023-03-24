@@ -38,11 +38,14 @@ class Logueo(LoginView):
         
         login = get_object_or_404(usuarios, id=user_id)
         
-        if login.Tipo == '1':
-            return reverse_lazy('usuario_profesor')
+        if login.es_prospecto:
+            return reverse_lazy('usuario_prospecto')
         
-        elif login.Tipo == '2':
+        elif login.es_estudiante:
             return reverse_lazy('usuario_estudiante')
+        
+        elif login.es_profesor:
+            return reverse_lazy('usuario_profesor')
 
 
 class PaginaRegistroEstudiante(FormView):
@@ -65,28 +68,27 @@ class PaginaRegistroEstudiante(FormView):
         user = User.objects.get(username=username)
         user_id = user.pk
         
-        datos_usuario = ['2', True, user_id]
+        datos_usuario = [user_id, False, False, False, True, user_id]
         
-        form = FormularioUsuario({'Tipo': datos_usuario[0], 'estado': datos_usuario[1], 'usuarios': datos_usuario[2]})
+        form = FormularioUsuario({'usuarios': datos_usuario[0],  'activo': datos_usuario[1], 'es_profesor': datos_usuario[2], 'es_estudiante': datos_usuario[3], 'es_prospecto': datos_usuario[4]})
         
         if form.is_valid():
             form.save()
         
         id_usuario = get_object_or_404(usuarios, id=user_id)
         
-        datos_estudiante = [username, nombre_estudiante, primerapellido, 
-                            segundoapellido, fecha, telefono, correo, False, False, id_usuario]
+        datos_estudiante = [id_usuario, username, nombre_estudiante, primerapellido, 
+                            segundoapellido, fecha, telefono, correo]
         
-        form = FormularioEstudiantes({'Cedula': datos_estudiante[0], 'nombre': datos_estudiante[1], 'primer_apellido': datos_estudiante[2],
-                                      'segundo_apellido': datos_estudiante[3], 'fecha_nacimiento': datos_estudiante[4], 'phone_tutor': datos_estudiante[5],
-                                      'correo_estudiante': datos_estudiante[6], 'pago_realizado': datos_estudiante[7],
-                                      'documentos_presentados': datos_estudiante[8], 'user': datos_estudiante[9]})
+        form = FormularioEstudiantes({ 'user': datos_estudiante[0], 'identificacion': datos_estudiante[1], 'nombre': datos_estudiante[2], 'primer_apellido': datos_estudiante[3],
+                                      'segundo_apellido': datos_estudiante[4], 'fecha_nacimiento': datos_estudiante[5], 'numero_telefonico': datos_estudiante[6],
+                                      'correo': datos_estudiante[7]})
         if form.is_valid():
             form.save()
             
         if Usuarios is not None:
             login(self.request, Usuarios)
-            registrar_accion(self.request.user, 'El usuario '+ username +' se ha creado una cuenta como estudiante.')
+            registrar_accion(self.request.user, 'El usuario '+ username +' se ha creado una cuenta como prospecto.')
         return super(PaginaRegistroEstudiante, self).form_valid(form)
 
     def get(self, *args, **kwargs):
@@ -94,83 +96,21 @@ class PaginaRegistroEstudiante(FormView):
             return redirect('usuario_estudiante')
         return super(PaginaRegistroEstudiante, self).get(*args, **kwargs)
 
-# class PaginaRegistroProfesor(FormView):
-#     template_name = 'usuario/registro_profesor.html'
-#     form_class = UserCreationForm
-#     redirect_authenticated_user = True
-#     success_url = reverse_lazy('usuario_profesor')
-    
-
-#     def form_valid(self, form):
-#         username = form.cleaned_data['username']
-#         password_profesor = form.cleaned_data['password2']
-#         nombre_profesor = self.request.POST.get('nombre')
-#         primerapellido = self.request.POST.get('primerapellido')
-#         segundoapellido = self.request.POST.get('segundoapellido')
-#         puestoeducativo = self.request.POST.get('puestoeducativo')
-#         correo = self.request.POST.get('correo')
-        
-#         Usuarios = form.save() # type: ignore
-        
-#         user = User.objects.get(username=username)
-#         user_id = user.pk
-        
-#         datos_usuario = ['1', True, user_id]
-        
-#         form = FormularioUsuario({'Tipo': datos_usuario[0], 'estado': datos_usuario[1], 'usuarios': datos_usuario[2]})
-        
-#         if form.is_valid():
-#             form.save()
-        
-#         id_usuario = get_object_or_404(usuarios, id=user_id)
-        
-#         datos_profesor = [username, nombre_profesor, primerapellido, 
-#                             segundoapellido, correo, puestoeducativo, password_profesor, id_usuario]
-        
-#         form = FormularioProfesor({'Cedula': datos_profesor[0], 'nombre': datos_profesor[1], 'primer_apellido': datos_profesor[2],
-#                                 'segundo_apellido': datos_profesor[3], 'correo_profesor': datos_profesor[4], 'puesto_educativo': datos_profesor[5],
-#                                 'password': datos_profesor[6], 'user': datos_profesor[7]})
-        
-#         if form.is_valid():
-#             form.save()
-            
-#         if Usuarios is not None:
-#             login(self.request, Usuarios)
-#         return super(PaginaRegistroProfesor, self).form_valid(form)
-
-#     def get(self, *args, **kwargs):
-#         if self.request.user.is_authenticated:
-#             return redirect('usuario_profesor')
-#         return super(PaginaRegistroProfesor, self).get(*args, **kwargs)
-    
-    
-
-#
-# class ListaPendientes(LoginRequiredMixin, ListView):
-#     model = usuarios
-#     context_object_name = 'usuarios'
-#
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['usuarios'] = context['usuarios'].filter(usuarios=self.request.user)
-#         context['count'] = context['usuarios'].filter(completo=False).count()
-#
-#         valor_buscado = self.request.GET.get('area-buscar') or ''
-#         if valor_buscado:
-#             context['usuarios'] = context['usuarios'].filter(titulo__icontains=valor_buscado)
-#             context['valor_buscado'] = valor_buscado
-#         return context
-
 
 class DetalleUsuarioEstudiante(LoginRequiredMixin, ListView):
     model = usuarios
-    context_object_name = 'prueba'
-    template_name = 'usuario/prueba.html'
+    context_object_name = 'prueba_estudiante'
+    template_name = 'usuario/prueba_estudiante.html'
     
 class DetalleUsuarioProfesor(LoginRequiredMixin, ListView):
     model = usuarios
     context_object_name = 'prueba_profesor'
     template_name = 'usuario/prueba_profesor.html'
+    
+class DetalleUsuarioProspecto(LoginRequiredMixin, ListView):
+    model = usuarios
+    context_object_name = 'prueba_prospecto'
+    template_name = 'usuario/prueba_prospecto.html'
 
 
 class CrearUsuario(LoginRequiredMixin, CreateView):
@@ -181,18 +121,6 @@ class CrearUsuario(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.usuario = self.request.user
         return super(CrearUsuario, self).form_valid(form)
-
-
-# class EditarTarea(LoginRequiredMixin, UpdateView):
-#     model = Usuarios
-#     fields = ['titulo', 'descripcion', 'completo']
-#     success_url = reverse_lazy('tareas')
-#
-#
-# class EliminarTarea(LoginRequiredMixin, DeleteView):
-#     model = Usuarios
-#     context_object_name = 'usuario'
-#     success_url = reverse_lazy('tareas')
 
 
 def obtener_datos(request):
