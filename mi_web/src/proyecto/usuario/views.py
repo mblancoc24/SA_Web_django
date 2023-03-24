@@ -51,9 +51,6 @@ class PaginaRegistroEstudiante(FormView):
 
     def form_valid(self, form):
         username = form.cleaned_data['username']
-        password_estudiantes = form.cleaned_data['password2']
-        encryptedpassword=make_password(password_estudiantes)
-        print(encryptedpassword)
         nombre_estudiante = self.request.POST.get('nombre')
         primerapellido = self.request.POST.get('primerapellido')
         segundoapellido = self.request.POST.get('segundoapellido')
@@ -76,14 +73,12 @@ class PaginaRegistroEstudiante(FormView):
         id_usuario = get_object_or_404(usuarios, id=user_id)
         
         datos_estudiante = [username, nombre_estudiante, primerapellido, 
-                            segundoapellido, fecha, telefono, correo,
-                            encryptedpassword, False, False, id_usuario]
-        print(datos_estudiante[7])
+                            segundoapellido, fecha, telefono, correo, False, False, id_usuario]
         
         form = FormularioEstudiantes({'Cedula': datos_estudiante[0], 'nombre': datos_estudiante[1], 'primer_apellido': datos_estudiante[2],
                                       'segundo_apellido': datos_estudiante[3], 'fecha_nacimiento': datos_estudiante[4], 'phone_tutor': datos_estudiante[5],
-                                      'correo_estudiante': datos_estudiante[6], 'password': datos_estudiante[7], 'pago_realizado': datos_estudiante[8],
-                                      'documentos_presentados': datos_estudiante[9], 'user': datos_estudiante[10]})
+                                      'correo_estudiante': datos_estudiante[6], 'pago_realizado': datos_estudiante[7],
+                                      'documentos_presentados': datos_estudiante[8], 'user': datos_estudiante[9]})
         if form.is_valid():
             form.save()
             
