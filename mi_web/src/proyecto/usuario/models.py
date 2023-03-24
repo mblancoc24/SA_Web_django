@@ -39,3 +39,10 @@ class profesor(models.Model):
     correo_profesor = models.CharField(max_length=100)
     puesto_educativo = models.CharField(max_length=50)
     
+class RegistroLogsUser (models.Model):
+    fechatiempo = models.DateTimeField(auto_now_add=True)
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    accion = models.CharField(max_length=300)
+    
+
+    
