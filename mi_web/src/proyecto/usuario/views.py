@@ -92,54 +92,54 @@ class PaginaRegistroEstudiante(FormView):
             return redirect('usuario_estudiante')
         return super(PaginaRegistroEstudiante, self).get(*args, **kwargs)
 
-class PaginaRegistroProfesor(FormView):
-    template_name = 'usuario/registro_profesor.html'
-    form_class = UserCreationForm
-    redirect_authenticated_user = True
-    success_url = reverse_lazy('usuario_profesor')
+# class PaginaRegistroProfesor(FormView):
+#     template_name = 'usuario/registro_profesor.html'
+#     form_class = UserCreationForm
+#     redirect_authenticated_user = True
+#     success_url = reverse_lazy('usuario_profesor')
     
 
-    def form_valid(self, form):
-        username = form.cleaned_data['username']
-        password_profesor = form.cleaned_data['password2']
-        nombre_profesor = self.request.POST.get('nombre')
-        primerapellido = self.request.POST.get('primerapellido')
-        segundoapellido = self.request.POST.get('segundoapellido')
-        puestoeducativo = self.request.POST.get('puestoeducativo')
-        correo = self.request.POST.get('correo')
+#     def form_valid(self, form):
+#         username = form.cleaned_data['username']
+#         password_profesor = form.cleaned_data['password2']
+#         nombre_profesor = self.request.POST.get('nombre')
+#         primerapellido = self.request.POST.get('primerapellido')
+#         segundoapellido = self.request.POST.get('segundoapellido')
+#         puestoeducativo = self.request.POST.get('puestoeducativo')
+#         correo = self.request.POST.get('correo')
         
-        Usuarios = form.save() # type: ignore
+#         Usuarios = form.save() # type: ignore
         
-        user = User.objects.get(username=username)
-        user_id = user.pk
+#         user = User.objects.get(username=username)
+#         user_id = user.pk
         
-        datos_usuario = ['1', True, user_id]
+#         datos_usuario = ['1', True, user_id]
         
-        form = FormularioUsuario({'Tipo': datos_usuario[0], 'estado': datos_usuario[1], 'usuarios': datos_usuario[2]})
+#         form = FormularioUsuario({'Tipo': datos_usuario[0], 'estado': datos_usuario[1], 'usuarios': datos_usuario[2]})
         
-        if form.is_valid():
-            form.save()
+#         if form.is_valid():
+#             form.save()
         
-        id_usuario = get_object_or_404(usuarios, id=user_id)
+#         id_usuario = get_object_or_404(usuarios, id=user_id)
         
-        datos_profesor = [username, nombre_profesor, primerapellido, 
-                            segundoapellido, correo, puestoeducativo, password_profesor, id_usuario]
+#         datos_profesor = [username, nombre_profesor, primerapellido, 
+#                             segundoapellido, correo, puestoeducativo, password_profesor, id_usuario]
         
-        form = FormularioProfesor({'Cedula': datos_profesor[0], 'nombre': datos_profesor[1], 'primer_apellido': datos_profesor[2],
-                                'segundo_apellido': datos_profesor[3], 'correo_profesor': datos_profesor[4], 'puesto_educativo': datos_profesor[5],
-                                'password': datos_profesor[6], 'user': datos_profesor[7]})
+#         form = FormularioProfesor({'Cedula': datos_profesor[0], 'nombre': datos_profesor[1], 'primer_apellido': datos_profesor[2],
+#                                 'segundo_apellido': datos_profesor[3], 'correo_profesor': datos_profesor[4], 'puesto_educativo': datos_profesor[5],
+#                                 'password': datos_profesor[6], 'user': datos_profesor[7]})
         
-        if form.is_valid():
-            form.save()
+#         if form.is_valid():
+#             form.save()
             
-        if Usuarios is not None:
-            login(self.request, Usuarios)
-        return super(PaginaRegistroProfesor, self).form_valid(form)
+#         if Usuarios is not None:
+#             login(self.request, Usuarios)
+#         return super(PaginaRegistroProfesor, self).form_valid(form)
 
-    def get(self, *args, **kwargs):
-        if self.request.user.is_authenticated:
-            return redirect('usuario_profesor')
-        return super(PaginaRegistroProfesor, self).get(*args, **kwargs)
+#     def get(self, *args, **kwargs):
+#         if self.request.user.is_authenticated:
+#             return redirect('usuario_profesor')
+#         return super(PaginaRegistroProfesor, self).get(*args, **kwargs)
     
     
 

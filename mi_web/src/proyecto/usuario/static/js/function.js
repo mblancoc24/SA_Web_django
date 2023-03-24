@@ -41,8 +41,8 @@ function datacedula() {
         primer_apellido.readOnly = false;
         segundo_apellido.readOnly = false;
     }
-
-    if (input.value.length >= 10 && input.value.length <= 12 && input2 === "Dimex") {
+ 
+    if (input.value.length >= 10 && input.value.length <= 12 && input2 === "Dimex" || "Cédula Residente" || "Refugiado") {
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
@@ -68,7 +68,7 @@ function datacedula() {
         xhttp.open("GET", "/obtener-datos/?identificacion=" + encodeURIComponent(input.value), true);
         xhttp.send();
         
-    }else if (input.value.length < 10 && input2 === "Dimex"){
+    }else if (input.value.length < 10 && input2 === "Dimex" || "Cédula Residente" || "Refugiado"){
         
         var nombre = document.getElementById("nombre");
         var primer_apellido = document.getElementById("primerapellido");

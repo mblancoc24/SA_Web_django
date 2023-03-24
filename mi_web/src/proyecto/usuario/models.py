@@ -60,7 +60,9 @@ class profesor(models.Model):
     segundo_apellido = models.CharField(max_length=18)
     correo_profesor = models.CharField(max_length=100)
     puesto_educativo = models.CharField(max_length=50)
-    password = models.CharField(max_length=30)
+    password = models.CharField(max_length=30) 
+    
+
 
 
 
