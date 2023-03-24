@@ -59,5 +59,12 @@ function change(){
     }
 }
 
+$(document).ready(function () {
+    $("#identificacion").keypress((e) => {
+        if (e.which == 8) {
+            $("#uia_portal_info_solicitante_informacion").click();
+        }
+    });
 
+});
 
