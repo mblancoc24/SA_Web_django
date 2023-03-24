@@ -58,7 +58,7 @@ class PaginaRegistroEstudiante(FormView):
         telefono = self.request.POST.get('telefono')
         correo = self.request.POST.get('correo')
 
-        Usuarios = form.save() # type: ignore
+        Usuarios = form.save()
         
         user = User.objects.get(username=username)
         user_id = user.pk
