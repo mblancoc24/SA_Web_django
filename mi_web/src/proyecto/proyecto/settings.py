@@ -56,7 +56,7 @@ ROOT_URLCONF = 'proyecto.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'usuario/templates'],
+        'DIRS': [BASE_DIR / 'usuario/templates/usuario'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -79,7 +79,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres',
-        'USER': 'odoo',
+        'USER': 'postgres',
         'PASSWORD': '1502',
         'HOST': 'localhost',
         'PORT': '5432',
@@ -146,8 +146,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_PORT = 465
-EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
+EMAIL_HOST_PORT = 587
+EMAIL_USE_TLS = False
 EMAIL_HOST_USER = 'correouianoreply@gmail.com'
 EMAIL_HOST_PASSWORD = 'admin1818'
+EMAIL_USE_AUTH = False

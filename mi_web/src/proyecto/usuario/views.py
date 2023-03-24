@@ -6,9 +6,11 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from .forms import FormularioEstudiantes, FormularioUsuario, FormularioProfesor
 from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView
+from django.core.mail import send_mail
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from .models import usuarios, profesor, estudiantes
+from .models import usuarios, profesor, estudiantes, RegistroLogsUser
 import requests
 import json
 import django
@@ -84,6 +86,7 @@ class PaginaRegistroEstudiante(FormView):
             
         if Usuarios is not None:
             login(self.request, Usuarios)
+            registrar_accion(self.request.user, 'El usuario '+ username +' se ha creado una cuenta como estudiante.')
         return super(PaginaRegistroEstudiante, self).form_valid(form)
 
     def get(self, *args, **kwargs):
@@ -226,39 +229,33 @@ def obtener_datos(request):
     return JsonResponse(data_completa, safe=False)
 
 
-def password_reset_view(request):
-    if request.method == 'POST':
-        correo = ''
-        form = PasswordResetForm(request.POST)
-        cedula = '117580049'
-        
-        if form.is_valid():
-            # cedula = request.GET.('username')
-            user = User.objects.get(username=cedula)
-            user_id = user.pk
-            login = get_object_or_404(usuarios, id=user_id) 
-            
-            if login.Tipo == '1':
-                profesordata = get_object_or_404(profesor, id_profesor=login.id)
-                correo = profesordata.correo_profesor         
-            elif login.Tipo == '2':
-                estudiantedata = get_object_or_404(estudiantes, id_estudiante=login.id)
-                correo = estudiantedata.correo_estudiante   
-                         
-            uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
-            token = default_token_generator.make_token(user)
-            http = 'http'
-            domain = '127.0.0.1:8000'
-            reset_url = reverse('password_reset_confirm', kwargs={'uidb64': uidb64, 'token': token})
-            reset_link = '{}://{}{}'.format(http, domain, reset_url)
+class MyPasswordResetView(PasswordResetView):
+    template_name = 'my_password_reset.html'
+    email_template_name = 'my_password_reset_email.html'
+    subject_template_name = 'my_password_reset_subject.txt'
+    success_url = reverse_lazy('password_reset_done')
+    from_email = 'correouianoreply@gmail.com'
+
+    def form_valid(self, form):
+        # Agregamos el código para enviar el correo electrónico personalizado aquí
+        email = form.cleaned_data['email']
+        user = User.objects.filter(email=email).first()
+        if user is not None:
             send_mail(
-                'Password Reset Request',
-                'Follow the link to reset your password: {}'.format(reset_link),
-                settings.DEFAULT_FROM_EMAIL,
-                [correo],
+                'Restablecer contraseña',
+                'Por favor, sigue este enlace para restablecer tu contraseña:',
+                self.from_email,
+                [email],
                 fail_silently=False,
+                html_message='Haz clic <a href="{}">aquí</a> para restablecer tu contraseña.'.format(self.get_success_url())
             )
-        return redirect('password_reset_send')
-    else:
-        form = PasswordResetForm()
-    return render(request, 'registration/password_reset.html', {'form': form, 'http': 'http', 'domain': '127.0.0.1:8000'})
+        return super().form_valid(form)
+    
+class MyPasswordResetDoneView(PasswordResetDoneView):
+    template_name = 'my_password_reset_done.html'
+    success_url = reverse_lazy('password_reset_done')
+
+
+def registrar_accion(usuario, accion):
+    registro = RegistroLogsUser(usuario=usuario, accion=accion)
+    registro.save()
