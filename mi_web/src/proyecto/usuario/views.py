@@ -22,6 +22,7 @@ from django.contrib.auth.models import User
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth.hashers import make_password
 
 class Logueo(LoginView):
     template_name = 'usuario/login.html'
@@ -51,6 +52,8 @@ class PaginaRegistroEstudiante(FormView):
     def form_valid(self, form):
         username = form.cleaned_data['username']
         password_estudiantes = form.cleaned_data['password2']
+        encryptedpassword=make_password(password_estudiantes)
+        print(encryptedpassword)
         nombre_estudiante = self.request.POST.get('nombre')
         primerapellido = self.request.POST.get('primerapellido')
         segundoapellido = self.request.POST.get('segundoapellido')
@@ -74,7 +77,8 @@ class PaginaRegistroEstudiante(FormView):
         
         datos_estudiante = [username, nombre_estudiante, primerapellido, 
                             segundoapellido, fecha, telefono, correo,
-                            password_estudiantes, False, False, id_usuario]
+                            encryptedpassword, False, False, id_usuario]
+        print(datos_estudiante[7])
         
         form = FormularioEstudiantes({'Cedula': datos_estudiante[0], 'nombre': datos_estudiante[1], 'primer_apellido': datos_estudiante[2],
                                       'segundo_apellido': datos_estudiante[3], 'fecha_nacimiento': datos_estudiante[4], 'phone_tutor': datos_estudiante[5],
@@ -211,10 +215,8 @@ def obtener_datos(request):
         segundo_apellido = nombre_completo[-1].title()
         data = [nombre, primer_apellido, segundo_apellido]
         
-    elif len(identificiacion) >= 10 and len(identificiacion) <= 12 and len(nombre_completo) == 2:
-        nombre = nombre_completo[0].title()
-        primer_apellido = nombre_completo[-1].title()
-        data = [nombre, primer_apellido, 'N/A']
+    elif len(identificiacion) >= 10 and len(identificiacion) <= 12:
+        data = ['Existe']
     else:
         data = []
         
