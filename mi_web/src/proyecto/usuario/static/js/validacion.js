@@ -1,6 +1,10 @@
 function change() {
   var selectValue = document.getElementById("tipo");
   var input = document.getElementById("identificacion");
+  var telefono = document.getElementById("telefono");
+  telefono.oninput = function () {
+    this.value = this.value.replace(/[^0-9]/g, "");
+  };
   if (selectValue.value === "Cédula") {
     input.oninput = function () {
       this.value = this.value.replace(/[^0-9]/g, "");
@@ -51,6 +55,11 @@ $(document).ready(function () {
     $("#nombre").val("");
     $("#primerapellido").val("");
     $("#segundoapellido").val("");
+    $("#telefono").val("");
+    $("#fechanacimiento").val("");
+    $("#correo").val("");
+    $("#password1").val("");
+    $("#password2").val("");
   });
 
   const password1 = $("#password1");
