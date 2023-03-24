@@ -59,12 +59,18 @@ function change(){
     }
 }
 
-$(document).ready(function () {
-    $("#identificacion").keypress((e) => {
-        if (e.which == 8) {
-            $("#uia_portal_info_solicitante_informacion").click();
-        }
-    });
-
+document.addEventListener("keyup", function(event) {
+    if(event.key === 'Backspace'){
+            var nombre = document.getElementById('nombre');
+            var primer = document.getElementById('primerapellido');
+            var segundo = document.getElementById('segundoapellido');
+            nombre.value = '';
+            nombre.removeAttribute('readonly');
+            primer.value = '';
+            primer.removeAttribute('readonly');
+            segundo.value = '';
+            segundo.removeAttribute('readonly');
+    }
 });
+
 
