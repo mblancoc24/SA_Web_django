@@ -10,10 +10,10 @@ class FormularioEstudiantes(forms.ModelForm):
     class Meta:
         model = estudiantes
         fields = ('Cedula', 'nombre', 'primer_apellido','segundo_apellido', 'fecha_nacimiento', 'phone_tutor', 
-                  'correo_estudiante', 'password', 'pago_realizado','documentos_presentados', 'user')
+                  'correo_estudiante', 'pago_realizado','documentos_presentados', 'user')
         
 class FormularioProfesor(forms.ModelForm):
     class Meta:
         model = profesor
         fields = ('Cedula', 'nombre', 'primer_apellido','segundo_apellido',
-                  'correo_profesor', 'puesto_educativo', 'password', 'user')
+                  'correo_profesor', 'puesto_educativo', 'user')
