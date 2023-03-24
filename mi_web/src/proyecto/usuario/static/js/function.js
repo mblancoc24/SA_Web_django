@@ -29,6 +29,7 @@ function datacedula() {
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 var datos = this.responseText;
+                const datos_usuario = datos.split(",");
 
                 var nombre = document.getElementById("nombre");
                 var primer_apellido = document.getElementById("primerapellido");
