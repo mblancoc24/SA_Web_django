@@ -25,6 +25,10 @@ class estudiantes(models.Model):
     fecha_nacimiento = models.DateField()
     phone_tutor = models.IntegerField(default=0)
     correo_estudiante = models.CharField(max_length=60)
+<<<<<<< HEAD
+=======
+    password = models.CharField(max_length=128)
+>>>>>>> 6d04073f2ac9b16e94d8ca5c239fc99a65fb7bfb
     pago_realizado = models.BooleanField(default=False)
     documentos_presentados = models.BooleanField(default=False)
 
