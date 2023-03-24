@@ -200,23 +200,28 @@ def obtener_datos(request):
     response = requests.get(url)
     
     data_usuario = json.loads(response.text)
-    
-    data_nombre = data_usuario["nombre"]
-    
-    nombre_completo = data_nombre.split()
-    
-    if len(identificiacion) == 9:
-        nombre = ' '.join(nombre_completo[:-2]).title()
-        primer_apellido = nombre_completo[-2].title()
-        segundo_apellido = nombre_completo[-1].title()
-        data = [nombre, primer_apellido, segundo_apellido]
         
-    elif len(identificiacion) >= 10 and len(identificiacion) <= 12 and len(nombre_completo) == 2:
-        nombre = nombre_completo[0].title()
-        primer_apellido = nombre_completo[-1].title()
-        data = [nombre, primer_apellido, 'N/A']
+    if len(identificiacion) == 9:
+        data_nombre = data_usuario["nombre"]
+        if data_nombre is not None:
+            nombre_completo = data_nombre.split()
+            
+            nombre = ' '.join(nombre_completo[:-2]).title()
+            primer_apellido = nombre_completo[-2].title()
+            segundo_apellido = nombre_completo[-1].title()
+            data = [nombre, primer_apellido, segundo_apellido]
+        else:
+            data = []
+            
+    elif len(identificiacion) >= 10 and len(identificiacion) <= 12:
+        data_nombre = data_usuario["nombre"]
+        if data_nombre is not None:
+            data = ['Existe']
+        else:
+            data = []
     else:
         data = []
+        
         
     data_completa = json.dumps(data)
     return JsonResponse(data_completa, safe=False)

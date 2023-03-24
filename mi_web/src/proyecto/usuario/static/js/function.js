@@ -27,7 +27,7 @@ function datacedula() {
         xhttp.open("GET", "/obtener-datos/?identificacion=" + encodeURIComponent(input.value), true);
         xhttp.send();
         
-    }else if (input.value.length < 9 && input2 === "Cédula"){
+    }else if (input.value.length < 9 && input2 === "Cédula "){
         
         var nombre = document.getElementById("nombre");
         var primer_apellido = document.getElementById("primerapellido");
@@ -47,22 +47,17 @@ function datacedula() {
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 var datos = this.responseText;
-                console.log(datos);
-                const datos_usuario = datos.split(",");
+                const datos_usuario = datos;
 
-                console.log(datos_usuario[0])
+                if (datos_usuario == "Existe") {
+                    var nombre = document.getElementById("nombre");
+                    var primer_apellido = document.getElementById("primerapellido");
+                    var segundo_apellido = document.getElementById("segundoapellido");
 
-                var nombre = document.getElementById("nombre");
-                var primer_apellido = document.getElementById("primerapellido");
-                var segundo_apellido = document.getElementById("segundoapellido");
-                
-                nombre.value = datos_usuario[0].replace(/[\\\[\]"]/g, "").replace(/u00f1/g, 'ñ').replace(/u00D1/g, 'Ñ');
-                primer_apellido.value = datos_usuario[1].replace(/[\\\[\]" ]/g, "").replace(/u00f1/g, 'ñ').replace(/u00D1/g, 'Ñ');
-                segundo_apellido.value = datos_usuario[2].replace(/[\\\[\]" ]/g, "").replace(/u00f1/g, 'ñ').replace(/u00D1/g, 'Ñ');
-
-                nombre.readOnly = true;
-                primer_apellido.readOnly = true;
-                segundo_apellido.readOnly = true;
+                    nombre.readOnly = false;
+                    primer_apellido.readOnly = false;
+                    segundo_apellido.readOnly = false;
+                }
             }
         };
         xhttp.open("GET", "/obtener-datos/?identificacion=" + encodeURIComponent(input.value), true);
@@ -78,8 +73,8 @@ function datacedula() {
         primer_apellido.value = "";
         segundo_apellido.value = "";
 
-        nombre.readOnly = false;
-        primer_apellido.readOnly = false;
-        segundo_apellido.readOnly = false;
+        nombre.readOnly = true;
+        primer_apellido.readOnly = true;
+        segundo_apellido.readOnly = true;
     }
 }
