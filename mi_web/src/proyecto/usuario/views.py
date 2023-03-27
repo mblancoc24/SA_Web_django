@@ -14,7 +14,7 @@ from .models import usuarios, profesor, estudiantes, RegistroLogsUser
 import requests
 import json
 import django
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.urls import reverse
 from django.core.mail import send_mail
 from django.conf import settings
@@ -38,14 +38,20 @@ class Logueo(LoginView):
         
         login = get_object_or_404(usuarios, id=user_id)
         
-        if login.es_prospecto:
-            return reverse_lazy('usuario_prospecto')
+        login = get_object_or_404(usuarios, id=user_id)
         
-        elif login.es_estudiante:
-            return reverse_lazy('usuario_estudiante')
-        
-        elif login.es_profesor:
-            return reverse_lazy('usuario_profesor')
+        if login.es_estudiante and login.es_profesor:
+            return HttpResponse('login.html', {'mostrar_modal': True})
+        else:
+            if login.es_prospecto:
+                return reverse_lazy('usuario_prospecto')
+            
+            elif login.es_estudiante:
+                return reverse_lazy('usuario_estudiante')
+            
+            elif login.es_profesor:
+                return reverse_lazy('usuario_profesor')
+
 
 
 class PaginaRegistroEstudiante(FormView):
@@ -187,3 +193,6 @@ class MyPasswordResetDoneView(PasswordResetDoneView):
 def registrar_accion(usuario, accion):
     registro = RegistroLogsUser(usuario=usuario, accion=accion)
     registro.save()
+
+def modalusuario(request):
+    return render (request, 'modal.html')

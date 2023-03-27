@@ -51,6 +51,7 @@ function change() {
 }
 
 $(document).ready(function () {
+  $('#exampleModalCenter').modal('show');
   $("#tipo").change(function () {
     $("#nombre").val("");
     $("#primerapellido").val("");

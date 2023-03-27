@@ -16,12 +16,12 @@
                     </div>
                     <div class="form-floating mb-3">
 
-                        <input type="password" class="form-control" id="floatingPassword" placeholder="Contraseña"
+                        <input type="password"  class="form-control" id="floatingPassword" placeholder="Contraseña"
                             name="password">
                         <label for="floatingPassword" style="opacity: .65;">{{form.password.label}}</label>
                     </div>
                     <div class="d-grid mb-2">
-                        <button type="submit" class="btn btn-primary btn-login fw-bold">Ingresar</button>
+                        <button type="submit" data-toggle="modal" data-target="#exampleModalCenter" class="btn btn-primary btn-login fw-bold">Ingresar</button>
                     </div>
                     <div class="d-grid">
                         <a href="{% url 'password_reset' %}" class="" style="text-decoration: none;">Olvido su
@@ -42,3 +42,32 @@
 </div>
 
 {% endblock content %}
+
+
+
+{% block modal %}
+
+{% if mostrar_modal %}
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" aria-labelledby="exampleModalCenterTitle"
+    style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content rounded-0">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">¿Tienes dos cuentas donde quiere ir?</h5>
+                <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><span class="icon-close2"></span></span>
+                </button> -->
+            </div>
+            <div class="modal-body">
+                <div class="d-grid mb-2">
+                    <a href="{% url 'usuario_estudiante' %}" class="text-info">Estudiante</a>
+                </div>
+                <div class="d-grid mb-2">
+                    <a href="{% url 'usuario_profesor' %}" class="text-info">Profesor</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock modal %}
