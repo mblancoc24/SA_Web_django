@@ -1,5 +1,5 @@
 from audioop import max
-
+from django import forms
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -12,6 +12,7 @@ class usuarios(models.Model):
     es_profesor = models.BooleanField(default=False)
     es_estudiante = models.BooleanField(default=False)
     es_prospecto = models.BooleanField(default=True)
+    es_cursolibre = models.BooleanField(default=False)
     fecha_creado = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -27,6 +28,13 @@ class estudiantes(models.Model):
     fecha_nacimiento = models.DateField()
     numero_telefonico = models.IntegerField(default=0)
     correo = models.CharField(max_length=60)
+    direccion = models.CharField(max_length=200)
+    
+    
+class info_estudiantes (models.Model):
+    usuario = models.ForeignKey(estudiantes, on_delete=models.CASCADE)
+    estado = models.CharField(max_length=25)
+    carrera = models.CharField(max_length=300)
 
 
 class profesor(models.Model):

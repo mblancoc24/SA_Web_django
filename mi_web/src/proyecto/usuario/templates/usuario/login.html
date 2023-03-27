@@ -24,7 +24,7 @@
                         <button type="submit" data-toggle="modal" data-target="#exampleModalCenter" class="btn btn-primary btn-login fw-bold">Ingresar</button>
                     </div>
                     <div class="d-grid">
-                        <a href="{% url 'password_reset' %}" class="" style="text-decoration: none;">Olvido su
+                        <a href="{% url 'password_reset' %}" class="" style="text-decoration: none;">Olvido su 
                             contraseña</a></span>
                     </div>
                 </form>
@@ -40,12 +40,6 @@
         </div>
     </div>
 </div>
-
-{% endblock content %}
-
-
-
-{% block modal %}
 
 {% if mostrar_modal %}
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" aria-labelledby="exampleModalCenterTitle"
@@ -70,4 +64,5 @@
     </div>
 </div>
 {% endif %}
-{% endblock modal %}
+
+{% endblock content %}
