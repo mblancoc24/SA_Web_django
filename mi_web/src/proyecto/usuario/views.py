@@ -3,7 +3,7 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate
 from .forms import FormularioEstudiantes, FormularioUsuario, FormularioProfesor
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView
@@ -30,29 +30,33 @@ class Logueo(LoginView):
     template_name = 'usuario/login.html'
     fields = '__all__'
     redirect_authenticated_user = True
-
-    def get_success_url(self):
-        username = self.request.POST.get('username')
-        user = User.objects.get(username=username)
-        user_id = user.pk
+    
+    def form_valid(self, form):
+        # Get the user object from the form data
+        username = form.cleaned_data.get('username')
+        password = form.cleaned_data.get('password')
+        user = authenticate(self.request, username=username, password=password)
         
-        login = get_object_or_404(usuarios, id=user_id)
+        # Call the parent form_valid method if the user is not authenticated
+        if user is None:
+            return super().form_invalid(form)
         
-        login = get_object_or_404(usuarios, id=user_id)
+        # Authenticate the user and log them in
+        login(self.request, user)
         
-        if login.es_estudiante and login.es_profesor:
-            return HttpResponse('login.html', {'mostrar_modal': True})
-        else:
-            if login.es_prospecto:
-                return reverse_lazy('usuario_prospecto')
-            
-            elif login.es_estudiante:
-                return reverse_lazy('usuario_estudiante')
-            
-            elif login.es_profesor:
-                return reverse_lazy('usuario_profesor')
-
-
+        # Get the custom user object from the database
+        login_obj = get_object_or_404(usuarios, id=user.id)
+        
+        # Choose the appropriate redirect URL based on the user type
+        if login_obj.es_estudiante and login_obj.es_profesor:
+            modal = True
+            return render(self.request, 'login.html', {'modal': modal})
+        elif login_obj.es_prospecto:
+            return redirect('usuario_prospecto')
+        elif login_obj.es_estudiante:
+            return redirect('usuario_estudiante')
+        elif login_obj.es_profesor:
+            return redirect('usuario_profesor')
 
 class PaginaRegistroEstudiante(FormView):
     template_name = 'usuario/registro_estudiantes.html'
