@@ -67,11 +67,14 @@ $(document).ready(function () {
   const password2 = $("#password2");
 
   function validatePasswords() {
+    var password = password1.value;
+    var pattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
     if (password1.val() !== password2.val()) {
       password2[0].setCustomValidity("Contraseña no coinciden");
     } else {
       password2[0].setCustomValidity("");
     }
+    
   }
 
   password1.on("input", validatePasswords);
@@ -88,6 +91,17 @@ $(document).ready(function () {
       primer.removeAttribute("readonly");
       segundo.value = "";
       segundo.removeAttribute("readonly");
+    }
+  });
+
+  var passwordField = document.getElementById("password1");
+  passwordField.addEventListener("input", function () {
+    var password = passwordField.value;
+    var pattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])[0-9a-zA-Z!@#$%^&*]{8,}$/;
+    if (pattern.test(password)) {
+      passwordField.setCustomValidity("");
+    } else {
+      passwordField.setCustomValidity("La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula, un número y un carácter especial.");
     }
   });
 });

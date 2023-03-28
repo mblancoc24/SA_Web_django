@@ -44,6 +44,7 @@ class Logueo(LoginView):
         
         # Call the parent form_valid method if the user is not authenticated
         if user is None:
+            form.add_error('username', 'El usuario no existe en el sistema')
             return super().form_invalid(form)
         
         # Authenticate the user and log them in
@@ -78,6 +79,10 @@ class Logueo(LoginView):
                     return redirect('cambiar_contrasena')
                 else:
                     return redirect('usuario_profesor')
+    # def form_invalid(self, form):
+    # # Add an error message to the context
+    #     error = 'El usuario o la contraseña son incorrectos.'
+    #     return render(self.request, 'login.html', {'form': form, 'error': error})
 
 def cambiar_contrasena(request):
     if request.method == 'POST':
