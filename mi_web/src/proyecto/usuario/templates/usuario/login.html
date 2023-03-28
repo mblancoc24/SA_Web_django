@@ -2,67 +2,71 @@
 
 {% block content %}
 
-<div class="row">
-    <div class="col-sm-9 col-md-7 col-lg-5 mx-auto mt-5">
-        <div class="card border-0 shadow rounded-3 my-5">
-            <div class="card-body p-4 p-sm-5">
-                <h5 class="card-title text-center mb-5 fw-light fs-5 fw-bold">Login</h5>
-                <form method="POST">
-                    {% csrf_token %}
-                    <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="floatingInput" placeholder="Identificación"
-                            name="username">
-                        <label for="floatingInput" style="opacity: .65;">Identificación</label>
-                    </div>
-                    <div class="form-floating mb-3">
+    <div class="row">
+        <div class="col-sm-9 col-md-7 col-lg-5 mx-auto mt-5">
+            <div class="card border-0 shadow rounded-3 my-5">
+                <div class="card-body p-4 p-sm-5">
+                    <h5 class="card-title text-center mb-5 fw-light fs-5 fw-bold">Login</h5>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="floatingInput" placeholder="Identificación"
+                                name="username">
+                            <label for="floatingInput" style="opacity: .65;">Identificación</label>
+                        </div>
+                        <div class="form-floating mb-3">
 
-                        <input type="password"  class="form-control" id="floatingPassword" placeholder="Contraseña"
-                            name="password">
-                        <label for="floatingPassword" style="opacity: .65;">{{form.password.label}}</label>
+                            <input type="password"  class="form-control" id="floatingPassword" placeholder="Contraseña"
+                                name="password">
+                            <label for="floatingPassword" style="opacity: .65;">{{form.password.label}}</label>
+                        </div>
+                        <div class="d-grid mb-2">
+                            <button type="submit" data-toggle="modal" data-target="#exampleModalCenter" class="btn btn-primary btn-login fw-bold">Ingresar</button>
+                        </div>
+                        <div class="d-grid">
+                            <a href="{% url 'password_reset' %}" class="" style="text-decoration: none;">Olvido su 
+                                contraseña</a></span>
+                        </div>
+                    </form>
+                    <hr class="my-4">
+                    <div class="d-flex text-center justify-content-center">
+                        <div class="d-inline-block m-1">
+                            <a href="{% url 'registro_estudiantes' %}"
+                                class="btn btn-primary btn-sm rounded fw-bold">Registrarse</a>
+                        </div>
                     </div>
-                    <div class="d-grid mb-2">
-                        <button type="submit" data-toggle="modal" data-target="#exampleModalCenter" class="btn btn-primary btn-login fw-bold">Ingresar</button>
-                    </div>
-                    <div class="d-grid">
-                        <a href="{% url 'password_reset' %}" class="" style="text-decoration: none;">Olvido su 
-                            contraseña</a></span>
-                    </div>
-                </form>
-                <hr class="my-4">
-                <div class="d-flex text-center justify-content-center">
-                    <div class="d-inline-block m-1">
-                        <a href="{% url 'registro_estudiantes' %}"
-                            class="btn btn-primary btn-sm rounded fw-bold">Registrarse</a>
-                    </div>
-                </div>
 
-            </div>
-        </div>
-    </div>
-</div>
-
-{% if mostrar_modal %}
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" aria-labelledby="exampleModalCenterTitle"
-    style="display: none;" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content rounded-0">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalCenterTitle">¿Tienes dos cuentas donde quiere ir?</h5>
-                <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true"><span class="icon-close2"></span></span>
-                </button> -->
-            </div>
-            <div class="modal-body">
-                <div class="d-grid mb-2">
-                    <a href="{% url 'usuario_estudiante' %}" class="text-info">Estudiante</a>
-                </div>
-                <div class="d-grid mb-2">
-                    <a href="{% url 'usuario_profesor' %}" class="text-info">Profesor</a>
                 </div>
             </div>
         </div>
     </div>
-</div>
-{% endif %}
+
+    {% block modal %}
+
+        {% if modal %}
+            <div class="modal fade" id="exampleModalCenter" tabindex="-1" aria-labelledby="exampleModalCenterTitle"
+                style="display: none;" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content rounded-0">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalCenterTitle">Tienes dos cuentas, ¿como deseas ingresar?</h5>
+                            <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true"><span class="icon-close2"></span></span>
+                            </button> -->
+                        </div>
+                        <div class="modal-body">
+                            <div class="d-grid mb-2">
+                                <a href="{% url 'usuario_estudiante' %}" class="text-info">Estudiante</a>
+                            </div>
+                            <div class="d-grid mb-2">
+                                <a href="{% url 'cambiar_contrasena' %}" class="text-info">Profesor</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+    {% endblock modal %}
 
 {% endblock content %}
