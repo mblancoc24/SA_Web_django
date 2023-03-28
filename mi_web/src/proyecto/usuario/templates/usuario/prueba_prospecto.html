@@ -1,7 +1,6 @@
 {% extends 'usuario/principal.html' %} {% block barranavegacion %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark w-100">
   <div class="container-fluid">
-    <!-- Logo en la izquierda -->
     <a class="navbar-brand">
       <img
         src="https://uia.ac.cr/home/dist/img/logo.svg"
@@ -10,8 +9,6 @@
         height="50"
       />
     </a>
-
-    <!-- Botón hamburguesa para móvil -->
     <button
       class="navbar-toggler"
       type="button"
@@ -24,13 +21,8 @@
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <!-- Opciones del menú -->
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto">
-        <!-- Opciones del menú aquí -->
-      </ul>
-
-      <!-- Botón "Cerrar sesión" en el lado derecho -->
+      <ul class="navbar-nav ms-auto"></ul>
       <a class="btn btn-default" href="{% url 'logout' %}" type="button"
         >Cerrar sesión</a
       >
@@ -42,7 +34,12 @@
 <div class="row">
   <div class="col-md-4 mt-5">
     <div class="card p-3 mb-2" id="infoCard">
-      <a href="#" class="card-link">
+      <a
+        data-bs-toggle="modal"
+        data-bs-target="#modal_primer_ingreso"
+        class="card-link"
+        onclick="datacarreras()"
+      >
         <img
           src="../static/img/primer_ingreso.png"
           class="card-img-top"
@@ -52,23 +49,23 @@
 
       <div class="card-body" id="infoCardBody">
         <h5 class="card-title" id="infoCardTitle">PRIMER INGRESO</h5>
-        <p class="card-text" id="infoCardText">Este es el contenido del elemento 1.</p>
+        <p class="card-text" id="infoCardText">
+          Este es el contenido del elemento 1.
+        </p>
       </div>
     </div>
   </div>
   <div class="col-md-4 mt-5">
     <div class="card p-3 mb-2" id="infoCard">
       <a href="#" class="card-link">
-        <img
-          src="../static/img/posgrados.png"
-          class="card-img-top"
-          alt="..."
-        />
+        <img src="../static/img/posgrados.png" class="card-img-top" alt="..." />
       </a>
 
       <div class="card-body" id="infoCardBody">
         <h5 class="card-title" id="infoCardTitle">PRIMER INGRESO</h5>
-        <p class="card-text" id="infoCardText">Este es el contenido del elemento 1.</p>
+        <p class="card-text" id="infoCardText">
+          Este es el contenido del elemento 1.
+        </p>
       </div>
     </div>
   </div>
@@ -84,9 +81,96 @@
 
       <div class="card-body" id="infoCardBody">
         <h5 class="card-title" id="infoCardTitle">PRIMER INGRESO</h5>
-        <p class="card-text" id="infoCardText">Este es el contenido del elemento 1.</p>
+        <p class="card-text" id="infoCardText">
+          Este es el contenido del elemento 1.
+        </p>
       </div>
     </div>
   </div>
 </div>
+
+<!-- Model de Primer Ingreso -->
+{% block modal_primerIngreso %}
+<div
+  class="modal fade"
+  id="modal_primer_ingreso"
+  tabindex="-1"
+  aria-labelledby="modal_primer_ingresoTitle"
+  style="display: none"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content rounded-0">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modal_primer_ingresoTitle">
+          FORMULARIO DE PRIMER INGRESO
+        </h5>
+      </div>
+      <div class="modal-body">
+        <form method="POST">
+          {% csrf_token %}
+          <div class="form-floating mb-3">
+            <input
+              class="form-control"
+              type="file"
+              id="floatingFile"
+              name="titulobachillerto"
+            />
+            <label for="floatingFile" style="opacity: 0.65"
+              >Título de Educación Media</label
+            >
+          </div>
+          <div class="form-floating mb-3">
+            <select id="colegio" class="form-select" name="colegio">
+              <option style="opacity: 0.65" value="" disabled selected hidden>
+                Colegio de procedencia
+              </option>
+            </select>
+            <label for="tipo" style="opacity: 0.65">Colegio de egreso</label>
+          </div>
+
+          <div class="form-floating mb-3">
+            <select
+              id="mi_select"
+              class="form-select selectorbuscador"
+              name="mi_select"
+            >
+              <option style="opacity: 0.65" value="" disabled selected hidden>
+                Seleccione la carrera
+              </option>
+            </select>
+            <label for="tipo" style="opacity: 0.65">Carrera de Interes</label>
+          </div>
+        </form>
+        <div class="d-grid mb-2">
+          <a
+            href="{% url 'usuario_estudiante' %}"
+            class="btn btn-primary btn-sm rounded fw-bold"
+            >Enviar Formulario</a
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock modal_primerIngreso %}
+<script>
+  function datacarreras() {
+    var select = document.getElementById("mi_select");
+    select.options.length = 0; // Eliminamos todas las opciones anteriores
+
+    fetch("/carrerasselect/")
+      .then((response) => response.json())
+      .then((data) => {
+        // Iteramos sobre los valores obtenidos
+        data.forEach(function (valor) {
+          // Creamos una nueva opción y la agregamos al select
+          var opcion = document.createElement("option");
+          opcion.value = valor;
+          opcion.text = valor;
+          select.add(opcion);
+        });
+      });
+  }
+</script>
 {% endblock content %}
