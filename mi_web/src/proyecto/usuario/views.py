@@ -119,15 +119,6 @@ class PaginaRegistroEstudiante(FormView):
                                       'correo': datos_estudiante[7], 'direccion': datos_estudiante[8]})
         if form.is_valid():
             form.save()
-        
-        id_estudiante = get_object_or_404(estudiantes, id=id_usuario)
-        
-        # info_estudiante = [id_estudiante, estado,carrera]
-        
-        # form = FormularioInfoEstudiante({'usuario': info_estudiante[0], 'estado': info_estudiante[1], 'carrera': info_estudiante[3]})
-        
-        # if form.is_valid():
-        #     form.save()
             
         if Usuarios is not None:
             login(self.request, Usuarios)
@@ -145,13 +136,10 @@ class DetalleUsuarioEstudiante(LoginRequiredMixin, ListView):
     context_object_name = 'prueba_estudiante'
     template_name = 'usuario/prueba_estudiante.html'
     
-    
-    
 class DetalleUsuarioProfesor(LoginRequiredMixin, ListView):
     model = usuarios
     context_object_name = 'prueba_profesor'
     template_name = 'usuario/prueba_profesor.html'
-    
     
 class DetalleUsuarioProspecto(LoginRequiredMixin, ListView):
     model = usuarios
@@ -163,7 +151,6 @@ class DetalleUsuarioEstudianteProfesor(LoginRequiredMixin, ListView):
     context_object_name = 'opciones_estudiante_profesor'
     template_name = 'usuario/opciones_login.html'
 
-
 class CrearUsuario(LoginRequiredMixin, CreateView):
     model = usuarios
     fields = ['nombre', 'primer_apellido', 'segundo_apellido','segundo_apellido']
@@ -172,7 +159,6 @@ class CrearUsuario(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.usuario = self.request.user
         return super(CrearUsuario, self).form_valid(form)
-
 
 def obtener_datos(request):
     print(django.get_version())
@@ -206,7 +192,6 @@ def obtener_datos(request):
         
     data_completa = json.dumps(data)
     return JsonResponse(data_completa, safe=False)
-
 
 class MyPasswordResetView(PasswordResetView):
     template_name = 'my_password_reset.html'

@@ -32,7 +32,8 @@ class estudiantes(models.Model):
     
     
 class info_estudiantes (models.Model):
-    usuario = models.ForeignKey(estudiantes, on_delete=models.CASCADE)
+    id_info = models.AutoField(primary_key=True)
+    user = models.OneToOneField(estudiantes, on_delete=models.CASCADE)
     estado = models.CharField(max_length=25)
     carrera = models.CharField(max_length=300)
 
