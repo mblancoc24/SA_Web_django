@@ -3,8 +3,13 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 from django.contrib.auth.forms import UserCreationForm
+
 from django.contrib.auth import login, update_session_auth_hash
 from .forms import FormularioEstudiantes, FormularioUsuario, FormularioProfesor, FormularioInfoEstudiante, CustomUserCreationForm
+
+from django.contrib.auth import login, authenticate
+from .forms import FormularioEstudiantes, FormularioUsuario, FormularioProfesor
+
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView
 from django.core.mail import send_mail
@@ -22,7 +27,6 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import PasswordResetForm, PasswordChangeForm
 from django.contrib.auth.models import User
 from django.apps import AppConfig
-from django.contrib.auth import login, authenticate
 
 from django.contrib import messages
 
@@ -46,7 +50,7 @@ class Logueo(LoginView):
         login(self.request, user)
         login_obj = get_object_or_404(usuarios, id=user.id)
         if login_obj.es_estudiante and login_obj.es_profesor:
-            primer_ingreso = password
+            primer_ingreso = user.password
             #ACA SE CONSULTARIA A LA BASE DE DATOS DE LAS CLAVES PREDETERMINADAS
             if primer_ingreso == 'admin1818':
                 registrar_accion(self.request.user, 'El usuario {0} ha realizado un cambio de contrasena y ha ingresado.'.format(username))
@@ -86,7 +90,6 @@ def cambiar_contrasena(request):
     else:
         form = PasswordChangeForm(request.user)
     return render(request, 'cambiar_contrasena.html', {'form': form})
-
 
 class PaginaRegistroEstudiante(FormView):
     template_name = 'usuario/registro_estudiantes.html'
