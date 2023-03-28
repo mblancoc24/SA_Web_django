@@ -68,3 +68,10 @@ class carreras (models.Model):
     
     class Meta:
         db_table = 'carreras'
+
+class colegios (models.Model):
+    nombre_colegio = models.CharField(max_length=100)
+    id = models.AutoField(primary_key=True)
+    
+    class Meta:
+        db_table = 'colegios'

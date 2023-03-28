@@ -38,7 +38,7 @@
         data-bs-toggle="modal"
         data-bs-target="#modal_primer_ingreso"
         class="card-link"
-        onclick="datacarreras()"
+        onclick="llenardata()"
       >
         <img
           src="../static/img/primer_ingreso.png"
@@ -121,12 +121,12 @@
             >
           </div>
           <div class="form-floating mb-3">
-            <select id="colegio" class="form-select" name="colegio">
+            <select id="colegio_select" class="form-select" name="colegio_select">
               <option style="opacity: 0.65" value="" disabled selected hidden>
                 Colegio de procedencia
               </option>
             </select>
-            <label for="tipo" style="opacity: 0.65">Colegio de egreso</label>
+            <label for="tipo" style="opacity: 0.65">Colegio donde egresó</label>
           </div>
 
           <div class="form-floating mb-3">
@@ -171,6 +171,31 @@
           select.add(opcion);
         });
       });
+    
+      datacolegios()
   }
+
+  function datacolegios() {
+    var select = document.getElementById("colegio_select");
+    select.options.length = 0; // Eliminamos todas las opciones anteriores
+
+    fetch("/colegiosselect/")
+      .then((response) => response.json())
+      .then((data) => {
+        // Iteramos sobre los valores obtenidos
+        data.forEach(function (valor) {
+          // Creamos una nueva opción y la agregamos al select
+          var opcion = document.createElement("option");
+          opcion.value = valor;
+          opcion.text = valor;
+          select.add(opcion);
+        });
+      });
+  }
+
+  function llenardata() {
+    datacolegios();
+    datacarreras();
+}
 </script>
 {% endblock content %}
