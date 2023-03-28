@@ -9,7 +9,8 @@ from .views import (MyPasswordResetView,
                     DetalleUsuarioProfesor, 
                     DetalleUsuarioProspecto,
                     obtener_datos,
-                    cambiar_contrasena)
+                    cambiar_contrasena,
+                    carrerasselect)
 from django.contrib.auth.views import LogoutView
 from django.contrib.auth import views as auth_views
 
@@ -27,4 +28,6 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
                path('usuario-profesor/', DetalleUsuarioProfesor.as_view(), name='usuario_profesor'),
                path('usuario-prospecto/', DetalleUsuarioProspecto.as_view(), name='usuario_prospecto'),
                path('obtener-datos/', obtener_datos, name='obtener_datos'),
+               
+               path('carrerasselect/', carrerasselect, name='carrerasselect'),
                ]
