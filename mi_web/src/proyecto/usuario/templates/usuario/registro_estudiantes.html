@@ -68,13 +68,13 @@
 
                     <div class="form-floating mb-3 col-md-6">
                         <input type="password" class="form-control" id="password1" placeholder="Contraseña"
-                            name="password1" required>
+                            name="password1" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])[0-9a-zA-Z!@#$%^&*]{8,}$" required>
                         <label for="password1" style="opacity: .65;">Contraseña</label>
                     </div>
 
                     <div class="form-floating mb-3 col-md-6">
                         <input type="password" class="form-control" id="password2" placeholder="Confirmar contraseña"
-                            name="password2" required>
+                            name="password2" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])[0-9a-zA-Z!@#$%^&*]{8,}$" required>
                         <label for="password2" style="opacity: .65;">Confirmar contraseña</label>
                         <span id='message'></span>
                     </div>

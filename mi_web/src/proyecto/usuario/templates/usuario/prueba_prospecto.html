@@ -1,120 +1,92 @@
-{% extends 'usuario/principal.html' %}
-
-{% block content %}
-<style>
-    .card-link:hover .card {
-        background-color: #000000;
-        border: 1px solid #000000;
-    }
-
-    .card {
-        height: 450px;
-        transition: transform 0.3s ease-in-out;
-        position: relative;
-    }
-    .card:hover {
-        transform: scale(1.2);
-        z-index: 1;
-    }
-      
-    .card-img-top {
-        height: 100%;
-        object-fit: cover;
-    }
-      
-    .card-body {
-        height: 100%;
-        padding: 1rem;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        color: black;
-    }
-
-    .card-title, .card-text {
-        color: #000;
-        text-decoration: none;
-    }
-
-    .card-link {
-        text-decoration: none;
-    }
-
-    .my-4 {
-        margin-top: 4rem;
-    }
-
-    .navbar-dark {
-        background-color: #333;
-    }
-
-    .btn-default {
-        color: #fff; /* Cambiar el color del texto a blanco */
-    }
-
-</style>
-
-
+{% extends 'usuario/principal.html' %} {% block barranavegacion %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark w-100">
-    <div class="container-fluid">
-      <!-- Logo en la izquierda -->
-      <a class="navbar-brand">
-        <img src="https://uia.ac.cr/home/dist/img/logo.svg" alt="" width="150" height="50">
-      </a>
-  
-      <!-- Botón hamburguesa para móvil -->
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-  
-      <!-- Opciones del menú -->
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          <!-- Opciones del menú aquí -->
-        </ul>
-  
-        <!-- Botón "Cerrar sesión" en el lado derecho -->
-        <a class="btn btn-default" href="{% url 'logout' %}" type="button">Cerrar sesión</a>
-      </div>
-    </div>
-  </nav>
+  <div class="container-fluid">
+    <!-- Logo en la izquierda -->
+    <a class="navbar-brand">
+      <img
+        src="https://uia.ac.cr/home/dist/img/logo.svg"
+        alt=""
+        width="150"
+        height="50"
+      />
+    </a>
 
-  <div class="container mx-auto my-4 border-0 shadow rounded-3">
-    <div class="row">
-      <div class="col-sm-4">
-        <a href="#" class="card-link">
-          <div class="card mb-3">
-            <img src="../static/img/primer_ingreso.png" class="card-img-top" alt="...">
-            <div class="card-body">
-              <h5 class="card-title">PRIMER INGRESO</h5>
-              <p class="card-text">Este es el contenido del elemento 1.</p>
-            </div>
-          </div>
-        </a>
-      </div>
-      <div class="col-sm-4">
-        <a href="#" class="card-link">
-          <div class="card mb-3">
-            <img src="../static/img/posgrados.png" class="card-img-top" alt="...">
-            <div class="card-body">
-              <h5 class="card-title">POSGRADO</h5>
-              <p class="card-text">Este es el contenido del elemento 2.</p>
-            </div>
-          </div>
-        </a>
-      </div>
-      <div class="col-sm-4">
-        <a href="#" class="card-link">
-          <div class="card mb-3">
-            <img src="../static/img/cursos_libres.png" class="card-img-top" alt="...">
-            <div class="card-body">
-              <h5 class="card-title">CURSOS LIBRES</h5>
-              <p class="card-text">Este es el contenido del elemento 3.</p>
-            </div>
-          </div>
-        </a>
+    <!-- Botón hamburguesa para móvil -->
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Opciones del menú -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <!-- Opciones del menú aquí -->
+      </ul>
+
+      <!-- Botón "Cerrar sesión" en el lado derecho -->
+      <a class="btn btn-default" href="{% url 'logout' %}" type="button"
+        >Cerrar sesión</a
+      >
+    </div>
+  </div>
+</nav>
+{% endblock barranavegacion %} {% block content %}
+
+<div class="row">
+  <div class="col-md-4 mt-5">
+    <div class="card p-3 mb-2" id="infoCard">
+      <a href="#" class="card-link">
+        <img
+          src="../static/img/primer_ingreso.png"
+          class="card-img-top"
+          alt="..."
+        />
+      </a>
+
+      <div class="card-body" id="infoCardBody">
+        <h5 class="card-title" id="infoCardTitle">PRIMER INGRESO</h5>
+        <p class="card-text" id="infoCardText">Este es el contenido del elemento 1.</p>
       </div>
     </div>
   </div>
+  <div class="col-md-4 mt-5">
+    <div class="card p-3 mb-2" id="infoCard">
+      <a href="#" class="card-link">
+        <img
+          src="../static/img/posgrados.png"
+          class="card-img-top"
+          alt="..."
+        />
+      </a>
 
+      <div class="card-body" id="infoCardBody">
+        <h5 class="card-title" id="infoCardTitle">PRIMER INGRESO</h5>
+        <p class="card-text" id="infoCardText">Este es el contenido del elemento 1.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 mt-5">
+    <div class="card p-3 mb-2" id="infoCard">
+      <a href="#" class="card-link">
+        <img
+          src="../static/img/cursos_libres.png"
+          class="card-img-top"
+          alt="..."
+        />
+      </a>
+
+      <div class="card-body" id="infoCardBody">
+        <h5 class="card-title" id="infoCardTitle">PRIMER INGRESO</h5>
+        <p class="card-text" id="infoCardText">Este es el contenido del elemento 1.</p>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock content %}
