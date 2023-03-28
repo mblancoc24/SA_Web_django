@@ -15,7 +15,7 @@ from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView
 from django.core.mail import send_mail
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from .models import usuarios, profesor, estudiantes, RegistroLogsUser, carreras
+from .models import usuarios, profesor, estudiantes, RegistroLogsUser, carreras, colegios
 import requests
 import json
 import django
@@ -241,4 +241,8 @@ def registrar_accion(usuario, accion):
     
 def carrerasselect(request):
     valores = carreras.objects.values_list('nombre_carrera', flat=True)
+    return JsonResponse(list(valores), safe=False)
+
+def colegiosselect(request):
+    valores = colegios.objects.values_list('nombre_colegio', flat=True)
     return JsonResponse(list(valores), safe=False)
