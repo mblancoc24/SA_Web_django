@@ -15,7 +15,7 @@ from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView
 from django.core.mail import send_mail
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from .models import usuarios, profesor, estudiantes, RegistroLogsUser
+from .models import usuarios, profesor, estudiantes, RegistroLogsUser, carreras
 import requests
 import json
 import django
@@ -109,7 +109,7 @@ class PaginaRegistroEstudiante(FormView):
         segundoapellido = self.request.POST.get('segundoapellido')
         fecha = self.request.POST.get('fechanacimiento')
         telefono = self.request.POST.get('telefono')
-        correo = self.request.POST.get('email')
+        correo_personal = self.request.POST.get('email')
         direccion = self.request.POST.get('direccion')
 
         Usuarios = form.save() # type: ignore
@@ -127,11 +127,11 @@ class PaginaRegistroEstudiante(FormView):
         id_usuario = get_object_or_404(usuarios, id=user_id)
         
         datos_estudiante = [id_usuario, username, nombre_estudiante, primerapellido, 
-                            segundoapellido, fecha, telefono, correo, direccion]
+                            segundoapellido, fecha, telefono, 'No Asignado', correo_personal, direccion]
         
         form = FormularioEstudiantes({ 'user': datos_estudiante[0], 'identificacion': datos_estudiante[1], 'nombre': datos_estudiante[2], 'primer_apellido': datos_estudiante[3],
                                       'segundo_apellido': datos_estudiante[4], 'fecha_nacimiento': datos_estudiante[5], 'numero_telefonico': datos_estudiante[6],
-                                      'correo': datos_estudiante[7], 'direccion': datos_estudiante[8]})
+                                      'correo_institucional': datos_estudiante[7], 'correo_personal': datos_estudiante[8], 'direccion': datos_estudiante[9]})
         if form.is_valid():
             form.save()
             
@@ -238,3 +238,7 @@ class MyPasswordResetDoneView(PasswordResetDoneView):
 def registrar_accion(usuario, accion):
     registro = RegistroLogsUser(usuario=usuario, accion=accion)
     registro.save()
+    
+def carrerasselect(request):
+    valores = carreras.objects.values_list('nombre_carrera', flat=True)
+    return JsonResponse(list(valores), safe=False)

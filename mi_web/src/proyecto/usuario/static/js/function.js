@@ -49,3 +49,20 @@ function datacedula() {
         xhttp.send();
     }
 }
+
+function datacarreras(){
+    console.log('hola esty dentro jaja')
+    var select = document.getElementById("mi_select");
+    select.options.length = 0; // Eliminamos todas las opciones anteriores
+    
+    fetch("/carrerasselect/").then(response => response.json()).then(data => {
+        // Iteramos sobre los valores obtenidos
+        data.forEach(function(valor) {
+            // Creamos una nueva opción y la agregamos al select
+            var opcion = document.createElement("option");
+            opcion.value = valor;
+            opcion.text = valor;
+            select.add(opcion);
+        });
+    }); 
+}

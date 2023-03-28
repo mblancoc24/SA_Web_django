@@ -27,7 +27,8 @@ class estudiantes(models.Model):
     segundo_apellido = models.CharField(max_length=18)
     fecha_nacimiento = models.DateField()
     numero_telefonico = models.IntegerField(default=0)
-    correo = models.CharField(max_length=60)
+    correo_institucional = models.CharField(max_length=60)
+    correo_personal = models.CharField(max_length=60)
     direccion = models.CharField(max_length=200)
     
     
@@ -61,3 +62,9 @@ class RegistroIDUserCambios (models.Model):
     antigua_identifiacion = models.CharField(max_length=25)
     tipo_ident_antigua = models.CharField(max_length=25)
     
+class carreras (models.Model):
+    id = models.AutoField(primary_key=True)
+    nombre_carrera = models.CharField(max_length=60)
+    
+    class Meta:
+        db_table = 'carreras'
