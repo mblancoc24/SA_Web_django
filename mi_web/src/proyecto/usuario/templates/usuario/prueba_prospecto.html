@@ -1,15 +1,26 @@
-{% extends 'usuario/principal.html' %}
-
-{% block barranavegacion %}
+{% extends 'usuario/principal.html' %} {% block barranavegacion %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark w-100">
   <div class="container-fluid">
     <!-- Logo en la izquierda -->
     <a class="navbar-brand">
-      <img src="https://uia.ac.cr/home/dist/img/logo.svg" alt="" width="150" height="50">
+      <img
+        src="https://uia.ac.cr/home/dist/img/logo.svg"
+        alt=""
+        width="150"
+        height="50"
+      />
     </a>
 
     <!-- Botón hamburguesa para móvil -->
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
       <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -20,162 +31,62 @@
       </ul>
 
       <!-- Botón "Cerrar sesión" en el lado derecho -->
-      <a class="btn btn-default" href="{% url 'logout' %}" type="button">Cerrar sesión</a>
+      <a class="btn btn-default" href="{% url 'logout' %}" type="button"
+        >Cerrar sesión</a
+      >
     </div>
   </div>
 </nav>
+{% endblock barranavegacion %} {% block content %}
 
-{% endblock barranavegacion %}
+<div class="row">
+  <div class="col-md-4 mt-5">
+    <div class="card p-3 mb-2" id="infoCard">
+      <a href="#" class="card-link">
+        <img
+          src="../static/img/primer_ingreso.png"
+          class="card-img-top"
+          alt="..."
+        />
+      </a>
 
-{% block content %}
-<style>
-    .card-link:hover .card {
-        background-color: #000000;
-        border: 1px solid #000000;
-    }
-
-    .card {
-        height: 450px;
-        transition: transform 0.3s ease-in-out;
-        position: relative;
-    }
-    .card:hover {
-        transform: scale(1.2);
-        z-index: 1;
-    }
-      
-    .card-img-top {
-        height: 100%;
-        object-fit: cover;
-    }
-      
-    .card-body {
-        height: 100%;
-        padding: 1rem;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        color: black;
-    }
-
-    .card-title, .card-text {
-        color: #000;
-        text-decoration: none;
-    }
-
-    .card-link {
-        text-decoration: none;
-    }
-
-    .my-4 {
-        margin-top: 4rem;
-    }
-
-    .navbar-dark {
-        background-color: #333;
-    }
-
-    .btn-default {
-        color: #fff; /* Cambiar el color del texto a blanco */
-    }
-
-</style>
-
-  <div class="container mx-auto my-4 border-0 shadow rounded-3">
-    <div class="row">
-      <div class="col-sm-4">
-        <a data-bs-toggle="modal" data-bs-target="#modal_primer_ingreso" class="card-link" onclick="datacarreras()">
-          <div class="card mb-3">
-            <img src="../static/img/primer_ingreso.png" class="card-img-top" alt="...">
-            <div class="card-body">
-              <h5 class="card-title">PRIMER INGRESO</h5>
-              <p class="card-text">Este es el contenido del elemento 1.</p>
-            </div>
-          </div>
-        </a>
-      </div>
-      <div class="col-sm-4">
-        <a class="card-link">
-          <div class="card mb-3">
-            <img src="../static/img/posgrados.png" class="card-img-top" alt="...">
-            <div class="card-body">
-              <h5 class="card-title">POSGRADO</h5>
-              <p class="card-text">Este es el contenido del elemento 2.</p>
-            </div>
-          </div>
-        </a>
-      </div>
-      <div class="col-sm-4">
-        <a class="card-link">
-          <div class="card mb-3">
-            <img src="../static/img/cursos_libres.png" class="card-img-top" alt="...">
-            <div class="card-body">
-              <h5 class="card-title">CURSOS LIBRES</h5>
-              <p class="card-text">Este es el contenido del elemento 3.</p>
-            </div>
-          </div>
-        </a>
+      <div class="card-body" id="infoCardBody">
+        <h5 class="card-title" id="infoCardTitle">PRIMER INGRESO</h5>
+        <p class="card-text" id="infoCardText">Este es el contenido del elemento 1.</p>
       </div>
     </div>
   </div>
+  <div class="col-md-4 mt-5">
+    <div class="card p-3 mb-2" id="infoCard">
+      <a href="#" class="card-link">
+        <img
+          src="../static/img/posgrados.png"
+          class="card-img-top"
+          alt="..."
+        />
+      </a>
 
-
-<!-- Model de Primer Ingreso -->
-{% block modal_primerIngreso %}
-<div class="modal fade" id="modal_primer_ingreso" tabindex="-1" aria-labelledby="modal_primer_ingresoTitle"
-    style="display: none;" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content rounded-0">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modal_primer_ingresoTitle">FORMULARIO DE PRIMER INGRESO</h5>
-            </div>
-            <div class="modal-body">
-              <form method="POST">
-                {% csrf_token %}
-                <div class="form-floating mb-3">
-                  <input class="form-control" type="file" id="floatingFile" name="titulobachillerto">
-                  <label for="floatingFile" style="opacity: .65;">Título de Educación Media</label>
-                </div>
-                <div class="form-floating mb-3">
-                  <select id="colegio" class="form-select" name="colegio">
-                    <option style="opacity: .65;" value="" disabled selected hidden>Colegio de procedencia</option>
-                  </select>
-                  <label for="tipo" style="opacity: .65;">Colegio de egreso</label>
-                </div>
-
-                <div class="form-floating mb-3">
-                  <select id="mi_select" class="form-select selectorbuscador" name="mi_select">
-                    <option style="opacity: .65;" value="" disabled selected hidden>Seleccione la carrera</option>
-                  </select>
-                  <label for="tipo" style="opacity: .65;">Carrera de Interes</label>
-                </div>
-              </form>
-                <div class="d-grid mb-2">
-                    <a href="{% url 'usuario_estudiante' %}" class="btn btn-primary btn-sm rounded fw-bold">Enviar Formulario</a>
-                </div>
-            </div>
-        </div>
+      <div class="card-body" id="infoCardBody">
+        <h5 class="card-title" id="infoCardTitle">PRIMER INGRESO</h5>
+        <p class="card-text" id="infoCardText">Este es el contenido del elemento 1.</p>
+      </div>
     </div>
+  </div>
+  <div class="col-md-4 mt-5">
+    <div class="card p-3 mb-2" id="infoCard">
+      <a href="#" class="card-link">
+        <img
+          src="../static/img/cursos_libres.png"
+          class="card-img-top"
+          alt="..."
+        />
+      </a>
+
+      <div class="card-body" id="infoCardBody">
+        <h5 class="card-title" id="infoCardTitle">PRIMER INGRESO</h5>
+        <p class="card-text" id="infoCardText">Este es el contenido del elemento 1.</p>
+      </div>
+    </div>
+  </div>
 </div>
-{% endblock modal_primerIngreso %}
-<script>
-
-  function datacarreras(){
-    var select = document.getElementById("mi_select");
-    select.options.length = 0; // Eliminamos todas las opciones anteriores
-    
-    fetch("/carrerasselect/").then(response => response.json()).then(data => {
-        // Iteramos sobre los valores obtenidos
-        data.forEach(function(valor) {
-            // Creamos una nueva opción y la agregamos al select
-            var opcion = document.createElement("option");
-            opcion.value = valor;
-            opcion.text = valor;
-            select.add(opcion);
-        });
-    }); 
-  }
-
-</script>
-
 {% endblock content %}
