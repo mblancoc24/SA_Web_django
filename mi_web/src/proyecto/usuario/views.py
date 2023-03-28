@@ -3,8 +3,13 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 from django.contrib.auth.forms import UserCreationForm
+
 from django.contrib.auth import login, update_session_auth_hash
 from .forms import FormularioEstudiantes, FormularioUsuario, FormularioProfesor, FormularioInfoEstudiante, CustomUserCreationForm
+
+from django.contrib.auth import login, authenticate
+from .forms import FormularioEstudiantes, FormularioUsuario, FormularioProfesor
+
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView
 from django.core.mail import send_mail
@@ -25,22 +30,26 @@ from django.apps import AppConfig
 
 from django.contrib import messages
 
-class Logueo(LoginView,AppConfig):
+class Logueo(LoginView):
     template_name = 'usuario/login.html'
     fields = '__all__'
     redirect_authenticated_user = True
-    name = 'primer_ingreso'
     
-    def get_success_url(self):
-        username = self.request.POST.get('username')
-        user = User.objects.get(username=username)
-        user_id = user.pk
+    def form_valid(self, form):
+        # Get the user object from the form data
+        username = form.cleaned_data.get('username')
+        password = form.cleaned_data.get('password')
+        user = authenticate(self.request, username=username, password=password)
+
         
-        login = get_object_or_404(usuarios, id=user_id)
+        # Call the parent form_valid method if the user is not authenticated
+        if user is None:
+            return super().form_invalid(form)
         
-        login = get_object_or_404(usuarios, id=user_id)
-        
-        if login.es_estudiante and login.es_profesor:
+        # Authenticate the user and log them in
+        login(self.request, user)
+        login_obj = get_object_or_404(usuarios, id=user.id)
+        if login_obj.es_estudiante and login_obj.es_profesor:
             primer_ingreso = user.password
             #ACA SE CONSULTARIA A LA BASE DE DATOS DE LAS CLAVES PREDETERMINADAS
             if primer_ingreso == 'admin1818':
@@ -50,15 +59,15 @@ class Logueo(LoginView,AppConfig):
                 registrar_accion(self.request.user, 'El usuario {0} ha ingresado como profesor.'.format(username))
                 return reverse_lazy('usuario_estudiante_profesor')
         else:
-            if login.es_prospecto:
+            if login_obj.es_prospecto:
                 registrar_accion(self.request.user, 'El usuario {0} ha ingresado como prospecto.'.format(username))
                 return reverse_lazy('usuario_prospecto')
             
-            elif login.es_estudiante:
+            elif login_obj.es_estudiante:
                 registrar_accion(self.request.user, 'El usuario {0} ha ingresado como estudiante.'.format(username))
                 return reverse_lazy('usuario_estudiante')
             
-            elif login.es_profesor:
+            elif login_obj.es_profesor:
                 registrar_accion(self.request.user, 'El usuario {0} ha ingresado como profesor.'.format(username))
                 #ACA SE CONSULTARIA A LA BASE DE DATOS DE LAS CLAVES PREDETERMINADAS
                 primer_ingreso = self.request.POST.get('password')
@@ -79,7 +88,6 @@ def cambiar_contrasena(request):
     else:
         form = PasswordChangeForm(request.user)
     return render(request, 'cambiar_contrasena.html', {'form': form})
-
 
 class PaginaRegistroEstudiante(FormView):
     template_name = 'usuario/registro_estudiantes.html'
