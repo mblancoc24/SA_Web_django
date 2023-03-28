@@ -3,8 +3,13 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 from django.contrib.auth.forms import UserCreationForm
+
+from django.contrib.auth import login, update_session_auth_hash
+from .forms import FormularioEstudiantes, FormularioUsuario, FormularioProfesor, FormularioInfoEstudiante, CustomUserCreationForm
+
 from django.contrib.auth import login, authenticate
 from .forms import FormularioEstudiantes, FormularioUsuario, FormularioProfesor
+
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView
 from django.core.mail import send_mail
@@ -19,12 +24,11 @@ from django.urls import reverse
 from django.core.mail import send_mail
 from django.conf import settings
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth.forms import PasswordResetForm, PasswordChangeForm
 from django.contrib.auth.models import User
-from django.utils.http import urlsafe_base64_encode
-from django.utils.encoding import force_bytes
-from django.contrib.auth.tokens import default_token_generator
-from django.contrib.auth.hashers import make_password
+from django.apps import AppConfig
+
+from django.contrib import messages
 
 class Logueo(LoginView):
     template_name = 'usuario/login.html'
@@ -36,6 +40,7 @@ class Logueo(LoginView):
         username = form.cleaned_data.get('username')
         password = form.cleaned_data.get('password')
         user = authenticate(self.request, username=username, password=password)
+
         
         # Call the parent form_valid method if the user is not authenticated
         if user is None:
@@ -43,26 +48,54 @@ class Logueo(LoginView):
         
         # Authenticate the user and log them in
         login(self.request, user)
-        
-        # Get the custom user object from the database
         login_obj = get_object_or_404(usuarios, id=user.id)
-        
-        # Choose the appropriate redirect URL based on the user type
         if login_obj.es_estudiante and login_obj.es_profesor:
-            modal = True
-            return render(self.request, 'login.html', {'modal': modal})
-        elif login_obj.es_prospecto:
-            return redirect('usuario_prospecto')
-        elif login_obj.es_estudiante:
-            return redirect('usuario_estudiante')
-        elif login_obj.es_profesor:
+            primer_ingreso = user.password
+            #ACA SE CONSULTARIA A LA BASE DE DATOS DE LAS CLAVES PREDETERMINADAS
+            if primer_ingreso == 'admin1818':
+                registrar_accion(self.request.user, 'El usuario {0} ha realizado un cambio de contrasena y ha ingresado.'.format(username))
+                modal = True
+                return render(self.request, 'login.html', {'modal': modal})
+            else:
+                registrar_accion(self.request.user, 'El usuario {0} ha ingresado como profesor.'.format(username))
+                modal = True
+                return render(self.request, 'login.html', {'modal': modal})
+        else:
+            if login_obj.es_prospecto:
+                registrar_accion(self.request.user, 'El usuario {0} ha ingresado como prospecto.'.format(username))
+                return redirect('usuario_prospecto')
+            
+            elif login_obj.es_estudiante:
+                registrar_accion(self.request.user, 'El usuario {0} ha ingresado como estudiante.'.format(username))
+                return redirect('usuario_estudiante')
+            
+            elif login_obj.es_profesor:
+                registrar_accion(self.request.user, 'El usuario {0} ha ingresado como profesor.'.format(username))
+                #ACA SE CONSULTARIA A LA BASE DE DATOS DE LAS CLAVES PREDETERMINADAS
+                primer_ingreso = self.request.POST.get('password')
+                if primer_ingreso == 'admin1818':
+                    registrar_accion(self.request.user, 'El usuario {0} ha realizado un cambio de contrasena  y ha ingresado.'.format(username))
+                    return redirect('cambiar_contrasena')
+                else:
+                    return redirect('usuario_profesor')
+
+def cambiar_contrasena(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            messages.success(request, 'Your password was successfully updated!')
             return redirect('usuario_profesor')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'cambiar_contrasena.html', {'form': form})
 
 class PaginaRegistroEstudiante(FormView):
     template_name = 'usuario/registro_estudiantes.html'
-    form_class = UserCreationForm
+    form_class = CustomUserCreationForm
     redirect_authenticated_user = True
-    success_url = reverse_lazy('usuario_estudiante')
+    success_url = reverse_lazy('usuario_prospecto')
 
     def form_valid(self, form):
         username = form.cleaned_data['username']
@@ -71,16 +104,17 @@ class PaginaRegistroEstudiante(FormView):
         segundoapellido = self.request.POST.get('segundoapellido')
         fecha = self.request.POST.get('fechanacimiento')
         telefono = self.request.POST.get('telefono')
-        correo = self.request.POST.get('correo')
+        correo = self.request.POST.get('email')
+        direccion = self.request.POST.get('direccion')
 
-        Usuarios = form.save()
+        Usuarios = form.save() # type: ignore
         
         user = User.objects.get(username=username)
         user_id = user.pk
         
-        datos_usuario = [user_id, False, False, False, True, user_id]
+        datos_usuario = [user_id, False, False, False, True, False]
         
-        form = FormularioUsuario({'usuarios': datos_usuario[0],  'activo': datos_usuario[1], 'es_profesor': datos_usuario[2], 'es_estudiante': datos_usuario[3], 'es_prospecto': datos_usuario[4]})
+        form = FormularioUsuario({'usuarios': datos_usuario[0],  'activo': datos_usuario[1], 'es_profesor': datos_usuario[2], 'es_estudiante': datos_usuario[3], 'es_prospecto': datos_usuario[4], 'es_cursolibre': datos_usuario[5]})
         
         if form.is_valid():
             form.save()
@@ -88,11 +122,11 @@ class PaginaRegistroEstudiante(FormView):
         id_usuario = get_object_or_404(usuarios, id=user_id)
         
         datos_estudiante = [id_usuario, username, nombre_estudiante, primerapellido, 
-                            segundoapellido, fecha, telefono, correo]
+                            segundoapellido, fecha, telefono, correo, direccion]
         
         form = FormularioEstudiantes({ 'user': datos_estudiante[0], 'identificacion': datos_estudiante[1], 'nombre': datos_estudiante[2], 'primer_apellido': datos_estudiante[3],
                                       'segundo_apellido': datos_estudiante[4], 'fecha_nacimiento': datos_estudiante[5], 'numero_telefonico': datos_estudiante[6],
-                                      'correo': datos_estudiante[7]})
+                                      'correo': datos_estudiante[7], 'direccion': datos_estudiante[8]})
         if form.is_valid():
             form.save()
             
@@ -103,7 +137,7 @@ class PaginaRegistroEstudiante(FormView):
 
     def get(self, *args, **kwargs):
         if self.request.user.is_authenticated:
-            return redirect('usuario_estudiante')
+            return redirect('usuario_prospecto')
         return super(PaginaRegistroEstudiante, self).get(*args, **kwargs)
 
 
@@ -121,7 +155,11 @@ class DetalleUsuarioProspecto(LoginRequiredMixin, ListView):
     model = usuarios
     context_object_name = 'prueba_prospecto'
     template_name = 'usuario/prueba_prospecto.html'
-
+    
+class DetalleUsuarioEstudianteProfesor(LoginRequiredMixin, ListView):
+    model = usuarios
+    context_object_name = 'opciones_estudiante_profesor'
+    template_name = 'usuario/opciones_login.html'
 
 class CrearUsuario(LoginRequiredMixin, CreateView):
     model = usuarios
@@ -131,7 +169,6 @@ class CrearUsuario(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.usuario = self.request.user
         return super(CrearUsuario, self).form_valid(form)
-
 
 def obtener_datos(request):
     print(django.get_version())
@@ -166,7 +203,6 @@ def obtener_datos(request):
     data_completa = json.dumps(data)
     return JsonResponse(data_completa, safe=False)
 
-
 class MyPasswordResetView(PasswordResetView):
     template_name = 'my_password_reset.html'
     email_template_name = 'my_password_reset_email.html'
@@ -197,6 +233,3 @@ class MyPasswordResetDoneView(PasswordResetDoneView):
 def registrar_accion(usuario, accion):
     registro = RegistroLogsUser(usuario=usuario, accion=accion)
     registro.save()
-
-def modalusuario(request):
-    return render (request, 'modal.html')
