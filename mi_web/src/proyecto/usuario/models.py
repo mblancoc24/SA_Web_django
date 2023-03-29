@@ -35,8 +35,9 @@ class estudiantes(models.Model):
 class info_estudiantes (models.Model):
     id_info = models.AutoField(primary_key=True)
     user = models.OneToOneField(estudiantes, on_delete=models.CASCADE)
-    estado = models.CharField(max_length=25)
-    carrera = models.CharField(max_length=300)
+    ingresoeconomico = models.CharField(max_length=35)
+    carrera = models.CharField(max_length=100)
+    colegio = models.CharField(max_length=100)
 
 
 class profesor(models.Model):
@@ -63,11 +64,18 @@ class RegistroIDUserCambios (models.Model):
     tipo_ident_antigua = models.CharField(max_length=25)
     
 class carreras (models.Model):
-    id = models.AutoField(primary_key=True)
     nombre_carrera = models.CharField(max_length=60)
+    id = models.AutoField(primary_key=True)
     
     class Meta:
-        db_table = 'carreras'
+        db_table = 'primer_ingreso'
+        
+class posgrados (models.Model):
+    nombre_carrera = models.CharField(max_length=60)
+    id = models.AutoField(primary_key=True)
+    
+    class Meta:
+        db_table = 'posgrados'
 
 class colegios (models.Model):
     nombre_colegio = models.CharField(max_length=100)
