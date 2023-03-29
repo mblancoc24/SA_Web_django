@@ -11,7 +11,8 @@
                     {% csrf_token %}
                     <div class="form-floating mb-3 col-md-6">
                         <select id="tipo" class="form-select" onchange="change();">
-                            <option style="opacity: .65;" value="" disabled selected hidden>Tipo de identificación</option>
+                            <option style="opacity: .65;" value="" disabled selected hidden>Tipo de identificación
+                            </option>
                             <option value="Cédula">Cédula Física</option>
                             <option value="Dimex">DIMEX</option>
                             <option value="Pasaporte">Pasaporte</option>
@@ -27,7 +28,8 @@
                         <label for="identificacion" style="opacity: .65;">Identificación</label>
                     </div>
                     <div class="form-floating mb-3 col-md-6">
-                        <input type="text" class="form-control" id="nombre" placeholder="Nombre" name="nombre" readonly required>
+                        <input type="text" class="form-control" id="nombre" placeholder="Nombre" name="nombre" readonly
+                            required>
                         <label for="nombre" style="opacity: .65;">Nombre</label>
                     </div>
 
@@ -62,26 +64,26 @@
                     </div>
 
                     <div class="form-floating mb-3 col-md-6">
-                        <input type="email" class="form-control" id="correo" placeholder="Correo" name="email" required pattern="(?![_.-])((?![_.-][_.-])[a-zA-Z\d_.-]){0,63}[a-zA-Z\d]@((?!-)((?!--)[a-zA-Z\d-]){0,63}[a-zA-Z\d]\.){1,2}([a-zA-Z]{2,14}\.)?[a-zA-Z]{2,14}">
+                        <input type="email" class="form-control" id="correo" placeholder="Correo" name="email" required
+                            pattern="(?![_.-])((?![_.-][_.-])[a-zA-Z\d_.-]){0,63}[a-zA-Z\d]@((?!-)((?!--)[a-zA-Z\d-]){0,63}[a-zA-Z\d]\.){1,2}([a-zA-Z]{2,14}\.)?[a-zA-Z]{2,14}">
                         <label for="correo" style="opacity: .65;">Correo Electronico</label>
                     </div>
 
                     <div class="form-floating mb-3 col-md-6">
                         <input type="password" class="form-control" id="password1" placeholder="Contraseña"
-                            name="password1" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])[0-9a-zA-Z!@#$%^&*]{8,}$" required>
+                            name="password1" required>
                         <label for="password1" style="opacity: .65;">Contraseña</label>
                     </div>
 
                     <div class="form-floating mb-3 col-md-6">
                         <input type="password" class="form-control" id="password2" placeholder="Confirmar contraseña"
-                            name="password2" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])[0-9a-zA-Z!@#$%^&*]{8,}$" required>
+                            name="password2" required>
                         <label for="password2" style="opacity: .65;">Confirmar contraseña</label>
                         <span id='message'></span>
                     </div>
 
                     <div class="d-grid">
-                        <button type="submit"
-                            class="btn btn-primary btn-login fw-bold">Registrar</button>
+                        <button type="submit" class="btn btn-primary btn-login fw-bold">Registrar</button>
                     </div>
 
                     <hr class="my-4">
@@ -94,5 +96,5 @@
             </div>
         </div>
     </div>
-</div> 
+</div>
 {% endblock content %}

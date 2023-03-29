@@ -74,7 +74,7 @@ $(document).ready(function () {
     } else {
       password2[0].setCustomValidity("");
     }
-    
+
   }
 
   password1.on("input", validatePasswords);
@@ -97,7 +97,7 @@ $(document).ready(function () {
   var passwordField = document.getElementById("password1");
   passwordField.addEventListener("input", function () {
     var password = passwordField.value;
-    var pattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])[0-9a-zA-Z!@#$%^&*]{8,}$/;
+    var pattern = /[A-Za-z0-9@#$%-/*.)(\-<>}{})]{8,}/;
     if (pattern.test(password)) {
       passwordField.setCustomValidity("");
     } else {

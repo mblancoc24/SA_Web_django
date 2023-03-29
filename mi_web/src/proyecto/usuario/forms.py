@@ -29,5 +29,5 @@ class FormularioProfesor(forms.ModelForm):
 class FormularioInfoEstudiante(forms.ModelForm):
     class Meta:
         model = info_estudiantes
-        fields = ('user','estado', 'carrera')
+        fields = ('user','ingresoeconomico', 'carrera', 'colegio')
         

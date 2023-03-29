@@ -1,10 +1,10 @@
 function datacedula() {
     var input = document.getElementById("identificacion");
     var input2 = document.getElementById("tipo").value;
-    
+
     if (input.value.length >= 10 && input.value.length <= 12 && input2 === "Dimex" || "Cédula Residente" || "Refugiado") {
         var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
+        xhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
                 var datos = this.responseText;
                 const datos_usuario = datos.split(",");
@@ -22,11 +22,11 @@ function datacedula() {
         };
         xhttp.open("GET", "/obtener-datos/?identificacion=" + encodeURIComponent(input.value), true);
         xhttp.send();
-        
+
     }
-    if (input.value.length === 9 && input2 === "Cédula"){
+    if (input.value.length === 9 && input2 === "Cédula") {
         var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
+        xhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
                 var datos = this.responseText;
                 const datos_usuario = datos.split(",");
@@ -42,7 +42,7 @@ function datacedula() {
                 nombre.readOnly = true;
                 primer_apellido.readOnly = true;
                 segundo_apellido.readOnly = true;
-                
+
             }
         };
         xhttp.open("GET", "/obtener-datos/?identificacion=" + encodeURIComponent(input.value), true);
@@ -50,19 +50,19 @@ function datacedula() {
     }
 }
 
-function datacarreras(){
+function datacarreras() {
     console.log('hola esty dentro jaja')
     var select = document.getElementById("mi_select");
     select.options.length = 0; // Eliminamos todas las opciones anteriores
-    
+
     fetch("/carrerasselect/").then(response => response.json()).then(data => {
         // Iteramos sobre los valores obtenidos
-        data.forEach(function(valor) {
+        data.forEach(function (valor) {
             // Creamos una nueva opción y la agregamos al select
             var opcion = document.createElement("option");
             opcion.value = valor;
             opcion.text = valor;
             select.add(opcion);
         });
-    }); 
+    });
 }

@@ -8,10 +8,10 @@
 
 <div class="cuerpo-tarjeta">
     <form method="POST">
-    {% csrf_token %}
-    <p>Vas a eliminar esta tarea: "{{tarea}}"</p>
-    <input class='boton' type="submit" value="Eliminar">
-</form>
+        {% csrf_token %}
+        <p>Vas a eliminar esta tarea: "{{tarea}}"</p>
+        <input class='boton' type="submit" value="Eliminar">
+    </form>
 </div>
 
 {% endblock content %}
