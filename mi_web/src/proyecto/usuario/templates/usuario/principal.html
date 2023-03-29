@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <title>Users</title>
@@ -15,9 +16,16 @@
     {% bootstrap_javascript %}
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"
+        integrity="sha512-+YfyYojD7phswAtRsLbcxbZwqwxILHh3qFkeXvG8zh1iYsPxNqzggqGZvQ8ZTSG/0dRbzC7V9i6m8r6WlYmQIw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"
+        integrity="sha512-qosVhKFv29cU6W8j2iFh6nBd6nZPlzbwZI6bLjkMkJOiq02aevX/XmSkn5c5ueNTj5dLPLh4CNZ4JQ08dfun0g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="{% static 'js/validacion.js' %}"></script>
     <script src="{% static 'js/function.js' %}"></script>
 </head>
+
 <body>
 
     {% block barranavegacion %}
@@ -29,4 +37,5 @@
         {% endblock content %}
     </div>
 </body>
+
 </html>

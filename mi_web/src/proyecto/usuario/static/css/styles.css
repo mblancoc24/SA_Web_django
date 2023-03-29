@@ -1,53 +1,59 @@
 .card-link:hover .card {
-    background-color: #000000;
-    border: 1px solid #000000;
-  }
+  background-color: #000000;
+  border: 1px solid #000000;
+}
 
-  #infoCard {
-    transition: transform 0.2s ease;
-    box-shadow: 0 4px 6px 0 rgba(22, 22, 26, 0.18);
-    border-radius: 2%;
-    border: 0;
-    margin-bottom: 1em;
-    position: relative;
-  }
-  #infoCard:hover {
-    transform: scale(1.1);
-  }
+#infoCard {
+  transition: transform 0.2s ease;
+  box-shadow: 0 4px 6px 0 rgba(22, 22, 26, 0.18);
+  border-radius: 2%;
+  border: 0;
+  margin-bottom: 1em;
+  position: relative;
+}
 
-  #infoCard-img-top {
-    height: 100%;
-    object-fit: cover;
-    border-radius: 2%;
-  }
+#infoCard:hover {
+  transform: scale(1.1);
+}
 
-  #infoCardBody {
-    height: 100%;
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    color: black;
-  }
+#infoCard-img-top {
+  height: 100%;
+  object-fit: cover;
+  border-radius: 2%;
+}
 
-  #infoCardTitle,
-  #infoCardText {
-    color: #000;
-    text-decoration: none;
-  }
+#infoCardBody {
+  height: 100%;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: black;
+}
 
-  .card-link {
-    text-decoration: none;
-  }
+#infoCardTitle,
+#infoCardText {
+  color: #000;
+  text-decoration: none;
+}
 
-  .my-4 {
-    margin-top: 4rem;
-  }
+.card-link {
+  text-decoration: none;
+}
 
-  .navbar-dark {
-    background-color: #333;
-  }
+.my-4 {
+  margin-top: 4rem;
+}
 
-  .btn-default {
-    color: #fff; /* Cambiar el color del texto a blanco */
-  }
+.navbar-dark {
+  background-color: #333;
+}
+
+.btn-default {
+  color: #fff;
+  /* Cambiar el color del texto a blanco */
+}
+
+#btnNavbar:hover {
+  background-color: yellow;
+}
