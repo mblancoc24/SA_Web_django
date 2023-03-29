@@ -23,6 +23,13 @@
 
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto"></ul>
+      <a class="btn btn-default" href="{% url 'cambiar_contrasena' %}" type="button"
+        >Cambiar Contraseña</a
+      >
+    </div>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto"></ul>
       <a class="btn btn-default" href="{% url 'logout' %}" type="button"
         >Cerrar sesión</a
       >
@@ -118,6 +125,18 @@
             />
             <label for="floatingFile" style="opacity: 0.65"
               >Título de Educación Media</label
+            >
+          </div>
+
+          <div class="form-floating mb-3">
+            <input
+              class="form-control"
+              type="file"
+              id="floatingFile"
+              name="titulobachillerto"
+            />
+            <label for="floatingFile" style="opacity: 0.65"
+              >Cédula de identidad (fotografía visible por ambos lados)</label
             >
           </div>
           <div class="form-floating mb-3">

@@ -91,7 +91,15 @@ def cambiar_contrasena(request):
             user = form.save()
             update_session_auth_hash(request, user)  # Important!
             messages.success(request, 'Your password was successfully updated!')
-            return redirect('usuario_profesor')
+            login_obj = get_object_or_404(usuarios, id=user.id)
+            if login_obj.es_prospecto:
+                return redirect('usuario_prospecto')
+                
+            elif login_obj.es_estudiante:
+                return redirect('usuario_estudiante')
+                
+            elif login_obj.es_profesor:
+                return redirect('usuario_profesor')
     else:
         form = PasswordChangeForm(request.user)
     return render(request, 'cambiar_contrasena.html', {'form': form})
