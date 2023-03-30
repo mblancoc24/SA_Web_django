@@ -3,13 +3,13 @@
 {% block content %}
 
 <div class="row">
-    <div class="col-sm-9 col-md-7 col-lg-7 mx-auto">
+    <div class="col-md-12 mx-auto">
         <div class="card border-0 shadow rounded-3 my-5">
             <div class="card-body p-4 p-sm-5">
-                <h5 class="card-title text-center mb-5 fw-light fs-5 fw-bold">Registrar Estudiante</h5>
+                <h5 class="card-title text-center mb-4 fw-light fs-5 fw-bold">Registrar Estudiante</h5>
                 <form class="row g-3" method="POST">
                     {% csrf_token %}
-                    <div class="form-floating mb-3 col-md-6">
+                    <div class="form-floating col-md-4">
                         <select id="tipo" class="form-select" onchange="change();">
                             <option style="opacity: .65;" value="" disabled selected hidden>Tipo de identificación
                             </option>
@@ -22,68 +22,89 @@
                         </select>
                         <label for="tipo" style="opacity: .65;">Tipo de identificación</label>
                     </div>
-                    <div class="form-floating mb-3 col-md-6">
+                    <div class="form-floating mb-3 col-md-4">
                         <input type="text" class="form-control" id="identificacion" placeholder="Identificación"
                             name="username" onkeyup="datacedula()" disabled required>
                         <label for="identificacion" style="opacity: .65;">Identificación</label>
                     </div>
-                    <div class="form-floating mb-3 col-md-6">
+                    <div class="form-floating mb-3 col-md-4">
                         <input type="text" class="form-control" id="nombre" placeholder="Nombre" name="nombre" readonly
                             required>
                         <label for="nombre" style="opacity: .65;">Nombre</label>
                     </div>
 
-                    <div class="form-floating mb-3 col-md-6">
+                    <div class="form-floating mb-3 col-md-4">
                         <input type="text" class="form-control" id="primerapellido" placeholder="Primer Apellido"
                             name="primerapellido" readonly required>
                         <label for="primerapellido" style="opacity: .65;">Primer Apellido</label>
                     </div>
 
-                    <div class="form-floating mb-3 col-md-6">
+                    <div class="form-floating mb-3 col-md-4">
                         <input type="text" class="form-control" id="segundoapellido" placeholder="Segundo Apellido"
                             name="segundoapellido" readonly required>
                         <label for="segundoapellido" style="opacity: .65;">Segundo Apellido</label>
                     </div>
 
-                    <div class="form-floating mb-3 col-md-6">
+                    <div class="form-floating mb-3 col-md-4">
                         <input type="date" class="form-control" id="fechanacimiento" placeholder="Fecha de nacimiento"
                             name="fechanacimiento" required>
                         <label for="fechanacimiento" style="opacity: .65;">Fecha de nacimiento</label>
                     </div>
 
-                    <div class="form-floating mb-3 col-md-6">
+                    <div class="form-floating mb-3 col-md-4">
                         <input type="text" class="form-control" id="telefono" placeholder="Número Telefónico"
                             name="telefono" required>
                         <label for="telefono" style="opacity: .65;">Número Telefónico</label>
                     </div>
 
-                    <div class="form-floating mb-3 col-md-6">
+                    <div class="form-floating mb-3 col-md-4">
+                        <select id="pais" class="form-select" name="pais_select"
+                          data-placeholder="Selecione un País">
+                          <option style="opacity: 0.65" value="" disabled selected hidden></option>
+                        </select>
+                    </div>
+
+                    <div class="form-floating mb-3 col-md-4">
+                        <select id="provincia" class="form-select" name="provicncia_select"
+                          data-placeholder="Selecione una provincia">
+                          <option style="opacity: 0.65" value="" disabled selected hidden></option>
+                        </select>
+                    </div>
+
+                    <div class="form-floating mb-3 col-md-4">
+                        <select id="distrito" class="form-select" name="distrito_select"
+                          data-placeholder="Selecione un distrito">
+                          <option style="opacity: 0.65" value="" disabled selected hidden></option>
+                        </select>
+                    </div>
+
+                    <div class="form-floating mb-3 col-md-4">
                         <textarea type="text" class="form-control" id="direccion" placeholder="Dirección Domicilio"
                             name="direccion" required rows="3"></textarea>
                         <label for="direccion" style="opacity: .65;">Dirección Domicilio</label>
                     </div>
 
-                    <div class="form-floating mb-3 col-md-6">
+                    <div class="form-floating mb-3 col-md-4">
                         <input type="email" class="form-control" id="correo" placeholder="Correo" name="email" required
                             pattern="(?![_.-])((?![_.-][_.-])[a-zA-Z\d_.-]){0,63}[a-zA-Z\d]@((?!-)((?!--)[a-zA-Z\d-]){0,63}[a-zA-Z\d]\.){1,2}([a-zA-Z]{2,14}\.)?[a-zA-Z]{2,14}">
                         <label for="correo" style="opacity: .65;">Correo Electronico</label>
                     </div>
 
-                    <div class="form-floating mb-3 col-md-6">
+                    <div class="form-floating mb-3 col-md-4">
                         <input type="password" class="form-control" id="password1" placeholder="Contraseña"
                             name="password1" required>
                         <label for="password1" style="opacity: .65;">Contraseña</label>
                     </div>
 
-                    <div class="form-floating mb-3 col-md-6">
+                    <div class="form-floating mb-3 col-md-4">
                         <input type="password" class="form-control" id="password2" placeholder="Confirmar contraseña"
                             name="password2" required>
                         <label for="password2" style="opacity: .65;">Confirmar contraseña</label>
                         <span id='message'></span>
                     </div>
 
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-primary btn-login fw-bold">Registrar</button>
+                    <div class="d-grid d-flex justify-content-center">
+                        <button type="submit" class="btn btn-primary btn-login fw-bold" style="max-width: 150px;">Registrar</button>
                     </div>
 
                     <hr class="my-4">
