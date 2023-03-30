@@ -155,15 +155,18 @@
     <div class="modal-content rounded-0">
       <div class="modal-header">
         <h5 class="modal-title" id="modal_posgradoTitle">
-          FORMULARIO DE PRIMER INGRESO
+          FORMULARIO DE POSGRADOS
         </h5>
+           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><span class="icon-close2"></span></span>
+                </button> 
       </div>
       <div class="modal-body">
         <form method="POST">
           {% csrf_token %}
           <div class="form-floating mb-3">
             <input class="form-control" type="file" id="floatingFile" name="titulobachillerto" />
-            <label for="floatingFile" style="opacity: 0.65">Título de Educación Media</label>
+            <label for="floatingFile" style="opacity: 0.65">Título Universitario</label>
           </div>
 
           <div class="form-floating mb-3">
@@ -171,9 +174,10 @@
             <label for="floatingFile" style="opacity: 0.65">Identificación (fotografía visible por ambos lados)</label>
           </div>
 
+
           <div class="form-floating mb-3">
             <input class="form-control" type="file" id="floatingFile" name="fotoperfil" />
-            <label for="floatingFile" style="opacity: 0.65">Foto tuya de perfil visible</label>
+            <label for="floatingFile" style="opacity: 0.65">Foto de perfil visible</label>
           </div>
 
           <div class="form-floating mb-3">
@@ -186,22 +190,14 @@
             <label for="tipo" style="opacity: 0.65">Seleccione tipo de ingreso económico</label>
           </div>
 
-          <div class="form-floating mb-3">
-            <select id="colegio_select" class="form-select" name="colegio_select">
-              <option style="opacity: 0.65" value="" disabled selected hidden>
-                Colegio de procedencia
-              </option>
-            </select>
-            <label for="tipo" style="opacity: 0.65">Colegio de procedencia</label>
-          </div>
-
+     
           <div class="form-floating mb-3">
             <select id="mi_select" class="form-select selectorbuscador" name="mi_select">
               <option style="opacity: 0.65" value="" disabled selected hidden>
-                Seleccione la carrera
+                Seleccione la Especialidad
               </option>
             </select>
-            <label for="tipo" style="opacity: 0.65">Carrera de Interés</label>
+            <label for="tipo" style="opacity: 0.65">Especialidad de Interes</label>
           </div>
         </form>
         <div class="d-grid mb-2">

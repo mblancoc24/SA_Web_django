@@ -15,7 +15,7 @@ from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView
 from django.core.mail import send_mail
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from .models import usuarios, profesor, estudiantes, RegistroLogsUser, carreras, colegios, posgrados
+from .models import usuarios, profesor, estudiantes, RegistroLogsUser, carreras, colegios,posgrados
 import requests
 import json
 import django
@@ -91,15 +91,7 @@ def cambiar_contrasena(request):
             user = form.save()
             update_session_auth_hash(request, user)  # Important!
             messages.success(request, 'Your password was successfully updated!')
-            login_obj = get_object_or_404(usuarios, id=user.id)
-            if login_obj.es_prospecto:
-                return redirect('usuario_prospecto')
-                
-            elif login_obj.es_estudiante:
-                return redirect('usuario_estudiante')
-                
-            elif login_obj.es_profesor:
-                return redirect('usuario_profesor')
+            return redirect('usuario_profesor')
     else:
         form = PasswordChangeForm(request.user)
     return render(request, 'cambiar_contrasena.html', {'form': form})
@@ -256,5 +248,5 @@ def colegiosselect(request):
     return JsonResponse(list(valores), safe=False)
 
 def posgradosselect(request):
-    valores = colegios.objects.values_list('nombre_carrera', flat=True)
+    valores = posgrados.objects.values_list('nombre_carrera', flat=True)
     return JsonResponse(list(valores), safe=False)
