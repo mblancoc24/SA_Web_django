@@ -84,17 +84,26 @@ class Logueo(LoginView):
     #     error = 'El usuario o la contraseña son incorrectos.'
     #     return render(self.request, 'login.html', {'form': form, 'error': error})
 
-def cambiar_contrasena(request):
-    if request.method == 'POST':
-        form = PasswordChangeForm(request.user, request.POST)
-        if form.is_valid():
-            user = form.save()
-            update_session_auth_hash(request, user)  # Important!
-            messages.success(request, 'Your password was successfully updated!')
-            return redirect('usuario_profesor')
-    else:
-        form = PasswordChangeForm(request.user)
-    return render(request, 'cambiar_contrasena.html', {'form': form})
+class cambiarcontrasena (LoginRequiredMixin):
+    def cambiar_contrasena(request):
+        if request.method == 'POST':
+            form = PasswordChangeForm(request.user, request.POST)
+            if form.is_valid():
+                user = form.save()
+                update_session_auth_hash(request, user)  # Important!
+                messages.success(request, 'Your password was successfully updated!')
+                login_obj = get_object_or_404(usuarios, id=user.id)
+                if login_obj.es_prospecto:
+                    return redirect('usuario_prospecto')
+                    
+                elif login_obj.es_estudiante:
+                    return redirect('usuario_estudiante')
+                    
+                elif login_obj.es_profesor:
+                    return redirect('usuario_profesor')
+        else:
+            form = PasswordChangeForm(request.user)
+        return render(request, 'cambiar_contrasena.html', {'form': form})
 
 class PaginaRegistroEstudiante(FormView):
     template_name = 'usuario/registro_estudiantes.html'
@@ -250,3 +259,24 @@ def colegiosselect(request):
 def posgradosselect(request):
     valores = posgrados.objects.values_list('nombre_carrera', flat=True)
     return JsonResponse(list(valores), safe=False)
+
+class vistaPerfil (LoginRequiredMixin):
+    context_object_name = 'perfil_estudiante'
+    template_name = 'usuario/perfil.html'
+
+
+    def profile_view(request):
+        user = request.user
+        usuario = get_object_or_404(usuarios, id=user.pk)
+        estudiante = get_object_or_404(estudiantes, user=usuario.id)
+        context = {'user': user,
+                'estudiante':estudiante}
+        return render(request, 'perfil.html', context)
+    
+    def form_valid(self, form):
+        
+        numero_telefonico = self.request.POST.get('numero_telefonico')
+        correo_personal = self.request.POST.get('correo_personal')
+        
+        data = [numero_telefonico, correo_personal]
+        return super(vistaPerfil, self).form_valid(form)
