@@ -104,4 +104,5 @@ $(document).ready(function () {
       passwordField.setCustomValidity("La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula, un número y un carácter especial.");
     }
   });
+  $('.select2').select2();
 });

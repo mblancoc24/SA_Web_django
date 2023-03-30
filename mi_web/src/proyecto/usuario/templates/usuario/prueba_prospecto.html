@@ -24,7 +24,7 @@
 {% endblock barranavegacion %} {% block content %}
 
 <div class="row">
-  <div class="col-md-4 mt-5">
+  <div class="col-sm-6 col-lg-4 mt-5">
     <div class="card p-3 mb-2" id="infoCard">
       <a data-bs-toggle="modal" data-bs-target="#modal_primer_ingreso" class="card-link" onclick="llenardata()">
         <img src="../static/img/primer_ingreso.png" class="card-img-top" alt="..." />
@@ -32,13 +32,14 @@
 
       <div class="card-body" id="infoCardBody">
         <h5 class="card-title" id="infoCardTitle">PRIMER INGRESO</h5>
-        <p class="card-text" id="infoCardText">
-          Este es el contenido del elemento 1.
+        <p class="card-text" id="infoCardTextModal">
+          <a data-bs-toggle="modal" data-bs-target="#modal_primer_ingreso_instrucciones"
+            class="card-link">Instrucciones</a>
         </p>
       </div>
     </div>
   </div>
-  <div class="col-md-4 mt-5">
+  <div class="col-sm-6 col-lg-4 mt-5">
     <div class="card p-3 mb-2" id="infoCard">
       <a data-bs-toggle="modal" data-bs-target="#modal_posgrado" class="card-link" onclick="llenardata()">
         <img src="../static/img/posgrados.png" class="card-img-top" alt="..." />
@@ -46,33 +47,35 @@
 
       <div class="card-body" id="infoCardBody">
         <h5 class="card-title" id="infoCardTitle">POSGRADOS</h5>
-        <p class="card-text" id="infoCardText">
-          Este es el contenido del elemento 1.
+        <p class="card-text" id="infoCardTextModal">
+          <a data-bs-toggle="modal" data-bs-target="#modal_posgrado_instrucciones" class="card-link">Instrucciones</a>
         </p>
       </div>
     </div>
   </div>
-  <div class="col-md-4 mt-5">
+  <div class="col-sm-6 col-lg-4 mt-5">
     <div class="card p-3 mb-2" id="infoCard">
-      <a href="#" class="card-link">
+      <a data-bs-toggle="modal" data-bs-target="#modal_cursolibres" class="card-link">
         <img src="../static/img/cursos_libres.png" class="card-img-top" alt="..." />
       </a>
 
       <div class="card-body" id="infoCardBody">
-        <h5 class="card-title" id="infoCardTitle">PRIMER INGRESO</h5>
-        <p class="card-text" id="infoCardText">
-          Este es el contenido del elemento 1.
+        <h5 class="card-title" id="infoCardTitle">CURSOS LIBRES</h5>
+        <p class="card-text" id="infoCardTextModal">
+          <a data-bs-toggle="modal" data-bs-target="#modal_cursos_libres_instrucciones"
+            class="card-link">Instrucciones</a>
         </p>
       </div>
     </div>
   </div>
 </div>
-
+<br>
+<br>
 <!-- Model de Primer Ingreso -->
 {% block modal_primerIngreso %}
 <div class="modal fade" id="modal_primer_ingreso" tabindex="-1" aria-labelledby="modal_primer_ingresoTitle"
   style="display: none" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
     <div class="modal-content rounded-0">
       <div class="modal-header">
         <h5 class="modal-title" id="modal_primer_ingresoTitle">
@@ -82,39 +85,42 @@
       <div class="modal-body">
         <form method="POST">
           {% csrf_token %}
-          <div class="form-floating mb-3">
-            <input class="form-control" type="file" id="floatingFile" name="titulobachillerto" />
-            <label for="floatingFile" style="opacity: 0.65">Título de Educación Media</label>
+          <div class="form-group mb-3">
+            <label for="archivo">Título de Educación Media</label>
+            <input class="form-control custom-file-input" style="opacity: 0.65" type="file" id="floatingFile"
+              name="titulobachillerto" />
           </div>
 
-          <div class="form-floating mb-3">
-            <input class="form-control" type="file" id="floatingFile" name="cedulafotografia" />
-            <label for="floatingFile" style="opacity: 0.65">Identificación (fotografía visible por ambos lados)</label>
+          <div class="form-group mb-3">
+            <label for="floatingFile">Identificación (fotografía visible por ambos lados)</label>
+            <input class="form-control" style="opacity: 0.65" type="file" id="floatingFile" name="cedulafotografia" />
           </div>
 
-          <div class="form-floating mb-3">
-            <input class="form-control" type="file" id="floatingFile" name="fotoperfil" />
-            <label for="floatingFile" style="opacity: 0.65">Foto tuya de perfil visible</label>
+          <div class="form-group mb-3">
+            <label for="floatingFile">Foto tuya de perfil visible</label>
+            <input class="form-control" style="opacity: 0.65" type="file" id="floatingFile" name="fotoperfil" />
           </div>
 
-          <div class="form-floating mb-3">
-            <select id="ingreso_economico" class="form-select" name="ingreso_economico">
-              <option style="opacity: .65;" value="" disabled selected hidden>Tipos de Ingreso Económico</option>
+          <div class="form-group mb-3">
+            <label for="tipo">Seleccione tipo de ingreso económico</label>
+            <select id="ingreso_economico" class="form-control select2" style="" name="ingreso_economico" required>
+              <option value="" disabled selected hidden>Tipos de Ingreso Económico</option>
               <option value="Asalariado">Asalariado</option>
               <option value="Independiente">Ingresos Propios</option>
               <option value="Dependiente">Dependiente Economico</option>
             </select>
-            <label for="tipo" style="opacity: 0.65">Seleccione tipo de ingreso económico</label>
           </div>
 
-          <div class="form-floating mb-3">
+          <div class="form-group mb-3">
+            <label for="lblcarrera">Colegio de procedencia</label>
             <select id="colegio_select" class="form-select" name="colegio_select"
               data-placeholder="Colegio donde egresó">
-              <option style="opacity: 0.65" value="" disabled selected hidden></option>
+              <option value="" disabled selected hidden></option>
             </select>
           </div>
 
-          <div class="form-floating mb-3">
+          <div class="form-group mb-3 dropdown-parent">
+            <label for="lblcarrera">Seleccione una carrera</label>
             <select id="mi_select" class="form-select selectorbuscador" name="mi_select"
               data-placeholder="Seleccione la carrera">
               <option style="opacity: 0.65" value="" disabled selected hidden>
@@ -127,19 +133,19 @@
               Convalidación de Cursos
             </label>
           </div>
-
-          <div id="certificacion" class="form-floating mb-3" style="display: none;">
-            <input class="form-control" type="file" id="floatingFile" name="fotoperfil" />
-            <label for="floatingFile" style="opacity: 0.65">Certificación de Notas del Curso</label>
+          <div id="certificacion" class="form-group mb-3" style="display: none;">
+            <label for="floatingFile">Certificación de Notas del Curso</label>
+            <input class="form-control" style="opacity: 0.65" type="file" id="floatingFile" name="fotoperfil" />
           </div>
 
-          <div id="plan" class="form-floating mb-3" style="display: none;">
-            <input class="form-control" type="file" id="floatingFile" name="fotoperfil" />
-            <label for="floatingFile" style="opacity: 0.65">Plan de Estudio - Contenido del Curso</label>
+          <div id="plan" class="form-group mb-3" style="display: none;">
+            <label for="floatingFile">Plan de Estudio - Contenido del Curso</label>
+            <input class="form-control" style="opacity: 0.65" type="file" id="floatingFile" name="fotoperfil" />
           </div>
         </form>
-        <div class="d-grid mb-2">
-          <a href="{% url 'usuario_estudiante' %}" class="btn btn-primary btn-sm rounded fw-bold">Enviar Formulario</a>
+        <div class="d-grid mb-2 d-flex justify-content-center">
+          <a href="{% url 'usuario_estudiante' %}" class="btn btn-primary btn-sm rounded fw-bold"
+            style="max-width: 150px;">Enviar Formulario</a>
         </div>
       </div>
     </div>
@@ -195,7 +201,7 @@
             <label for="tipo" style="opacity: 0.65">Colegio de procedencia</label>
           </div>
 
-          <div class="form-floating mb-3">
+          <div class="form-floating mb-3 ">
             <select id="mi_select" class="form-select selectorbuscador" name="mi_select">
               <option style="opacity: 0.65" value="" disabled selected hidden>
                 Seleccione la carrera
@@ -213,7 +219,92 @@
 </div>
 {% endblock modal_posgrado %}
 
+<!-- Modal Curso Libres -->
+{% block modal_cursolibres %}
+<div class="modal fade" id="modal_cursolibres" tabindex="-1" aria-labelledby="modal_cursolibresTitle"
+  style="display: none" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content rounded-0">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modal_cursolibresTitle">
+          FORMULARIO DE CURSO LIBRES
+        </h5>
+      </div>
+      <div class="modal-body">
+        <form method="POST">
+          {% csrf_token %}
+          <div class="form-group mb-3">
+            <label for="floatingFile">Identificación (fotografía visible por ambos lados)</label>
+            <input class="form-control" style="opacity: 0.65" type="file" id="floatingFile" name="cedulafotografia" />
+          </div>
+        </form>
+        <div class="d-grid mb-2 d-flex justify-content-center">
+          <a href="{% url 'usuario_estudiante' %}" class="btn btn-primary btn-sm rounded fw-bold"
+            style="max-width: 150px;">Enviar Formulario</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock modal_cursolibres %}
+<!-- Modal Curso Libres -->
 
+<!-- Modal Instrucciones -->
+{% block modal_instruccionesprimerIngreso %}
+<div class="modal fade" id="modal_primer_ingreso_instrucciones" tabindex="-1"
+  aria-labelledby="modal_primer_ingreso_instruccionesTitle" style="display: none" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content rounded-0">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modal_primer_ingreso_instruccionesTitle">
+          INSTRUCCIONES PARA COMPLETAR FORMULARIO DE PRIMER INGRESO
+        </h5>
+      </div>
+      <div class="modal-body">
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock modal_instruccionesprimerIngreso %}
+
+{% block modal_instruccionesposgrados %}
+<div class="modal fade" id="modal_posgrado_instrucciones" tabindex="-1"
+  aria-labelledby="modal_posgrado_instruccionesTitle" style="display: none" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content rounded-0">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modal_posgrado_instruccionesTitle">
+          INSTRUCCIONES PARA COMPLETAR FORMULARIO DE POSGRADOS
+        </h5>
+      </div>
+      <div class="modal-body">
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock modal_instruccionesposgrados %}
+
+{% block modal_instruccionescursolibres %}
+<div class="modal fade" id="modal_cursos_libres_instrucciones" tabindex="-1"
+  aria-labelledby="modal_cursos_libres_instruccionesTitle" style="display: none" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content rounded-0">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modal_cursos_libres_instruccionesTitle">
+          INSTRUCCIONES PARA COMPLETAR FORMULARIO DE CURSOS LIBRES
+        </h5>
+      </div>
+      <div class="modal-body">
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock modal_instruccionescursolibres %}
+
+<!-- Modal Instrucciones -->
 <script>
   function datacarreras() {
     var select = $("#mi_select");
