@@ -10,19 +10,23 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto"></ul>
-      <a class="btn btn-default" id="btnNavbar" href="{% url 'cambiar_contrasena' %}" type="button">Cambiar
-        Contraseña</a>
-    </div>
-
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto"></ul>
-      <a class="btn btn-default" id="btnNavbar" href="{% url 'logout' %}" type="button">Cerrar sesión</a>
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <i class="fa fa-user"></i> Perfil
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="{% url 'perfil' %}">Ver perfil</a></li>
+            <li><a class="dropdown-item" href="{% url 'logout' %}">Cerrar sesión</a></li>
+          </ul>
+        </li>
+      </ul>
     </div>
   </div>
 </nav>
 {% endblock barranavegacion %} {% block content %}
-
+<div class="container">
 <div class="row">
   <div class="col-md-4 mt-5">
     <div class="card p-3 mb-2" id="infoCard">
@@ -66,6 +70,7 @@
       </div>
     </div>
   </div>
+</div>
 </div>
 
 <!-- Model de Primer Ingreso -->
