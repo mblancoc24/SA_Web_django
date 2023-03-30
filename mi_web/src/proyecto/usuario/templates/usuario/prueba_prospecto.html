@@ -10,19 +10,23 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto"></ul>
-      <a class="btn btn-default" id="btnNavbar" href="{% url 'cambiar_contrasena' %}" type="button">Cambiar
-        Contraseña</a>
-    </div>
-
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto"></ul>
-      <a class="btn btn-default" id="btnNavbar" href="{% url 'logout' %}" type="button">Cerrar sesión</a>
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <i class="fa fa-user"></i> Perfil
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="{% url 'perfil' %}">Ver perfil</a></li>
+            <li><a class="dropdown-item" href="{% url 'logout' %}">Cerrar sesión</a></li>
+          </ul>
+        </li>
+      </ul>
     </div>
   </div>
 </nav>
 {% endblock barranavegacion %} {% block content %}
-
+<div class="container">
 <div class="row">
   <div class="col-sm-6 col-lg-4 mt-5">
     <div class="card p-3 mb-2" id="infoCard">
@@ -161,15 +165,18 @@
     <div class="modal-content rounded-0">
       <div class="modal-header">
         <h5 class="modal-title" id="modal_posgradoTitle">
-          FORMULARIO DE PRIMER INGRESO
+          FORMULARIO DE POSGRADOS
         </h5>
+           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><span class="icon-close2"></span></span>
+                </button> 
       </div>
       <div class="modal-body">
         <form method="POST">
           {% csrf_token %}
           <div class="form-floating mb-3">
             <input class="form-control" type="file" id="floatingFile" name="titulobachillerto" />
-            <label for="floatingFile" style="opacity: 0.65">Título de Educación Media</label>
+            <label for="floatingFile" style="opacity: 0.65">Título Universitario</label>
           </div>
 
           <div class="form-floating mb-3">
@@ -177,9 +184,10 @@
             <label for="floatingFile" style="opacity: 0.65">Identificación (fotografía visible por ambos lados)</label>
           </div>
 
+
           <div class="form-floating mb-3">
             <input class="form-control" type="file" id="floatingFile" name="fotoperfil" />
-            <label for="floatingFile" style="opacity: 0.65">Foto tuya de perfil visible</label>
+            <label for="floatingFile" style="opacity: 0.65">Foto de perfil visible</label>
           </div>
 
           <div class="form-floating mb-3">
@@ -192,22 +200,14 @@
             <label for="tipo" style="opacity: 0.65">Seleccione tipo de ingreso económico</label>
           </div>
 
+     
           <div class="form-floating mb-3">
-            <select id="colegio_select" class="form-select" name="colegio_select">
-              <option style="opacity: 0.65" value="" disabled selected hidden>
-                Colegio de procedencia
-              </option>
-            </select>
-            <label for="tipo" style="opacity: 0.65">Colegio de procedencia</label>
-          </div>
-
-          <div class="form-floating mb-3 ">
             <select id="mi_select" class="form-select selectorbuscador" name="mi_select">
               <option style="opacity: 0.65" value="" disabled selected hidden>
-                Seleccione la carrera
+                Seleccione la Especialidad
               </option>
             </select>
-            <label for="tipo" style="opacity: 0.65">Carrera de Interés</label>
+            <label for="tipo" style="opacity: 0.65">Especialidad de Interes</label>
           </div>
         </form>
         <div class="d-grid mb-2">
@@ -217,6 +217,7 @@
     </div>
   </div>
 </div>
+{% endblock modal_posgrado %}
 {% endblock modal_posgrado %}
 
 <!-- Modal Curso Libres -->
