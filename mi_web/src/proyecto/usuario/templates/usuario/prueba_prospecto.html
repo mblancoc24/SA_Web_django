@@ -85,7 +85,7 @@
         </h5>
       </div>
       <div class="modal-body">
-        <form method="POST">
+        <form method="post" action="{% url 'enviar_archivo_a_odoo' %}" enctype="multipart/form-data">
           {% csrf_token %}
           <div class="form-floating mb-3">
             <input class="form-control" type="file" id="floatingFile" name="titulobachillerto" />
@@ -134,18 +134,18 @@
           </div>
 
           <div id="certificacion" class="form-floating mb-3" style="display: none;">
-            <input class="form-control" type="file" id="floatingFile" name="fotoperfil" />
+            <input class="form-control" type="file" id="floatingFile" name="notas" />
             <label for="floatingFile" style="opacity: 0.65">Certificación de Notas del Curso</label>
           </div>
 
           <div id="plan" class="form-floating mb-3" style="display: none;">
-            <input class="form-control" type="file" id="floatingFile" name="fotoperfil" />
+            <input class="form-control" type="file" id="floatingFile" name="planestudio" />
             <label for="floatingFile" style="opacity: 0.65">Plan de Estudio - Contenido del Curso</label>
           </div>
+          <div class="d-grid mb-2">
+            <button  type="submit" class="btn btn-primary btn-sm rounded fw-bold">Enviar Formulario</button>
+          </div>
         </form>
-        <div class="d-grid mb-2">
-          <a href="{% url 'usuario_estudiante' %}" class="btn btn-primary btn-sm rounded fw-bold">Enviar Formulario</a>
-        </div>
       </div>
     </div>
   </div>

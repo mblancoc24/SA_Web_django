@@ -85,6 +85,13 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
+ODOO_HOST = 'localhost'  # dirección IP o nombre de host de tu servidor Odoo
+ODOO_PORT = 8060  # puerto de conexión a Odoo (por defecto es 8069)
+ODOO_DB = 'UIA_3'  # nombre de tu base de datos en Odoo
+ODOO_USER = 'admin'  # nombre de usuario en Odoo
+ODOO_PASS = 'admin'  # contraseña de usuario en Odoo
+
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
@@ -150,3 +157,6 @@ EMAIL_HOST_PORT = 25
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'jlopezm@uia.ac.cr'
 EMAIL_HOST_PASSWORD = 'Xox65829'
+
+MEDIA_ROOT = 'media/'
+MEDIA_URL = '/media/'

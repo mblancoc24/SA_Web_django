@@ -1,0 +1,15 @@
+{% extends 'usuario/principal.html' %}
+
+
+{% block content %}
+
+<div class="container">
+    <form method="post" action="{% url 'enviar_archivo_a_odoo' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="archivo">
+        <input type="text" name="id">
+        <button type="submit">Enviar</button>
+    </form>
+</div>
+
+{% endblock content %}

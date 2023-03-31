@@ -83,3 +83,9 @@ class colegios (models.Model):
     
     class Meta:
         db_table = 'colegios'
+        
+class fotoperfil(models.Model):
+    user = models.OneToOneField(estudiantes, on_delete=models.CASCADE)
+    archivo = models.BinaryField()      
+        
+        
