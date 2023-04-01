@@ -1,3 +1,4 @@
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
@@ -16,6 +17,7 @@ from django.core.mail import send_mail
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from .models import usuarios, profesor, estudiantes, RegistroLogsUser, carreras, colegios, posgrados, fotoperfil
+
 import requests
 import json
 import django
@@ -271,7 +273,7 @@ def colegiosselect(request):
     return JsonResponse(list(valores), safe=False)
 
 def posgradosselect(request):
-    valores = colegios.objects.values_list('nombre_carrera', flat=True)
+    valores = posgrados.objects.values_list('nombre_carrera', flat=True)
     return JsonResponse(list(valores), safe=False)
 
 class vistaPerfil (LoginRequiredMixin):
@@ -310,6 +312,7 @@ def guardar_perfil(request):
                                         'segundo_apellido': datos_estudiante[4], 'fecha_nacimiento': datos_estudiante[5], 'numero_telefonico': datos_estudiante[6],
                                         'correo_institucional': datos_estudiante[7], 'correo_personal': datos_estudiante[8], 'direccion': datos_estudiante[9]}, instance=estudiante)
         
+
         if form.is_valid():
             form.save()
             return redirect('usuario_prospecto')
@@ -319,6 +322,7 @@ def guardar_perfil(request):
         return HttpResponse(status=400)
     
 lock = threading.Lock()
+
 def enviar_archivo_a_odoo(request):
     if request.method == 'POST':
         user = request.user
@@ -384,5 +388,3 @@ def enviar_archivo_a_odoo(request):
             return HttpResponse("Archivo enviado exitosamente a Odoo.")
         else:
             return render(request, 'prueba_prospecto.html')
-
-
