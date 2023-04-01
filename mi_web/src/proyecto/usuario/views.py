@@ -388,3 +388,5 @@ def enviar_archivo_a_odoo(request):
             return HttpResponse("Archivo enviado exitosamente a Odoo.")
         else:
             return render(request, 'prueba_prospecto.html')
+
+
