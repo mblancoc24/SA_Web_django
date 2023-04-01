@@ -113,7 +113,7 @@ class cambiarcontrasena (LoginRequiredMixin):
                     return redirect('usuario_profesor')
         else:
             form = PasswordChangeForm(request.user)
-        return render(request, 'cambiar_contrasena.html', {'form': form})
+        return render(request, 'Contrasenas/Correo/cambiar_contrasena.html', {'form': form})
 
 class PaginaRegistroEstudiante(FormView):
     template_name = 'usuario/registro_estudiantes.html'
@@ -168,17 +168,17 @@ class PaginaRegistroEstudiante(FormView):
 class DetalleUsuarioEstudiante(LoginRequiredMixin, ListView):
     model = usuarios
     context_object_name = 'prueba_estudiante'
-    template_name = 'usuario/prueba_estudiante.html'
+    template_name = 'Dashboard/Estudiante/prueba_estudiante.html'
     
 class DetalleUsuarioProfesor(LoginRequiredMixin, ListView):
     model = usuarios
     context_object_name = 'prueba_profesor'
-    template_name = 'usuario/prueba_profesor.html'
+    template_name = 'Dashboard/Profesor/prueba_profesor.html'
     
 class DetalleUsuarioProspecto(LoginRequiredMixin, ListView):
     model = usuarios
     context_object_name = 'prueba_prospecto'
-    template_name = 'usuario/prueba_prospecto.html'
+    template_name = 'Prospecto/prueba_prospecto.html'
     
 class DetalleUsuarioEstudianteProfesor(LoginRequiredMixin, ListView):
     model = usuarios
@@ -233,9 +233,9 @@ def obtener_datos(request):
     return JsonResponse(data_completa, safe=False)
 
 class MyPasswordResetView(PasswordResetView):
-    template_name = 'my_password_reset.html'
-    email_template_name = 'my_password_reset_email.html'
-    subject_template_name = 'my_password_reset_subject.txt'
+    template_name = 'Contrasenas/Correo/my_password_reset.html'
+    email_template_name = 'Contrasenas/Correo/my_password_reset_email.html'
+    subject_template_name = 'Contrasenas/Correo/my_password_reset_subject.txt'
     success_url = reverse_lazy('password_reset_done')
     from_email = 'correouianoreply@gmail.com'
 
@@ -256,7 +256,7 @@ class MyPasswordResetView(PasswordResetView):
         return super().form_valid(form)
     
 class MyPasswordResetDoneView(PasswordResetDoneView):
-    template_name = 'my_password_reset_done.html'
+    template_name = 'Contrasenas/Correo/my_password_reset_done.html'
     success_url = reverse_lazy('password_reset_done')
 
 
@@ -278,7 +278,7 @@ def posgradosselect(request):
 
 class vistaPerfil (LoginRequiredMixin):
     context_object_name = 'perfil_estudiante'
-    template_name = 'usuario/perfil.html'
+    template_name = 'Prospecto/perfil.html'
 
 
     def profile_view(request):
