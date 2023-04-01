@@ -4,7 +4,7 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 from django.contrib.auth.forms import UserCreationForm
-
+import os
 from django.contrib.auth import login, update_session_auth_hash
 from .forms import FormularioEstudiantes, FormularioUsuario, FormularioProfesor, FormularioInfoEstudiante, CustomUserCreationForm
 
@@ -16,7 +16,8 @@ from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView
 from django.core.mail import send_mail
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from .models import usuarios, profesor, estudiantes, RegistroLogsUser, carreras, colegios,posgrados
+from .models import usuarios, profesor, estudiantes, RegistroLogsUser, carreras, colegios, posgrados, fotoperfil
+
 import requests
 import json
 import django
@@ -28,8 +29,19 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import PasswordResetForm, PasswordChangeForm
 from django.contrib.auth.models import User
 from django.apps import AppConfig
+from django.core.files.storage import FileSystemStorage
+from django.shortcuts import render
 
 from django.contrib import messages
+from django.core.files import File
+from django.core.files.base import ContentFile
+from PIL import Image
+from odoorpc import ODOO
+import base64
+import threading
+import xmlrpc.client
+
+from django.http import HttpResponse
 
 class Logueo(LoginView):
     template_name = 'usuario/login.html'
@@ -80,10 +92,7 @@ class Logueo(LoginView):
                     return redirect('cambiar_contrasena')
                 else:
                     return redirect('usuario_profesor')
-    # def form_invalid(self, form):
-    # # Add an error message to the context
-    #     error = 'El usuario o la contraseña son incorrectos.'
-    #     return render(self.request, 'login.html', {'form': form, 'error': error})
+
 
 class cambiarcontrasena (LoginRequiredMixin):
     def cambiar_contrasena(request):
@@ -175,6 +184,11 @@ class DetalleUsuarioEstudianteProfesor(LoginRequiredMixin, ListView):
     model = usuarios
     context_object_name = 'opciones_estudiante_profesor'
     template_name = 'usuario/opciones_login.html'
+    
+class DetalleArchivoOdoo(LoginRequiredMixin, ListView):
+    model = usuarios
+    context_object_name = 'envio_archivos_odoo'
+    template_name = 'usuario/mmgv.html'
 
 class CrearUsuario(LoginRequiredMixin, CreateView):
     model = usuarios
@@ -225,6 +239,7 @@ class MyPasswordResetView(PasswordResetView):
     success_url = reverse_lazy('password_reset_done')
     from_email = 'correouianoreply@gmail.com'
 
+        
     def form_valid(self, form):
         # Agregamos el código para enviar el correo electrónico personalizado aquí
         email = form.cleaned_data['email']
@@ -270,14 +285,106 @@ class vistaPerfil (LoginRequiredMixin):
         user = request.user
         usuario = get_object_or_404(usuarios, id=user.pk)
         estudiante = get_object_or_404(estudiantes, user=usuario.id)
+        foto = fotoperfil.objects.get( user=estudiante.id_estudiante)
+        
+        imagen_url = Image.open(ContentFile(foto.archivo))
+        
         context = {'user': user,
-                'estudiante':estudiante}
-        return render(request, 'Prospecto/perfil.html', context)
+                'estudiante':estudiante,
+                'fotoperfil':imagen_url}
+        return render(request, 'perfil.html', context)
     
-    def form_valid(self, form):
+def guardar_perfil(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        numero_telefonico = request.POST.get('numero_telefonico')
+        correo_personal = request.POST.get('correo_personal')
         
-        numero_telefonico = self.request.POST.get('numero_telefonico')
-        correo_personal = self.request.POST.get('correo_personal')
+        user = User.objects.get(username=username)
+        user_id = user.pk
         
-        data = [numero_telefonico, correo_personal]
-        return super(vistaPerfil, self).form_valid(form)
+        estudiante = get_object_or_404(estudiantes, user=user_id)
+        
+        datos_estudiante = [estudiante.id_estudiante, estudiante.identificacion, estudiante.nombre, estudiante.primer_apellido, 
+                        estudiante.segundo_apellido, estudiante.fecha_nacimiento, numero_telefonico, estudiante.correo_institucional, correo_personal, estudiante.direccion]
+        
+        form = FormularioEstudiantes({ 'user': datos_estudiante[0], 'identificacion': datos_estudiante[1], 'nombre': datos_estudiante[2], 'primer_apellido': datos_estudiante[3],
+                                        'segundo_apellido': datos_estudiante[4], 'fecha_nacimiento': datos_estudiante[5], 'numero_telefonico': datos_estudiante[6],
+                                        'correo_institucional': datos_estudiante[7], 'correo_personal': datos_estudiante[8], 'direccion': datos_estudiante[9]}, instance=estudiante)
+        
+
+        if form.is_valid():
+            form.save()
+            return redirect('usuario_prospecto')
+        else:
+            return HttpResponse(status=400) 
+    else:
+        return HttpResponse(status=400)
+    
+lock = threading.Lock()
+
+def enviar_archivo_a_odoo(request):
+    if request.method == 'POST':
+        user = request.user
+        user_id = user.pk
+        estudiante = get_object_or_404(estudiantes, user=user_id)
+        foto = request.FILES['fotoperfil']
+        
+        img_data = foto.read()
+
+        # Convertir la imagen a bytes
+        img_bytes = bytearray(img_data)
+
+        # Crear el objeto UserFile y guardarlo en la base de datos
+        user_file = fotoperfil(user=estudiante, archivo=img_bytes)
+        user_file.save()
+        
+        # Obtener el archivo y el id
+        titulo = request.FILES.get('titulobachillerto')
+        cedula = request.FILES.get('cedulafotografia')
+        
+        notas = request.FILES.get('notas')
+        plan = request.FILES.get('planestudio')
+        registro_id = request.user.username
+        
+        # Obtener extensión del archivo
+        
+        
+        datacompleta = [titulo,cedula,foto,notas,plan]
+        
+        # Conectar a Odoo
+        odoo = ODOO('localhost', port=8060)
+        odoo.login('UIA_3', 'admin', 'admin')
+        
+        def enviodata(data):
+            lock.acquire()
+            
+            _, ext = os.path.splitext(data.name)
+            file_base64 = base64.b64encode(data.read()).decode('utf-8')
+            
+            payload = odoo.env['prestamos.prestamo'].create({
+                'archivo_nombre': data.name,
+                'archivo_base64': file_base64,
+                'registro_id': registro_id,
+                'registro_modelo': 'Prospecto Primer Ingreso',
+                'archivo_tipo': ext
+            })
+        
+            lock.release()
+        
+        threads = []
+        for i in range(5):
+            thread = threading.Thread(target=enviodata, args=(datacompleta[i],)) 
+            threads.append(thread)
+
+        # Iniciamos los hilos uno por uno
+        for thread in threads:
+            thread.start()
+
+        # Esperamos a que todos los hilos terminen su ejecución
+        for thread in threads:
+            thread.join()
+
+            return HttpResponse("Archivo enviado exitosamente a Odoo.")
+        else:
+            return render(request, 'prueba_prospecto.html')
