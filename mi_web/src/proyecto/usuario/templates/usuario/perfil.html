@@ -25,7 +25,7 @@
     <div class="row">
         <div class="col-md-3 border-right">
             <div class="d-flex flex-column align-items-center text-center p-3 py-5">
-                <img class="rounded-circle mt-5" width="150px" src="../static/img/user.png">
+                <img class="rounded-circle mt-5" width="150px" src="data:image/png;base64,{{ fotoperfil|base64 }}">
                 <span class="font-weight-bold">{{ user.username }}</span>
                 <span class="text-black-50">{{ estudiante.correo_institucional }}</span>
                 <span> </span>
@@ -36,16 +36,20 @@
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h4 class="text-right">Informacion de Perfil</h4>
                 </div>
-                <form method="POST">
+                <form method="POST" action="{% url 'guardar_perfil' %}">
                     {% csrf_token %}
                     <div class="row mt-2">
+                        <input name="username" value="{{ user.username }}" hidden>
                         <div class="col-md-6">
                             <label class="labels">Nombre</label>
-                            <input type="text" class="form-control" placeholder="Nombre" value="{{ estudiante.nombre }}" readonly>
+                            <input type="text" class="form-control" placeholder="Nombre" value="{{ estudiante.nombre }}"
+                                readonly>
                         </div>
                         <div class="col-md-6">
                             <label class="labels">Apellidos</label>
-                            <input type="text" class="form-control" value="{{ estudiante.primer_apellido }} {{ estudiante.segundo_apellido }}" placeholder="Apellidos" readonly>
+                            <input type="text" class="form-control"
+                                value="{% if estudiante.segundo_apellido and estudiante.segundo_apellido %} {{ estudiante.primer_apellido }} {{ estudiante.segundo_apellido }} {% else %} {{ estudiante.segundo_apellido }} {% endif %}"
+                                placeholder="Apellidos" readonly>
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -69,15 +73,17 @@
                     <div class="row mt-3">
                         <div class="col-md-12">
                             <label class="labels">Numero Telefonico</label>
-                            <input type="text" class="form-control" placeholder="Numero Telefonico" name="numero_telefonico" value="{{ estudiante.numero_telefonico }}">
+                            <input type="text" class="form-control" placeholder="Numero Telefonico"
+                                name="numero_telefonico" value="{{ estudiante.numero_telefonico }}">
                         </div>
                         <div class="col-md-12">
                             <label class="labels">Correo Electronico Personal</label>
-                            <input type="text" class="form-control" placeholder="Correo Personal" name="correo_personal" value="{{ estudiante.correo_personal }}">
+                            <input type="text" class="form-control" placeholder="Correo Personal" name="correo_personal"
+                                value="{{ estudiante.correo_personal }}">
                         </div>
                     </div>
                     <div class="mt-5 text-center">
-                        <button class="btn btn-primary profile-button" type="submit" h>Guardar Informacion</button>
+                        <button class="btn btn-primary profile-button" type="submit">Guardar Informacion</button>
                     </div>
                 </form>
             </div>
@@ -88,10 +94,8 @@
                     <span>Configuracion de Cuenta</span>
                 </div><br>
                 <div class="col-md-12">
-                    <a href="{% url 'cambiar_contrasena' %}" class="btn btn-primary btn-sm rounded fw-bold">Cambiar Contraseña</a>
-                </div> <br>
-                <div class="col-md-12">
-                    <a href="{% url 'usuario_estudiante' %}" class="btn btn-primary btn-sm rounded fw-bold">Cambiar Correo Personal</a>
+                    <a href="{% url 'cambiar_contrasena' %}" class="btn btn-primary btn-sm rounded fw-bold">Cambiar
+                        Contraseña</a>
                 </div>
             </div>
         </div>

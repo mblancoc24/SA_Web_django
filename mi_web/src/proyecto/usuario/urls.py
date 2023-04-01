@@ -10,10 +10,14 @@ from .views import (MyPasswordResetView,
                     DetalleUsuarioProspecto,
                     vistaPerfil,
                     cambiarcontrasena,
+                    DetalleArchivoOdoo,
                     obtener_datos,
                     carrerasselect,
                     colegiosselect,
-                    posgradosselect)
+                    posgradosselect,
+                    guardar_perfil,
+                    enviar_archivo_a_odoo
+                    )
 from django.contrib.auth.views import LogoutView
 from django.contrib.auth import views as auth_views
 
@@ -37,4 +41,8 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
                path('posgradosselect/', posgradosselect, name='posgradosselect'),
                
                path('perfil/', vistaPerfil.profile_view, name='perfil'),
+               path('guardar-perfil/', guardar_perfil, name='guardar_perfil'),
+               
+               path('enviar-archivo-a-odoo/', enviar_archivo_a_odoo, name='enviar_archivo_a_odoo'),
+               path('archivos-odoo/', DetalleArchivoOdoo.as_view(), name='archivos_odoo'),
                ]
