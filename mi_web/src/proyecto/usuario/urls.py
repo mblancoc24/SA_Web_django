@@ -1,9 +1,5 @@
 from django.urls import path
-from .views import (MyPasswordResetView, 
-                    MyPasswordResetDoneView,
-                    MyPasswordResetView, 
-                    MyPasswordResetConfirmView,
-                    PasswordResetCompleteView,
+from .views import (
                     Logueo, 
                     PaginaRegistroEstudiante,
                     CrearUsuario, 
@@ -13,7 +9,6 @@ from .views import (MyPasswordResetView,
                     DetalleUsuarioProspecto,
                     vistaPerfil,
                     cambiarcontrasena,
-                    SessionTimeoutView,
                     obtener_datos,
                     obtener_provincia,
                     obtener_canton,
@@ -35,10 +30,31 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
                path('crear-usuario/', CrearUsuario.as_view(), name='crear-usuario'),
                path('cambiar_contrasena/', cambiarcontrasena.cambiar_contrasena, name='cambiar_contrasena'),
                
-               path('password_reset/', MyPasswordResetView.as_view(), name='password_reset'),
-               path('password_reset_done/', MyPasswordResetDoneView.as_view(), name='password_reset_done'),
-               path('reset/<uidb64>/<token>/', MyPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
-               path('reset/done/', PasswordResetCompleteView.as_view(), name='password_reset_complete'),
+               path('password-reset/',
+                auth_views.PasswordResetView.as_view(
+                template_name='Contrasenas/Correo/password_reset.html',
+                subject_template_name='Contrasenas/Correo/password_reset_subject.txt',
+                email_template_name='Contrasenas/Correo/password_reset_email.html'),
+                name='password_reset'),
+               
+                path('password-reset/done/',
+                    auth_views.PasswordResetDoneView.as_view(
+                        template_name='Contrasenas/Correo/password_reset_done.html'
+                    ),
+                    name='password_reset_done'),
+                
+                path('password-reset-confirm/<uidb64>/<token>/',
+                    auth_views.PasswordResetConfirmView.as_view(
+                        template_name='Contrasenas/Correo/password_reset_confirm.html'
+                    ),
+                    name='password_reset_confirm'),
+                
+                path('password-reset-complete/',
+                    auth_views.PasswordResetCompleteView.as_view(
+                        template_name='Contrasenas/Correo/password_reset_complete.html'
+                    ),
+                    name='password_reset_complete'),
+               
                path('usuario-estudiante/', DetalleUsuarioEstudiante.as_view(), name='usuario_estudiante'),
                path('usuario-estudiante-profesor/', DetalleUsuarioEstudianteProfesor.as_view(), name='usuario_estudiante_profesor'),
                path('usuario-profesor/', DetalleUsuarioProfesor.as_view(), name='usuario_profesor'),
