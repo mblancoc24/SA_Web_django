@@ -27,6 +27,7 @@
 </nav>
 {% endblock barranavegacion %} {% block content %}
   <div class="row">
+    
     <div class="col-sm-6 col-lg-4 mt-5">
       <div class="card p-3 mb-2" id="infoCard">
         <a data-bs-toggle="modal" data-bs-target="#modal_primer_ingreso" class="card-link" onclick="llenardata()">
@@ -44,7 +45,7 @@
     </div>
     <div class="col-sm-6 col-lg-4 mt-5">
       <div class="card p-3 mb-2" id="infoCard">
-        <a data-bs-toggle="modal" data-bs-target="#modal_posgrado" class="card-link" onclick="llenardata()">
+        <a data-bs-toggle="modal" data-bs-target="#modal_posgrado" class="card-link" onclick="dataposgrados()">
           <img src="../static/img/posgrados.png" class="card-img-top" alt="..." />
         </a>
 
@@ -89,7 +90,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <form method="POST">
+          <form method="post" action="{% url 'enviar_archivo_a_odoo' %}" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-group mb-3">
               <label for="archivo">Título de Educación Media</label>
@@ -120,6 +121,7 @@
             <div class="form-group mb-3">
               <label for="lblcarrera">Colegio de procedencia</label>
               <select id="colegio_select" class="form-select" name="colegio_select"
+              
                 data-placeholder="Colegio donde egresó">
                 <option value="" disabled selected hidden></option>
               </select>
@@ -139,27 +141,42 @@
                 Convalidación de Cursos
               </label>
             </div>
+            
             <div id="certificacion" class="form-group mb-3" style="display: none;">
               <label for="floatingFile">Certificación de Notas del Curso</label>
-              <input class="form-control" style="opacity: 0.65" type="file" id="floatingFile" name="fotoperfil" />
+              <input class="form-control" style="opacity: 0.65" type="file" id="floatingFile" name="certificacionnotas" />
             </div>
 
             <div id="plan" class="form-group mb-3" style="display: none;">
               <label for="floatingFile">Plan de Estudio - Contenido del Curso</label>
-              <input class="form-control" style="opacity: 0.65" type="file" id="floatingFile" name="fotoperfil" />
+              <input class="form-control" style="opacity: 0.65" type="file" id="floatingFile" name="planestudio" />
+            </div>
+
+            <div class="mb-3 form-check">
+              <input class="form-check-input" type="checkbox" value="" id="asesor" name="asesor">
+              <label class="form-check-label" for="asesor">
+                ¿Fuiste atendido por un asesor?
+              </label>
+            </div>
+
+            <div class="form-group mb-3 dropdown-parent" id="select_asesor" style="display: none;">
+              <label for="lblcarrera">Seleccione el asesor que te ha atendido</label>
+              <select id="asesor_select" class="form-select selectorbuscador" name="asesor_select"
+                data-placeholder="Seleccione el asesor que te ha atendido">
+                <option style="opacity: 0.65" value="" disabled selected hidden>Seleccion asesor</option>
+              </select>
+            </div>
+            <div class="d-grid mb-2">
+              <button  type="submit" class="btn btn-primary btn-sm rounded fw-bold">Enviar Formulario</button>
             </div>
           </form>
-          <div class="d-grid mb-2 d-flex justify-content-center">
-            <a href="{% url 'usuario_estudiante' %}" class="btn btn-primary btn-sm rounded fw-bold"
-              style="max-width: 150px;">Enviar Formulario</a>
-          </div>
         </div>
       </div>
     </div>
   </div>
   {% endblock modal_primerIngreso %}
 
-  <!-- Model de Prospecto -->
+  <!-- Model de Posgrado -->
   {% block modal_posgrado %}
   <div class="modal fade" id="modal_posgrado" tabindex="-1" aria-labelledby="modal_posgradoTitle" style="display: none"
     aria-hidden="true">
@@ -205,7 +222,7 @@
 
             <div class="form-group mb-3 dropdown-parent">
               <label for="tipo">Especialidad de Interes</label>
-              <select id="mi_select" class="form-select selectorbuscador" name="mi_select" data-placeholder="Seleccione la Especialidad">
+              <select id="posgradoselect" class="form-select selectorbuscador" name="posgradoselect" data-placeholder="Seleccione la Especialidad">
                 <option style="opacity: 0.65" value="" disabled selected hidden>
                   Seleccione la Especialidad
                 </option>
@@ -366,21 +383,26 @@
     }
 
     function dataposgrados() {
-      var select = document.getElementById("colegio_select");
+      var select = document.getElementById("posgradoselect");
       select.options.length = 0; // Eliminamos todas las opciones anteriores
+      var opcionPorDefecto = new Option("Seleccione una posgrado", "", true, true);
+      select.append(opcionPorDefecto);
 
       fetch("/posgradosselect/")
-        .then((response) => response.json())
-        .then((data) => {
-          // Iteramos sobre los valores obtenidos
-          data.forEach(function (valor) {
-            // Creamos una nueva opción y la agregamos al select
-            var opcion = document.createElement("option");
-            opcion.value = valor;
-            opcion.text = valor;
-            select.add(opcion);
-          });
+      .then((response) => response.json())
+      .then((data) => {
+        // Iteramos sobre los valores obtenidos
+        data.forEach(function (valor) {
+          // Creamos una nueva opción y la agregamos al select
+          var opcion = new Option(valor, valor);
+          select.append(opcion);
         });
+        // Inicializamos Select2 con el dropdownParent apuntando al modal
+        select.select2({
+          dropdownParent: $("#modal_posgrado"),
+          width: "100%", // Ancho del dropdown
+        });
+      });
     }
 
     function llenardata() {
@@ -399,6 +421,16 @@
       } else {
         div.style.display = "none";
         div2.style.display = "none";
+      }
+    });
+
+    const checkbox2 = document.getElementById("asesor");
+    const div3 = document.getElementById("select_asesor");
+    checkbox2.addEventListener("change", function () {
+      if (this.checked) {
+        div3.style.display = "block"; 
+      } else {
+        div3.style.display = "none";
       }
     });
   </script>

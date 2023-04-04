@@ -1,23 +1,25 @@
-
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 from django.contrib.auth.forms import UserCreationForm
 import os
+from django.utils import timezone
 from django.contrib.auth import login, update_session_auth_hash
 from .forms import FormularioEstudiantes, FormularioUsuario, FormularioProfesor, FormularioInfoEstudiante, CustomUserCreationForm
-
-from django.contrib.auth import login, authenticate
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login, authenticate, logout
 from .forms import FormularioEstudiantes, FormularioUsuario, FormularioProfesor
-
+from django.conf import settings
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView
 from django.core.mail import send_mail
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from .models import usuarios, profesor, estudiantes, RegistroLogsUser, carreras, colegios, posgrados, fotoperfil
-
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.contrib.auth.tokens import default_token_generator
 import requests
 import json
 import django
@@ -49,6 +51,7 @@ class Logueo(LoginView):
     redirect_authenticated_user = True
     
     def form_valid(self, form):
+        logout(self.request)
         # Get the user object from the form data
         username = form.cleaned_data.get('username')
         password = form.cleaned_data.get('password')
@@ -58,6 +61,7 @@ class Logueo(LoginView):
         # Call the parent form_valid method if the user is not authenticated
         if user is None:
             form.add_error('username', 'El usuario no existe en el sistema')
+            logout(self.request)
             return super().form_invalid(form)
         
         # Authenticate the user and log them in
@@ -92,7 +96,6 @@ class Logueo(LoginView):
                     return redirect('cambiar_contrasena')
                 else:
                     return redirect('usuario_profesor')
-
 
 class cambiarcontrasena (LoginRequiredMixin):
     def cambiar_contrasena(request):
@@ -130,6 +133,7 @@ class PaginaRegistroEstudiante(FormView):
         telefono = self.request.POST.get('telefono')
         correo_personal = self.request.POST.get('email')
         direccion = self.request.POST.get('direccion')
+        sexo = self.request.POST.get('sexo')
 
         Usuarios = form.save() # type: ignore
         
@@ -146,11 +150,11 @@ class PaginaRegistroEstudiante(FormView):
         id_usuario = get_object_or_404(usuarios, id=user_id)
         
         datos_estudiante = [id_usuario, username, nombre_estudiante, primerapellido, 
-                            segundoapellido, fecha, telefono, 'No Asignado', correo_personal, direccion]
+                            segundoapellido, fecha, telefono, 'No Asignado', correo_personal, direccion, sexo]
         
         form = FormularioEstudiantes({ 'user': datos_estudiante[0], 'identificacion': datos_estudiante[1], 'nombre': datos_estudiante[2], 'primer_apellido': datos_estudiante[3],
                                       'segundo_apellido': datos_estudiante[4], 'fecha_nacimiento': datos_estudiante[5], 'numero_telefonico': datos_estudiante[6],
-                                      'correo_institucional': datos_estudiante[7], 'correo_personal': datos_estudiante[8], 'direccion': datos_estudiante[9]})
+                                      'correo_institucional': datos_estudiante[7], 'correo_personal': datos_estudiante[8], 'direccion': datos_estudiante[9], 'sexo': datos_estudiante[10]})
         if form.is_valid():
             form.save()
             
@@ -161,20 +165,21 @@ class PaginaRegistroEstudiante(FormView):
 
     def get(self, *args, **kwargs):
         if self.request.user.is_authenticated:
-            return redirect('usuario_prospecto')
+            logout(self.request)
+            return redirect('registro_estudiantes')
         return super(PaginaRegistroEstudiante, self).get(*args, **kwargs)
-
 
 class DetalleUsuarioEstudiante(LoginRequiredMixin, ListView):
     model = usuarios
     context_object_name = 'prueba_estudiante'
     template_name = 'Dashboard/Estudiante/prueba_estudiante.html'
-    
+      
 class DetalleUsuarioProfesor(LoginRequiredMixin, ListView):
     model = usuarios
     context_object_name = 'prueba_profesor'
     template_name = 'Dashboard/Profesor/prueba_profesor.html'
-    
+
+
 class DetalleUsuarioProspecto(LoginRequiredMixin, ListView):
     model = usuarios
     context_object_name = 'prueba_prospecto'
@@ -185,10 +190,12 @@ class DetalleUsuarioEstudianteProfesor(LoginRequiredMixin, ListView):
     context_object_name = 'opciones_estudiante_profesor'
     template_name = 'usuario/opciones_login.html'
     
+
 class DetalleArchivoOdoo(LoginRequiredMixin, ListView):
     model = usuarios
     context_object_name = 'envio_archivos_odoo'
     template_name = 'usuario/mmgv.html'
+
 
 class CrearUsuario(LoginRequiredMixin, CreateView):
     model = usuarios
@@ -200,7 +207,6 @@ class CrearUsuario(LoginRequiredMixin, CreateView):
         return super(CrearUsuario, self).form_valid(form)
 
 def obtener_datos(request):
-    print(django.get_version())
     identificiacion = request.GET.get("identificacion")
     url = 'https://api.hacienda.go.cr/fe/ae?identificacion=' + identificiacion
     response = requests.get(url)
@@ -231,27 +237,34 @@ def obtener_datos(request):
         
     data_completa = json.dumps(data)
     return JsonResponse(data_completa, safe=False)
-
 class MyPasswordResetView(PasswordResetView):
     template_name = 'Contrasenas/Correo/my_password_reset.html'
     email_template_name = 'Contrasenas/Correo/my_password_reset_email.html'
     subject_template_name = 'Contrasenas/Correo/my_password_reset_subject.txt'
     success_url = reverse_lazy('password_reset_done')
     from_email = 'correouianoreply@gmail.com'
+    
+class MyPasswordReset(FormView):
+    template_name = 'Contrasenas/Correo/my_password_reset.html'
+    success_url = reverse_lazy('password_reset_email')
+    
 
         
     def form_valid(self, form):
-        # Agregamos el código para enviar el correo electrónico personalizado aquí
         email = form.cleaned_data['email']
         user = User.objects.filter(email=email).first()
         if user is not None:
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            token = default_token_generator.make_token(user)
+            reset_url = self.request.build_absolute_uri(reverse('password_reset_confirm', kwargs={'uidb64': uid, 'token': token}))
+            full_reset_url = f"{settings.PROTOCOL}://{settings.DOMAIN_NAME}{reset_url}"
             send_mail(
                 'Restablecer contraseña',
-                'Por favor, sigue este enlace para restablecer tu contraseña:',
+                'Por favor, sigue este enlace para restablecer tu contraseña: {}'.format(full_reset_url),
                 self.from_email,
                 [email],
                 fail_silently=False,
-                html_message='Haz clic <a href="{}">aquí</a> para restablecer tu contraseña.'.format(self.get_success_url())
+                html_message='Haz clic <a href="{}">aquí</a> para restablecer tu contraseña.'.format(full_reset_url)
             )
         return super().form_valid(form)
     
@@ -285,22 +298,25 @@ class vistaPerfil (LoginRequiredMixin):
         user = request.user
         usuario = get_object_or_404(usuarios, id=user.pk)
         estudiante = get_object_or_404(estudiantes, user=usuario.id)
-        foto = fotoperfil.objects.get( user=estudiante.id_estudiante)
+        fotoperfiles = fotoperfil.objects.get( user=estudiante.id_estudiante)
         
-        imagen_url = Image.open(ContentFile(foto.archivo))
+        
+        
+        imagen_url = Image.open(ContentFile(fotoperfiles.archivo))
         
         context = {'user': user,
                 'estudiante':estudiante,
                 'fotoperfil':imagen_url}
-        return render(request, 'perfil.html', context)
+        return render(request, 'Prospecto/perfil.html', context)
     
+ 
 def guardar_perfil(request):
     if request.method == 'POST':
-        username = request.POST.get('username')
+        user = request.user
         numero_telefonico = request.POST.get('numero_telefonico')
         correo_personal = request.POST.get('correo_personal')
         
-        user = User.objects.get(username=username)
+        user = User.objects.get(username=user.username)
         user_id = user.pk
         
         estudiante = get_object_or_404(estudiantes, user=user_id)
@@ -321,6 +337,14 @@ def guardar_perfil(request):
     else:
         return HttpResponse(status=400)
     
+def mostrar_foto(request):
+    user = request.user
+    usuario = get_object_or_404(usuarios, id=user.pk)
+    estudiante = get_object_or_404(estudiantes, user=usuario.id)
+    foto_perfil = get_object_or_404(fotoperfil, user=estudiante.id_estudiante)
+    foto_bytes = bytes(foto_perfil.archivo)
+    return HttpResponse(foto_bytes, content_type='image/png')
+
 lock = threading.Lock()
 
 def enviar_archivo_a_odoo(request):
@@ -328,65 +352,55 @@ def enviar_archivo_a_odoo(request):
         user = request.user
         user_id = user.pk
         estudiante = get_object_or_404(estudiantes, user=user_id)
-        foto = request.FILES['fotoperfil']
+        foto = request.FILES.get('fotoperfil')
         
         img_data = foto.read()
-
+        
         # Convertir la imagen a bytes
         img_bytes = bytearray(img_data)
 
         # Crear el objeto UserFile y guardarlo en la base de datos
         user_file = fotoperfil(user=estudiante, archivo=img_bytes)
         user_file.save()
-        
-        # Obtener el archivo y el id
-        titulo = request.FILES.get('titulobachillerto')
-        cedula = request.FILES.get('cedulafotografia')
-        
-        notas = request.FILES.get('notas')
-        plan = request.FILES.get('planestudio')
-        registro_id = request.user.username
-        
-        # Obtener extensión del archivo
-        
-        
-        datacompleta = [titulo,cedula,foto,notas,plan]
-        
-        # Conectar a Odoo
-        odoo = ODOO('localhost', port=8060)
-        odoo.login('UIA_3', 'admin', 'admin')
-        
-        def enviodata(data):
-            lock.acquire()
-            
-            _, ext = os.path.splitext(data.name)
-            file_base64 = base64.b64encode(data.read()).decode('utf-8')
-            
-            payload = odoo.env['prestamos.prestamo'].create({
-                'archivo_nombre': data.name,
-                'archivo_base64': file_base64,
-                'registro_id': registro_id,
-                'registro_modelo': 'Prospecto Primer Ingreso',
-                'archivo_tipo': ext
-            })
-        
-            lock.release()
-        
-        threads = []
-        for i in range(5):
-            thread = threading.Thread(target=enviodata, args=(datacompleta[i],)) 
-            threads.append(thread)
+    
+    return redirect('usuario_prospecto')
 
-        # Iniciamos los hilos uno por uno
-        for thread in threads:
-            thread.start()
+class SessionTimeoutView(LoginRequiredMixin):
+    template_name = 'usuarios/login.html'
+    login_url = '/login/'
+    
+    def dispatch(self, request, *args, **kwargs):
+        print("Dispatching to session timeout view...")
+        logout(request)
+        return super().dispatch(request, *args, **kwargs)
+    
+    
+def obtener_provincia(request):
+    url = 'https://ubicaciones.paginasweb.cr/provincias.json'
+    response = requests.get(url)
+    data = response.json()
+    return JsonResponse(data, safe=False)
 
-        # Esperamos a que todos los hilos terminen su ejecución
-        for thread in threads:
-            thread.join()
+def obtener_canton(request):
+    id = request.GET.get("provincia_select")
+    url = 'https://ubicaciones.paginasweb.cr/provincia/'+id+'/cantones.json'
+    response = requests.get(url)
+    data = response.json()
+    return JsonResponse(data, safe=False)
 
-            return HttpResponse("Archivo enviado exitosamente a Odoo.")
-        else:
-            return render(request, 'prueba_prospecto.html')
+def obtener_distrito(request):
+    id_provincia = request.GET.get("provincia_select")
+    id_canton = request.GET.get("canton_select")
+    url = 'https://ubicaciones.paginasweb.cr/provincia/'+id_provincia+'/canton/'+id_canton+'/distritos.json'
+    response = requests.get(url)
+    data = response.json()
+    return JsonResponse(data, safe=False)
 
-
+def obtener_nacionalidad(request):
+    url = 'https://restcountries.com/v3.1/all?fields=name'
+    response = requests.get(url)
+    data = response.json()
+    countries = []
+    for country in data:
+        countries.append(country["name"]["common"])
+    return JsonResponse(sorted(countries), safe=False)

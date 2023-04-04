@@ -26,7 +26,7 @@
         <div class="row mt-2">
             <div class="col-md-12 mb-3">
                 <div class="d-flex flex-column align-items-center text-center p-3 py-5">
-                    <img class="rounded-circle mt-5" width="150px" src="../static/img/user.png">
+                    <img class="rounded-circle mt-5" width="150px" height="150px" src="{% url 'mostrar_foto' %}" alt="..static\img\user.png">
                     <span class="font-weight-bold">{{ user.username }}</span>
                     <span class="text-black-50">{{ estudiante.correo_institucional }}</span>
                     <span> </span>
@@ -39,21 +39,13 @@
                     Contraseña</a>
             </div>
         </div>
-        <div class="col-md-10 col-sm-12 mx-auto">
-            <div class="text-center">
-                <a href="{% url 'usuario_estudiante' %}"
-                    class="btn btn-primary btn-sm rounded fw-bold">Cambiar
-                    Correo Personal</a>
-            </div>
-        </div>
-        
     </div>
     <div class="col-md-9 col-sm-12 border-right">
         <div class="p-3 py-5">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h4 class="mx-auto">Informacion de Perfil</h4>
             </div>
-            <form method="POST">
+            <form method="POST" action="{% url 'guardar_perfil' %}">
                 {% csrf_token %}
                 <div class="row mt-2">
                     <div class="col-md-6 col-sm-12 mb-3">

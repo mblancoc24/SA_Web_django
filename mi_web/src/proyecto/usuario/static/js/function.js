@@ -51,7 +51,6 @@ function datacedula() {
 }
 
 function datacarreras() {
-    console.log('hola esty dentro jaja')
     var select = document.getElementById("mi_select");
     select.options.length = 0; // Eliminamos todas las opciones anteriores
 
