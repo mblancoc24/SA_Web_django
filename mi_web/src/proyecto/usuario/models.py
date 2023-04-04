@@ -25,7 +25,11 @@ class usuarios(models.Model):
 
 class estudiantes(models.Model):
     id_estudiante = models.AutoField(primary_key=True)
-    user = models.OneToOneField(usuarios,on_delete=models.CASCADE)
+    user = models.ForeignKey(usuarios,
+                            on_delete=models.CASCADE,
+                            null=True,
+                            blank=True)
+    activo = models.BooleanField(default=False)
     identificacion = models.CharField(max_length=22)
     nombre = models.CharField(max_length=18)
     primer_apellido = models.CharField(max_length=18)
@@ -34,13 +38,19 @@ class estudiantes(models.Model):
     numero_telefonico = models.IntegerField(default=0)
     correo_institucional = models.CharField(max_length=60)
     correo_personal = models.CharField(max_length=60)
-    direccion = models.CharField(max_length=200)
+    nacionalidad = models.CharField(max_length=20)
+    provincia = models.CharField(max_length=20)
+    canton = models.CharField(max_length=20)
+    distrito = models.CharField(max_length=20)
     sexo = models.CharField(max_length=15)
     
     
 class info_estudiantes (models.Model):
     id_info = models.AutoField(primary_key=True)
-    user = models.OneToOneField(estudiantes, on_delete=models.CASCADE)
+    user = models.ForeignKey(estudiantes,
+                            on_delete=models.CASCADE,
+                            null=True,
+                            blank=True)
     ingresoeconomico = models.CharField(max_length=35)
     carrera = models.CharField(max_length=100)
     colegio = models.CharField(max_length=100)
@@ -48,7 +58,10 @@ class info_estudiantes (models.Model):
 
 class profesor(models.Model):
     id_profesor= models.AutoField(primary_key=True)
-    user = models.OneToOneField(usuarios, on_delete=models.CASCADE)
+    user = models.ForeignKey(usuarios,
+                            on_delete=models.CASCADE,
+                            null=True,
+                            blank=True)
     identificacion = models.CharField(max_length=25)
     nombre = models.CharField(max_length=18)
     primer_apellido = models.CharField(max_length=18)
@@ -91,7 +104,10 @@ class colegios (models.Model):
         db_table = 'colegios'
         
 class fotoperfil(models.Model):
-    user = models.OneToOneField(estudiantes, on_delete=models.CASCADE)
+    user = models.ForeignKey(estudiantes,
+                            on_delete=models.CASCADE,
+                            null=True,
+                            blank=True)
     archivo = models.BinaryField() 
         
         

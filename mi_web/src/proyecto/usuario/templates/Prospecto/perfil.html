@@ -26,7 +26,7 @@
         <div class="row mt-2">
             <div class="col-md-12 mb-3">
                 <div class="d-flex flex-column align-items-center text-center p-3 py-5">
-                    <img class="rounded-circle mt-5" width="150px" height="150px" src="{% url 'mostrar_foto' %}" alt="..static\img\user.png">
+                    <img class="rounded-circle mt-5" width="150px" height="150px" src="{% url 'mostrar_foto' %}" alt="../static/img/user.png">
                     <span class="font-weight-bold">{{ user.username }}</span>
                     <span class="text-black-50">{{ estudiante.correo_institucional }}</span>
                     <span> </span>
@@ -63,19 +63,19 @@
                 <div class="row mt-3">
                     <div class="col-md-6 col-sm-12 mb-3">
                         <label class="labels">Pais</label>
-                        <input type="text" class="form-control" placeholder="Pais" value="">
+                        <input type="text" class="form-control" placeholder="Pais" value="{{ estudiante.nacionalidad }}" readonly>
                     </div>
                     <div class="col-md-6 col-sm-12 mb-3">
                         <label class="labels">Provincia</label>
-                        <input type="text" class="form-control" value="" placeholder="Provincia">
+                        <input type="text" class="form-control" name="provincia" value="{{ estudiante.provincia }}" placeholder="Provincia">
                     </div>
                     <div class="col-md-6 col-sm-12 mb-3">
                         <label class="labels">Canton</label>
-                        <input type="text" class="form-control" placeholder="Canton" value="">
+                        <input type="text" class="form-control" name="canton" placeholder="Canton" value="{{ estudiante.canton }}">
                     </div>
                     <div class="col-md-6 col-sm-12 mb-3">
                         <label class="labels">Distrito</label>
-                        <input type="text" class="form-control" placeholder="Distrito" value="">
+                        <input type="text" class="form-control" name="distrito" placeholder="Distrito" value="{{ estudiante.distrito }}">
                     </div>
                 </div>
                 <div class="row mt-3">
