@@ -19,7 +19,7 @@ class FormularioEstudiantes(forms.ModelForm):
     class Meta:
         model = estudiantes
         fields = ('user','identificacion', 'nombre', 'primer_apellido','segundo_apellido', 'fecha_nacimiento', 'numero_telefonico', 
-                  'correo_institucional', 'correo_personal', 'direccion', 'sexo')
+                  'correo_institucional', 'correo_personal', 'nacionalidad', 'provincia', 'canton', 'distrito', 'sexo')
         
 class FormularioProfesor(forms.ModelForm):
     class Meta:
