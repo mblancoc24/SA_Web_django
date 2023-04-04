@@ -1,6 +1,8 @@
 from django.urls import path
 from .views import (MyPasswordResetView, 
-                    MyPasswordResetDoneView, 
+                    MyPasswordResetDoneView,
+                    MyPasswordResetView, 
+                    MyPasswordReset,
                     Logueo, 
                     PaginaRegistroEstudiante,
                     CrearUsuario, 
@@ -10,13 +12,18 @@ from .views import (MyPasswordResetView,
                     DetalleUsuarioProspecto,
                     vistaPerfil,
                     cambiarcontrasena,
-                    DetalleArchivoOdoo,
+                    SessionTimeoutView,
                     obtener_datos,
+                    obtener_provincia,
+                    obtener_canton,
+                    obtener_distrito,
+                    obtener_nacionalidad,
                     carrerasselect,
                     colegiosselect,
                     posgradosselect,
                     guardar_perfil,
-                    enviar_archivo_a_odoo
+                    enviar_archivo_a_odoo,
+                    mostrar_foto,
                     )
 from django.contrib.auth.views import LogoutView
 from django.contrib.auth import views as auth_views
@@ -28,13 +35,18 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
                path('cambiar_contrasena/', cambiarcontrasena.cambiar_contrasena, name='cambiar_contrasena'),
                
                path('password_reset/', MyPasswordResetView.as_view(), name='password_reset'),
-               path('password_reset/done/', MyPasswordResetDoneView.as_view(), name='password_reset_done'),
-
+               path('password_reset_done/', MyPasswordResetDoneView.as_view(), name='password_reset_done'),
+               path('password_reset_email/', MyPasswordReset.as_view(), name='password_reset_email'),
                path('usuario-estudiante/', DetalleUsuarioEstudiante.as_view(), name='usuario_estudiante'),
                path('usuario-estudiante-profesor/', DetalleUsuarioEstudianteProfesor.as_view(), name='usuario_estudiante_profesor'),
                path('usuario-profesor/', DetalleUsuarioProfesor.as_view(), name='usuario_profesor'),
                path('usuario-prospecto/', DetalleUsuarioProspecto.as_view(), name='usuario_prospecto'),
+               
                path('obtener-datos/', obtener_datos, name='obtener_datos'),
+               path('obtener-provincia/', obtener_provincia, name='obtener_provincia'),
+               path('obtener-canton/', obtener_canton, name='obtener_canton'),
+               path('obtener-distrito/', obtener_distrito, name='obtener_distrito'),
+               path('obtener-nacionalidad/', obtener_nacionalidad, name='obtener_nacionalidad'),
                
                path('carrerasselect/', carrerasselect, name='carrerasselect'),
                path('colegiosselect/', colegiosselect, name='colegiosselect'),
@@ -44,5 +56,5 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
                path('guardar-perfil/', guardar_perfil, name='guardar_perfil'),
                
                path('enviar-archivo-a-odoo/', enviar_archivo_a_odoo, name='enviar_archivo_a_odoo'),
-               path('archivos-odoo/', DetalleArchivoOdoo.as_view(), name='archivos_odoo'),
+               path('mostrar-foto/', mostrar_foto, name='mostrar_foto'),
                ]

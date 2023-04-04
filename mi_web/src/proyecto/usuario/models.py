@@ -2,6 +2,11 @@ from audioop import max
 from django import forms
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.files.base import ContentFile
+from django.utils import timezone
+import base64
+import io
+from django.core.files.storage import default_storage
 
 class usuarios(models.Model):
     usuarios = models.ForeignKey(User,
@@ -30,6 +35,7 @@ class estudiantes(models.Model):
     correo_institucional = models.CharField(max_length=60)
     correo_personal = models.CharField(max_length=60)
     direccion = models.CharField(max_length=200)
+    sexo = models.CharField(max_length=15)
     
     
 class info_estudiantes (models.Model):
@@ -71,7 +77,7 @@ class carreras (models.Model):
         db_table = 'primer_ingreso'
         
 class posgrados (models.Model):
-    nombre_carrera = models.CharField(max_length=60)
+    nombre_carrera = models.CharField(max_length=100)
     id = models.AutoField(primary_key=True)
     
     class Meta:
@@ -86,6 +92,6 @@ class colegios (models.Model):
         
 class fotoperfil(models.Model):
     user = models.OneToOneField(estudiantes, on_delete=models.CASCADE)
-    archivo = models.BinaryField()      
+    archivo = models.BinaryField() 
         
         
