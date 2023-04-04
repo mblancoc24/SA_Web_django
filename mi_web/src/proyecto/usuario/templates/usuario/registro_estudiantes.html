@@ -10,7 +10,7 @@
                 <form class="row g-3" method="POST">
                     {% csrf_token %}
                     <div class="form-floating col-md-4">
-                        <select id="tipo" class="form-select" onchange="change();">
+                        <select id="tipo" class="form-select" onchange="change();" >
                             <option style="opacity: .65;" value="" disabled selected hidden>Tipo de identificación
                             </option>
                             <option value="Cédula">Cédula Física</option>
@@ -50,6 +50,18 @@
                             name="fechanacimiento" required>
                         <label for="fechanacimiento" style="opacity: .65;">Fecha de nacimiento</label>
                     </div>
+                    
+                    <div class="form-floating mb-3 col-md-4">
+                        <select id="genero" class="form-select" name="Genero_select"
+                          data-placeholder="Genero" required>
+                          <option style="opacity: 0.65" value="" disabled selected hidden>Genero</option>
+                            <option value="femenino">Femenino</option>
+                            <option value="masculino">Masculino</option>
+                            <option value="no_decirlo">Prefiero no decirlo</option>
+                            <option value="otro">Otro</option>
+                        </select>
+                        <label for="tipo" style="opacity: .65;">Genero</label>
+                    </div>
 
                     <div class="form-floating mb-3 col-md-4">
                         <input type="text" class="form-control" id="telefono" placeholder="Número Telefónico"
@@ -58,30 +70,35 @@
                     </div>
 
                     <div class="form-floating mb-3 col-md-4">
-                        <select id="pais" class="form-select" name="pais_select"
-                          data-placeholder="Selecione un País">
-                          <option style="opacity: 0.65" value="" disabled selected hidden></option>
+                        <select id="pais_select" class="form-select" name="pais_select"
+                          data-placeholder="Seleccione Nacionalidad" onclick="cargarPais()" required>
+                          <option style="opacity: 0.65" value="" disabled selected hidden>Seleccione Nacionalidad</option>
                         </select>
+                        <label for="tipo" style="opacity: .65;">Nacionalidad</label>
                     </div>
 
                     <div class="form-floating mb-3 col-md-4">
-                        <select id="provincia" class="form-select" name="provicncia_select"
-                          data-placeholder="Selecione una provincia">
-                          <option style="opacity: 0.65" value="" disabled selected hidden></option>
+                        <select id="provincia_select" class="form-select" name="provincia_select"
+                          data-placeholder="Selecione Provincia" onclick="cargarProvincias()" required>
+                          <option style="opacity: 0.65" value="" disabled selected hidden>Seleccione Provincia</option>
                         </select>
+                        <label for="tipo" style="opacity: .65;">Provincia</label>
                     </div>
 
                     <div class="form-floating mb-3 col-md-4">
-                        <select id="distrito" class="form-select" name="distrito_select"
-                          data-placeholder="Selecione un distrito">
-                          <option style="opacity: 0.65" value="" disabled selected hidden></option>
+                        <select id="canton_select" class="form-select" name="canton_select"
+                          data-placeholder="Selecione Canton" required>
+                          <option style="opacity: 0.65" value="" disabled selected hidden>Seleccione Cantón</option>
                         </select>
+                        <label for="tipo" style="opacity: .65;">Cantón</label>
                     </div>
 
                     <div class="form-floating mb-3 col-md-4">
-                        <textarea type="text" class="form-control" id="direccion" placeholder="Dirección Domicilio"
-                            name="direccion" required rows="3"></textarea>
-                        <label for="direccion" style="opacity: .65;">Dirección Domicilio</label>
+                        <select id="distrito_select" class="form-select" name="distrito_select"
+                          data-placeholder="Selecione Distrito" required>
+                          <option style="opacity: 0.65" value="" disabled selected hidden>Seleccione Distrito</option>
+                        </select>
+                        <label for="tipo" style="opacity: .65;">Distrito</label>
                     </div>
 
                     <div class="form-floating mb-3 col-md-4">
@@ -118,4 +135,138 @@
         </div>
     </div>
 </div>
+
+<script>
+    var provinciasCargadas = false;
+
+    function cargarProvincias() {
+        if (provinciasCargadas) {
+            return;
+        }
+
+        var select = document.getElementById("provincia_select");
+        var select2 = document.getElementById("canton_select");
+        var select3 = document.getElementById("distrito_select");
+
+        select.options.length = 0; // Eliminamos todas las opciones anteriores
+        select2.options.length = 0;
+        select3.options.length = 0;
+
+        var option1 = document.createElement("option");
+        option1.text = 'Seleccione Cantón';
+        select2.add(option1);
+        var option2 = document.createElement("option");
+        option2.text = 'Seleccione Distrito';
+        select3.add(option2);
+
+        var url = "{% url 'obtener_provincia' %}";
+        var request = new XMLHttpRequest();
+        request.open('GET', url, true);
+        request.onload = function() {
+          if (request.status === 200) {
+            var data = JSON.parse(request.responseText);
+            for(key in data) {
+              var option = document.createElement("option");
+              option.value = key;
+              option.text = data[key];
+              select.add(option);
+            }
+            provinciasCargadas = true;
+          }
+        };
+        request.send();
+    }
+
+    const miSelect = document.getElementById('provincia_select');
+    miSelect.addEventListener('change', () => {
+    const opcionSeleccionada = miSelect.value;
+        cargarCantones(opcionSeleccionada);
+    });
+
+    function cargarCantones(valor) {
+        var select = document.getElementById("canton_select");
+        var select2 = document.getElementById("distrito_select");
+
+        select.options.length = 0; // Eliminamos todas las opciones anteriores
+        select2.options.length = 0; // Eliminamos todas las opciones anteriores
+
+        var option3 = document.createElement("option");
+        option3.text = 'Seleccione Distrito';
+        select2.add(option3);
+
+        var url = "/obtener-canton/?provincia_select=";
+        var request = new XMLHttpRequest();
+        request.open('GET', url + encodeURIComponent(valor), true);
+        request.onload = function() {
+          if (request.status === 200) {
+            var data = JSON.parse(request.responseText);
+            for(key in data) {
+              var option = document.createElement("option");
+              option.value = key;
+              option.text = data[key];
+              select.add(option);
+            }
+          }
+        };
+        request.send();
+    }
+
+    const miSelect1 = document.getElementById('provincia_select');
+    const miSelect2 = document.getElementById('canton_select');
+    miSelect2.addEventListener('change', () => {
+    const opcionSeleccionada = miSelect1.value;
+    const opcionSeleccionada2 = miSelect2.value;
+        cargarDistritos(opcionSeleccionada,opcionSeleccionada2);
+    });
+
+    function cargarDistritos(valor1, valor2) {
+        var select = document.getElementById("distrito_select");
+        select.options.length = 0; // Eliminamos todas las opciones anteriores
+        var url = "/obtener-distrito/?provincia_select=" + encodeURIComponent(valor1) + "&canton_select=" + encodeURIComponent(valor2);
+        var request = new XMLHttpRequest();
+        request.open('GET', url, true);
+        request.onload = function() {
+          if (request.status === 200) {
+            var data = JSON.parse(request.responseText);
+            for(key in data) {
+              var option = document.createElement("option");
+              option.value = key;
+              option.text = data[key];
+              select.add(option);
+            }
+          }
+        };
+        request.send();
+    }
+
+
+    var paisCargadas = false;
+
+    function cargarPais() {
+        if (paisCargadas) {
+            return;
+        }
+
+        var select = document.getElementById("pais_select");
+
+        select.options.length = 0; // Eliminamos todas las opciones anteriores
+
+        var url = "{% url 'obtener_nacionalidad' %}";
+        var request = new XMLHttpRequest();
+        request.open('GET', url, true);
+        request.onload = function() {
+          if (request.status === 200) {
+            var data = JSON.parse(request.responseText);
+            for(key in data) {
+              var option = document.createElement("option");
+              option.value = key;
+              option.text = data[key];
+              select.add(option);
+            }
+            paisCargadas = true;
+          }
+        };
+        request.send();
+    }
+</script>
 {% endblock content %}

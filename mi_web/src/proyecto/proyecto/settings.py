@@ -44,9 +44,9 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -71,6 +71,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'proyecto.wsgi.application'
 
+DOMAIN_NAME = 'tudominio.com'
+PROTOCOL = 'https'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
@@ -85,12 +87,6 @@ DATABASES = {
         'PORT': '5432',
     }
 }
-
-ODOO_HOST = 'localhost'  # dirección IP o nombre de host de tu servidor Odoo
-ODOO_PORT = 8060  # puerto de conexión a Odoo (por defecto es 8069)
-ODOO_DB = 'UIA_3'  # nombre de tu base de datos en Odoo
-ODOO_USER = 'admin'  # nombre de usuario en Odoo
-ODOO_PASS = 'admin'  # contraseña de usuario en Odoo
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -127,6 +123,13 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
+# Configuración de sesión
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_COOKIE_AGE = 86400  # Duración de la cookie de sesión (en segundos)
+SESSION_EXPIRE_SECONDS = 600  # Duración máxima de la sesión (en segundos)
+SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True  # Cerrar sesión después de la última actividad
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Cerrar sesión cuando el navegador se cierre
+SESSION_EXPIRE_REDIRECT_URL = '/session-timeout/'  # URL de la vista que se usará para redirigir al usuario
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
