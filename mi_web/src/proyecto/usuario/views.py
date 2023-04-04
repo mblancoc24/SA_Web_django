@@ -66,7 +66,7 @@ class Logueo(LoginView):
         
         # Authenticate the user and log them in
         login(self.request, user)
-        login_obj = get_object_or_404(usuarios, id=user.id)
+        login_obj = get_object_or_404(usuarios, usuarios=user.id)
         if login_obj.es_estudiante and login_obj.es_profesor:
             primer_ingreso = user.password
             #ACA SE CONSULTARIA A LA BASE DE DATOS DE LAS CLAVES PREDETERMINADAS
@@ -105,7 +105,7 @@ class cambiarcontrasena (LoginRequiredMixin):
                 user = form.save()
                 update_session_auth_hash(request, user)  # Important!
                 messages.success(request, 'Your password was successfully updated!')
-                login_obj = get_object_or_404(usuarios, id=user.id)
+                login_obj = get_object_or_404(usuarios, usuarios=user.id)
                 if login_obj.es_prospecto:
                     return redirect('usuario_prospecto')
                     
@@ -132,7 +132,10 @@ class PaginaRegistroEstudiante(FormView):
         fecha = self.request.POST.get('fechanacimiento')
         telefono = self.request.POST.get('telefono')
         correo_personal = self.request.POST.get('email')
-        direccion = self.request.POST.get('direccion')
+        nacionalidad = self.request.POST.get('pais')
+        provincia = self.request.POST.get('provincia')
+        canton = self.request.POST.get('canton')
+        distrito = self.request.POST.get('distrito')
         sexo = self.request.POST.get('Genero_select')
 
         Usuarios = form.save() # type: ignore
@@ -147,14 +150,16 @@ class PaginaRegistroEstudiante(FormView):
         if form.is_valid():
             form.save()
         
-        id_usuario = get_object_or_404(usuarios, id=user_id)
+        usuario = get_object_or_404(usuarios, usuarios=user_id)
+        id_usuario = usuario.usuarios_id
         
         datos_estudiante = [id_usuario, username, nombre_estudiante, primerapellido, 
-                            segundoapellido, fecha, telefono, 'No Asignado', correo_personal, direccion, sexo]
+                            segundoapellido, fecha, telefono, 'No Asignado', correo_personal, nacionalidad, provincia, canton, distrito, sexo]
         
         form = FormularioEstudiantes({ 'user': datos_estudiante[0], 'identificacion': datos_estudiante[1], 'nombre': datos_estudiante[2], 'primer_apellido': datos_estudiante[3],
                                       'segundo_apellido': datos_estudiante[4], 'fecha_nacimiento': datos_estudiante[5], 'numero_telefonico': datos_estudiante[6],
-                                      'correo_institucional': datos_estudiante[7], 'correo_personal': datos_estudiante[8], 'direccion': datos_estudiante[9], 'sexo': datos_estudiante[10]})
+                                      'correo_institucional': datos_estudiante[7], 'correo_personal': datos_estudiante[8], 'nacionalidad': datos_estudiante[9], 'provincia': datos_estudiante[10], 
+                                      'canton': datos_estudiante[11], 'distrito': datos_estudiante[12], 'sexo': datos_estudiante[13]})
         if form.is_valid():
             form.save()
             
@@ -314,17 +319,20 @@ class vistaPerfil (LoginRequiredMixin):
 
     def profile_view(request):
         user = request.user
-        usuario = get_object_or_404(usuarios, id=user.pk)
-        estudiante = get_object_or_404(estudiantes, user=usuario.id)
-        fotoperfiles = fotoperfil.objects.get( user=estudiante.id_estudiante)
-        
-        
-        
-        imagen_url = Image.open(ContentFile(fotoperfiles.archivo))
-        
-        context = {'user': user,
+        usuario = get_object_or_404(usuarios, usuarios=user.pk)
+        estudiante = get_object_or_404(estudiantes, user=usuario.usuarios_id)
+        try:
+            fotoperfiles = fotoperfil.objects.get(user=estudiante.user_id)
+            imagen_url = Image.open(ContentFile(fotoperfiles.archivo))
+            context = {'user': user,
                 'estudiante':estudiante,
                 'fotoperfil':imagen_url}
+        except fotoperfil.DoesNotExist:
+            fotoperfiles = None
+            context = {'user': user,
+                'estudiante':estudiante,
+                'fotoperfil':'../static/img/user.png'}
+            
         return render(request, 'Prospecto/perfil.html', context)
     
  
@@ -333,6 +341,9 @@ def guardar_perfil(request):
         user = request.user
         numero_telefonico = request.POST.get('numero_telefonico')
         correo_personal = request.POST.get('correo_personal')
+        provincia = request.POST.get('provincia')
+        canton = request.POST.get('canton')
+        distrito = request.POST.get('distrito')
         
         user = User.objects.get(username=user.username)
         user_id = user.pk
@@ -340,11 +351,12 @@ def guardar_perfil(request):
         estudiante = get_object_or_404(estudiantes, user=user_id)
         
         datos_estudiante = [estudiante.id_estudiante, estudiante.identificacion, estudiante.nombre, estudiante.primer_apellido, 
-                        estudiante.segundo_apellido, estudiante.fecha_nacimiento, numero_telefonico, estudiante.correo_institucional, correo_personal, estudiante.direccion]
+                        estudiante.segundo_apellido, estudiante.fecha_nacimiento, numero_telefonico, estudiante.correo_institucional, correo_personal, estudiante.nacionalidad, provincia, canton, distrito, estudiante.sexo]
         
         form = FormularioEstudiantes({ 'user': datos_estudiante[0], 'identificacion': datos_estudiante[1], 'nombre': datos_estudiante[2], 'primer_apellido': datos_estudiante[3],
                                         'segundo_apellido': datos_estudiante[4], 'fecha_nacimiento': datos_estudiante[5], 'numero_telefonico': datos_estudiante[6],
-                                        'correo_institucional': datos_estudiante[7], 'correo_personal': datos_estudiante[8], 'direccion': datos_estudiante[9]}, instance=estudiante)
+                                        'correo_institucional': datos_estudiante[7], 'correo_personal': datos_estudiante[8], 'nacionalidad': datos_estudiante[9], 
+                                        'provincia': datos_estudiante[10], 'canton': datos_estudiante[11], 'distrito': datos_estudiante[12], 'sexo': datos_estudiante[13]}, instance=estudiante)
         
 
         if form.is_valid():
@@ -357,9 +369,9 @@ def guardar_perfil(request):
     
 def mostrar_foto(request):
     user = request.user
-    usuario = get_object_or_404(usuarios, id=user.pk)
-    estudiante = get_object_or_404(estudiantes, user=usuario.id)
-    foto_perfil = get_object_or_404(fotoperfil, user=estudiante.id_estudiante)
+    usuario = get_object_or_404(usuarios, usuarios=user.pk)
+    estudiante = get_object_or_404(estudiantes, user=usuario.usuarios_id)
+    foto_perfil = get_object_or_404(fotoperfil, user=estudiante.user_id)
     foto_bytes = bytes(foto_perfil.archivo)
     return HttpResponse(foto_bytes, content_type='image/png')
 
@@ -378,7 +390,7 @@ def enviar_archivo_a_odoo(request):
         img_bytes = bytearray(img_data)
 
         # Crear el objeto UserFile y guardarlo en la base de datos
-        user_file = fotoperfil(user=estudiante, archivo=img_bytes)
+        user_file = fotoperfil(user=estudiante.user_id, archivo=img_bytes)
         user_file.save()
     
     return redirect('usuario_prospecto')
