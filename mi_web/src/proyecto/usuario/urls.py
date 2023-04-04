@@ -8,7 +8,6 @@ from .views import (
                     DetalleUsuarioProfesor, 
                     DetalleUsuarioProspecto,
                     vistaPerfil,
-                    cambiarcontrasena,
                     obtener_datos,
                     obtener_provincia,
                     obtener_canton,
@@ -28,7 +27,15 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
                path('registro_estudiantes/', PaginaRegistroEstudiante.as_view(), name='registro_estudiantes'),
                path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
                path('crear-usuario/', CrearUsuario.as_view(), name='crear-usuario'),
-               path('cambiar_contrasena/', cambiarcontrasena.cambiar_contrasena, name='cambiar_contrasena'),
+             
+               path(
+                'change-password/',
+                auth_views.PasswordChangeView.as_view(
+                    template_name='Contrasenas/Correo/change-password.html',
+                    success_url = '/logout/'
+                ),
+                name='change_password'
+                ),
                
                path('password-reset/',
                 auth_views.PasswordResetView.as_view(
