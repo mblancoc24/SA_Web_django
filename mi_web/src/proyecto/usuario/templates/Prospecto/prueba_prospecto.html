@@ -228,11 +228,27 @@
                 </option>
               </select>
             </div>
-          </form>
-          <div class="d-grid mb-2">
-            <a href="{% url 'usuario_estudiante' %}" class="btn btn-primary btn-sm rounded fw-bold">Enviar
-              Formulario</a>
-          </div>
+
+            <div class="mb-3 form-check">
+              <input class="form-check-input" type="checkbox" value="" id="asesor" name="asesor">
+              <label class="form-check-label" for="asesor">
+                ¿Fuiste atendido por un asesor?
+              </label>
+            </div>
+
+            <div class="form-group mb-3 dropdown-parent" id="select_asesor" style="display: none;">
+              <label for="lblcarrera">Seleccione el asesor que te ha atendido</label>
+              <select id="asesor_select" class="form-select selectorbuscador" name="asesor_select"
+                data-placeholder="Seleccione el asesor que te ha atendido">
+                <option style="opacity: 0.65" value="" disabled selected hidden>Seleccion asesor</option>
+              </select>
+            </div>
+          
+            <div class="d-grid mb-2">
+              <a href="{% url 'usuario_estudiante' %}" class="btn btn-primary btn-sm rounded fw-bold">Enviar
+                Formulario</a>
+            </div>
+        </form>
         </div>
       </div>
     </div>

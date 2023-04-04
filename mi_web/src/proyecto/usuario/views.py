@@ -1,59 +1,23 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic.list import ListView
-from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
-from django.contrib.auth.forms import UserCreationForm, SetPasswordForm
-import os
-from django.utils import timezone
-from django.contrib.auth import login, update_session_auth_hash
+from .models import usuarios, profesor, estudiantes, RegistroLogsUser, carreras, colegios, posgrados, fotoperfil
 from .forms import FormularioEstudiantes, FormularioUsuario, FormularioProfesor, FormularioInfoEstudiante, CustomUserCreationForm
+from django.views.generic.list import ListView
+from django.views.generic.edit import CreateView, FormView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate, logout
-from .forms import FormularioEstudiantes, FormularioUsuario, FormularioProfesor
-from django.conf import settings
 from django.contrib.auth.views import LoginView
-from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView,PasswordResetCompleteView,PasswordResetConfirmView
-from django.core.mail import send_mail
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from .models import usuarios, profesor, estudiantes, RegistroLogsUser, carreras, colegios, posgrados, fotoperfil
-from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
-from django.utils.encoding import force_bytes
-from django.contrib.auth import get_user_model
-from django.contrib.auth.tokens import default_token_generator
-import requests
-import json
-import django
 from django.http import JsonResponse, HttpResponse
-from django.urls import reverse
-from django.core.mail import send_mail
-from django.conf import settings
-from django.shortcuts import render, redirect
-from django.contrib.auth.forms import PasswordResetForm, PasswordChangeForm
 from django.contrib.auth.models import User
-from django.apps import AppConfig
-from django.core.files.storage import FileSystemStorage
-from django.shortcuts import render
-
-from django.contrib import messages
-from django.core.files import File
 from django.core.files.base import ContentFile
 from PIL import Image
 from odoorpc import ODOO
 import base64
 import threading
 import xmlrpc.client
-
-from django.utils.encoding import force_bytes
-from django.utils.http import urlsafe_base64_encode
-from django.views.generic.edit import FormView
-from django.conf import settings
-from django.core.mail import send_mail
-from django.contrib import messages
-from django.template.loader import render_to_string
-from django.utils.html import strip_tags
-
-from django.http import HttpResponse
+import requests
+import json
 
 class Logueo(LoginView):
     template_name = 'usuario/login.html'
@@ -107,26 +71,6 @@ class Logueo(LoginView):
                 else:
                     return redirect('usuario_profesor')
 
-class cambiarcontrasena (LoginRequiredMixin):
-    def cambiar_contrasena(request):
-        if request.method == 'POST':
-            form = PasswordChangeForm(request.user, request.POST)
-            if form.is_valid():
-                user = form.save()
-                update_session_auth_hash(request, user)  # Important!
-                messages.success(request, 'Your password was successfully updated!')
-                login_obj = get_object_or_404(usuarios, usuarios=user.id)
-                if login_obj.es_prospecto:
-                    return redirect('usuario_prospecto')
-                    
-                elif login_obj.es_estudiante:
-                    return redirect('usuario_estudiante')
-                    
-                elif login_obj.es_profesor:
-                    return redirect('usuario_profesor')
-        else:
-            form = PasswordChangeForm(request.user)
-        return render(request, 'Contrasenas/Correo/cambiar_contrasena.html', {'form': form})
 
 class PaginaRegistroEstudiante(FormView):
     template_name = 'usuario/registro_estudiantes.html'
@@ -274,23 +218,25 @@ class vistaPerfil (LoginRequiredMixin):
     context_object_name = 'perfil_estudiante'
     template_name = 'Prospecto/perfil.html'
 
-
     def profile_view(request):
         user = request.user
         usuario = get_object_or_404(usuarios, usuarios=user.pk)
         estudiante = get_object_or_404(estudiantes, user=usuario.usuarios_id)
+   
         try:
-            fotoperfiles = fotoperfil.objects.get(user=estudiante.user_id)
-            imagen_url = Image.open(ContentFile(fotoperfiles.archivo))
-            context = {'user': user,
-                'estudiante':estudiante,
-                'fotoperfil':imagen_url}
+            fotoperfil_obj = fotoperfil.objects.get(user=estudiante.user_id)
+            imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
+            context = {
+                'user': user,
+                'estudiante': estudiante,
+                'fotoperfil': imagen_url,
+            }
         except fotoperfil.DoesNotExist:
-            fotoperfiles = None
-            context = {'user': user,
-                'estudiante':estudiante,
-                'fotoperfil':'../static/img/user.png'}
-            
+
+            context = {
+                'user': user,
+                'estudiante': estudiante,
+            }
         return render(request, 'Prospecto/perfil.html', context)
     
  
