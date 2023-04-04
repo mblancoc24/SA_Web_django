@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, SetPasswordForm
 import os
 from django.utils import timezone
 from django.contrib.auth import login, update_session_auth_hash
@@ -19,6 +19,7 @@ from django.urls import reverse_lazy
 from .models import usuarios, profesor, estudiantes, RegistroLogsUser, carreras, colegios, posgrados, fotoperfil
 from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
 from django.utils.encoding import force_bytes
+from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 import requests
 import json
@@ -42,6 +43,15 @@ from odoorpc import ODOO
 import base64
 import threading
 import xmlrpc.client
+
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
+from django.views.generic.edit import FormView
+from django.conf import settings
+from django.core.mail import send_mail
+from django.contrib import messages
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 from django.http import HttpResponse
 
@@ -243,58 +253,6 @@ def obtener_datos(request):
     data_completa = json.dumps(data)
     return JsonResponse(data_completa, safe=False)
 
-class MyPasswordResetView(PasswordResetView):
-    template_name = 'Contrasenas/Correo/my_password_reset.html'
-    email_template_name = 'Contrasenas/Correo/my_password_reset_email.html'
-    subject_template_name = 'Contrasenas/Correo/my_password_reset_subject.txt'
-    success_url = reverse_lazy('password_reset_done')
-    from_email = 'correouianoreply@gmail.com'
-    
-    def form_valid(self, form):
-        email = form.cleaned_data['email']
-        user = User.objects.filter(email=email).first()
-        if user is not None:
-            uid = urlsafe_base64_encode(force_bytes(user.pk))
-            token = default_token_generator.make_token(user)
-            reset_url = self.request.build_absolute_uri(reverse('password_reset_confirm', kwargs={'uidb64': uid, 'token': token}))
-            full_reset_url = f"{settings.PROTOCOL}://{settings.DOMAIN_NAME}{reset_url}"
-        return super().form_valid(form)
-    
-
-class MyPasswordResetConfirmView(PasswordResetConfirmView):
-    template_name = 'Contrasenas/Correo/password_reset_confirm.html'
-    success_url = reverse_lazy('password_reset_complete')
-
-    def form_valid(self, form):
-        uidb64 = self.kwargs['uidb64']
-        token = self.kwargs['token']
-        try:
-            uid = urlsafe_base64_decode(uidb64).decode()
-            user = User.objects.get(pk=uid)
-        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-            user = None
-
-        if user is not None and default_token_generator.check_token(user, token):
-            password1 = form.cleaned_data['new_password1']
-            password2 = form.cleaned_data['new_password2']
-            if password1 == password2:
-                user.set_password(password1)
-                user.save()
-                return redirect(self.success_url)
-        return super().form_invalid(form)
-
-class MyPasswordResetDoneView(PasswordResetDoneView):
-    template_name = 'Contrasenas/Correo/my_password_reset_done.html'
-    success_url = reverse_lazy('password_reset_done')
-
-class MyPasswordResetCompleteView(PasswordResetCompleteView):
-    template_name = 'my_password_reset_complete.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['message'] = 'Tu contraseña ha sido restablecida exitosamente.'
-        return context
-    
 
 def registrar_accion(usuario, accion):
     registro = RegistroLogsUser(usuario=usuario, accion=accion)

@@ -71,7 +71,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'proyecto.wsgi.application'
 
-DOMAIN_NAME = 'tudominio.com'
+DOMAIN_NAME = 'http://localhost/'
 PROTOCOL = 'https'
 
 # Database
@@ -161,3 +161,6 @@ EMAIL_USE_SSL = True
 EMAIL_USE_TLS = False
 EMAIL_HOST_USER = 'victor2722vl@gmail.com'
 EMAIL_HOST_PASSWORD = 'ydjbbzuohjwrlpuf'
+
+
+PASSWORD_RESET_TOKEN_TIMEOUT = None
