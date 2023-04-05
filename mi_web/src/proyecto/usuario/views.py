@@ -1,49 +1,23 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic.list import ListView
-from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
-from django.contrib.auth.forms import UserCreationForm
-import os
-from django.utils import timezone
-from django.contrib.auth import login, update_session_auth_hash
+from .models import usuarios, profesor, estudiantes, RegistroLogsUser, carreras, colegios, posgrados, fotoperfil
 from .forms import FormularioEstudiantes, FormularioUsuario, FormularioProfesor, FormularioInfoEstudiante, CustomUserCreationForm
+from django.views.generic.list import ListView
+from django.views.generic.edit import CreateView, FormView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate, logout
-from .forms import FormularioEstudiantes, FormularioUsuario, FormularioProfesor
-from django.conf import settings
 from django.contrib.auth.views import LoginView
-from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView
-from django.core.mail import send_mail
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from .models import usuarios, profesor, estudiantes, RegistroLogsUser, carreras, colegios, posgrados, fotoperfil
-from django.utils.http import urlsafe_base64_encode
-from django.utils.encoding import force_bytes
-from django.contrib.auth.tokens import default_token_generator
-import requests
-import json
-import django
 from django.http import JsonResponse, HttpResponse
-from django.urls import reverse
-from django.core.mail import send_mail
-from django.conf import settings
-from django.shortcuts import render, redirect
-from django.contrib.auth.forms import PasswordResetForm, PasswordChangeForm
 from django.contrib.auth.models import User
-from django.apps import AppConfig
-from django.core.files.storage import FileSystemStorage
-from django.shortcuts import render
-
-from django.contrib import messages
-from django.core.files import File
 from django.core.files.base import ContentFile
 from PIL import Image
 from odoorpc import ODOO
 import base64
 import threading
 import xmlrpc.client
-
-from django.http import HttpResponse
+import requests
+import json
 
 class Logueo(LoginView):
     template_name = 'usuario/login.html'
@@ -66,7 +40,7 @@ class Logueo(LoginView):
         
         # Authenticate the user and log them in
         login(self.request, user)
-        login_obj = get_object_or_404(usuarios, id=user.id)
+        login_obj = get_object_or_404(usuarios, usuarios=user.id)
         if login_obj.es_estudiante and login_obj.es_profesor:
             primer_ingreso = user.password
             #ACA SE CONSULTARIA A LA BASE DE DATOS DE LAS CLAVES PREDETERMINADAS
@@ -97,26 +71,6 @@ class Logueo(LoginView):
                 else:
                     return redirect('usuario_profesor')
 
-class cambiarcontrasena (LoginRequiredMixin):
-    def cambiar_contrasena(request):
-        if request.method == 'POST':
-            form = PasswordChangeForm(request.user, request.POST)
-            if form.is_valid():
-                user = form.save()
-                update_session_auth_hash(request, user)  # Important!
-                messages.success(request, 'Your password was successfully updated!')
-                login_obj = get_object_or_404(usuarios, id=user.id)
-                if login_obj.es_prospecto:
-                    return redirect('usuario_prospecto')
-                    
-                elif login_obj.es_estudiante:
-                    return redirect('usuario_estudiante')
-                    
-                elif login_obj.es_profesor:
-                    return redirect('usuario_profesor')
-        else:
-            form = PasswordChangeForm(request.user)
-        return render(request, 'Contrasenas/Correo/cambiar_contrasena.html', {'form': form})
 
 class PaginaRegistroEstudiante(FormView):
     template_name = 'usuario/registro_estudiantes.html'
@@ -132,8 +86,11 @@ class PaginaRegistroEstudiante(FormView):
         fecha = self.request.POST.get('fechanacimiento')
         telefono = self.request.POST.get('telefono')
         correo_personal = self.request.POST.get('email')
-        direccion = self.request.POST.get('direccion')
-        sexo = self.request.POST.get('sexo')
+        nacionalidad = self.request.POST.get('pais')
+        provincia = self.request.POST.get('provincia')
+        canton = self.request.POST.get('canton')
+        distrito = self.request.POST.get('distrito')
+        sexo = self.request.POST.get('Genero_select')
 
         Usuarios = form.save() # type: ignore
         
@@ -147,14 +104,16 @@ class PaginaRegistroEstudiante(FormView):
         if form.is_valid():
             form.save()
         
-        id_usuario = get_object_or_404(usuarios, id=user_id)
+        usuario = get_object_or_404(usuarios, usuarios=user_id)
+        id_usuario = usuario.usuarios_id
         
         datos_estudiante = [id_usuario, username, nombre_estudiante, primerapellido, 
-                            segundoapellido, fecha, telefono, 'No Asignado', correo_personal, direccion, sexo]
+                            segundoapellido, fecha, telefono, 'No Asignado', correo_personal, nacionalidad, provincia, canton, distrito, sexo]
         
         form = FormularioEstudiantes({ 'user': datos_estudiante[0], 'identificacion': datos_estudiante[1], 'nombre': datos_estudiante[2], 'primer_apellido': datos_estudiante[3],
                                       'segundo_apellido': datos_estudiante[4], 'fecha_nacimiento': datos_estudiante[5], 'numero_telefonico': datos_estudiante[6],
-                                      'correo_institucional': datos_estudiante[7], 'correo_personal': datos_estudiante[8], 'direccion': datos_estudiante[9], 'sexo': datos_estudiante[10]})
+                                      'correo_institucional': datos_estudiante[7], 'correo_personal': datos_estudiante[8], 'nacionalidad': datos_estudiante[9], 'provincia': datos_estudiante[10], 
+                                      'canton': datos_estudiante[11], 'distrito': datos_estudiante[12], 'sexo': datos_estudiante[13]})
         if form.is_valid():
             form.save()
             
@@ -237,40 +196,6 @@ def obtener_datos(request):
         
     data_completa = json.dumps(data)
     return JsonResponse(data_completa, safe=False)
-class MyPasswordResetView(PasswordResetView):
-    template_name = 'Contrasenas/Correo/my_password_reset.html'
-    email_template_name = 'Contrasenas/Correo/my_password_reset_email.html'
-    subject_template_name = 'Contrasenas/Correo/my_password_reset_subject.txt'
-    success_url = reverse_lazy('password_reset_done')
-    from_email = 'correouianoreply@gmail.com'
-    
-class MyPasswordReset(FormView):
-    template_name = 'Contrasenas/Correo/my_password_reset.html'
-    success_url = reverse_lazy('password_reset_email')
-    
-
-        
-    def form_valid(self, form):
-        email = form.cleaned_data['email']
-        user = User.objects.filter(email=email).first()
-        if user is not None:
-            uid = urlsafe_base64_encode(force_bytes(user.pk))
-            token = default_token_generator.make_token(user)
-            reset_url = self.request.build_absolute_uri(reverse('password_reset_confirm', kwargs={'uidb64': uid, 'token': token}))
-            full_reset_url = f"{settings.PROTOCOL}://{settings.DOMAIN_NAME}{reset_url}"
-            send_mail(
-                'Restablecer contraseña',
-                'Por favor, sigue este enlace para restablecer tu contraseña: {}'.format(full_reset_url),
-                self.from_email,
-                [email],
-                fail_silently=False,
-                html_message='Haz clic <a href="{}">aquí</a> para restablecer tu contraseña.'.format(full_reset_url)
-            )
-        return super().form_valid(form)
-    
-class MyPasswordResetDoneView(PasswordResetDoneView):
-    template_name = 'Contrasenas/Correo/my_password_reset_done.html'
-    success_url = reverse_lazy('password_reset_done')
 
 
 def registrar_accion(usuario, accion):
@@ -293,20 +218,25 @@ class vistaPerfil (LoginRequiredMixin):
     context_object_name = 'perfil_estudiante'
     template_name = 'Prospecto/perfil.html'
 
-
     def profile_view(request):
         user = request.user
-        usuario = get_object_or_404(usuarios, id=user.pk)
-        estudiante = get_object_or_404(estudiantes, user=usuario.id)
-        fotoperfiles = fotoperfil.objects.get( user=estudiante.id_estudiante)
-        
-        
-        
-        imagen_url = Image.open(ContentFile(fotoperfiles.archivo))
-        
-        context = {'user': user,
-                'estudiante':estudiante,
-                'fotoperfil':imagen_url}
+        usuario = get_object_or_404(usuarios, usuarios=user.pk)
+        estudiante = get_object_or_404(estudiantes, user=usuario.usuarios_id)
+   
+        try:
+            fotoperfil_obj = fotoperfil.objects.get(user=estudiante.user_id)
+            imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
+            context = {
+                'user': user,
+                'estudiante': estudiante,
+                'fotoperfil': imagen_url,
+            }
+        except fotoperfil.DoesNotExist:
+
+            context = {
+                'user': user,
+                'estudiante': estudiante,
+            }
         return render(request, 'Prospecto/perfil.html', context)
     
  
@@ -315,6 +245,9 @@ def guardar_perfil(request):
         user = request.user
         numero_telefonico = request.POST.get('numero_telefonico')
         correo_personal = request.POST.get('correo_personal')
+        provincia = request.POST.get('provincia')
+        canton = request.POST.get('canton')
+        distrito = request.POST.get('distrito')
         
         user = User.objects.get(username=user.username)
         user_id = user.pk
@@ -322,11 +255,12 @@ def guardar_perfil(request):
         estudiante = get_object_or_404(estudiantes, user=user_id)
         
         datos_estudiante = [estudiante.id_estudiante, estudiante.identificacion, estudiante.nombre, estudiante.primer_apellido, 
-                        estudiante.segundo_apellido, estudiante.fecha_nacimiento, numero_telefonico, estudiante.correo_institucional, correo_personal, estudiante.direccion]
+                        estudiante.segundo_apellido, estudiante.fecha_nacimiento, numero_telefonico, estudiante.correo_institucional, correo_personal, estudiante.nacionalidad, provincia, canton, distrito, estudiante.sexo]
         
         form = FormularioEstudiantes({ 'user': datos_estudiante[0], 'identificacion': datos_estudiante[1], 'nombre': datos_estudiante[2], 'primer_apellido': datos_estudiante[3],
                                         'segundo_apellido': datos_estudiante[4], 'fecha_nacimiento': datos_estudiante[5], 'numero_telefonico': datos_estudiante[6],
-                                        'correo_institucional': datos_estudiante[7], 'correo_personal': datos_estudiante[8], 'direccion': datos_estudiante[9]}, instance=estudiante)
+                                        'correo_institucional': datos_estudiante[7], 'correo_personal': datos_estudiante[8], 'nacionalidad': datos_estudiante[9], 
+                                        'provincia': datos_estudiante[10], 'canton': datos_estudiante[11], 'distrito': datos_estudiante[12], 'sexo': datos_estudiante[13]}, instance=estudiante)
         
 
         if form.is_valid():
@@ -339,9 +273,9 @@ def guardar_perfil(request):
     
 def mostrar_foto(request):
     user = request.user
-    usuario = get_object_or_404(usuarios, id=user.pk)
-    estudiante = get_object_or_404(estudiantes, user=usuario.id)
-    foto_perfil = get_object_or_404(fotoperfil, user=estudiante.id_estudiante)
+    usuario = get_object_or_404(usuarios, usuarios=user.pk)
+    estudiante = get_object_or_404(estudiantes, user=usuario.usuarios_id)
+    foto_perfil = get_object_or_404(fotoperfil, user=estudiante.user_id)
     foto_bytes = bytes(foto_perfil.archivo)
     return HttpResponse(foto_bytes, content_type='image/png')
 
@@ -360,7 +294,7 @@ def enviar_archivo_a_odoo(request):
         img_bytes = bytearray(img_data)
 
         # Crear el objeto UserFile y guardarlo en la base de datos
-        user_file = fotoperfil(user=estudiante, archivo=img_bytes)
+        user_file = fotoperfil(user=estudiante.user_id, archivo=img_bytes)
         user_file.save()
     
     return redirect('usuario_prospecto')

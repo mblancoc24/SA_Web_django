@@ -21,6 +21,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/js/select2.min.js"></script>
     <script src="{% static 'js/validacion.js' %}"></script>
     <script src="{% static 'js/function.js' %}"></script>
+    <script>
+        history.pushState(null, null, location.href);
+        window.onpopstate = function () {
+            history.go(1);
+        };
+    </script>
 </head>
 
 <body class="d-flex flex-column min-vh-100">

@@ -70,35 +70,39 @@
                     </div>
 
                     <div class="form-floating mb-3 col-md-4">
-                        <select id="pais_select" class="form-select" name="pais_select"
+                        <select id="pais_select" class="form-select"  onchange="obtenerPais(this)" name="pais_select"
                           data-placeholder="Seleccione Nacionalidad" onclick="cargarPais()" required>
                           <option style="opacity: 0.65" value="" disabled selected hidden>Seleccione Nacionalidad</option>
                         </select>
                         <label for="tipo" style="opacity: .65;">Nacionalidad</label>
+                        <input type="hidden" id="pais" name="pais">
                     </div>
 
                     <div class="form-floating mb-3 col-md-4">
                         <select id="provincia_select" class="form-select" name="provincia_select"
-                          data-placeholder="Selecione Provincia" onclick="cargarProvincias()" required>
+                          data-placeholder="Selecione Provincia" onchange="obtenerProvincia(this)" onclick="cargarProvincias()" required>
                           <option style="opacity: 0.65" value="" disabled selected hidden>Seleccione Provincia</option>
                         </select>
                         <label for="tipo" style="opacity: .65;">Provincia</label>
+                        <input type="hidden" id="provincia" name="provincia">
                     </div>
 
                     <div class="form-floating mb-3 col-md-4">
                         <select id="canton_select" class="form-select" name="canton_select"
-                          data-placeholder="Selecione Canton" required>
+                          data-placeholder="Selecione Canton" onchange="obtenerCanton(this)" required>
                           <option style="opacity: 0.65" value="" disabled selected hidden>Seleccione Cantón</option>
                         </select>
                         <label for="tipo" style="opacity: .65;">Cantón</label>
+                        <input type="hidden" id="canton" name="canton">
                     </div>
 
                     <div class="form-floating mb-3 col-md-4">
                         <select id="distrito_select" class="form-select" name="distrito_select"
-                          data-placeholder="Selecione Distrito" required>
+                          data-placeholder="Selecione Distrito" onchange="obtenerDistrito(this)" required>
                           <option style="opacity: 0.65" value="" disabled selected hidden>Seleccione Distrito</option>
                         </select>
                         <label for="tipo" style="opacity: .65;">Distrito</label>
+                        <input type="hidden" id="distrito" name="distrito">
                     </div>
 
                     <div class="form-floating mb-3 col-md-4">
@@ -145,19 +149,6 @@
         }
 
         var select = document.getElementById("provincia_select");
-        var select2 = document.getElementById("canton_select");
-        var select3 = document.getElementById("distrito_select");
-
-        select.options.length = 0; // Eliminamos todas las opciones anteriores
-        select2.options.length = 0;
-        select3.options.length = 0;
-
-        var option1 = document.createElement("option");
-        option1.text = 'Seleccione Cantón';
-        select2.add(option1);
-        var option2 = document.createElement("option");
-        option2.text = 'Seleccione Distrito';
-        select3.add(option2);
 
         var url = "{% url 'obtener_provincia' %}";
         var request = new XMLHttpRequest();
@@ -165,6 +156,7 @@
         request.onload = function() {
           if (request.status === 200) {
             var data = JSON.parse(request.responseText);
+            select.options.length = 0;
             for(key in data) {
               var option = document.createElement("option");
               option.value = key;
@@ -172,27 +164,16 @@
               select.add(option);
             }
             provinciasCargadas = true;
+            dataCantones(select);
+            obtenerProvincia(select)
           }
         };
         request.send();
     }
 
-    const miSelect = document.getElementById('provincia_select');
-    miSelect.addEventListener('change', () => {
-    const opcionSeleccionada = miSelect.value;
-        cargarCantones(opcionSeleccionada);
-    });
-
     function cargarCantones(valor) {
         var select = document.getElementById("canton_select");
         var select2 = document.getElementById("distrito_select");
-
-        select.options.length = 0; // Eliminamos todas las opciones anteriores
-        select2.options.length = 0; // Eliminamos todas las opciones anteriores
-
-        var option3 = document.createElement("option");
-        option3.text = 'Seleccione Distrito';
-        select2.add(option3);
 
         var url = "/obtener-canton/?provincia_select=";
         var request = new XMLHttpRequest();
@@ -200,45 +181,41 @@
         request.onload = function() {
           if (request.status === 200) {
             var data = JSON.parse(request.responseText);
+            select.options.length = 0;
             for(key in data) {
               var option = document.createElement("option");
               option.value = key;
               option.text = data[key];
               select.add(option);
             }
+            dataDistritos(select)
+            obtenerDistrito(select)
           }
         };
         request.send();
     }
 
-    const miSelect1 = document.getElementById('provincia_select');
-    const miSelect2 = document.getElementById('canton_select');
-    miSelect2.addEventListener('change', () => {
-    const opcionSeleccionada = miSelect1.value;
-    const opcionSeleccionada2 = miSelect2.value;
-        cargarDistritos(opcionSeleccionada,opcionSeleccionada2);
-    });
-
     function cargarDistritos(valor1, valor2) {
         var select = document.getElementById("distrito_select");
-        select.options.length = 0; // Eliminamos todas las opciones anteriores
+
         var url = "/obtener-distrito/?provincia_select=" + encodeURIComponent(valor1) + "&canton_select=" + encodeURIComponent(valor2);
         var request = new XMLHttpRequest();
         request.open('GET', url, true);
         request.onload = function() {
           if (request.status === 200) {
             var data = JSON.parse(request.responseText);
+            select.options.length = 0;
             for(key in data) {
               var option = document.createElement("option");
               option.value = key;
               option.text = data[key];
               select.add(option);
             }
+            obtenerDistrito(select)
           }
         };
         request.send();
     }
-
 
     var paisCargadas = false;
 
@@ -268,5 +245,38 @@
         };
         request.send();
     }
+
+    function dataCantones(select){
+        var valorSeleccionado = select.options[select.selectedIndex].value;
+        cargarCantones(valorSeleccionado);
+    }
+
+    function dataDistritos(select){
+        const miSelect = document.getElementById('provincia_select');
+        var valorSeleccionado = select.options[select.selectedIndex].value;
+
+        cargarDistritos(miSelect.value, valorSeleccionado);
+    }
+    
+
+    function obtenerPais(select) {
+        var textoSeleccionado = select.options[select.selectedIndex].text;
+        document.getElementById('pais').value = textoSeleccionado;
+    }
+    function obtenerProvincia(select) {
+        var textoSeleccionado = select.options[select.selectedIndex].text;
+        document.getElementById('provincia').value = textoSeleccionado;
+        dataCantones(select)
+    }
+    function obtenerCanton(select) {
+        var textoSeleccionado = select.options[select.selectedIndex].text;
+        document.getElementById('canton').value = textoSeleccionado;
+        dataDistritos(select)
+    }
+    function obtenerDistrito(select) {
+        var textoSeleccionado = select.options[select.selectedIndex].text;
+        document.getElementById('distrito').value = textoSeleccionado;
+    }
+
 </script>
 {% endblock content %}
