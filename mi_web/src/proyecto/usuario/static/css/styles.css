@@ -380,7 +380,15 @@ option {
   color: black;
 }
 
-footer {
+.main-footer {
+  background-color: #1d1d26;
+  background-image: url(../img/textura-rayas.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  color: #fff;
+}
+
+.secondFooter {
   background-color: #1d1d26;
   background-image: url(../img/textura-rayas.png);
   background-size: cover;
@@ -421,3 +429,45 @@ footer .row  a {
     max-width: 100%;
   }
 }
+
+.logo-hidden {
+  display: none;
+}
+
+[class*=sidebar-dark] .user-panel {
+  border-bottom: none;
+}
+
+.line {
+  
+  border-color: darkgray;
+  opacity: 0.4;
+}
+
+
+.logo {
+  pointer-events: none;
+  color: #000;
+}
+
+@media screen and (max-width: 767px) {
+  .logo  {
+    white-space: normal;
+  }
+}
+
+/* .brand-link .brand-text {
+  font-size: 150%;
+}
+
+@media (max-width: 767.98px) {
+  .brand-link .brand-text {
+      font-size: 16px;
+  }
+}
+
+@media (max-width: 479px) {
+  .brand-link .brand-text {
+      font-size: 16px;
+  }
+} */

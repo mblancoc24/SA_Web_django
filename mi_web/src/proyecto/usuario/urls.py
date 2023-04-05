@@ -19,6 +19,8 @@ from .views import (
                     guardar_perfil,
                     enviar_archivo_a_odoo,
                     mostrar_foto,
+                    DashboardEstudianteView,
+                    DashboardProfesorView
                     )
 from django.contrib.auth.views import LogoutView
 from django.contrib.auth import views as auth_views
@@ -82,4 +84,6 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
                
                path('enviar-archivo-a-odoo/', enviar_archivo_a_odoo, name='enviar_archivo_a_odoo'),
                path('mostrar-foto/', mostrar_foto, name='mostrar_foto'),
+               path('estudiante/<int:id>/', DashboardEstudianteView.as_view(), name='estudiante'),
+               path('profesor/<int:id>/', DashboardProfesorView.as_view(), name='profesor'),
                ]

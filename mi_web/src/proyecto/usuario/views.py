@@ -18,6 +18,7 @@ import threading
 import xmlrpc.client
 import requests
 import json
+from django.views import View
 
 class Logueo(LoginView):
     template_name = 'usuario/login.html'
@@ -338,3 +339,17 @@ def obtener_nacionalidad(request):
     for country in data:
         countries.append(country["name"]["common"])
     return JsonResponse(sorted(countries), safe=False)
+
+class DashboardEstudianteView(LoginRequiredMixin, View):
+    login_url = ''  # Ruta de inicio de sesión
+    redirect_field_name = 'login'  # Nombre del campo de redirección
+
+    def get(self, request, id):
+        return render(request, 'Dashboard/Estudiante/estudiante.html', {'id': id})
+    
+class DashboardProfesorView(LoginRequiredMixin, View):
+    login_url = ''  # Ruta de inicio de sesión
+    redirect_field_name = 'login'  # Nombre del campo de redirección
+
+    def get(self, request, id):
+        return render(request, 'Dashboard/Profesor/profesor.html', {'id': id})
