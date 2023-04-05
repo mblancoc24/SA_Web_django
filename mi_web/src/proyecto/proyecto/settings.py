@@ -31,7 +31,9 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'adminlte3',
     'django.contrib.admin',
+    'adminlte3_theme',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -56,7 +58,7 @@ ROOT_URLCONF = 'proyecto.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'usuario/templates/usuario'],
+        'DIRS': [BASE_DIR / 'usuario/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
