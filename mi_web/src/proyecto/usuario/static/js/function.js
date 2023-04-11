@@ -2,6 +2,18 @@ function datacedula() {
     var input = document.getElementById("identificacion");
     var input2 = document.getElementById("tipo").value;
 
+    var nacimiento = document.getElementById("dis_nacimiento");
+    var genero = document.getElementById("dis_genero");
+    var telefono = document.getElementById("dis_telefono");
+    var nacionalidad = document.getElementById("dis_pais");
+    var provincia = document.getElementById("dis_provincia");
+    var canton = document.getElementById("dis_canton");
+    var distrito = document.getElementById("dis_distrito");
+    var cuenta_profesor = document.getElementById("cuenta_profesor");
+    var cuenta_estudiante = document.getElementById("cuenta_estudiante");
+    var cuenta_estudianteprofesor = document.getElementById("cuenta_estudianteprofesor");
+    var es_profesor = document.getElementById("es_profesor");
+
     if (input.value.length >= 10 && input.value.length <= 12 && input2 === "Dimex" || "Cédula Residente" || "Refugiado") {
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
@@ -38,6 +50,49 @@ function datacedula() {
                 nombre.value = datos_usuario[0].replace(/[\\\[\]"]/g, "").replace(/u00f1/g, 'ñ').replace(/u00D1/g, 'Ñ');
                 primer_apellido.value = datos_usuario[1].replace(/[\\\[\]" ]/g, "").replace(/u00f1/g, 'ñ').replace(/u00D1/g, 'Ñ');
                 segundo_apellido.value = datos_usuario[2].replace(/[\\\[\]" ]/g, "").replace(/u00f1/g, 'ñ').replace(/u00D1/g, 'Ñ');
+
+                if (datos_usuario[3].replace(/[\\\[\]" ]/g, "") === "profesor") {
+                    nacimiento.style.display = "none";
+                    genero.style.display = "none";
+                    telefono.style.display = "none";
+                    nacionalidad.style.display = "none";
+                    provincia.style.display = "none";
+                    canton.style.display = "none";
+                    distrito.style.display = "none";
+                    cuenta_profesor.style.display = "block";
+                    es_profesor.value = "profesor";
+
+                    console.log(es_profesor.value);
+                }
+                else if (datos_usuario[3].replace(/[\\\[\]" ]/g, "") === "estudiante"){
+                    nacimiento.style.display = "none";
+                    genero.style.display = "none";
+                    telefono.style.display = "none";
+                    nacionalidad.style.display = "none";
+                    provincia.style.display = "none";
+                    canton.style.display = "none";
+                    distrito.style.display = "none";
+                    cuenta_estudiante.style.display = "block";
+                    es_profesor.value = "estudiante";
+
+                    console.log(es_profesor.value);
+                }
+                else if (datos_usuario[3].replace(/[\\\[\]" ]/g, "") === "prospecto"){
+                    es_profesor.value = "prospecto";
+                    console.log(es_profesor.value);
+                }
+                else if (datos_usuario[3].replace(/[\\\[\]" ]/g, "") === "estudianteprofesor"){
+                    nacimiento.style.display = "none";
+                    genero.style.display = "none";
+                    telefono.style.display = "none";
+                    nacionalidad.style.display = "none";
+                    provincia.style.display = "none";
+                    canton.style.display = "none";
+                    distrito.style.display = "none";
+                    cuenta_estudianteprofesor.style.display = "block";
+                    es_profesor.value = "estudianteprofesor";
+                    console.log(es_profesor.value);
+                }
 
                 nombre.readOnly = true;
                 primer_apellido.readOnly = true;

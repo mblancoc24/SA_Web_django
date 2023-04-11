@@ -6,7 +6,7 @@
     <div class="col-md-12 mx-auto">
         <div class="card border-0 shadow rounded-3 my-5">
             <div class="card-body p-4 p-sm-5">
-                <h5 class="card-title text-center mb-4 fw-light fs-5 fw-bold">Registrar Estudiante</h5>
+                <h5 class="card-title text-center mb-4 fw-light fs-5 fw-bold">Registro Estudiantil</h5>
                 <form class="row g-3" method="POST">
                     {% csrf_token %}
                     <div class="form-floating col-md-4">
@@ -54,23 +54,21 @@
                         <label for="segundoapellido" style="opacity: .65;">Segundo Apellido</label>
                     </div>
 
-                    <div class="form-floating  mb-3 col-md-4">
+                    <div class="form-floating  mb-3 col-md-4" id="dis_nacimiento" style="display: block;">
                     
 		
                     <div class="input-group date" id="fechanacimiento"   >
                         <label for="fechanacimiento"></label>
                         
                         <input  class="form-control flatpickr flatpickr-input active"  data-id="datetime" id="fechanacimiento" readonly="readonly" placeholder="Fecha de nacimiento. dd/mm/yyyy"
-                        name="fechanacimiento" required />
+                        name="fechanacimiento"/>
                         
-                    </div>
-
-                                     
+                    </div>         
                     </div>
                     
-                    <div class="form-floating mb-3 col-md-4">
+                    <div class="form-floating mb-3 col-md-4" id="dis_genero" style="display: block;">
                         <select id="genero" class="form-select" name="Genero_select"
-                          data-placeholder="Genero" required>
+                          data-placeholder="Genero" >
                           <option style="opacity: 0.65" value="" disabled selected hidden>Genero</option>
                             <option value="femenino">Femenino</option>
                             <option value="masculino">Masculino</option>
@@ -79,8 +77,7 @@
                         </select>
                         <label for="tipo" style="opacity: .65;">Genero</label>
                     </div>
-
-                    <div class="form-floating mb-3 col-md-4">
+                    <div class="form-floating mb-3 col-md-4" id="dis_telefono" style="display: block;">
                         <div class="input-group">
                             <span class="input-group-text" id="basic-addon1">
                               <svg xmlns="http://www.w3.org/2000/svg" width="30" height="45" fill="currentColor" class="bi bi-telephone-plus" viewBox="0 0 16 16">
@@ -89,49 +86,49 @@
             </svg>
                             </span>
                             <input type="text" class="form-control" id="telefono" placeholder="Número Telefónico"
-                            name="telefono" required>
+                            name="telefono">
 
                           </div>
-                       
                     </div>
 
-                    <div class="form-floating mb-3 col-md-4">
+                    <div class="form-floating mb-3 col-md-4" id="dis_pais" style="display: block;">
                         <select id="pais_select" class="form-select"  onchange="obtenerPais(this)" name="pais_select"
-                          data-placeholder="Seleccione Nacionalidad" onclick="cargarPais()" required>
+                          data-placeholder="Seleccione Nacionalidad" onclick="cargarPais()" >
                           <option style="opacity: 0.65" value="" disabled selected hidden>Seleccione Nacionalidad</option>
                         </select>
                         <label for="tipo" style="opacity: .65;">Nacionalidad</label>
                         <input type="hidden" id="pais" name="pais">
                     </div>
 
-                    <div class="form-floating mb-3 col-md-4">
+                    <div class="form-floating mb-3 col-md-4" id="dis_provincia" style="display: block;">
                         <select id="provincia_select" class="form-select" name="provincia_select"
-                          data-placeholder="Selecione Provincia" onchange="obtenerProvincia(this)" onclick="cargarProvincias()" required>
+                          data-placeholder="Selecione Provincia" onchange="obtenerProvincia(this)" onclick="cargarProvincias()">
                           <option style="opacity: 0.65" value="" disabled selected hidden>Seleccione Provincia</option>
                         </select>
                         <label for="tipo" style="opacity: .65;">Provincia</label>
                         <input type="hidden" id="provincia" name="provincia">
                     </div>
 
-                    <div class="form-floating mb-3 col-md-4">
+                    <div class="form-floating mb-3 col-md-4" id="dis_canton" style="display: block;">
                         <select id="canton_select" class="form-select" name="canton_select"
-                          data-placeholder="Selecione Canton" onchange="obtenerCanton(this)" required>
+                          data-placeholder="Selecione Canton" onchange="obtenerCanton(this)" >
                           <option style="opacity: 0.65" value="" disabled selected hidden>Seleccione Cantón</option>
                         </select>
                         <label for="tipo" style="opacity: .65;">Cantón</label>
                         <input type="hidden" id="canton" name="canton">
                     </div>
 
-                    <div class="form-floating mb-3 col-md-4">
+                    <div class="form-floating mb-3 col-md-4" id="dis_distrito" style="display: block;">
                         <select id="distrito_select" class="form-select" name="distrito_select"
-                          data-placeholder="Selecione Distrito" onchange="obtenerDistrito(this)" required>
+                          data-placeholder="Selecione Distrito" onchange="obtenerDistrito(this)">
                           <option style="opacity: 0.65" value="" disabled selected hidden>Seleccione Distrito</option>
                         </select>
                         <label for="tipo" style="opacity: .65;">Distrito</label>
                         <input type="hidden" id="distrito" name="distrito">
                     </div>
 
-                    <div class="form-floating mb-3 col-md-4">
+
+                    <div class="form-floating mb-3 col-md-4" id="dis_correo" style="display: block;">
                         <div class="input-group">
                             <span class="input-group-text" id="basic-addon1">
                               <svg xmlns="http://www.w3.org/2000/svg" width="30" height="45" fill="currentColor" class="bi bi-envelope-plus" viewBox="0 0 16 16">
@@ -146,7 +143,7 @@
                    
                     </div>
 
-                    <div class="form-floating mb-3 col-md-4">
+                    <div class="form-floating mb-3 col-md-4" id="dis_contrasena" style="display: block;">
                         <div class="input-group mb-3 input-group-lg">
                             <span class="input-group-text" id="basic-addon1">
                               <svg xmlns="http://www.w3.org/2000/svg"  width="30" height="45" fill="currentColor" class="bi bi-pass-fill" viewBox="0 0 16 16">
@@ -160,7 +157,7 @@
                        
                     </div>
 
-                    <div class="form-floating mb-3 col-md-4">
+                    <div class="form-floating mb-3 col-md-4" id="dis_confirmar" style="display: block;">
                         <div class="input-group mb-3 input-group-lg">
                             <span class="input-group-text" id="basic-addon1">
                               <svg xmlns="http://www.w3.org/2000/svg"  width="30" height="45" fill="currentColor" class="bi bi-pass-fill" viewBox="0 0 16 16">
@@ -174,6 +171,30 @@
                     </div>
                        
                        
+
+                    <div class="jumbotron" id="cuenta_profesor" style="display: none;">
+                        <h5 class="display-12">Se ha verificado que eres profesor. Los datos ya han sido recopilados anteriormente.</h5>
+                        </p>
+                        <h5 class="display-12">Su correo institucional y contraseña de acceso de profesor serán los mismos para acceso estudiantil. Por favor proceda a ingresar lo solicitado para finalizar verificacion y registrar.</h5>
+                        </p>
+                        <input type="text" id="es_profesor" name="es_profesor" value="estudiante" hidden>
+                    </div>
+
+                    <div class="jumbotron" id="cuenta_estudiante" style="display: none;">
+                        <h5 class="display-12">Se ha verificado que eres estudiante regular. Los datos ya han sido recopilados anteriormente.</h5>
+                        </p>
+                        <h5 class="display-12">Su correo institucional y contraseña de acceso de estudiante serán los mismos para acceso estudiantil. Por favor proceda a ingresar lo solicitado para finalizar verificacion y registrar.</h5>
+                        </p>
+                    </div>
+
+                    <div class="jumbotron" id="cuenta_estudianteprofesor" style="display: none;">
+                        <h5 class="display-12">Se ha verificado que eres profesor y estudiante regular. Los datos ya han sido recopilados anteriormente.</h5>
+                        </p>
+                        <h5 class="display-12">Su correo institucional y contraseña de acceso de profesor serán unificados con tu acceso estudiantil. Por favor proceda a ingresar lo solicitado para finalizar verificacion y registrar.</h5>
+                        </p>
+                    </div>
+
+
                         <span id='message'></span>
                     </div>
 
@@ -199,4 +220,5 @@
         
     });
 </script>
+
 {% endblock content %}

@@ -19,6 +19,9 @@ from .views import (
                     guardar_perfil,
                     enviar_archivo_a_odoo,
                     mostrar_foto,
+                    sesion_expirada,
+                    change_email,
+                    change_email_correct,
                     DashboardEstudianteView,
                     DashboardProfesorView
                     )
@@ -29,6 +32,7 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
                path('registro_estudiantes/', PaginaRegistroEstudiante.as_view(), name='registro_estudiantes'),
                path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
                path('crear-usuario/', CrearUsuario.as_view(), name='crear-usuario'),
+               path('sesion-expirada/', sesion_expirada, name='sesion_expirada'),
              
                path(
                 'change-password/',
@@ -86,4 +90,9 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
                path('mostrar-foto/', mostrar_foto, name='mostrar_foto'),
                path('estudiante/<int:id>/', DashboardEstudianteView.as_view(), name='estudiante'),
                path('profesor/<int:id>/', DashboardProfesorView.as_view(), name='profesor'),
+               
+               path('cambio-correo/', change_email, name='cambio_correo'),
+               path('change-email-correct/', change_email_correct, name='change_email_correct'),
                ]
+
+

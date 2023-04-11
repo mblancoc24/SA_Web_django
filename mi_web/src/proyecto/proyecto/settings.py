@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 import os
+from django.urls import reverse_lazy
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django_session_timeout.middleware.SessionTimeoutMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -126,12 +128,11 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # Configuración de sesión
-SESSION_ENGINE = 'django.contrib.sessions.backends.db'
-SESSION_COOKIE_AGE = 86400  # Duración de la cookie de sesión (en segundos)
-SESSION_EXPIRE_SECONDS = 600  # Duración máxima de la sesión (en segundos)
-SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True  # Cerrar sesión después de la última actividad
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Cerrar sesión cuando el navegador se cierre
-SESSION_EXPIRE_REDIRECT_URL = '/session-timeout/'  # URL de la vista que se usará para redirigir al usuario
+SESSION_EXPIRE_SECONDS = 600
+SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True 
+SESSION_EXPIRE_REDIRECT_URL = 'sesion_expirada/' 
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
