@@ -104,6 +104,7 @@ function datacedula() {
         xhttp.send();
     }
 }
+
 const loadingIndicator = document.getElementById('loading-indicator');
 loadingIndicator.classList.remove('hidden'); // Mostrar el indicador
 // Realizar la acción
