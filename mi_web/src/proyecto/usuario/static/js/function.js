@@ -38,6 +38,12 @@ function datacedula() {
                 nombre.value = datos_usuario[0].replace(/[\\\[\]"]/g, "").replace(/u00f1/g, 'ñ').replace(/u00D1/g, 'Ñ');
                 primer_apellido.value = datos_usuario[1].replace(/[\\\[\]" ]/g, "").replace(/u00f1/g, 'ñ').replace(/u00D1/g, 'Ñ');
                 segundo_apellido.value = datos_usuario[2].replace(/[\\\[\]" ]/g, "").replace(/u00f1/g, 'ñ').replace(/u00D1/g, 'Ñ');
+                console.log(datos_usuario[3]+" Hola")
+                
+                if(datos_usuario[3]){
+                    console.log(datos_usuario[3])
+                }
+
 
                 nombre.readOnly = true;
                 primer_apellido.readOnly = true;

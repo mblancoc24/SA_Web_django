@@ -19,6 +19,9 @@ import xmlrpc.client
 import requests
 import json
 from django.views import View
+from django.conf import settings
+from django.core.mail import send_mail
+import random
 
 class Logueo(LoginView):
     template_name = 'usuario/login.html'
@@ -181,7 +184,17 @@ def obtener_datos(request):
             nombre = ' '.join(nombre_completo[:-2]).title()
             primer_apellido = nombre_completo[-2].title()
             segundo_apellido = nombre_completo[-1].title()
-            data = [nombre, primer_apellido, segundo_apellido]
+            
+            user = User.objects.get(username=identificiacion)
+            if user is not None:
+                user_id = user.pk
+                usuario = get_object_or_404(usuarios, usuarios=user_id)
+                if  usuario.es_profesor:
+                    data = [nombre, primer_apellido, segundo_apellido, True]
+                else:
+                    data = [nombre, primer_apellido, segundo_apellido, False]
+            else:
+                data = [nombre, primer_apellido, segundo_apellido]
         else:
             data = []
             
@@ -225,7 +238,7 @@ class vistaPerfil (LoginRequiredMixin):
         estudiante = get_object_or_404(estudiantes, user=usuario.usuarios_id)
    
         try:
-            fotoperfil_obj = fotoperfil.objects.get(user=estudiante.user_id)
+            fotoperfil_obj = fotoperfil.objects.get(user=estudiante.user_id) 
             imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
             context = {
                 'user': user,
@@ -245,7 +258,6 @@ def guardar_perfil(request):
     if request.method == 'POST':
         user = request.user
         numero_telefonico = request.POST.get('numero_telefonico')
-        correo_personal = request.POST.get('correo_personal')
         provincia = request.POST.get('provincia')
         canton = request.POST.get('canton')
         distrito = request.POST.get('distrito')
@@ -256,7 +268,7 @@ def guardar_perfil(request):
         estudiante = get_object_or_404(estudiantes, user=user_id)
         
         datos_estudiante = [estudiante.id_estudiante, estudiante.identificacion, estudiante.nombre, estudiante.primer_apellido, 
-                        estudiante.segundo_apellido, estudiante.fecha_nacimiento, numero_telefonico, estudiante.correo_institucional, correo_personal, estudiante.nacionalidad, provincia, canton, distrito, estudiante.sexo]
+                        estudiante.segundo_apellido, estudiante.fecha_nacimiento, numero_telefonico, estudiante.correo_institucional, estudiante.correo_personal, estudiante.nacionalidad, provincia, canton, distrito, estudiante.sexo]
         
         form = FormularioEstudiantes({ 'user': datos_estudiante[0], 'identificacion': datos_estudiante[1], 'nombre': datos_estudiante[2], 'primer_apellido': datos_estudiante[3],
                                         'segundo_apellido': datos_estudiante[4], 'fecha_nacimiento': datos_estudiante[5], 'numero_telefonico': datos_estudiante[6],
@@ -353,3 +365,43 @@ class DashboardProfesorView(LoginRequiredMixin, View):
 
     def get(self, request, id):
         return render(request, 'Dashboard/Profesor/profesor.html', {'id': id})
+    
+def sesion_expirada(request):
+    return render(request, 'sesion_expirada.html') 
+
+def change_email(request):
+    codigo = random.randint(100000, 999999)
+    
+    user = request.user
+    subject = 'Cambio de Correo Electronico'
+    message = f'Hola, {user.username}, se ha solicitado modificar el correo electronico personal.\n\nEl código es: {codigo}\n\nEL CODIGO SOLO ES VALIDO PARA EL DIA DE HOY.\n\nUn cordial saludo.\nUIA.'
+    email_from = settings.EMAIL_HOST_USER
+    recipient_list = [user.email, ]
+    
+    send_mail( subject, message, email_from, recipient_list )
+    
+    return render(request, 'usuario/cambio_correo_codigo.html', {'codigo': codigo})
+
+def change_email_correct(request):
+    if request.method == 'POST':
+        user = request.user
+        
+        nuevo_correo = request.POST.get('nuevo_correo2')
+        
+        user = User.objects.get(username=user.username)
+        user_id = user.pk
+        
+        estudiante = get_object_or_404(estudiantes, user=user_id)
+        
+        datos_estudiante = [estudiante.id_estudiante, estudiante.identificacion, estudiante.nombre, estudiante.primer_apellido, 
+                        estudiante.segundo_apellido, estudiante.fecha_nacimiento, estudiante.numero_telefonico, estudiante.correo_institucional, 
+                        nuevo_correo, estudiante.nacionalidad, estudiante.provincia, estudiante.canton, estudiante.distrito, estudiante.sexo]
+        
+        form = FormularioEstudiantes({ 'user': datos_estudiante[0], 'identificacion': datos_estudiante[1], 'nombre': datos_estudiante[2], 'primer_apellido': datos_estudiante[3],
+                                        'segundo_apellido': datos_estudiante[4], 'fecha_nacimiento': datos_estudiante[5], 'numero_telefonico': datos_estudiante[6],
+                                        'correo_institucional': datos_estudiante[7], 'correo_personal': datos_estudiante[8], 'nacionalidad': datos_estudiante[9], 
+                                        'provincia': datos_estudiante[10], 'canton': datos_estudiante[11], 'distrito': datos_estudiante[12], 'sexo': datos_estudiante[13]}, instance=estudiante)
+    
+        if form.is_valid():
+            form.save()
+            return render(request, 'Prospecto/perfil.html')
