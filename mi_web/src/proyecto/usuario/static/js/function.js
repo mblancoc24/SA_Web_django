@@ -49,12 +49,7 @@ function datacedula() {
         xhttp.send();
     }
 }
-$(function(){
-    $('#datepicker').datepicker({
-        uiLibrary: 'bootstrap5',
-        format: 'yyyy-mm-dd'
-    });
-});
+
 const loadingIndicator = document.getElementById('loading-indicator');
 loadingIndicator.classList.remove('hidden'); // Mostrar el indicador
 // Realizar la acción

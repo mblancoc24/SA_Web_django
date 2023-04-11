@@ -57,8 +57,9 @@
                     <div class="form-floating mb-4 col-md-4">
                        
 		
-                    <div class="input-group date" id="datepicker"  width="400"  height="175">
-                        <input  class="form-control"   id="fechanacimiento datepicker"  placeholder="Fecha de nacimiento"
+                    <div class="input-group date" id=" datepicker"  width="400"  height="175">
+                        <label for="fechanacimiento datepicker"></label>
+                        <input  class="form-control"   id="datepicker"  placeholder="Fecha de nacimiento. dd/mm/yyyy"
                         name="fechanacimiento" required />
                         
                     </div>
@@ -191,5 +192,14 @@
         </div>
     </div>
 </div>
-
+<script>
+    $('#datepicker').datepicker({
+        uiLibrary: 'bootstrap5',
+        format: 'dd/mm/yyyy',
+        
+        change: function (e, value) {
+          $('#datepicker').val(value);
+        }
+    });
+</script>
 {% endblock content %}
