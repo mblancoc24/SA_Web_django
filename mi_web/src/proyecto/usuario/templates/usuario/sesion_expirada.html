@@ -1,0 +1,6 @@
+{% extends 'usuario/principal.html' %}
+
+{% block content %}
+<h3>Sesion Expirada.</h3>
+<a href="{% url 'login' %}" act>Vuelva a Iniciar Sesion</a>
+{% endblock content %}

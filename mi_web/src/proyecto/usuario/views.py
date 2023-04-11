@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import usuarios, profesor, estudiantes, RegistroLogsUser, carreras, colegios, posgrados, fotoperfil
-from .forms import FormularioEstudiantes, FormularioUsuario, FormularioProfesor, FormularioInfoEstudiante, CustomUserCreationForm
+from .forms import FormularioEstudiantes, FormularioUsuario, FormularioProfesor, FormularioProspecto, FormularioInfoEstudiante, CustomUserCreationForm
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, FormView
 from django.contrib.auth.decorators import login_required
@@ -44,34 +44,43 @@ class Logueo(LoginView):
         
         # Authenticate the user and log them in
         login(self.request, user)
-        login_obj = get_object_or_404(usuarios, usuarios=user.id)
+        login_obj = get_object_or_404(usuarios, auth_user=user.id)
         if login_obj.es_estudiante and login_obj.es_profesor:
-            primer_ingreso = user.password
             #ACA SE CONSULTARIA A LA BASE DE DATOS DE LAS CLAVES PREDETERMINADAS
-            if primer_ingreso == 'admin1818':
-                registrar_accion(self.request.user, 'El usuario {0} ha realizado un cambio de contrasena y ha ingresado.'.format(username))
+            if password == 'Admin1818$':
+                registrar_accion(login_obj, 'El usuario {0} ha realizado un cambio de contrasena y ha ingresado.'.format(username))
                 modal = True
-                return render(self.request, 'login.html', {'modal': modal})
+                return redirect('change_password')
             else:
-                registrar_accion(self.request.user, 'El usuario {0} ha ingresado como profesor.'.format(username))
+                registrar_accion(login_obj, 'El usuario {0} ha ingresado como profesor.'.format(username))
                 modal = True
-                return render(self.request, 'login.html', {'modal': modal})
+                return render(self.request, 'usuario/login.html', {'modal': modal})
+            
+        elif login_obj.es_prospecto and login_obj.es_profesor:
+            #ACA SE CONSULTARIA A LA BASE DE DATOS DE LAS CLAVES PREDETERMINADAS
+            if password == 'Admin1818$':
+                registrar_accion(login_obj, 'El usuario {0} ha realizado un cambio de contrasena y ha ingresado.'.format(username))
+                modal = True
+                return redirect('change_password')
+            else:
+                registrar_accion(login_obj, 'El usuario {0} ha ingresado como profesor.'.format(username))
+                modal = True
+                return render(self.request, 'usuario/login.html', {'modal': modal})
         else:
             if login_obj.es_prospecto:
-                registrar_accion(self.request.user, 'El usuario {0} ha ingresado como prospecto.'.format(username))
+                registrar_accion(login_obj, 'El usuario {0} ha ingresado como prospecto.'.format(username))
                 return redirect('usuario_prospecto')
             
             elif login_obj.es_estudiante:
-                registrar_accion(self.request.user, 'El usuario {0} ha ingresado como estudiante.'.format(username))
+                registrar_accion(login_obj, 'El usuario {0} ha ingresado como estudiante.'.format(username))
                 return redirect('usuario_estudiante')
             
             elif login_obj.es_profesor:
-                registrar_accion(self.request.user, 'El usuario {0} ha ingresado como profesor.'.format(username))
+                registrar_accion(login_obj, 'El usuario {0} ha ingresado como profesor.'.format(username))
                 #ACA SE CONSULTARIA A LA BASE DE DATOS DE LAS CLAVES PREDETERMINADAS
-                primer_ingreso = self.request.POST.get('password')
-                if primer_ingreso == 'admin1818':
+                if password == 'Admin1818$':
                     registrar_accion(self.request.user, 'El usuario {0} ha realizado un cambio de contrasena  y ha ingresado.'.format(username))
-                    return redirect('cambiar_contrasena')
+                    return redirect('change_password')
                 else:
                     return redirect('usuario_profesor')
 
@@ -83,47 +92,94 @@ class PaginaRegistroEstudiante(FormView):
     success_url = reverse_lazy('usuario_prospecto')
 
     def form_valid(self, form):
+        es_profesor = self.request.POST.get('es_profesor')
         username = form.cleaned_data['username']
         nombre_estudiante = self.request.POST.get('nombre')
         primerapellido = self.request.POST.get('primerapellido')
         segundoapellido = self.request.POST.get('segundoapellido')
-        fecha = self.request.POST.get('fechanacimiento')
-        telefono = self.request.POST.get('telefono')
-        correo_personal = self.request.POST.get('email')
-        nacionalidad = self.request.POST.get('pais')
-        provincia = self.request.POST.get('provincia')
-        canton = self.request.POST.get('canton')
-        distrito = self.request.POST.get('distrito')
-        sexo = self.request.POST.get('Genero_select')
+        
+        if es_profesor == 'profesor':
+            Usuarios = form.save() # type: ignore
+             
+            user = User.objects.get(username=username)
+            user_id = user.pk
+            
+            profesor_usuario = get_object_or_404(profesor, identificacion=username)
+            
+            datos_usuario = [user_id, False, True, False, True, False]
+            
+            form = FormularioUsuario({'auth_user': datos_usuario[0],  'activo': datos_usuario[1], 'es_profesor': datos_usuario[2], 'es_estudiante': datos_usuario[3], 'es_prospecto': datos_usuario[4], 'es_cursolibre': datos_usuario[5]})
+            
+            if form.is_valid():
+                form.save()
+                
+            datos_estudiante = [profesor_usuario.identificacion, profesor_usuario.nombre, profesor_usuario.primer_apellido, 
+                                profesor_usuario.segundo_apellido, profesor_usuario.fecha_nacimiento, profesor_usuario.numero_telefonico, profesor_usuario.correo_institucional, 
+                                profesor_usuario.correo_personal, profesor_usuario.nacionalidad, profesor_usuario.provincia, profesor_usuario.canton, profesor_usuario.distrito, profesor_usuario.sexo]
+            
+            form = FormularioEstudiantes({'identificacion': datos_estudiante[0], 'nombre': datos_estudiante[1], 'primer_apellido': datos_estudiante[2],
+                                        'segundo_apellido': datos_estudiante[3], 'fecha_nacimiento': datos_estudiante[4], 'numero_telefonico': datos_estudiante[5],
+                                        'correo_institucional': datos_estudiante[6], 'correo_personal': datos_estudiante[7], 'nacionalidad': datos_estudiante[8], 'provincia': datos_estudiante[9], 
+                                        'canton': datos_estudiante[10], 'distrito': datos_estudiante[11], 'sexo': datos_estudiante[12]})
+            if form.is_valid():
+                form.save()
+                
+        elif es_profesor == 'estudiante' or es_profesor == 'estudianteprofesor':
+            
+            Usuarios = form.save() # type: ignore
+            
+            user = User.objects.get(username=username)
+            user_id = user.pk
+            
+            if es_profesor == 'estudianteprofesor':
+                datos_usuario = [user_id, False, True, True, False, False]
+            else:
+                datos_usuario = [user_id, False, False, True, False, False]
+            
+            form = FormularioUsuario({'auth_user': datos_usuario[0],  'activo': datos_usuario[1], 'es_profesor': datos_usuario[2], 'es_estudiante': datos_usuario[3], 'es_prospecto': datos_usuario[4], 'es_cursolibre': datos_usuario[5]})
+            
+            if form.is_valid():
+                form.save()
+                
+        elif es_profesor == 'prospecto':
+            fecha = self.request.POST.get('fechanacimiento')
+            telefono = self.request.POST.get('telefono')
+            correo_personal = self.request.POST.get('email')
+            nacionalidad = self.request.POST.get('pais')
+            provincia = self.request.POST.get('provincia')
+            canton = self.request.POST.get('canton')
+            distrito = self.request.POST.get('distrito')
+            sexo = self.request.POST.get('Genero_select')
 
-        Usuarios = form.save() # type: ignore
-        
-        user = User.objects.get(username=username)
-        user_id = user.pk
-        
-        datos_usuario = [user_id, False, False, False, True, False]
-        
-        form = FormularioUsuario({'usuarios': datos_usuario[0],  'activo': datos_usuario[1], 'es_profesor': datos_usuario[2], 'es_estudiante': datos_usuario[3], 'es_prospecto': datos_usuario[4], 'es_cursolibre': datos_usuario[5]})
-        
-        if form.is_valid():
-            form.save()
-        
-        usuario = get_object_or_404(usuarios, usuarios=user_id)
-        id_usuario = usuario.usuarios_id
-        
-        datos_estudiante = [id_usuario, username, nombre_estudiante, primerapellido, 
-                            segundoapellido, fecha, telefono, 'No Asignado', correo_personal, nacionalidad, provincia, canton, distrito, sexo]
-        
-        form = FormularioEstudiantes({ 'user': datos_estudiante[0], 'identificacion': datos_estudiante[1], 'nombre': datos_estudiante[2], 'primer_apellido': datos_estudiante[3],
-                                      'segundo_apellido': datos_estudiante[4], 'fecha_nacimiento': datos_estudiante[5], 'numero_telefonico': datos_estudiante[6],
-                                      'correo_institucional': datos_estudiante[7], 'correo_personal': datos_estudiante[8], 'nacionalidad': datos_estudiante[9], 'provincia': datos_estudiante[10], 
-                                      'canton': datos_estudiante[11], 'distrito': datos_estudiante[12], 'sexo': datos_estudiante[13]})
-        if form.is_valid():
-            form.save()
+            Usuarios = form.save() # type: ignore
+            
+            user = User.objects.get(username=username)
+            user_id = user.pk
+            
+            datos_usuario = [user_id, False, False, False, True, False]
+            
+            form = FormularioUsuario({'auth_user': datos_usuario[0],  'activo': datos_usuario[1], 'es_profesor': datos_usuario[2], 'es_estudiante': datos_usuario[3], 'es_prospecto': datos_usuario[4], 'es_cursolibre': datos_usuario[5]})
+            
+            if form.is_valid():
+                form.save()
+            
+            usuario = get_object_or_404(usuarios, auth_user=user_id)
+            id_usuario = usuario.auth_user_id
+            
+            datos_estudiante = [id_usuario, username, nombre_estudiante, primerapellido, 
+                                segundoapellido, fecha, telefono, 'No Asignado', correo_personal, nacionalidad, provincia, canton, distrito, sexo]
+            
+            form = FormularioProspecto({'user': datos_estudiante[0],'identificacion': datos_estudiante[1], 'nombre': datos_estudiante[2], 'primer_apellido': datos_estudiante[3],
+                                        'segundo_apellido': datos_estudiante[4], 'fecha_nacimiento': datos_estudiante[5], 'numero_telefonico': datos_estudiante[6],
+                                        'correo_institucional': datos_estudiante[7], 'correo_personal': datos_estudiante[8], 'nacionalidad': datos_estudiante[9], 'provincia': datos_estudiante[10], 
+                                        'canton': datos_estudiante[11], 'distrito': datos_estudiante[12], 'sexo': datos_estudiante[13]})
+            if form.is_valid():
+                form.save()
             
         if Usuarios is not None:
+            user = get_object_or_404(usuarios, auth_user=user_id)
             login(self.request, Usuarios)
-            registrar_accion(self.request.user, 'El usuario '+ username +' se ha creado una cuenta como prospecto.')
+            registrar_accion(user, 'El usuario '+ username +' se ha creado una cuenta como prospecto.')
         return super(PaginaRegistroEstudiante, self).form_valid(form)
 
     def get(self, *args, **kwargs):
@@ -170,13 +226,13 @@ class CrearUsuario(LoginRequiredMixin, CreateView):
         return super(CrearUsuario, self).form_valid(form)
 
 def obtener_datos(request):
-    identificiacion = request.GET.get("identificacion")
-    url = 'https://api.hacienda.go.cr/fe/ae?identificacion=' + identificiacion
+    id = request.GET.get("identificacion")
+    url = 'https://api.hacienda.go.cr/fe/ae?identificacion=' + id
     response = requests.get(url)
     
     data_usuario = json.loads(response.text)
         
-    if len(identificiacion) == 9:
+    if len(id) == 9:
         data_nombre = data_usuario["nombre"]
         if data_nombre is not None:
             nombre_completo = data_nombre.split()
@@ -185,20 +241,41 @@ def obtener_datos(request):
             primer_apellido = nombre_completo[-2].title()
             segundo_apellido = nombre_completo[-1].title()
             
-            user = User.objects.get(username=identificiacion)
+            try:
+                user = get_object_or_404(profesor, identificacion=id)
+                status = 'profesor'
+            except:
+                user = None
+            
             if user is not None:
-                user_id = user.pk
-                usuario = get_object_or_404(usuarios, usuarios=user_id)
-                if  usuario.es_profesor:
-                    data = [nombre, primer_apellido, segundo_apellido, True]
-                else:
-                    data = [nombre, primer_apellido, segundo_apellido, False]
+                
+                try:
+                    user = get_object_or_404(estudiantes, identificacion=id)
+                    status = 'estudianteprofesor'
+                except:
+                    user = None
+                
+                if user is not None:
+                    data = [nombre, primer_apellido, segundo_apellido, status]
+                else:    
+                    data = [nombre, primer_apellido, segundo_apellido, status]
+                    
             else:
-                data = [nombre, primer_apellido, segundo_apellido]
+                try:
+                    user = get_object_or_404(estudiantes, identificacion=id)
+                    status = 'estudiante'
+                except:
+                    user = None
+                
+                if user is not None:
+                    data = [nombre, primer_apellido, segundo_apellido, status]
+                else:
+                    status = 'prospecto'
+                    data = [nombre, primer_apellido, segundo_apellido, status]
         else:
             data = []
             
-    elif len(identificiacion) >= 10 and len(identificiacion) <= 12:
+    elif len(id) >= 10 and len(id) <= 12:
         data_nombre = data_usuario["nombre"]
         if data_nombre is not None:
             data = ['Existe']
@@ -270,10 +347,10 @@ def guardar_perfil(request):
         datos_estudiante = [estudiante.id_estudiante, estudiante.identificacion, estudiante.nombre, estudiante.primer_apellido, 
                         estudiante.segundo_apellido, estudiante.fecha_nacimiento, numero_telefonico, estudiante.correo_institucional, estudiante.correo_personal, estudiante.nacionalidad, provincia, canton, distrito, estudiante.sexo]
         
-        form = FormularioEstudiantes({ 'user': datos_estudiante[0], 'identificacion': datos_estudiante[1], 'nombre': datos_estudiante[2], 'primer_apellido': datos_estudiante[3],
-                                        'segundo_apellido': datos_estudiante[4], 'fecha_nacimiento': datos_estudiante[5], 'numero_telefonico': datos_estudiante[6],
-                                        'correo_institucional': datos_estudiante[7], 'correo_personal': datos_estudiante[8], 'nacionalidad': datos_estudiante[9], 
-                                        'provincia': datos_estudiante[10], 'canton': datos_estudiante[11], 'distrito': datos_estudiante[12], 'sexo': datos_estudiante[13]}, instance=estudiante)
+        form = FormularioEstudiantes({ 'identificacion': datos_estudiante[0], 'nombre': datos_estudiante[1], 'primer_apellido': datos_estudiante[2],
+                                        'segundo_apellido': datos_estudiante[3], 'fecha_nacimiento': datos_estudiante[4], 'numero_telefonico': datos_estudiante[5],
+                                        'correo_institucional': datos_estudiante[6], 'correo_personal': datos_estudiante[7], 'nacionalidad': datos_estudiante[8], 'provincia': datos_estudiante[9], 
+                                        'canton': datos_estudiante[10], 'distrito': datos_estudiante[11], 'sexo': datos_estudiante[12]}, instance=estudiante)
         
 
         if form.is_valid():
@@ -286,7 +363,7 @@ def guardar_perfil(request):
     
 def mostrar_foto(request):
     user = request.user
-    usuario = get_object_or_404(usuarios, usuarios=user.pk)
+    usuario = get_object_or_404(usuarios, auth_user=user.pk)
     estudiante = get_object_or_404(estudiantes, user=usuario.usuarios_id)
     foto_perfil = get_object_or_404(fotoperfil, user=estudiante.user_id)
     foto_bytes = bytes(foto_perfil.archivo)
@@ -397,10 +474,10 @@ def change_email_correct(request):
                         estudiante.segundo_apellido, estudiante.fecha_nacimiento, estudiante.numero_telefonico, estudiante.correo_institucional, 
                         nuevo_correo, estudiante.nacionalidad, estudiante.provincia, estudiante.canton, estudiante.distrito, estudiante.sexo]
         
-        form = FormularioEstudiantes({ 'user': datos_estudiante[0], 'identificacion': datos_estudiante[1], 'nombre': datos_estudiante[2], 'primer_apellido': datos_estudiante[3],
-                                        'segundo_apellido': datos_estudiante[4], 'fecha_nacimiento': datos_estudiante[5], 'numero_telefonico': datos_estudiante[6],
-                                        'correo_institucional': datos_estudiante[7], 'correo_personal': datos_estudiante[8], 'nacionalidad': datos_estudiante[9], 
-                                        'provincia': datos_estudiante[10], 'canton': datos_estudiante[11], 'distrito': datos_estudiante[12], 'sexo': datos_estudiante[13]}, instance=estudiante)
+        form = FormularioEstudiantes({ 'identificacion': datos_estudiante[0], 'nombre': datos_estudiante[1], 'primer_apellido': datos_estudiante[2],
+                                        'segundo_apellido': datos_estudiante[3], 'fecha_nacimiento': datos_estudiante[4], 'numero_telefonico': datos_estudiante[5],
+                                        'correo_institucional': datos_estudiante[6], 'correo_personal': datos_estudiante[7], 'nacionalidad': datos_estudiante[8], 'provincia': datos_estudiante[9], 
+                                        'canton': datos_estudiante[10], 'distrito': datos_estudiante[11], 'sexo': datos_estudiante[12]}, instance=estudiante)
     
         if form.is_valid():
             form.save()
