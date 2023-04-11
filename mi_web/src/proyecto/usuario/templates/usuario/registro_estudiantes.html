@@ -54,12 +54,13 @@
                         <label for="segundoapellido" style="opacity: .65;">Segundo Apellido</label>
                     </div>
 
-                    <div class="form-floating mb-4 col-md-4">
-                       
+                    <div class="form-floating  mb-3 col-md-4">
+                    
 		
-                    <div class="input-group date" id="fechanacimiento"  >
+                    <div class="input-group date" id="fechanacimiento"   >
                         <label for="fechanacimiento"></label>
-                        <input  class="form-control"   id="fechanacimiento"  placeholder="Fecha de nacimiento. dd/mm/yyyy"
+                        
+                        <input  class="form-control flatpickr flatpickr-input active"  data-id="datetime" id="fechanacimiento" readonly="readonly" placeholder="Fecha de nacimiento. dd/mm/yyyy"
                         name="fechanacimiento" required />
                         
                     </div>
@@ -194,7 +195,8 @@
 </div>
 <script>
     flatpickr("#fechanacimiento", {
-        dateFormat: "d/m/Y"
+        dateFormat: "d/m/Y",
+        
     });
 </script>
 {% endblock content %}
