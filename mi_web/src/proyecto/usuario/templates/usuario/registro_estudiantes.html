@@ -97,6 +97,20 @@
                           </div>
                     </div>
 
+                    <div class="form-floating mb-3 col-md-4" id="dis_telefono2" style="display: block;">
+                      <div class="input-group">
+                          <span class="input-group-text" id="basic-addon1">
+                            <svg xmlns="http://www.w3.org/2000/svg"  width="28" height="35" fill="currentColor" class="bi bi-telephone-plus" viewBox="0 0 16 16">
+            <path d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"></path>
+            <path fill-rule="evenodd" d="M12.5 1a.5.5 0 0 1 .5.5V3h1.5a.5.5 0 0 1 0 1H13v1.5a.5.5 0 0 1-1 0V4h-1.5a.5.5 0 0 1 0-1H12V1.5a.5.5 0 0 1 .5-.5z"></path>
+          </svg>
+                          </span>
+                          <input type="text" class="form-control" id="telefono2" placeholder="Segundo Número Telefónico"
+                          name="telefono2">
+
+                        </div>
+                  </div>
+
                     <div class="form-floating mb-3 col-md-4" id="dis_pais" style="display: block;">
                         <select id="pais_select" class="form-select"  onchange="obtenerPais(this)" name="pais_select"
                           data-placeholder="Seleccione Nacionalidad" onclick="cargarPais()" >
@@ -206,7 +220,7 @@
 
                     <div class="d-grid d-flex justify-content-center">
 
-                        <button type="submit" class="w-100 btn btn-lg btn-primary btn-login fw-bold bi bi-box-arrow-in-right" style="max-width: 175px;"> Registrar</button>
+                        <button onclick="cantones()" type="submit" class="w-100 btn btn-lg btn-primary btn-login fw-bold bi bi-box-arrow-in-right" style="max-width: 175px;"> Registrar</button>
                     </div>
 
                     <hr class="my-4">
@@ -275,7 +289,7 @@ function cargarCantones(valor) {
           select.add(option);
         }
         dataDistritos(select)
-        obtenerDistrito(select)
+        obtenerCanton(select)
       }
     };
     request.send();
@@ -333,36 +347,37 @@ function cargarPais() {
 }
 
 function dataCantones(select){
-    var valorSeleccionado = select.options[select.selectedIndex].value;
-    cargarCantones(valorSeleccionado);
+  var valorSeleccionado = select.options[select.selectedIndex].value;
+  cargarCantones(valorSeleccionado);
 }
 
 function dataDistritos(select){
-    const miSelect = document.getElementById('provincia_select');
-    var valorSeleccionado = select.options[select.selectedIndex].value;
+  const miSelect = document.getElementById('provincia_select');
+  var valorSeleccionado = select.options[select.selectedIndex].value;
 
-    cargarDistritos(miSelect.value, valorSeleccionado);
+  cargarDistritos(miSelect.value, valorSeleccionado);
 }
 
 
 function obtenerPais(select) {
-    var textoSeleccionado = select.options[select.selectedIndex].text;
-    document.getElementById('pais').value = textoSeleccionado;
+  var textoSeleccionado = select.options[select.selectedIndex].text;
+  document.getElementById('pais').value = textoSeleccionado;
 }
 function obtenerProvincia(select) {
-    var textoSeleccionado = select.options[select.selectedIndex].text;
-    document.getElementById('provincia').value = textoSeleccionado;
-    dataCantones(select)
+  var textoSeleccionado = select.options[select.selectedIndex].text;
+  document.getElementById('provincia').value = textoSeleccionado;
+  dataCantones(select)
 }
 function obtenerCanton(select) {
-    var textoSeleccionado = select.options[select.selectedIndex].text;
-    document.getElementById('canton').value = textoSeleccionado;
-    dataDistritos(select)
+  var textoSeleccionado = select.options[select.selectedIndex].text;
+  document.getElementById('canton').value = textoSeleccionado;
+  dataDistritos(select)
 }
 function obtenerDistrito(select) {
-    var textoSeleccionado = select.options[select.selectedIndex].text;
-    document.getElementById('distrito').value = textoSeleccionado;
+  var textoSeleccionado = select.options[select.selectedIndex].text;
+  document.getElementById('distrito').value = textoSeleccionado;
 }
+
 </script>
 
 {% endblock content %}

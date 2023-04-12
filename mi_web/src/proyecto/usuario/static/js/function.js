@@ -5,6 +5,7 @@ function datacedula() {
     var nacimiento = document.getElementById("dis_nacimiento");
     var genero = document.getElementById("dis_genero");
     var telefono = document.getElementById("dis_telefono");
+    var telefono2 = document.getElementById("dis_telefono2");
     var nacionalidad = document.getElementById("dis_pais");
     var provincia = document.getElementById("dis_provincia");
     var canton = document.getElementById("dis_canton");
@@ -34,6 +35,7 @@ function datacedula() {
                         nacimiento.style.display = "none";
                         genero.style.display = "none";
                         telefono.style.display = "none";
+                        telefono2.style.display = "none";
                         nacionalidad.style.display = "none";
                         provincia.style.display = "none";
                         canton.style.display = "none";
@@ -47,6 +49,7 @@ function datacedula() {
                         nacimiento.style.display = "none";
                         genero.style.display = "none";
                         telefono.style.display = "none";
+                        telefono2.style.display = "none";
                         nacionalidad.style.display = "none";
                         provincia.style.display = "none";
                         canton.style.display = "none";
@@ -64,6 +67,7 @@ function datacedula() {
                         nacimiento.style.display = "none";
                         genero.style.display = "none";
                         telefono.style.display = "none";
+                        telefono2.style.display = "none";
                         nacionalidad.style.display = "none";
                         provincia.style.display = "none";
                         canton.style.display = "none";
@@ -73,6 +77,53 @@ function datacedula() {
                         console.log(es_profesor.value);
                     }
     
+                }
+                else{
+                    if (datos_usuario[1].replace(/[\\\[\]" ]/g, "") === "profesor") {
+                        nacimiento.style.display = "none";
+                        genero.style.display = "none";
+                        telefono.style.display = "none";
+                        telefono2.style.display = "none";
+                        nacionalidad.style.display = "none";
+                        provincia.style.display = "none";
+                        canton.style.display = "none";
+                        distrito.style.display = "none";
+                        cuenta_profesor.style.display = "block";
+                        es_profesor.value = "profesor";
+    
+                        console.log(es_profesor.value);
+                    }
+                    else if (datos_usuario[1].replace(/[\\\[\]" ]/g, "") === "estudiante"){
+                        nacimiento.style.display = "none";
+                        genero.style.display = "none";
+                        telefono.style.display = "none";
+                        telefono2.style.display = "none";
+                        nacionalidad.style.display = "none";
+                        provincia.style.display = "none";
+                        canton.style.display = "none";
+                        distrito.style.display = "none";
+                        cuenta_estudiante.style.display = "block";
+                        es_profesor.value = "estudiante";
+    
+                        console.log(es_profesor.value);
+                    }
+                    else if (datos_usuario[1].replace(/[\\\[\]" ]/g, "") === "prospecto"){
+                        es_profesor.value = "prospecto";
+                        console.log(es_profesor.value);
+                    }
+                    else if (datos_usuario[1].replace(/[\\\[\]" ]/g, "") === "estudianteprofesor"){
+                        nacimiento.style.display = "none";
+                        genero.style.display = "none";
+                        telefono.style.display = "none";
+                        telefono2.style.display = "none";
+                        nacionalidad.style.display = "none";
+                        provincia.style.display = "none";
+                        canton.style.display = "none";
+                        distrito.style.display = "none";
+                        cuenta_estudianteprofesor.style.display = "block";
+                        es_profesor.value = "estudianteprofesor";
+                        console.log(es_profesor.value);
+                    }
                 }
             }
         };
@@ -99,6 +150,7 @@ function datacedula() {
                     nacimiento.style.display = "none";
                     genero.style.display = "none";
                     telefono.style.display = "none";
+                    telefono2.style.display = "none";
                     nacionalidad.style.display = "none";
                     provincia.style.display = "none";
                     canton.style.display = "none";
@@ -112,6 +164,7 @@ function datacedula() {
                     nacimiento.style.display = "none";
                     genero.style.display = "none";
                     telefono.style.display = "none";
+                    telefono2.style.display = "none";
                     nacionalidad.style.display = "none";
                     provincia.style.display = "none";
                     canton.style.display = "none";
@@ -129,6 +182,7 @@ function datacedula() {
                     nacimiento.style.display = "none";
                     genero.style.display = "none";
                     telefono.style.display = "none";
+                    telefono2.style.display = "none";
                     nacionalidad.style.display = "none";
                     provincia.style.display = "none";
                     canton.style.display = "none";

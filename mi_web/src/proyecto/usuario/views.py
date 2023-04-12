@@ -3,7 +3,6 @@ from .models import usuarios, profesor, estudiantes, RegistroLogsUser, carreras,
 from .forms import FormularioEstudiantes, FormularioUsuario, FormularioPrimerIngreso, FormularioProfesor, FormularioProspecto, FormularioInfoEstudiante, CustomUserCreationForm
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, FormView
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -93,7 +92,7 @@ class PaginaRegistroEstudiante(FormView):
     template_name = 'usuario/registro_estudiantes.html'
     form_class = CustomUserCreationForm
     redirect_authenticated_user = True
-    success_url = reverse_lazy('usuario_prospecto')
+    success_url = reverse_lazy('login')
 
     def form_valid(self, form):
         es_profesor = self.request.POST.get('es_profesor')
@@ -118,13 +117,13 @@ class PaginaRegistroEstudiante(FormView):
                 form.save()
                 
             datos_estudiante = [profesor_usuario.identificacion, profesor_usuario.nombre, profesor_usuario.primer_apellido, 
-                                profesor_usuario.segundo_apellido, profesor_usuario.fecha_nacimiento, profesor_usuario.numero_telefonico, profesor_usuario.correo_institucional, 
+                                profesor_usuario.segundo_apellido, profesor_usuario.fecha_nacimiento, profesor_usuario.numero_telefonico, profesor_usuario.numero_telefonico2, profesor_usuario.correo_institucional, 
                                 profesor_usuario.correo_personal, profesor_usuario.nacionalidad, profesor_usuario.provincia, profesor_usuario.canton, profesor_usuario.distrito, profesor_usuario.sexo]
             
             form = FormularioEstudiantes({'identificacion': datos_estudiante[0], 'nombre': datos_estudiante[1], 'primer_apellido': datos_estudiante[2],
-                                        'segundo_apellido': datos_estudiante[3], 'fecha_nacimiento': datos_estudiante[4], 'numero_telefonico': datos_estudiante[5],
-                                        'correo_institucional': datos_estudiante[6], 'correo_personal': datos_estudiante[7], 'nacionalidad': datos_estudiante[8], 'provincia': datos_estudiante[9], 
-                                        'canton': datos_estudiante[10], 'distrito': datos_estudiante[11], 'sexo': datos_estudiante[12]})
+                                        'segundo_apellido': datos_estudiante[3], 'fecha_nacimiento': datos_estudiante[4], 'numero_telefonico': datos_estudiante[5], 'numero_telefonico': datos_estudiante[6],
+                                        'correo_institucional': datos_estudiante[7], 'correo_personal': datos_estudiante[8], 'nacionalidad': datos_estudiante[9], 'provincia': datos_estudiante[10], 
+                                        'canton': datos_estudiante[11], 'distrito': datos_estudiante[12], 'sexo': datos_estudiante[13]})
             if form.is_valid():
                 form.save()
                 
@@ -148,6 +147,7 @@ class PaginaRegistroEstudiante(FormView):
         elif es_profesor == 'prospecto':
             fecha = self.request.POST.get('fechanacimiento')
             telefono = self.request.POST.get('telefono')
+            telefono2 = self.request.POST.get('telefono2')
             correo_personal = self.request.POST.get('email')
             nacionalidad = self.request.POST.get('pais')
             provincia = self.request.POST.get('provincia')
@@ -171,12 +171,12 @@ class PaginaRegistroEstudiante(FormView):
             id_usuario = usuario.auth_user_id
             
             datos_estudiante = [id_usuario, username, nombre_estudiante, primerapellido, 
-                                segundoapellido, fecha, telefono, 'No Asignado', correo_personal, nacionalidad, provincia, canton, distrito, sexo]
+                                segundoapellido, fecha, telefono, telefono2, 'No Asignado', correo_personal, nacionalidad, provincia, canton, distrito, sexo]
             
             form = FormularioProspecto({'user': datos_estudiante[0],'identificacion': datos_estudiante[1], 'nombre': datos_estudiante[2], 'primer_apellido': datos_estudiante[3],
-                                        'segundo_apellido': datos_estudiante[4], 'fecha_nacimiento': datos_estudiante[5], 'numero_telefonico': datos_estudiante[6],
-                                        'correo_institucional': datos_estudiante[7], 'correo_personal': datos_estudiante[8], 'nacionalidad': datos_estudiante[9], 'provincia': datos_estudiante[10], 
-                                        'canton': datos_estudiante[11], 'distrito': datos_estudiante[12], 'sexo': datos_estudiante[13]})
+                                        'segundo_apellido': datos_estudiante[4], 'fecha_nacimiento': datos_estudiante[5], 'numero_telefonico': datos_estudiante[6], 'numero_telefonico2': datos_estudiante[7],
+                                        'correo_institucional': datos_estudiante[8], 'correo_personal': datos_estudiante[9], 'nacionalidad': datos_estudiante[10], 'provincia': datos_estudiante[11], 
+                                        'canton': datos_estudiante[12], 'distrito': datos_estudiante[13], 'sexo': datos_estudiante[14]})
             if form.is_valid():
                 form.save()
             
@@ -184,6 +184,7 @@ class PaginaRegistroEstudiante(FormView):
             user = get_object_or_404(usuarios, auth_user=user_id)
             login(self.request, Usuarios)
             registrar_accion(user, 'El usuario '+ username +' se ha creado una cuenta como prospecto.')
+            logout(self.request)
         return super(PaginaRegistroEstudiante, self).form_valid(form)
 
     def get(self, *args, **kwargs):
@@ -438,6 +439,7 @@ def guardar_perfil(request):
     if request.method == 'POST':
         user = request.user
         numero_telefonico = request.POST.get('numero_telefonico')
+        numero_telefonico2 = request.POST.get('numero_telefonico2')
         provincia = request.POST.get('provincia')
         canton = request.POST.get('canton')
         distrito = request.POST.get('distrito')
@@ -448,12 +450,12 @@ def guardar_perfil(request):
         estudiante = get_object_or_404(estudiantes, user=user_id)
         
         datos_estudiante = [estudiante.id_estudiante, estudiante.identificacion, estudiante.nombre, estudiante.primer_apellido, 
-                        estudiante.segundo_apellido, estudiante.fecha_nacimiento, numero_telefonico, estudiante.correo_institucional, estudiante.correo_personal, estudiante.nacionalidad, provincia, canton, distrito, estudiante.sexo]
+                        estudiante.segundo_apellido, estudiante.fecha_nacimiento, numero_telefonico, numero_telefonico2, estudiante.correo_institucional, estudiante.correo_personal, estudiante.nacionalidad, provincia, canton, distrito, estudiante.sexo]
         
         form = FormularioEstudiantes({ 'identificacion': datos_estudiante[0], 'nombre': datos_estudiante[1], 'primer_apellido': datos_estudiante[2],
-                                        'segundo_apellido': datos_estudiante[3], 'fecha_nacimiento': datos_estudiante[4], 'numero_telefonico': datos_estudiante[5],
-                                        'correo_institucional': datos_estudiante[6], 'correo_personal': datos_estudiante[7], 'nacionalidad': datos_estudiante[8], 'provincia': datos_estudiante[9], 
-                                        'canton': datos_estudiante[10], 'distrito': datos_estudiante[11], 'sexo': datos_estudiante[12]}, instance=estudiante)
+                                        'segundo_apellido': datos_estudiante[3], 'fecha_nacimiento': datos_estudiante[4], 'numero_telefonico': datos_estudiante[5], 'numero_telefonico2': datos_estudiante[6],
+                                        'correo_institucional': datos_estudiante[7], 'correo_personal': datos_estudiante[8], 'nacionalidad': datos_estudiante[9], 'provincia': datos_estudiante[10], 
+                                        'canton': datos_estudiante[11], 'distrito': datos_estudiante[12], 'sexo': datos_estudiante[13]}, instance=estudiante)
         
 
         if form.is_valid():
@@ -581,20 +583,20 @@ def change_email_correct(request):
         user = User.objects.get(username=user.username)
         user_id = user.pk
         
-        estudiante = get_object_or_404(estudiantes, user=user_id)
-        
-        datos_estudiante = [estudiante.id_estudiante, estudiante.identificacion, estudiante.nombre, estudiante.primer_apellido, 
-                        estudiante.segundo_apellido, estudiante.fecha_nacimiento, estudiante.numero_telefonico, estudiante.correo_institucional, 
+        estudiante = get_object_or_404(prospecto, identificacion=user.username)
+            
+        datos_estudiante = [estudiante.user, estudiante.identificacion, estudiante.nombre, estudiante.primer_apellido, 
+                        estudiante.segundo_apellido, estudiante.fecha_nacimiento, estudiante.numero_telefonico, estudiante.numero_telefonico2, estudiante.correo_institucional, 
                         nuevo_correo, estudiante.nacionalidad, estudiante.provincia, estudiante.canton, estudiante.distrito, estudiante.sexo]
         
-        form = FormularioEstudiantes({ 'identificacion': datos_estudiante[0], 'nombre': datos_estudiante[1], 'primer_apellido': datos_estudiante[2],
-                                        'segundo_apellido': datos_estudiante[3], 'fecha_nacimiento': datos_estudiante[4], 'numero_telefonico': datos_estudiante[5],
-                                        'correo_institucional': datos_estudiante[6], 'correo_personal': datos_estudiante[7], 'nacionalidad': datos_estudiante[8], 'provincia': datos_estudiante[9], 
-                                        'canton': datos_estudiante[10], 'distrito': datos_estudiante[11], 'sexo': datos_estudiante[12]}, instance=estudiante)
+        form = FormularioEstudiantes({'user': datos_estudiante[0],'identificacion': datos_estudiante[1], 'nombre': datos_estudiante[2], 'primer_apellido': datos_estudiante[3],
+                                        'segundo_apellido': datos_estudiante[4], 'fecha_nacimiento': datos_estudiante[5], 'numero_telefonico': datos_estudiante[6], 'numero_telefonico2': datos_estudiante[7],
+                                        'correo_institucional': datos_estudiante[8], 'correo_personal': datos_estudiante[9], 'nacionalidad': datos_estudiante[10], 'provincia': datos_estudiante[11], 
+                                        'canton': datos_estudiante[12], 'distrito': datos_estudiante[13], 'sexo': datos_estudiante[14]}, instance=estudiante)
     
         if form.is_valid():
             form.save()
-            return render(request, 'Prospecto/perfil.html')
+            return redirect('perfil_prospecto')
         
 def revision_formulario(request):
     user = request.user
