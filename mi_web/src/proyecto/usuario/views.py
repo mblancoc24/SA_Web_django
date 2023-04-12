@@ -22,6 +22,7 @@ from django.views import View
 from django.conf import settings
 from django.core.mail import send_mail
 import random
+from django.urls import reverse
 
 class Logueo(LoginView):
     template_name = 'usuario/login.html'
@@ -53,8 +54,8 @@ class Logueo(LoginView):
                 return redirect('change_password')
             else:
                 registrar_accion(login_obj, 'El usuario {0} ha ingresado como profesor.'.format(username))
-                modal = True
-                return render(self.request, 'usuario/login.html', {'modal': modal})
+                context = {'id': username, 'status': 3}
+                return redirect(reverse('profesor', kwargs=context))
             
         elif login_obj.es_prospecto and login_obj.es_profesor:
             #ACA SE CONSULTARIA A LA BASE DE DATOS DE LAS CLAVES PREDETERMINADAS
@@ -64,8 +65,8 @@ class Logueo(LoginView):
                 return redirect('change_password')
             else:
                 registrar_accion(login_obj, 'El usuario {0} ha ingresado como profesor.'.format(username))
-                modal = True
-                return render(self.request, 'usuario/login.html', {'modal': modal})
+                context = {'id': username, 'status': 3}
+                return redirect(reverse('profesor', kwargs=context))
         else:
             if login_obj.es_prospecto:
                 registrar_accion(login_obj, 'El usuario {0} ha ingresado como prospecto.'.format(username))
@@ -73,7 +74,8 @@ class Logueo(LoginView):
             
             elif login_obj.es_estudiante:
                 registrar_accion(login_obj, 'El usuario {0} ha ingresado como estudiante.'.format(username))
-                return redirect('usuario_estudiante')
+                context = {'id': username, 'status': 1}
+                return redirect(reverse('estudiante', kwargs=context))
             
             elif login_obj.es_profesor:
                 registrar_accion(login_obj, 'El usuario {0} ha ingresado como profesor.'.format(username))
@@ -82,7 +84,8 @@ class Logueo(LoginView):
                     registrar_accion(self.request.user, 'El usuario {0} ha realizado un cambio de contrasena  y ha ingresado.'.format(username))
                     return redirect('change_password')
                 else:
-                    return redirect('usuario_profesor')
+                    context = {'id': username, 'status': 2}
+                    return redirect(reverse('profesor', kwargs=context))
 
 
 class PaginaRegistroEstudiante(FormView):
@@ -307,9 +310,9 @@ def posgradosselect(request):
 
 class vistaPerfil (LoginRequiredMixin):
     context_object_name = 'perfil_estudiante'
-    template_name = 'Prospecto/perfil.html'
+    template_name = 'Dashboard/Componentes/perfil.html'
 
-    def profile_view(request):
+    def profile_view(request, id, status):
         user = request.user
         usuario = get_object_or_404(usuarios, usuarios=user.pk)
         estudiante = get_object_or_404(estudiantes, user=usuario.usuarios_id)
@@ -321,14 +324,18 @@ class vistaPerfil (LoginRequiredMixin):
                 'user': user,
                 'estudiante': estudiante,
                 'fotoperfil': imagen_url,
+                'status': status,
+                'id' : id,
             }
         except fotoperfil.DoesNotExist:
 
             context = {
                 'user': user,
                 'estudiante': estudiante,
+                'status': status,
+                'id' : id,
             }
-        return render(request, 'Prospecto/perfil.html', context)
+        return render(request, 'Dashboard/Componentes/perfil.html', context)
     
  
 def guardar_perfil(request):
@@ -355,7 +362,7 @@ def guardar_perfil(request):
 
         if form.is_valid():
             form.save()
-            return redirect('usuario_prospecto')
+            return redirect(request.META.get('HTTP_REFERER'))
         else:
             return HttpResponse(status=400) 
     else:
@@ -433,15 +440,15 @@ class DashboardEstudianteView(LoginRequiredMixin, View):
     login_url = ''  # Ruta de inicio de sesión
     redirect_field_name = 'login'  # Nombre del campo de redirección
 
-    def get(self, request, id):
-        return render(request, 'Dashboard/Estudiante/estudiante.html', {'id': id})
+    def get(self, request, id, status):
+        return render(request, 'Dashboard/dashboard.html', {'id': id, 'status': status})
     
 class DashboardProfesorView(LoginRequiredMixin, View):
     login_url = ''  # Ruta de inicio de sesión
     redirect_field_name = 'login'  # Nombre del campo de redirección
 
-    def get(self, request, id):
-        return render(request, 'Dashboard/Profesor/profesor.html', {'id': id})
+    def get(self, request, id, status):
+        return render(request, 'Dashboard/dashboard.html', {'id': id, 'status': status})
     
 def sesion_expirada(request):
     return render(request, 'sesion_expirada.html') 

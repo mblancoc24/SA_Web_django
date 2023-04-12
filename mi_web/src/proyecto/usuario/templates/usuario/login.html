@@ -2,9 +2,9 @@
 
 {% block content %}
 
-<div class="row">
-    <div class="col-sm-9 col-md-7 col-lg-5 mx-auto mt-5">
-        <div class="card border-0 shadow rounded-3 my-5">
+<div class="row mt-5">
+    <div class="col-sm-9 col-md-7 col-lg-5 mx-auto mt-5 mb-5">
+        <div class="card border-0 shadow rounded-3 my-5 mx-auto">
             <div class="card-body p-4 p-sm-5">
                 <h5 class="card-title text-center mb-5 fw-light fs-5 fw-bold"> Portal del Sitema Academico </h5>
                 {% if form.errors %}
@@ -74,32 +74,6 @@
         </div>
     </div>
 </div>
-
-{% block modal %}
-{% if modal %}
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" aria-labelledby="exampleModalCenterTitle"
-    style="display: none;" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content rounded-0">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalCenterTitle">¿Tienes dos cuentas donde quiere ir?</h5>
-                <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true"><span class="icon-close2"></span></span>
-                </button> -->
-            </div>
-            <div class="modal-body">
-                <div class="d-grid mb-2">
-                    <a href="{% url 'usuario_estudiante' %}" class="text-info">Estudiante</a>
-                </div>
-                <div class="d-grid mb-2">
-                    <a href="{% url 'usuario_profesor' %}" class="text-info">Profesor</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-{% endif %}
-{% endblock modal %}
 {% endblock content %}
 
 
