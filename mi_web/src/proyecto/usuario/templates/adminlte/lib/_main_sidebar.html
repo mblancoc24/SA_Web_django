@@ -15,6 +15,8 @@
             <div class="info">
                 {% if status == 1 %}
                     <a href="{% url 'perfil' id=id status=status %}" class="d-block">Victor</a>
+                {% elif status == 4 %}
+                    <a href="{% url 'perfil_prospecto' id=id status=status %}" class="d-block">Victor</a>
                 {% else %}
                     <a href="{% url 'perfil_profesor' id=id status=status %}" class="d-block">Victor</a>
                 {% endif %}
@@ -31,6 +33,13 @@
                 {% if status == 1 %}
                     <li class="nav-item">
                         <a href="{% url 'estudiante' id=id status=status %}" class="nav-link">
+                            <i class="fas fa-home"></i>
+                            <p>Home</p>
+                        </a>
+                    </li>
+                {% elif status == 4 %}
+                    <li class="nav-item">
+                        <a href="{% url 'usuario_prospecto' id=id status=status %}" class="nav-link">
                             <i class="fas fa-home"></i>
                             <p>Home</p>
                         </a>
