@@ -22,6 +22,7 @@ from .views import (
                     sesion_expirada,
                     change_email,
                     change_email_correct,
+                    revision_formulario,
                     DashboardEstudianteView,
                     DashboardProfesorView
                     )
@@ -95,6 +96,8 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
                
                path('cambio-correo/', change_email, name='cambio_correo'),
                path('change-email-correct/', change_email_correct, name='change_email_correct'),
+               
+               path("revision-form/", revision_formulario, name="revision_form"),
                ]
 
 
