@@ -1,7 +1,8 @@
 {% extends 'Dashboard/dashboard.html' %}
 {% block content %}
-<div class="row">
-    <div class="col-sm-6 col-lg-4 mt-5">
+<div class="container">
+<div class="row d-flex justify-content-center">
+    <div class="col-sm-4 col-lg-3 mt-2">
         <div class="card p-3 mb-2" id="infoCard">
             {% load static %}
             <a data-bs-toggle="modal" data-bs-target="#modal_primer_ingreso" class="card-link" onclick="llenardata()">
@@ -17,7 +18,7 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-6 col-lg-4 mt-5">
+    <div class="col-sm-4 col-lg-3 mt-2">
         <div class="card p-3 mb-2" id="infoCard">
             <a data-bs-toggle="modal" data-bs-target="#modal_posgrado" class="card-link" onclick="dataposgrados()">
                 <img src="{% static 'img/posgrados.png' %}" class="card-img-top" alt="..." />
@@ -32,7 +33,7 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-6 col-lg-4 mt-5">
+    <div class="col-sm-4 col-lg-3 mt-2">
         <div class="card p-3 mb-2" id="infoCard">
             <a data-bs-toggle="modal" data-bs-target="#modal_cursolibres" class="card-link">
                 <img src="{% static 'img/cursos_libres.png' %}" class="card-img-top" alt="..." />
@@ -47,6 +48,7 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 <br>
 <br>
@@ -159,7 +161,7 @@
 {% block modal_posgrado %}
 <div class="modal fade" id="modal_posgrado" tabindex="-1" aria-labelledby="modal_posgradoTitle" style="display: none"
     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content rounded-0">
             <div class="modal-header">
                 <h5 class="modal-title" id="modal_posgradoTitle">
