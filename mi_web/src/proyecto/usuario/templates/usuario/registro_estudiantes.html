@@ -37,14 +37,14 @@
                        
                     </div>
                     <div class="form-floating mb-3 col-md-4">
-                        <input type="text" class="form-control" id="nombre" placeholder="Nombre" name="first_name" readonly
+                        <input type="text" class="form-control" id="nombre" placeholder="Nombre" name="nombre" readonly
                             required>
-                        <label for="first_name" style="opacity: .65;">Nombre</label>
+                        <label for="nombre" style="opacity: .65;">Nombre</label>
                     </div>
 
                     <div class="form-floating mb-3 col-md-4">
                         <input type="text" class="form-control" id="primerapellido" placeholder="Primer Apellido"
-                            name="last_name" readonly required>
+                            name="primerapellido" readonly required>
                         <label for="primerapellido" style="opacity: .65;">Primer Apellido</label>
                     </div>
 
@@ -64,7 +64,7 @@
                         </span>
                         <label for="fechanacimiento"></label>
                         
-                        <input  class="form-control flatpickr flatpickr-input active"  data-id="datetime" id="fechanacimiento" readonly="readonly" placeholder="Fecha de nacimiento. dd/mm/yyyy"
+                        <input  class="form-control flatpickr flatpickr-input active" width="30" height="45" data-id="datetime" id="fechanacimiento" readonly="readonly" placeholder="Fecha de nacimiento. dd/mm/yyyy"
                         name="fechanacimiento"/>
                       </div>
 		
@@ -86,9 +86,9 @@
                         <div class="input-group">
                             <span class="input-group-text" id="basic-addon1">
                               <svg xmlns="http://www.w3.org/2000/svg" width="30" height="45" fill="currentColor" class="bi bi-telephone-plus" viewBox="0 0 16 16">
-                                <path d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"></path>
-                                <path fill-rule="evenodd" d="M12.5 1a.5.5 0 0 1 .5.5V3h1.5a.5.5 0 0 1 0 1H13v1.5a.5.5 0 0 1-1 0V4h-1.5a.5.5 0 0 1 0-1H12V1.5a.5.5 0 0 1 .5-.5z"></path>
-                                </svg>
+              <path d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"></path>
+              <path fill-rule="evenodd" d="M12.5 1a.5.5 0 0 1 .5.5V3h1.5a.5.5 0 0 1 0 1H13v1.5a.5.5 0 0 1-1 0V4h-1.5a.5.5 0 0 1 0-1H12V1.5a.5.5 0 0 1 .5-.5z"></path>
+            </svg>
                             </span>
                             <input type="text" class="form-control" id="telefono" placeholder="Número Telefónico"
                             name="telefono">
@@ -132,36 +132,14 @@
                         <input type="hidden" id="distrito" name="distrito">
                     </div>
 
-                    
-                    <div class="jumbotron" id="cuenta_profesor" style="display: none;">
-                        <h5 class="display-12">Se ha verificado que eres profesor. Los datos ya han sido recopilados anteriormente.</h5>
-                        </p>
-                        <h5 class="display-12">Su correo institucional y contraseña de acceso de profesor serán los mismos para acceso estudiantil. Por favor proceda a ingresar lo solicitado para finalizar verificacion y registrar.</h5>
-                        </p>
-                        <input type="text" id="es_profesor" name="es_profesor" value="estudiante" hidden>
-                    </div>
-
-                    <div class="jumbotron" id="cuenta_estudiante" style="display: none;">
-                        <h5 class="display-12">Se ha verificado que eres estudiante regular. Los datos ya han sido recopilados anteriormente.</h5>
-                        </p>
-                        <h5 class="display-12">Su correo institucional y contraseña de acceso de estudiante serán los mismos para acceso estudiantil. Por favor proceda a ingresar lo solicitado para finalizar verificacion y registrar.</h5>
-                        </p>
-                    </div>
-
-                    <div class="jumbotron" id="cuenta_estudianteprofesor" style="display: none;">
-                        <h5 class="display-12">Se ha verificado que eres profesor y estudiante regular. Los datos ya han sido recopilados anteriormente.</h5>
-                        </p>
-                        <h5 class="display-12">Su correo institucional y contraseña de acceso de profesor serán unificados con tu acceso estudiantil. Por favor proceda a ingresar lo solicitado para finalizar verificacion y registrar.</h5>
-                        </p>
-                    </div>
 
                     <div class="form-floating mb-3 col-md-4" id="dis_correo" style="display: block;">
                         <div class="input-group">
                             <span class="input-group-text" id="basic-addon1">
                               <svg xmlns="http://www.w3.org/2000/svg" width="30" height="45" fill="currentColor" class="bi bi-envelope-plus" viewBox="0 0 16 16">
-                                <path d="M2 2a2 2 0 0 0-2 2v8.01A2 2 0 0 0 2 14h5.5a.5.5 0 0 0 0-1H2a1 1 0 0 1-.966-.741l5.64-3.471L8 9.583l7-4.2V8.5a.5.5 0 0 0 1 0V4a2 2 0 0 0-2-2H2Zm3.708 6.208L1 11.105V5.383l4.708 2.825ZM1 4.217V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v.217l-7 4.2-7-4.2Z"></path>
-                                <path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Zm-3.5-2a.5.5 0 0 0-.5.5v1h-1a.5.5 0 0 0 0 1h1v1a.5.5 0 0 0 1 0v-1h1a.5.5 0 0 0 0-1h-1v-1a.5.5 0 0 0-.5-.5Z"></path>
-                                </svg>
+              <path d="M2 2a2 2 0 0 0-2 2v8.01A2 2 0 0 0 2 14h5.5a.5.5 0 0 0 0-1H2a1 1 0 0 1-.966-.741l5.64-3.471L8 9.583l7-4.2V8.5a.5.5 0 0 0 1 0V4a2 2 0 0 0-2-2H2Zm3.708 6.208L1 11.105V5.383l4.708 2.825ZM1 4.217V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v.217l-7 4.2-7-4.2Z"></path>
+              <path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Zm-3.5-2a.5.5 0 0 0-.5.5v1h-1a.5.5 0 0 0 0 1h1v1a.5.5 0 0 0 1 0v-1h1a.5.5 0 0 0 0-1h-1v-1a.5.5 0 0 0-.5-.5Z"></path>
+            </svg>
                             </span>
                             <input type="email" class="form-control" id="correo" placeholder="Correo" name="email" required
                             pattern="(?![_.-])((?![_.-][_.-])[a-zA-Z\d_.-]){0,63}[a-zA-Z\d]@((?!-)((?!--)[a-zA-Z\d-]){0,63}[a-zA-Z\d]\.){1,2}([a-zA-Z]{2,14}\.)?[a-zA-Z]{2,14}">
@@ -197,6 +175,34 @@
                        
                     </div>
                        
+                       
+
+                    <div class="jumbotron" id="cuenta_profesor" style="display: none;">
+                        <h5 class="display-12">Se ha verificado que eres profesor. Los datos ya han sido recopilados anteriormente.</h5>
+                        </p>
+                        <h5 class="display-12">Su correo institucional y contraseña de acceso de profesor serán los mismos para acceso estudiantil. Por favor proceda a ingresar lo solicitado para finalizar verificacion y registrar.</h5>
+                        </p>
+                        <input type="text" id="es_profesor" name="es_profesor" value="estudiante" hidden>
+                    </div>
+
+                    <div class="jumbotron" id="cuenta_estudiante" style="display: none;">
+                        <h5 class="display-12">Se ha verificado que eres estudiante regular. Los datos ya han sido recopilados anteriormente.</h5>
+                        </p>
+                        <h5 class="display-12">Su correo institucional y contraseña de acceso de estudiante serán los mismos para acceso estudiantil. Por favor proceda a ingresar lo solicitado para finalizar verificacion y registrar.</h5>
+                        </p>
+                    </div>
+
+                    <div class="jumbotron" id="cuenta_estudianteprofesor" style="display: none;">
+                        <h5 class="display-12">Se ha verificado que eres profesor y estudiante regular. Los datos ya han sido recopilados anteriormente.</h5>
+                        </p>
+                        <h5 class="display-12">Su correo institucional y contraseña de acceso de profesor serán unificados con tu acceso estudiantil. Por favor proceda a ingresar lo solicitado para finalizar verificacion y registrar.</h5>
+                        </p>
+                    </div>
+
+
+                        <span id='message'></span>
+                    </div>
+
                     <div class="d-grid d-flex justify-content-center">
 
                         <button type="submit" class="w-100 btn btn-lg btn-primary btn-login fw-bold bi bi-box-arrow-in-right" style="max-width: 175px;"> Registrar</button>
