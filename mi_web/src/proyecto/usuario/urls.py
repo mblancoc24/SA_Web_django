@@ -83,13 +83,15 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
                path('colegiosselect/', colegiosselect, name='colegiosselect'),
                path('posgradosselect/', posgradosselect, name='posgradosselect'),
                
-               path('perfil/', vistaPerfil.profile_view, name='perfil'),
+
                path('guardar-perfil/', guardar_perfil, name='guardar_perfil'),
                
                path('enviar-archivo-a-odoo/', enviar_archivo_a_odoo, name='enviar_archivo_a_odoo'),
                path('mostrar-foto/', mostrar_foto, name='mostrar_foto'),
-               path('estudiante/<int:id>/', DashboardEstudianteView.as_view(), name='estudiante'),
-               path('profesor/<int:id>/', DashboardProfesorView.as_view(), name='profesor'),
+               path('estudiante/<int:id>/<int:status>/', DashboardEstudianteView.as_view(), name='estudiante'),
+               path('estudiante/<int:id>/<int:status>/perfil/', vistaPerfil.profile_view, name='perfil'),
+               path('profesor/<int:id>/<int:status>/', DashboardProfesorView.as_view(), name='profesor'),
+               path('profesor/<int:id>/<int:status>/perfil/', vistaPerfil.profile_view, name='perfil_profesor'),
                
                path('cambio-correo/', change_email, name='cambio_correo'),
                path('change-email-correct/', change_email_correct, name='change_email_correct'),

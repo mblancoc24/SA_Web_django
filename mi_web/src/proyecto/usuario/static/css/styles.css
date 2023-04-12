@@ -490,3 +490,25 @@ footer .row  a {
       font-size: 16px;
   }
 } */
+
+.opcion {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
+@media (max-width: 767px) {
+  .opcion {
+    margin-top: auto;
+    justify-content: flex-end;
+    align-items: flex-end;
+    padding-right: 10px; /* ajusta el espacio entre el texto y el borde derecho */
+  }
+}
+
+.sidebar-bottom {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
