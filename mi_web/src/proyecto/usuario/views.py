@@ -447,19 +447,68 @@ def guardar_perfil(request):
         user = User.objects.get(username=user.username)
         user_id = user.pk
         
-        estudiante = get_object_or_404(estudiantes, user=user_id)
+        usuario = get_object_or_404(usuarios, user=user_id)
         
-        datos_estudiante = [estudiante.id_estudiante, estudiante.identificacion, estudiante.nombre, estudiante.primer_apellido, 
-                        estudiante.segundo_apellido, estudiante.fecha_nacimiento, numero_telefonico, numero_telefonico2, estudiante.correo_institucional, estudiante.correo_personal, estudiante.nacionalidad, provincia, canton, distrito, estudiante.sexo]
+        if usuario.es_profesor or usuario.es_estudiante:
+            estudiante = get_object_or_404(estudiantes, identificacion=user.username)
+            profesores = get_object_or_404(profesor, identificacion=user.username)
         
-        form = FormularioEstudiantes({ 'identificacion': datos_estudiante[0], 'nombre': datos_estudiante[1], 'primer_apellido': datos_estudiante[2],
-                                        'segundo_apellido': datos_estudiante[3], 'fecha_nacimiento': datos_estudiante[4], 'numero_telefonico': datos_estudiante[5], 'numero_telefonico2': datos_estudiante[6],
-                                        'correo_institucional': datos_estudiante[7], 'correo_personal': datos_estudiante[8], 'nacionalidad': datos_estudiante[9], 'provincia': datos_estudiante[10], 
-                                        'canton': datos_estudiante[11], 'distrito': datos_estudiante[12], 'sexo': datos_estudiante[13]}, instance=estudiante)
-        
+            datos_estudiante = [estudiante.identificacion, estudiante.nombre, estudiante.primer_apellido, 
+                            estudiante.segundo_apellido, estudiante.fecha_nacimiento, numero_telefonico, numero_telefonico2, estudiante.correo_institucional, estudiante.correo_personal, estudiante.nacionalidad, provincia, canton, distrito, estudiante.sexo]
+            
+            form = FormularioEstudiantes({ 'identificacion': datos_estudiante[0], 'nombre': datos_estudiante[1], 'primer_apellido': datos_estudiante[2],
+                                            'segundo_apellido': datos_estudiante[3], 'fecha_nacimiento': datos_estudiante[4], 'numero_telefonico': datos_estudiante[5], 'numero_telefonico2': datos_estudiante[6],
+                                            'correo_institucional': datos_estudiante[7], 'correo_personal': datos_estudiante[8], 'nacionalidad': datos_estudiante[9], 'provincia': datos_estudiante[10], 
+                                            'canton': datos_estudiante[11], 'distrito': datos_estudiante[12], 'sexo': datos_estudiante[13]}, instance=estudiante)
+            
+            if form.is_valid():
+                form.save()
+                
+            datos_profesor = [profesores.identificacion, profesores.nombre, profesores.primer_apellido, 
+                            profesores.segundo_apellido, profesores.fecha_nacimiento, numero_telefonico, numero_telefonico2, profesores.correo_institucional, profesores.correo_personal, profesores.nacionalidad, provincia, canton, distrito, profesores.sexo, profesores.puesto_educativo]
 
+            form = FormularioProfesor({ 'identificacion': datos_profesor[0], 'nombre': datos_profesor[1], 'primer_apellido': datos_profesor[2],
+                                            'segundo_apellido': datos_profesor[3], 'fecha_nacimiento': datos_profesor[4], 'numero_telefonico': datos_profesor[5], 'numero_telefonico2': datos_profesor[6],
+                                            'correo_institucional': datos_profesor[7], 'correo_personal': datos_profesor[8], 'nacionalidad': datos_profesor[9], 'provincia': datos_profesor[10], 
+                                            'canton': datos_profesor[11], 'distrito': datos_profesor[12], 'sexo': datos_profesor[13], 'puesto_educativo': datos_profesor[14]}, instance=profesores)
+            if form.is_valid():
+                form.save()
+            
+            return redirect(request.META.get('HTTP_REFERER'))
+        
+        elif usuario.es_profesor or usuario.es_prospecto:
+            estudiante = get_object_or_404(prospecto, identificacion=user.username)
+            profesores = get_object_or_404(profesor, identificacion=user.username)
+            
+            datos_profesor = [profesores.identificacion, profesores.nombre, profesores.primer_apellido, 
+                            profesores.segundo_apellido, profesores.fecha_nacimiento, numero_telefonico, numero_telefonico2, profesores.correo_institucional, profesores.correo_personal, profesores.nacionalidad, provincia, canton, distrito, profesores.sexo, profesores.puesto_educativo]
+
+            form = FormularioProfesor({ 'identificacion': datos_profesor[0], 'nombre': datos_profesor[1], 'primer_apellido': datos_profesor[2],
+                                            'segundo_apellido': datos_profesor[3], 'fecha_nacimiento': datos_profesor[4], 'numero_telefonico': datos_profesor[5], 'numero_telefonico2': datos_profesor[6],
+                                            'correo_institucional': datos_profesor[7], 'correo_personal': datos_profesor[8], 'nacionalidad': datos_profesor[9], 'provincia': datos_profesor[10], 
+                                            'canton': datos_profesor[11], 'distrito': datos_profesor[12], 'sexo': datos_profesor[13], 'puesto_educativo': datos_profesor[14]}, instance=profesores)
+            if form.is_valid():
+                form.save()
+            
+            estudiante = get_object_or_404(prospecto, identificacion=user.username)
+            
+            datos_estudiante = [estudiante.user, estudiante.identificacion, estudiante.nombre, estudiante.primer_apellido, 
+                            estudiante.segundo_apellido, estudiante.fecha_nacimiento, numero_telefonico, numero_telefonico2, estudiante.correo_institucional, 
+                            estudiante.correo_personal, estudiante.nacionalidad, provincia, canton, distrito, estudiante.sexo]
+            
+            form = FormularioProspecto({'user': datos_estudiante[0],'identificacion': datos_estudiante[1], 'nombre': datos_estudiante[2], 'primer_apellido': datos_estudiante[3],
+                                            'segundo_apellido': datos_estudiante[4], 'fecha_nacimiento': datos_estudiante[5], 'numero_telefonico': datos_estudiante[6], 'numero_telefonico2': datos_estudiante[7],
+                                        'correo_institucional': datos_estudiante[8], 'correo_personal': datos_estudiante[9], 'nacionalidad': datos_estudiante[10], 'provincia': datos_estudiante[11], 
+                                        'canton': datos_estudiante[12], 'distrito': datos_estudiante[13], 'sexo': datos_estudiante[14]}, instance=estudiante)
+
+            if form.is_valid():
+                form.save()
+            
+            return redirect(request.META.get('HTTP_REFERER'))
+        
         if form.is_valid():
             form.save()
+                
             return redirect(request.META.get('HTTP_REFERER'))
         else:
             return HttpResponse(status=400) 
@@ -589,7 +638,7 @@ def change_email_correct(request):
                         estudiante.segundo_apellido, estudiante.fecha_nacimiento, estudiante.numero_telefonico, estudiante.numero_telefonico2, estudiante.correo_institucional, 
                         nuevo_correo, estudiante.nacionalidad, estudiante.provincia, estudiante.canton, estudiante.distrito, estudiante.sexo]
         
-        form = FormularioEstudiantes({'user': datos_estudiante[0],'identificacion': datos_estudiante[1], 'nombre': datos_estudiante[2], 'primer_apellido': datos_estudiante[3],
+        form = FormularioProspecto({'user': datos_estudiante[0],'identificacion': datos_estudiante[1], 'nombre': datos_estudiante[2], 'primer_apellido': datos_estudiante[3],
                                         'segundo_apellido': datos_estudiante[4], 'fecha_nacimiento': datos_estudiante[5], 'numero_telefonico': datos_estudiante[6], 'numero_telefonico2': datos_estudiante[7],
                                         'correo_institucional': datos_estudiante[8], 'correo_personal': datos_estudiante[9], 'nacionalidad': datos_estudiante[10], 'provincia': datos_estudiante[11], 
                                         'canton': datos_estudiante[12], 'distrito': datos_estudiante[13], 'sexo': datos_estudiante[14]}, instance=estudiante)
