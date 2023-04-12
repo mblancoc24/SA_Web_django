@@ -55,15 +55,20 @@
                     </div>
 
                     <div class="form-floating  mb-3 col-md-4" id="dis_nacimiento" style="display: block;">
-                    
-		
-                    <div class="input-group date" id="fechanacimiento"   >
+                      <div class="input-group">
+                        <span class="input-group-text" id="basic-addon1">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="45" fill="currentColor" class="bi bi-calendar-week" viewBox="0 0 16 16">
+          <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm-5 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z"></path>
+          <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"></path>
+        </svg>
+                        </span>
                         <label for="fechanacimiento"></label>
                         
                         <input  class="form-control flatpickr flatpickr-input active"  data-id="datetime" id="fechanacimiento" readonly="readonly" placeholder="Fecha de nacimiento. dd/mm/yyyy"
                         name="fechanacimiento"/>
-                        
-                    </div>         
+                      </div>
+		
+                   
                     </div>
                     
                     <div class="form-floating mb-3 col-md-4" id="dis_genero" style="display: block;">
@@ -219,6 +224,144 @@
         dateFormat: "d/m/Y",
         
     });
+
+
+    var provinciasCargadas = false;
+
+function cargarProvincias() {
+    if (provinciasCargadas) {
+        return;
+    }
+
+    var select = document.getElementById("provincia_select");
+
+    var url = "{% url 'obtener_provincia' %}";
+    var request = new XMLHttpRequest();
+    request.open('GET', url, true);
+    request.onload = function() {
+      if (request.status === 200) {
+        var data = JSON.parse(request.responseText);
+        select.options.length = 0;
+        for(key in data) {
+          var option = document.createElement("option");
+          option.value = key;
+          option.text = data[key];
+          select.add(option);
+        }
+        provinciasCargadas = true;
+        dataCantones(select);
+        obtenerProvincia(select)
+      }
+    };
+    request.send();
+}
+
+function cargarCantones(valor) {
+    var select = document.getElementById("canton_select");
+    var select2 = document.getElementById("distrito_select");
+
+    var url = "/obtener-canton/?provincia_select=";
+    var request = new XMLHttpRequest();
+    request.open('GET', url + encodeURIComponent(valor), true);
+    request.onload = function() {
+      if (request.status === 200) {
+        var data = JSON.parse(request.responseText);
+        select.options.length = 0;
+        for(key in data) {
+          var option = document.createElement("option");
+          option.value = key;
+          option.text = data[key];
+          select.add(option);
+        }
+        dataDistritos(select)
+        obtenerDistrito(select)
+      }
+    };
+    request.send();
+}
+
+function cargarDistritos(valor1, valor2) {
+    var select = document.getElementById("distrito_select");
+
+    var url = "/obtener-distrito/?provincia_select=" + encodeURIComponent(valor1) + "&canton_select=" + encodeURIComponent(valor2);
+    var request = new XMLHttpRequest();
+    request.open('GET', url, true);
+    request.onload = function() {
+      if (request.status === 200) {
+        var data = JSON.parse(request.responseText);
+        select.options.length = 0;
+        for(key in data) {
+          var option = document.createElement("option");
+          option.value = key;
+          option.text = data[key];
+          select.add(option);
+        }
+        obtenerDistrito(select)
+      }
+    };
+    request.send();
+}
+
+var paisCargadas = false;
+
+function cargarPais() {
+    if (paisCargadas) {
+        return;
+    }
+
+    var select = document.getElementById("pais_select");
+
+    select.options.length = 0; // Eliminamos todas las opciones anteriores
+
+    var url = "{% url 'obtener_nacionalidad' %}";
+    var request = new XMLHttpRequest();
+    request.open('GET', url, true);
+    request.onload = function() {
+      if (request.status === 200) {
+        var data = JSON.parse(request.responseText);
+        for(key in data) {
+          var option = document.createElement("option");
+          option.value = key;
+          option.text = data[key];
+          select.add(option);
+        }
+        paisCargadas = true;
+      }
+    };
+    request.send();
+}
+
+function dataCantones(select){
+    var valorSeleccionado = select.options[select.selectedIndex].value;
+    cargarCantones(valorSeleccionado);
+}
+
+function dataDistritos(select){
+    const miSelect = document.getElementById('provincia_select');
+    var valorSeleccionado = select.options[select.selectedIndex].value;
+
+    cargarDistritos(miSelect.value, valorSeleccionado);
+}
+
+
+function obtenerPais(select) {
+    var textoSeleccionado = select.options[select.selectedIndex].text;
+    document.getElementById('pais').value = textoSeleccionado;
+}
+function obtenerProvincia(select) {
+    var textoSeleccionado = select.options[select.selectedIndex].text;
+    document.getElementById('provincia').value = textoSeleccionado;
+    dataCantones(select)
+}
+function obtenerCanton(select) {
+    var textoSeleccionado = select.options[select.selectedIndex].text;
+    document.getElementById('canton').value = textoSeleccionado;
+    dataDistritos(select)
+}
+function obtenerDistrito(select) {
+    var textoSeleccionado = select.options[select.selectedIndex].text;
+    document.getElementById('distrito').value = textoSeleccionado;
+}
 </script>
 
 {% endblock content %}
