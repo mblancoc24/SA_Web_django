@@ -207,8 +207,29 @@ class DetalleUsuarioProspecto(LoginRequiredMixin, ListView):
     model = usuarios
     context_object_name = 'prueba_prospecto'
     template_name = 'Dashboard/Prospecto/prospecto.html'
+    
     def get(self, request, id, status):
-        return render(request, 'Dashboard/Prospecto/prospecto.html', {'id': id, 'status': status})
+        
+        user = request.user
+        usuario = get_object_or_404(usuarios, auth_user=user.pk)
+        
+        try:
+            fotoperfil_obj = fotoperfil.objects.get(user=usuario.pk) 
+            imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
+            context = {
+                'id': id,
+                'status': status,
+                'user': user,
+                'fotoperfil': imagen_url,
+            }
+        except fotoperfil.DoesNotExist:
+
+            context = {
+                'id': id,
+                'status': status,
+                'user': user,
+            }
+        return render(request, 'Dashboard/Prospecto/prospecto.html', context)
     
 class DetalleUsuarioEstudianteProfesor(LoginRequiredMixin, ListView):
     model = usuarios
@@ -446,8 +467,7 @@ def guardar_perfil(request):
 def mostrar_foto(request):
     user = request.user
     usuario = get_object_or_404(usuarios, auth_user=user.pk)
-    estudiante = get_object_or_404(estudiantes, user=usuario.usuarios_id)
-    foto_perfil = get_object_or_404(fotoperfil, user=estudiante.user_id)
+    foto_perfil = get_object_or_404(fotoperfil, user=usuario.pk)
     foto_bytes = bytes(foto_perfil.archivo)
     return HttpResponse(foto_bytes, content_type='image/png')
 
@@ -457,17 +477,17 @@ def enviar_archivo_a_odoo(request):
     if request.method == 'POST':
         user = request.user
         user_id = user.pk
-        # estudiante = get_object_or_404(usuarios, auth_user=user_id)
-        # foto = request.FILES.get('fotoperfil')
+        estudiante = get_object_or_404(usuarios, auth_user=user_id)
+        foto = request.FILES.get('fotoperfil')
         
-        # img_data = foto.read()
+        img_data = foto.read()
         
-        # # Convertir la imagen a bytes
-        # img_bytes = bytearray(img_data)
+        # Convertir la imagen a bytes
+        img_bytes = bytearray(img_data)
 
-        # # Crear el objeto UserFile y guardarlo en la base de datos
-        # user_file = fotoperfil(user=estudiante.user_id, archivo=img_bytes)
-        # user_file.save()
+        # Crear el objeto UserFile y guardarlo en la base de datos
+        user_file = fotoperfil(user=estudiante, archivo=img_bytes)
+        user_file.save()
         
         usuario = get_object_or_404(usuarios, auth_user=user_id)
         formulariodata = [1, 1, usuario.pk,'Formulario Enviado Satisfactoriamente']

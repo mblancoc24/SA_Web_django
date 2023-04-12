@@ -97,7 +97,7 @@ class RegistroIDUserCambios (models.Model):
     tipo_ident_antigua = models.CharField(max_length=25)
     
 class fotoperfil(models.Model):
-    user = models.ForeignKey(prospecto,
+    user = models.ForeignKey(usuarios,
                             on_delete=models.CASCADE,
                             null=True,
                             blank=True)
