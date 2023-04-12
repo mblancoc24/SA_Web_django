@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import usuarios, profesor, estudiantes, RegistroLogsUser, carreras, colegios, posgrados, fotoperfil
-from .forms import FormularioEstudiantes, FormularioUsuario, FormularioProfesor, FormularioProspecto, FormularioInfoEstudiante, CustomUserCreationForm
+from .models import usuarios, profesor, estudiantes, RegistroLogsUser, carreras, colegios, posgrados, fotoperfil, estados, etapas, primerIngreso
+from .forms import FormularioEstudiantes, FormularioUsuario, FormularioPrimerIngreso, FormularioProfesor, FormularioProspecto, FormularioInfoEstudiante, CustomUserCreationForm
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, FormView
 from django.contrib.auth.decorators import login_required
@@ -97,8 +97,8 @@ class PaginaRegistroEstudiante(FormView):
     def form_valid(self, form):
         es_profesor = self.request.POST.get('es_profesor')
         username = form.cleaned_data['username']
-        nombre_estudiante = self.request.POST.get('nombre')
-        primerapellido = self.request.POST.get('primerapellido')
+        nombre_estudiante = self.request.POST.get('first_name')
+        primerapellido = self.request.POST.get('last_name')
         segundoapellido = self.request.POST.get('segundoapellido')
         
         if es_profesor == 'profesor':
@@ -281,9 +281,70 @@ def obtener_datos(request):
     elif len(id) >= 10 and len(id) <= 12:
         data_nombre = data_usuario["nombre"]
         if data_nombre is not None:
-            data = ['Existe']
+            try:
+                user = get_object_or_404(profesor, identificacion=id)
+                status = 'profesor'
+            except:
+                user = None
+            
+            if user is not None:
+                
+                try:
+                    user = get_object_or_404(estudiantes, identificacion=id)
+                    status = 'estudianteprofesor'
+                except:
+                    user = None
+                
+                if user is not None:
+                    data = ['Existe', status]
+                else:
+                    data = ['Existe', status]    
+                    
+            else:
+                try:
+                    user = get_object_or_404(estudiantes, identificacion=id)
+                    status = 'estudiante'
+                except:
+                    user = None
+                
+                if user is not None:
+                    data = ['Existe', status]
+                else:
+                    status = 'prospecto'
+                    data = ['Existe', status]
+            
         else:
-            data = []
+            try:
+                user = get_object_or_404(profesor, identificacion=id)
+                status = 'profesor'
+            except:
+                user = None
+            
+            if user is not None:
+                
+                try:
+                    user = get_object_or_404(estudiantes, identificacion=id)
+                    status = 'estudianteprofesor'
+                except:
+                    user = None
+                
+                if user is not None:
+                    data = ['',status]
+                else:
+                    data = ['',status]    
+                    
+            else:
+                try:
+                    user = get_object_or_404(estudiantes, identificacion=id)
+                    status = 'estudiante'
+                except:
+                    user = None
+                
+                if user is not None:
+                    data = ['',status]
+                else:
+                    status = 'prospecto'
+                    data = ['',status]
     else:
         data = []
         
@@ -382,20 +443,31 @@ def enviar_archivo_a_odoo(request):
     if request.method == 'POST':
         user = request.user
         user_id = user.pk
-        estudiante = get_object_or_404(estudiantes, user=user_id)
-        foto = request.FILES.get('fotoperfil')
+        # estudiante = get_object_or_404(usuarios, auth_user=user_id)
+        # foto = request.FILES.get('fotoperfil')
         
-        img_data = foto.read()
+        # img_data = foto.read()
         
-        # Convertir la imagen a bytes
-        img_bytes = bytearray(img_data)
+        # # Convertir la imagen a bytes
+        # img_bytes = bytearray(img_data)
 
-        # Crear el objeto UserFile y guardarlo en la base de datos
-        user_file = fotoperfil(user=estudiante.user_id, archivo=img_bytes)
-        user_file.save()
+        # # Crear el objeto UserFile y guardarlo en la base de datos
+        # user_file = fotoperfil(user=estudiante.user_id, archivo=img_bytes)
+        # user_file.save()
+        
+        usuario = get_object_or_404(usuarios, auth_user=user_id)
+        formulariodata = [1, 1, usuario.pk,'Formulario Enviado Satisfactoriamente']
+        
+        form = FormularioPrimerIngreso({ 'etapa': formulariodata[0], 'estado': formulariodata[1],
+                                        'usuario': formulariodata[2],'comentario': formulariodata[3]})
+        if form.is_valid():
+            form.save()
+            return redirect('revision_form')
+        else:
+            return HttpResponse(status=400) 
+    else:
+        return HttpResponse(status=400)
     
-    return redirect('usuario_prospecto')
-
 class SessionTimeoutView(LoginRequiredMixin):
     template_name = 'usuarios/login.html'
     login_url = '/login/'
@@ -489,3 +561,23 @@ def change_email_correct(request):
         if form.is_valid():
             form.save()
             return render(request, 'Prospecto/perfil.html')
+        
+def revision_formulario(request):
+    user = request.user
+    user_id = user.pk 
+    usuario = get_object_or_404(usuarios, auth_user=user_id)
+    
+    # Obtener el objeto de la base de datos según su ID
+    statusgeneral = get_object_or_404(primerIngreso, usuario=usuario.pk)
+    
+    etapa  = get_object_or_404(etapas, id_etapa=statusgeneral.etapa_id)
+    
+    estado = get_object_or_404(estados, id_estado=statusgeneral.estado_id)
+
+    # Enviar el objeto y otros datos necesarios a la plantilla HTML
+    contexto = {
+        "comentario": statusgeneral.comentario,
+        "etapa": etapa.etapa_nombre,
+        "estado": estado.estado_nombre,
+    }
+    return render(request, "Prospecto/revision_form.html", contexto)

@@ -1,0 +1,89 @@
+{% extends 'usuario/principal.html' %}
+
+{% block content %}
+
+<div class="container text-center">
+    <h1 class="mb-4">Proceso de Admisión de Primer Ingreso</h1>
+    <div class="mb-4">
+        <label for="etapa" class="form-label">Etapa:</label>
+        <span id="etapa" class="fw-bold">{{ etapa }}</span>
+    </div>
+
+    <div id="progress-bar-container" class="progress">
+        <div class="progress-bar progress-bar-striped progress-bar-animated  bg-info" content="{{ estado }}" role="progressbar" aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+        <div id="progress-bar-status" style="display: flex;" class="progress-bar-status">{{ estado }}</div>
+    </div>
+    <div id="comentario" class="mt-4" style="display: block;">
+        <label for="etapa" class="form-label">Comentarios:</label>
+        <span id="etapa" class="fw-bold">{{ comentario }}</span>
+    </div>
+    <div id="comentario" class="mt-4">
+        <label for="etapa" class="form-label">Comentarios:</label>
+        <span id="etapa" class="fw-bold">{{ comentario }}</span>
+    </div>
+</div>
+
+<style>
+    .progress-bar {
+        background-color: rgb(255, 209, 64) !important;
+        height: 40px !important;
+    }
+    .progress{
+        background-color: rgb(56, 56, 56) !important;
+        height: 40px !important;
+    }
+    #progress-bar-status {
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 18px;
+        margin-left: 5px;
+      }
+</style>
+
+<script>
+    var progressBar = document.querySelector(".progress-bar");
+    var progressBarContainer = document.querySelector("#progress-bar-container");
+    var progressBarStatus = document.querySelector("#progress-bar-status");
+    var comentario = document.querySelector("#comentario");
+
+    // Obtener el estado del objeto de la base de datos en Django
+    var estado = "{{ estado }}";
+
+    switch (estado) {
+        case "Enviado":
+            progressBar.style.width = "10%";
+            progressBarStatus.textContent = "Enviado";
+            break;
+        case "Recibido":
+            progressBar.style.width = "25%";
+            progressBarStatus.textContent = "Recibido";
+            break;
+        case "En Revisión":
+            progressBar.style.width = "50%";
+            progressBarStatus.textContent = "En Revisión";
+            break;
+        case "Convalidaciones":
+            progressBar.style.width = "75%";
+            progressBarStatus.textContent = "Convalidaciones";
+            break;
+        case "Aprobado":
+            progressBar.style.width = "100%";
+            progressBarStatus.textContent = "Aprobado";
+            break;
+        case "No Aplica":
+            progressBar.style.width = "100%";
+            progressBarStatus.textContent = "No Aplica";
+            break;
+        case "Rechazado":
+            progressBar.style.width = "100%";
+            progressBarStatus.textContent = "Rechazado";
+            break;
+        default:
+            progressBar.style.width = "0%";
+            progressBarStatus.textContent = "Estado desconocido";
+    }
+
+</script>
+
+{% endblock content %}
