@@ -439,8 +439,7 @@ footer .row  a {
 }
 
 .line {
-  
-  border-color: darkgray;
+  background-color: darkgray;
   opacity: 0.4;
 }
 
@@ -511,4 +510,10 @@ footer .row  a {
   position: absolute;
   bottom: 0;
   width: 100%;
+}
+
+a {
+  color: #007bff;
+  text-decoration: none;
+  background-color: transparent;
 }
