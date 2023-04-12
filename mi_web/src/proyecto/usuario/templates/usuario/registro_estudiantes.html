@@ -55,15 +55,20 @@
                     </div>
 
                     <div class="form-floating  mb-3 col-md-4" id="dis_nacimiento" style="display: block;">
-                    
-		
-                    <div class="input-group date" id="fechanacimiento"   >
+                      <div class="input-group">
+                        <span class="input-group-text" id="basic-addon1">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="45" fill="currentColor" class="bi bi-calendar-week" viewBox="0 0 16 16">
+          <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm-5 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z"></path>
+          <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"></path>
+        </svg>
+                        </span>
                         <label for="fechanacimiento"></label>
                         
                         <input  class="form-control flatpickr flatpickr-input active"  data-id="datetime" id="fechanacimiento" readonly="readonly" placeholder="Fecha de nacimiento. dd/mm/yyyy"
                         name="fechanacimiento"/>
-                        
-                    </div>         
+                      </div>
+		
+                   
                     </div>
                     
                     <div class="form-floating mb-3 col-md-4" id="dis_genero" style="display: block;">
@@ -213,6 +218,7 @@
         dateFormat: "d/m/Y",
         
     });
+
 
     var provinciasCargadas = false;
 
