@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import usuarios, profesor, estudiantes, RegistroLogsUser, carreras, colegios, posgrados, fotoperfil, estados, etapas, primerIngreso
+from .models import usuarios, profesor, estudiantes, RegistroLogsUser, carreras, colegios, posgrados, fotoperfil, estados, etapas, primerIngreso, prospecto
 from .forms import FormularioEstudiantes, FormularioUsuario, FormularioPrimerIngreso, FormularioProfesor, FormularioProspecto, FormularioInfoEstudiante, CustomUserCreationForm
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, FormView
@@ -70,7 +70,8 @@ class Logueo(LoginView):
         else:
             if login_obj.es_prospecto:
                 registrar_accion(login_obj, 'El usuario {0} ha ingresado como prospecto.'.format(username))
-                return redirect('usuario_prospecto')
+                context = {'id': username, 'status': 4}
+                return redirect(reverse('usuario_prospecto', kwargs=context))
             
             elif login_obj.es_estudiante:
                 registrar_accion(login_obj, 'El usuario {0} ha ingresado como estudiante.'.format(username))
@@ -205,7 +206,9 @@ class DetalleUsuarioProfesor(LoginRequiredMixin, ListView):
 class DetalleUsuarioProspecto(LoginRequiredMixin, ListView):
     model = usuarios
     context_object_name = 'prueba_prospecto'
-    template_name = 'Prospecto/prueba_prospecto.html'
+    template_name = 'Dashboard/Prospecto/prospecto.html'
+    def get(self, request, id, status):
+        return render(request, 'Dashboard/Prospecto/prospecto.html', {'id': id, 'status': status})
     
 class DetalleUsuarioEstudianteProfesor(LoginRequiredMixin, ListView):
     model = usuarios
@@ -375,15 +378,26 @@ class vistaPerfil (LoginRequiredMixin):
 
     def profile_view(request, id, status):
         user = request.user
-        usuario = get_object_or_404(usuarios, usuarios=user.pk)
-        estudiante = get_object_or_404(estudiantes, user=usuario.usuarios_id)
+        usuario = get_object_or_404(usuarios, auth_user=user.pk)
+
+        if usuario.es_estudiante:
+
+            login = get_object_or_404(estudiantes, identificacion=user.username)
+
+        elif usuario.es_profesor:
+
+            login = get_object_or_404(profesor, identificacion=user.username)
+
+        elif usuario.es_prospecto:
+
+            login = get_object_or_404(prospecto, identificacion=user.username)
    
         try:
-            fotoperfil_obj = fotoperfil.objects.get(user=estudiante.user_id) 
+            fotoperfil_obj = fotoperfil.objects.get(user=login.user_id) 
             imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
             context = {
                 'user': user,
-                'estudiante': estudiante,
+                'estudiante': login,
                 'fotoperfil': imagen_url,
                 'status': status,
                 'id' : id,
@@ -392,7 +406,7 @@ class vistaPerfil (LoginRequiredMixin):
 
             context = {
                 'user': user,
-                'estudiante': estudiante,
+                'estudiante': login,
                 'status': status,
                 'id' : id,
             }

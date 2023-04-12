@@ -2,6 +2,9 @@
 {% block stylesheets %}
 {% include 'adminlte/lib/_styles.html' %}
 {% block style_sheets %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 {% endblock %}
