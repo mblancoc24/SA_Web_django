@@ -5,21 +5,20 @@
 <div class="container text-center">
     <h1 class="mb-4">Proceso de Admisión de Primer Ingreso</h1>
     <div class="mb-4">
-        <label for="etapa" class="form-label">Etapa:</label>
-        <span id="etapa" class="fw-bold">{{ etapa }}</span>
+        <span for="etapa" class="form-label fw-bold">Etapa actual:</span>
+        <span id="etapa" class="fw-normal">{{ etapa }}</span>
     </div>
 
     <div id="progress-bar-container" class="progress">
         <div class="progress-bar progress-bar-striped progress-bar-animated  bg-info" content="{{ estado }}" role="progressbar" aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
         <div id="progress-bar-status" style="display: flex;" class="progress-bar-status">{{ estado }}</div>
     </div>
-    <div id="comentario" class="mt-4" style="display: block;">
-        <label for="etapa" class="form-label">Comentarios:</label>
-        <span id="etapa" class="fw-bold">{{ comentario }}</span>
+    <div id="estado_etapa" class="mt-4" style="display: none;">
+        <span id="etapatext" class="fw-bold">Ha sido {{ estado }} por {{ etapa }}.</span>
     </div>
     <div id="comentario" class="mt-4">
-        <label for="etapa" class="form-label">Comentarios:</label>
-        <span id="etapa" class="fw-bold">{{ comentario }}</span>
+        <label for="etapa" class="form-label fw-bold">Comentarios del proceso:</label>
+        <span id="etapa" class="fw-normal">{{ comentario }}</span>
     </div>
 </div>
 
@@ -38,6 +37,14 @@
         color: white;
         font-size: 18px;
         margin-left: 5px;
+    }
+    #etapatext{
+        font-size: 25px;
+    }
+    .container {
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
       }
 </style>
 
@@ -45,6 +52,7 @@
     var progressBar = document.querySelector(".progress-bar");
     var progressBarContainer = document.querySelector("#progress-bar-container");
     var progressBarStatus = document.querySelector("#progress-bar-status");
+    var estado_estapa = document.querySelector("#estado_etapa");
     var comentario = document.querySelector("#comentario");
 
     // Obtener el estado del objeto de la base de datos en Django
@@ -70,17 +78,25 @@
         case "Aprobado":
             progressBar.style.width = "100%";
             progressBarStatus.textContent = "Aprobado";
+            progressBarStatus.style.display = "none";
+            comentario.style.display = "none";
+            estado_estapa.style.display = "block";
             break;
         case "No Aplica":
             progressBar.style.width = "100%";
             progressBarStatus.textContent = "No Aplica";
+            progressBarStatus.style.display = "none";
+            estado_estapa.style.display = "block";
             break;
         case "Rechazado":
             progressBar.style.width = "100%";
             progressBarStatus.textContent = "Rechazado";
+            progressBarStatus.style.display = "none";
+            estado_estapa.style.display = "block";
             break;
         default:
             progressBar.style.width = "0%";
+            comentario.style.display = "none";
             progressBarStatus.textContent = "Estado desconocido";
     }
 
