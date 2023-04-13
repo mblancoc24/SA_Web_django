@@ -13,9 +13,6 @@ from .views import (
                     obtener_canton,
                     obtener_distrito,
                     obtener_nacionalidad,
-                    carrerasselect,
-                    colegiosselect,
-                    posgradosselect,
                     guardar_perfil,
                     enviar_archivo_a_odoo,
                     mostrar_foto,
@@ -23,6 +20,7 @@ from .views import (
                     change_email,
                     change_email_correct,
                     revision_formulario,
+                    corregirdata,
                     DashboardEstudianteView,
                     DashboardProfesorView
                     )
@@ -80,9 +78,6 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
                path('obtener-distrito/', obtener_distrito, name='obtener_distrito'),
                path('obtener-nacionalidad/', obtener_nacionalidad, name='obtener_nacionalidad'),
                
-               path('carrerasselect/', carrerasselect, name='carrerasselect'),
-               path('colegiosselect/', colegiosselect, name='colegiosselect'),
-               path('posgradosselect/', posgradosselect, name='posgradosselect'),
                
 
                path('guardar-perfil/', guardar_perfil, name='guardar_perfil'),
@@ -98,6 +93,7 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
                path('change-email-correct/', change_email_correct, name='change_email_correct'),
                
                path("revision-form/", revision_formulario, name="revision_form"),
+               path("corregir-data/", corregirdata, name="corregir_data"),
                ]
 
 
