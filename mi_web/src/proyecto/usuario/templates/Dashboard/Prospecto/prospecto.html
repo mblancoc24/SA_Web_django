@@ -13,7 +13,8 @@
                 <h5 class="card-title" id="infoCardTitle">PRIMER INGRESO</h5>
                 <p class="card-text" id="infoCardTextModal">
                     <a data-bs-toggle="modal" data-bs-target="#modal_primer_ingreso_instrucciones"
-                        class="card-link">Instrucciones</a>
+                        class="card-link">
+                        <i class="fa fa-info" aria-hidden="true"></i> Instrucciones</a>
                 </p>
             </div>
         </div>
@@ -28,7 +29,8 @@
                 <h5 class="card-title" id="infoCardTitle">POSGRADOS</h5>
                 <p class="card-text" id="infoCardTextModal">
                     <a data-bs-toggle="modal" data-bs-target="#modal_posgrado_instrucciones"
-                        class="card-link">Instrucciones</a>
+                        class="card-link">
+                        <i class="fa fa-info" aria-hidden="true"></i> Instrucciones</a>
                 </p>
             </div>
         </div>
@@ -43,7 +45,8 @@
                 <h5 class="card-title" id="infoCardTitle">CURSOS LIBRES</h5>
                 <p class="card-text" id="infoCardTextModal">
                     <a data-bs-toggle="modal" data-bs-target="#modal_cursos_libres_instrucciones"
-                        class="card-link">Instrucciones</a>
+                        class="card-link">
+                        <i class="fa fa-info" aria-hidden="true"></i> Instrucciones</a>
                 </p>
             </div>
         </div>
@@ -56,7 +59,7 @@
 {% block modal_primerIngreso %}
 <div class="modal fade" id="modal_primer_ingreso" tabindex="-1" aria-labelledby="modal_primer_ingresoTitle"
     style="display: none" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-dialog modal-dialog modal-xl modal-fullscreen-sm-down" role="document">
         <div class="modal-content rounded-0">
             <div class="modal-header">
                 <h5 class="modal-title" id="modal_primer_ingresoTitle">
@@ -66,38 +69,48 @@
                     <span aria-hidden="true"><span class="icon-close2"></span></span>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body ">
                 <form method="post" action="{% url 'enviar_archivo_a_odoo' %}" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <div class="form-group mb-3">
-                        <label for="archivo">Título de Educación Media</label>
+                    <div class="row ">
+                    <div class="form-group col-md-4 col-sm-4 mb-3 ">
+                        <label for="floatingFile">
+                            <i class="fa fa-upload" aria-hidden="true"></i> Título de Educación Media
+                          </label>
                         <input class="form-control custom-file-input" style="opacity: 0.65" type="file"
-                            id="floatingFile" name="titulobachillerto" />
+                            id="floatingFile" name="titulobachillerto"  accept-language="es" />
                     </div>
 
-                    <div class="form-group mb-3">
-                        <label for="floatingFile">Identificación (fotografía visible por ambos lados)</label>
+                    <div class="form-group col-md-4 col-sm-4 mb-3 ">
+                        <label for="floatingFile">
+                            <i class="fa fa-upload" aria-hidden="true"></i> Identificación (fotografía visible por ambos lados)
+                        </label>
                         <input class="form-control" style="opacity: 0.65" type="file" id="floatingFile"
                             name="cedulafotografia" />
                     </div>
+                
 
-                    <div class="form-group mb-3">
-                        <label for="floatingFile">Foto tuya de perfil visible</label>
+                    <div class="form-group col-md-4 col-sm-4 mb-3">
+                        <label for="floatingFile">
+                            <i class="fa fa-upload" aria-hidden="true"></i> Foto tuya de perfil visible
+                        </label>
                         <input class="form-control" style="opacity: 0.65" type="file" id="floatingFile"
                             name="fotoperfil" />
                     </div>
-
-                    <div class="form-group mb-3">
+                </div>
+                <div class="row ">
+                    <div class="form-group col-md-4 col-sm-4 ">
                         <label for="tipo">Seleccione tipo de ingreso económico</label>
-                        <select id="ingreso_economico" class="form-control select2" name="ingreso_economico" required>
+                        <select id="ingreso_economico" class="form-select select2" name="ingreso_economico" required>
                             <option value="" disabled selected hidden>Tipos de Ingreso Económico</option>
                             <option value="Asalariado">Asalariado</option>
                             <option value="Independiente">Ingresos Propios</option>
                             <option value="Dependiente">Dependiente Economico</option>
                         </select>
                     </div>
-
-                    <div class="form-group mb-3">
+               
+                
+                    <div class="form-group col-md-4 col-sm-4 mb-3">
                         <label for="lblcarrera">Colegio de procedencia</label>
                         <select id="colegio_select" class="form-select" name="colegio_select"
                             data-placeholder="Colegio donde egresó">
@@ -105,7 +118,7 @@
                         </select>
                     </div>
 
-                    <div class="form-group mb-3 dropdown-parent">
+                    <div class="form-group col-md-4 col-sm-4 mb-3 dropdown-parent">
                         <label for="lblcarrera">Seleccione una carrera</label>
                         <select id="mi_select" class="form-select selectorbuscador" name="mi_select"
                             data-placeholder="Seleccione la carrera">
@@ -113,7 +126,9 @@
                             </option>
                         </select>
                     </div>
-                    <div class="mb-3 form-check">
+                </div>
+                <div class="row ">
+                    <div class="col-md-4 col-sm-4 mb-3 form-check">
                         <input class="form-check-input" type="checkbox" value="" id="convalidacion"
                             name="convalidacion">
                         <label class="form-check-label" for="convalidacion">
@@ -121,34 +136,38 @@
                         </label>
                     </div>
 
-                    <div id="certificacion" class="form-group mb-3" style="display: none;">
+                    <div id="certificacion" class="form-group col-md-4 col-sm-4 " style="display: none;">
                         <label for="floatingFile">Certificación de Notas del Curso</label>
                         <input class="form-control" style="opacity: 0.65" type="file" id="floatingFile"
                             name="certificacionnotas" />
                     </div>
-
-                    <div id="plan" class="form-group mb-3" style="display: none;">
+             
+               
+                    <div id="plan" class="form-group col-md-4 col-sm-4 " style="display: none;">
                         <label for="floatingFile">Plan de Estudio - Contenido del Curso</label>
                         <input class="form-control" style="opacity: 0.65" type="file" id="floatingFile"
                             name="planestudio" />
                     </div>
-
-                    <div class="mb-3 form-check">
+                </div>
+                <div class="row ">
+                    <div class="col-md-4 col-sm-4  form-check">
                         <input class="form-check-input" type="checkbox" value="" id="asesor" name="asesor">
                         <label class="form-check-label" for="asesor">
                             ¿Fuiste atendido por un asesor?
                         </label>
                     </div>
 
-                    <div class="form-group mb-3 dropdown-parent" id="select_asesor" style="display: none;">
+                    <div class="form-group col-md-4 col-sm-4 dropdown-parent" id="select_asesor" style="display: none;">
                         <label for="lblcarrera">Seleccione el asesor que te ha atendido</label>
                         <select id="asesor_select" class="form-select selectorbuscador" name="asesor_select"
                             data-placeholder="Seleccione el asesor que te ha atendido">
                             <option style="opacity: 0.65" value="" disabled selected hidden>Seleccion asesor</option>
                         </select>
                     </div>
-                    <div class="d-grid mb-2">
-                        <button type="submit" class="btn btn-primary btn-sm rounded fw-bold">Enviar Formulario</button>
+                </div>
+                    <div class="d-grid ">
+                        <button type="submit" class="btn btn-primary btn-sm rounded fw-bold">
+                            <i class="fa fa-paper-plane" aria-hidden="true"></i> Enviar Formulario</button>
                     </div>
                 </form>
             </div>
@@ -161,7 +180,7 @@
 {% block modal_posgrado %}
 <div class="modal fade" id="modal_posgrado" tabindex="-1" aria-labelledby="modal_posgradoTitle" style="display: none"
     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-dialog modal-xl" role="document">
         <div class="modal-content rounded-0">
             <div class="modal-header">
                 <h5 class="modal-title" id="modal_posgradoTitle">
@@ -174,28 +193,33 @@
             <div class="modal-body">
                 <form method="POST">
                     {% csrf_token %}
-                    <div class="form-group mb-3">
-                        <label for="floatingFile">Título Universitario</label>
+                    <div class="row ">
+                    <div class="form-group col-md-4 col-sm-4 mb-3 ">
+                        <label for="floatingFile">
+                            <i class="fa fa-upload" aria-hidden="true"></i>Título Universitario</label>
                         <input class="form-control" type="file" id="floatingFile" style="opacity: 0.65"
                             name="titulobachillerto" />
                     </div>
 
-                    <div class="form-group mb-3">
-                        <label for="floatingFile" style="opacity: 0.65">Identificación (fotografía visible por ambos
-                            lados)</label>
-                        <input class="form-control" type="file" id="floatingFile" style="opacity: .65;"
+                    <div class="form-group col-md-4 col-sm-4 mb-3 ">
+                        <label for="floatingFile">
+                            <i class="fa fa-upload" aria-hidden="true"></i> Identificación (fotografía visible por ambos lados)
+                        </label>
+                        <input class="form-control" style="opacity: 0.65" type="file" id="floatingFile"
                             name="cedulafotografia" />
                     </div>
 
-                    <div class="form-group mb-3">
-                        <label for="floatingFile">Foto de perfil visible</label>
+                    <div class="form-group col-md-4 col-sm-4 mb-3 ">
+                        <label for="floatingFile">
+                            <i class="fa fa-upload" aria-hidden="true"></i>Foto de perfil visible</label>
                         <input class="form-control" type="file" id="floatingFile" style="opacity: 0.65"
                             name="fotoperfil" />
                     </div>
-
-                    <div class="form-group mb-3">
+                </div>
+                <div class="row ">
+                    <div class="form-group col-md-4 col-sm-4 mb-3 ">
                         <label for="tipo">Seleccione tipo de ingreso económico</label>
-                        <select id="ingreso_economico" class="form-control select2" name="ingreso_economico" required>
+                        <select id="ingreso_economico" class="form-select select2" name="ingreso_economico" required>
                             <option style="opacity: .65;" value="" disabled selected hidden>Tipos de Ingreso Económico
                             </option>
                             <option value="Asalariado">Asalariado</option>
@@ -204,7 +228,7 @@
                         </select>
                     </div>
 
-                    <div class="form-group mb-3 dropdown-parent">
+                    <div class="form-group col-md-4 col-sm-4 mb-3 dropdown-parent">
                         <label for="tipo">Especialidad de Interes</label>
                         <select id="posgradoselect" class="form-select selectorbuscador" name="posgradoselect"
                             data-placeholder="Seleccione la Especialidad">
@@ -214,14 +238,14 @@
                         </select>
                     </div>
 
-                    <div class="mb-3 form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="asesor" name="asesor">
-                        <label class="form-check-label" for="asesor">
+                    <div class="col-md-4 col-sm-4 mb-3 form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="asesor2" name="asesor">
+                        <label class="form-check-label" for="asesor2">
                             ¿Fuiste atendido por un asesor?
                         </label>
                     </div>
-
-                    <div class="form-group mb-3 dropdown-parent" id="select_asesor" style="display: none;">
+                </div>
+                    <div class="form-group col-md-4 col-sm-4 dropdown-parent" id="select_asesor2" style="display: none;">
                         <label for="lblcarrera">Seleccione el asesor que te ha atendido</label>
                         <select id="asesor_select" class="form-select selectorbuscador" name="asesor_select"
                             data-placeholder="Seleccione el asesor que te ha atendido">
@@ -230,8 +254,8 @@
                     </div>
 
                     <div class="d-grid mb-2">
-                        <a href="{% url 'usuario_estudiante' %}" class="btn btn-primary btn-sm rounded fw-bold">Enviar
-                            Formulario</a>
+                        <a href="{% url 'usuario_estudiante' %}" class="btn btn-primary btn-sm rounded fw-bold">
+                            <i class="fa fa-paper-plane" aria-hidden="true"></i>  Enviar Formulario</a>
                     </div>
                 </form>
             </div>
@@ -258,14 +282,17 @@
                 <form method="POST">
                     {% csrf_token %}
                     <div class="form-group mb-3">
-                        <label for="floatingFile">Identificación (fotografía visible por ambos lados)</label>
+                        <label for="floatingFile">
+                            <i class="fa fa-upload" aria-hidden="true"></i>
+                            Identificación (fotografía visible por ambos lados)</label>
+                        
                         <input class="form-control" style="opacity: 0.65" type="file" id="floatingFile"
                             name="cedulafotografia" />
                     </div>
                 </form>
                 <div class="d-grid mb-2 d-flex justify-content-center">
                     <a href="{% url 'usuario_estudiante' %}" class="btn btn-primary btn-sm rounded fw-bold"
-                        style="max-width: 150px;">Enviar Formulario</a>
+                        style="max-width: 150px;"> <i class="fa fa-paper-plane" aria-hidden="true"></i>  Enviar Formulario</a>
                 </div>
             </div>
         </div>
@@ -433,6 +460,15 @@
             div3.style.display = "block";
         } else {
             div3.style.display = "none";
+        }
+    });
+    const checkbox3 = document.getElementById("asesor2");
+    const div4 = document.getElementById("select_asesor2");
+    checkbox3.addEventListener("change", function () {
+        if (this.checked) {
+            div4.style.display = "block";
+        } else {
+            div4.style.display = "none";
         }
     });
 </script>
