@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import usuarios, profesor, estudiantes, RegistroLogsUser, documentos, fotoperfil, estados, etapas, primerIngreso, prospecto
+from .models import usuarios, profesor, estudiantes, RegistroLogsUser, documentos, carreras, colegios, posgrados, fotoperfil, estados, etapas, primerIngreso, prospecto
 from .forms import FormularioEstudiantes, FormularioUsuario, FormularioDocumentos, FormularioPrimerIngreso, FormularioProfesor, FormularioProspecto, FormularioInfoEstudiante, CustomUserCreationForm
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, FormView
@@ -382,7 +382,17 @@ def registrar_accion(usuario, accion):
     registro = RegistroLogsUser(usuario=usuario, accion=accion)
     registro.save()
     
+def carrerasselect(request):
+    valores = carreras.objects.values_list('nombre_carrera', flat=True)
+    return JsonResponse(list(valores), safe=False)
 
+def colegiosselect(request):
+    valores = colegios.objects.values_list('nombre_colegio', flat=True)
+    return JsonResponse(list(valores), safe=False)
+
+def posgradosselect(request):
+    valores = posgrados.objects.values_list('nombre_carrera', flat=True)
+    return JsonResponse(list(valores), safe=False)
 
 class vistaPerfil (LoginRequiredMixin):
     context_object_name = 'perfil_estudiante'

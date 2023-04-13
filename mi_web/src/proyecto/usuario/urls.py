@@ -13,6 +13,9 @@ from .views import (
                     obtener_canton,
                     obtener_distrito,
                     obtener_nacionalidad,
+                    carrerasselect,
+                    colegiosselect,
+                    posgradosselect,
                     guardar_perfil,
                     enviar_archivo_a_odoo,
                     mostrar_foto,
@@ -66,6 +69,10 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
                         template_name='Contrasenas/Correo/password_reset_complete.html'
                     ),
                     name='password_reset_complete'),
+                
+                path('carrerasselect/', carrerasselect, name='carrerasselect'),
+                path('colegiosselect/', colegiosselect, name='colegiosselect'),
+                path('posgradosselect/', posgradosselect, name='posgradosselect'),
                
                path('usuario-estudiante/', DetalleUsuarioEstudiante.as_view(), name='usuario_estudiante'),
                path('usuario-estudiante-profesor/', DetalleUsuarioEstudianteProfesor.as_view(), name='usuario_estudiante_profesor'),
