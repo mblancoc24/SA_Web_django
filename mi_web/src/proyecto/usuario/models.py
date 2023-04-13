@@ -112,15 +112,25 @@ class etapas (models.Model):
     
 class estados (models.Model):
     id_estado = models.AutoField(primary_key=True)
-    estado_nombre = models.CharField(max_length=18)
+    estado_nombre = models.CharField(max_length=30)
     
 class primerIngreso (models.Model):
     id_fase = models.AutoField(primary_key=True)
     etapa = models.ForeignKey(etapas, on_delete=models.CASCADE)
     estado = models.ForeignKey(estados, on_delete=models.CASCADE)
+    convalidacion = models.BooleanField(default=False)
     usuario = models.ForeignKey(usuarios, on_delete=models.CASCADE)
     comentario = models.TextField(max_length=500)
     
+class documentos (models.Model):
+    id_documento = models.AutoField(primary_key=True)
+    usuario = models.ForeignKey(usuarios, on_delete=models.CASCADE)
+    tituloeducacion = models.BooleanField(default=False)
+    titulouniversitario = models.BooleanField(default=False)
+    identificacion = models.BooleanField(default=False)
+    foto = models.BooleanField(default=False)
+    notas = models.BooleanField(default=False)
+    plan = models.BooleanField(default=False)
     
         
 class posgrados (models.Model):

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import usuarios, profesor, estudiantes, RegistroLogsUser, carreras, colegios, posgrados, fotoperfil, estados, etapas, primerIngreso, prospecto
-from .forms import FormularioEstudiantes, FormularioUsuario, FormularioPrimerIngreso, FormularioProfesor, FormularioProspecto, FormularioInfoEstudiante, CustomUserCreationForm
+from .models import usuarios, profesor, estudiantes, RegistroLogsUser, documentos, carreras, colegios, posgrados, fotoperfil, estados, etapas, primerIngreso, prospecto
+from .forms import FormularioEstudiantes, FormularioUsuario, FormularioDocumentos, FormularioPrimerIngreso, FormularioProfesor, FormularioProspecto, FormularioInfoEstudiante, CustomUserCreationForm
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, FormView
 from django.contrib.auth import login, authenticate, logout
@@ -541,10 +541,20 @@ def enviar_archivo_a_odoo(request):
         user_file.save()
         
         usuario = get_object_or_404(usuarios, auth_user=user_id)
-        formulariodata = [1, 1, usuario.pk,'Formulario Enviado Satisfactoriamente']
+        formulariodata = [1, 1, False, usuario.pk,'Formulario Enviado Satisfactoriamente']
         
-        form = FormularioPrimerIngreso({ 'etapa': formulariodata[0], 'estado': formulariodata[1],
-                                        'usuario': formulariodata[2],'comentario': formulariodata[3]})
+        form = FormularioPrimerIngreso({ 'etapa': formulariodata[0], 'estado': formulariodata[1], 'convalidacion': formulariodata[2],
+                                        'usuario': formulariodata[3],'comentario': formulariodata[4]})
+        if form.is_valid():
+            form.save()
+            
+        formulariodocumentos = [usuario.pk, True, False, True, True, True, True]
+        
+        form = FormularioDocumentos({'usuario': formulariodocumentos[0], 'tituloeducacion': formulariodocumentos[1],
+                                     'titulouniversitario': formulariodocumentos[2], 'identificacion': formulariodocumentos[3],
+                                     'foto': formulariodocumentos[4], 'notas': formulariodocumentos[5],
+                                     'plan': formulariodocumentos[6]})
+        
         if form.is_valid():
             form.save()
             return redirect('revision_form')
@@ -645,6 +655,7 @@ def change_email_correct(request):
     
         if form.is_valid():
             form.save()
+            # hola Victor
             return redirect('perfil_prospecto')
         
 def revision_formulario(request):
@@ -658,11 +669,61 @@ def revision_formulario(request):
     etapa  = get_object_or_404(etapas, id_etapa=statusgeneral.etapa_id)
     
     estado = get_object_or_404(estados, id_estado=statusgeneral.estado_id)
+    
+    docs = get_object_or_404(documentos, usuario=usuario.pk)
 
     # Enviar el objeto y otros datos necesarios a la plantilla HTML
     contexto = {
         "comentario": statusgeneral.comentario,
         "etapa": etapa.etapa_nombre,
         "estado": estado.estado_nombre,
+        "convalidacion" : statusgeneral.convalidacion,
+        "documentos": docs,
     }
     return render(request, "Prospecto/revision_form.html", contexto)
+
+def corregirdata(request):
+    user = request.user
+    user_id = user.pk
+    
+    datocargado = request.POST.get('documentocargado')
+    
+    usuario = get_object_or_404(usuarios, auth_user=user_id)
+    
+    statusgeneral = get_object_or_404(primerIngreso, usuario=usuario.pk)
+    docs = get_object_or_404(documentos, usuario=usuario.pk)
+    
+    formulariodata = [2, 3, False, usuario.pk, statusgeneral.comentario]
+        
+    form = FormularioPrimerIngreso({ 'etapa': formulariodata[0], 'estado': formulariodata[1], 'convalidacion': formulariodata[2],
+                                        'usuario': formulariodata[3],'comentario': formulariodata[4]}, instance=statusgeneral)
+    if form.is_valid():
+        form.save()
+        
+    if datocargado == "titulo":
+        formulariodocs = [usuario.pk, True, docs.titulouniversitario, 
+                          docs.identificacion, docs.foto, docs.notas, docs.plan]
+    elif datocargado == "titulouniversitario":
+        formulariodocs = [usuario.pk, docs.tituloeducacion, True, 
+                          docs.identificacion, docs.foto, docs.notas, docs.plan]
+    elif datocargado == "identificacion":
+        formulariodocs = [usuario.pk, docs.tituloeducacion, docs.titulouniversitario, 
+                          True, docs.foto, docs.notas, docs.plan]
+    elif datocargado == "foto":
+        formulariodocs = [usuario.pk, docs.tituloeducacion, docs.titulouniversitario, 
+                          docs.identificacion, True, docs.notas, docs.plan]
+    elif datocargado == "notas":
+        formulariodocs = [usuario.pk, docs.tituloeducacion, docs.titulouniversitario, 
+                          docs.identificacion, docs.foto, True, docs.plan]
+    elif datocargado == "plan":
+        formulariodocs = [usuario.pk, docs.tituloeducacion, docs.titulouniversitario, 
+                          docs.identificacion, docs.foto, docs.notas, True]
+        
+    form = FormularioDocumentos({'usuario': formulariodocs[0], 'tituloeducacion': formulariodocs[1],
+                                     'titulouniversitario': formulariodocs[2], 'identificacion': formulariodocs[3],
+                                     'foto': formulariodocs[4], 'notas': formulariodocs[5],
+                                     'plan': formulariodocs[6]}, instance=docs)
+        
+    if form.is_valid():
+        form.save()
+        return redirect(request.META.get('HTTP_REFERER'))

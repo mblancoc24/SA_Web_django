@@ -1,5 +1,5 @@
 from django import forms
-from .models import estudiantes, usuarios, profesor, info_estudiantes, prospecto, primerIngreso
+from .models import estudiantes, usuarios, profesor, info_estudiantes, prospecto, primerIngreso, documentos
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
@@ -42,4 +42,9 @@ class FormularioInfoEstudiante(forms.ModelForm):
 class FormularioPrimerIngreso(forms.ModelForm):
     class Meta:
         model = primerIngreso
-        fields = ('etapa','estado', 'usuario', 'comentario')
+        fields = ('etapa','estado', 'convalidacion', 'usuario', 'comentario')
+        
+class FormularioDocumentos(forms.ModelForm):
+    class Meta:
+        model = documentos
+        fields = ('usuario','tituloeducacion', 'titulouniversitario', 'identificacion', 'foto', 'notas', 'plan')
