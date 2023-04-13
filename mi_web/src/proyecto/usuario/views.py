@@ -655,6 +655,7 @@ def change_email_correct(request):
     
         if form.is_valid():
             form.save()
+            # hola Victor
             return redirect('perfil_prospecto')
         
 def revision_formulario(request):
