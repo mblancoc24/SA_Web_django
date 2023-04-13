@@ -9,6 +9,7 @@
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-2 pb-3 mb-1 d-flex align-items-center">
             <div class="image">
+                
                 {% if fotoperfil %}
                     <img src="{% url 'mostrar_foto' %}" class="rounded-circle p-1" alt="User Image" style="width: 50px; height: 50px;">
                 {% else %}
@@ -17,12 +18,16 @@
                 {% endif %}
             </div>
             <div class="info">
+                
                 {% if status == 1 %}
-                    <a href="{% url 'perfil' id=id status=status %}" class="d-block">{{ user.first_name }}</a>
+                    <a href="{% url 'perfil' id=id status=status %}" class="d-block">
+                        <i class="fa fa-user" aria-hidden="true"></i> {{ user.first_name }}</a>
                 {% elif status == 4 %}
-                    <a href="{% url 'perfil_prospecto' id=id status=status %}" class="d-block">{{ user.first_name }}</a>
+                    <a href="{% url 'perfil_prospecto' id=id status=status %}" class="d-block">
+                        <i class="fa fa-user" aria-hidden="true"></i> {{ user.first_name }}</a>
                 {% else %}
-                    <a href="{% url 'perfil_profesor' id=id status=status %}" class="d-block">{{ user.first_name }}</a>
+                    <a href="{% url 'perfil_profesor' id=id status=status %}" class="d-block">
+                        <i class="fa fa-user" aria-hidden="true"></i> {{ user.first_name }}</a>
                 {% endif %}
             </div>
         </div>
