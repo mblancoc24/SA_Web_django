@@ -1,10 +1,8 @@
 {% extends 'Dashboard/dashboard.html' %}
+{% load static %}
 {% block content %}
 <div class="container py-2">
     <div class="row justify-content-center">
-        
-        
-
         <!-- For demo purpose -->
         <div class="col-lg-12 mx-auto mb-3 text-black text-center">
             <h1 class="display-4">Proceso de Admisión de Primer Ingreso</h1>
@@ -18,7 +16,7 @@
             <div class="col-lg-12 mx-auto">
                 <div class="card shadow mb-3 bg-white rounded-lg">
                     <div class="card-body p-5">
-                        <h4>Estado Actual: {{ estado }}</h4>
+                        <h4>Estado Actual: <span id="estado">{{ estado }}</span></h4>
                         <p id="comentarios" class="font-italic text-muted">{{ comentario }}</p>
 
                         <!-- Custom styled progress bar-->
@@ -50,7 +48,7 @@
                     <div class="col-xl-3 col-lg-6 mb-4 mx-auto">
                         <div class="bg-white rounded-lg p-5 shadow">
                             <h2 class="h6 font-weight-bold text-center mb-4">Tít. de Educ Media</h2>
-
+                            <input type="hidden" id="tituloTF" value="{{ documentos.tituloeducacion }}">
                             <!-- Progress bar 1 -->
                             <div class="progress mx-auto" data-value='50' id="div_progre_titulo">
                                 <span class="progress-left">
@@ -62,7 +60,6 @@
                                 <div
                                     class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
                                     <div class="h2 font-weight-bold">
-                                        {% load static %}
                                         <img id="img_titulo" src="{% static 'img/pendiente.png' %}" alt="">
                                     </div>
                                 </div>
@@ -72,9 +69,9 @@
                             <!-- Demo info -->
                             <div class="row text-center mt-4" id="div_titulo" style="display: none;">
                                 <label for="archivo">Subir Archivo</label>
-                                <input class="form-control" style="opacity: 0.65" type="file" id="floatingFile" name="titulo" />
-                                <div class="text-center">
-                                    <button onclick="cambiarestado('titulo')" class="btn btn-primary btn-sm rounded fw-bold">Cargar</button>
+                                <input class="form-control" style="opacity: 0.65" type="file" id="floatingFile" name="titulo" value="titulo"/>
+                                <div class="text-center mt-2">
+                                    <button id="btnT" class="btn btn-primary btn-sm rounded fw-bold">Cargar</button>
                                 </div>
                             </div>
                             <!-- END -->
@@ -84,7 +81,7 @@
                     <div class="col-xl-3 col-lg-6 mb-4 mx-auto">
                         <div class="bg-white rounded-lg p-5 shadow">
                             <h2 class="h6 font-weight-bold text-center mb-4">Identificación</h2>
-
+                            <input type="hidden" id="identificacionTF" value="{{ documentos.identificacion }}">
                             <!-- Progress bar 2 -->
                             <div class="progress mx-auto" data-value='50' id="div_progre_ident">
                                 <span class="progress-left">
@@ -96,7 +93,6 @@
                                 <div
                                     class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
                                     <div class="h2 font-weight-bold">
-                                        {% load static %}
                                         <img id="img_ident" src="{% static 'img/pendiente.png' %}" alt="">
                                     </div>
                                 </div>
@@ -108,8 +104,8 @@
                                 <label for="archivo">Subir Archivo</label>
                                 <input class="form-control" style="opacity: 0.65" type="file" id="floatingFile"
                                     name="identificacion" />
-                                <div class="text-center">
-                                        <button onclick="cambiarestado('identificacion')" class="btn btn-primary btn-sm rounded fw-bold">Cargar</button>
+                                <div class="text-center mt-2">
+                                        <button id="btnI" class="btn btn-primary btn-sm rounded fw-bold">Cargar</button>
                                 </div>
                             </div>
                             <!-- END -->
@@ -119,7 +115,7 @@
                     <div class="col-xl-3 col-lg-6 mb-4 mx-auto">
                         <div class="bg-white rounded-lg p-5 shadow">
                             <h2 class="h6 font-weight-bold text-center mb-4">Foto Tipo Pasaporte</h2>
-
+                            <input type="hidden" id="fotoTF" value="{{ documentos.foto }}">
                             <!-- Progress bar 3 -->
                             <div class="progress mx-auto" data-value='50' id="div_progre_pasaporte">
                                 <span class="progress-left">
@@ -131,7 +127,6 @@
                                 <div
                                     class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
                                     <div class="h2 font-weight-bold">
-                                        {% load static %}
                                         <img id="img_pasaporte" src="{% static 'img/pendiente.png' %}" alt="">
                                     </div>
                                 </div>
@@ -142,8 +137,8 @@
                             <div class="row text-center mt-4" id="div_pasaporte" style="display: none;">
                                 <label for="archivo">Subir Archivo</label>
                                 <input class="form-control" style="opacity: 0.65" type="file" id="floatingFile" name="pasaporte" />
-                                <div class="text-center">
-                                    <button onclick="cambiarestado('foto')" class="btn btn-primary btn-sm rounded fw-bold">Cargar</button>
+                                <div class="text-center mt-2">
+                                    <button id="btnF" class="btn btn-primary btn-sm rounded fw-bold">Cargar</button>
                                 </div>
                             </div>
                             <!-- END -->
@@ -151,10 +146,11 @@
                     </div>
 
                     <div class="row justify-content-center" id="div_convalidacion" style="display: none;">
+                        <input type="hidden" id="conv" value="{{ convalidacion }}">
                         <div class="col-xl-3 col-lg-6 mb-4 mx-auto">
                             <div class="bg-white rounded-lg p-5 shadow">
                                 <h2 class="h6 font-weight-bold text-center mb-4">Cert. de Notas</h2>
-
+                                <input type="hidden" id="notaTF" value="{{ documentos.nota }}">
                                 <!-- Progress bar 4 -->
                                 <div class="progress mx-auto" data-value='50' id="div_progre_notas">
                                     <span class="progress-left">
@@ -166,7 +162,6 @@
                                     <div
                                         class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
                                         <div class="h2 font-weight-bold">
-                                            {% load static %}
                                             <img id="img_notas" src="{% static 'img/pendiente.png' %}" alt="">
                                         </div>
                                     </div>
@@ -177,8 +172,8 @@
                                 <div class="row text-center mt-4" id="div_notas" style="display: none;">
                                     <label for="archivo">Subir Archivo</label>
                                     <input class="form-control" style="opacity: 0.65" type="file" id="floatingFile" name="notas" />
-                                    <div class="text-center">
-                                        <button onclick="cambiarestado('notas')" class="btn btn-primary btn-sm rounded fw-bold">Cargar</button>
+                                    <div class="text-center mt-2">
+                                        <button id="btnN" class="btn btn-primary btn-sm rounded fw-bold">Cargar</button>
                                     </div>
                                 </div>
                                 <!-- END -->
@@ -188,6 +183,7 @@
                         <div class="col-xl-3 col-lg-6 mb-4 mx-auto">
                             <div class="bg-white rounded-lg p-5 shadow">
                                 <h2 class="h6 font-weight-bold text-center mb-4">Plan de Estudio</h2>
+                                <input type="hidden" id="planTF" value="{{ documentos.plan }}">
                                 <!-- Progress bar 4 -->
                                 <div class="progress mx-auto" data-value='50' id="div_progre_estudio">
                                     <span class="progress-left">
@@ -199,7 +195,6 @@
                                     <div
                                         class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
                                         <div class="h2 font-weight-bold">
-                                            {% load static %}
                                             <img id="img_estudio" src="{% static 'img/pendiente.png' %}" alt="">
                                         </div>
                                     </div>
@@ -211,8 +206,8 @@
                                     <label for="archivo">Subir Archivo</label>
                                     <input class="form-control" style="opacity: 0.65" type="file" id="floatingFile"
                                         name="planestudio" />
-                                        <div class="text-center">
-                                            <button onclick="cambiarestado('plan')" class="btn btn-primary btn-sm rounded fw-bold">Cargar</button>
+                                        <div class="text-center mt-2">
+                                            <button id="btnP" class="btn btn-primary btn-sm rounded fw-bold">Cargar</button>
                                         </div>
                                 </div>
                                 <!-- END -->
@@ -225,490 +220,4 @@
         
     </div>
 </div>
-
-<style>
-    .custom-progress {
-        position: relative;
-        height: 10px;
-        background-color: #d8d8d8;
-        margin-bottom: 20px;
-    }
-
-    .custom-progress-bar {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 100%;
-        background-color: #0d6efd;
-    }
-
-    .progress {
-        width: 150px;
-        height: 150px;
-        background: none;
-        position: relative;
-    }
-
-    img {
-        max-width: 100px;
-        max-height: 100px;
-    }
-
-    .progress::after {
-        content: "";
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        border: 6px solid #d8d8d8;
-        position: absolute;
-        top: 0;
-        left: 0;
-    }
-
-    .progress>span {
-        width: 50%;
-        height: 100%;
-        overflow: hidden;
-        position: absolute;
-        top: 0;
-        z-index: 1;
-    }
-
-    .progress .progress-left {
-        left: 0;
-    }
-
-    .progress .progress-bar {
-        width: 100%;
-        height: 100%;
-        background: none;
-        border-width: 6px;
-        border-style: solid;
-        position: absolute;
-        top: 0;
-    }
-
-    .progress .progress-left .progress-bar {
-        left: 100%;
-        border-top-right-radius: 80px;
-        border-bottom-right-radius: 80px;
-        border-left: 0;
-        -webkit-transform-origin: center left;
-        transform-origin: center left;
-    }
-
-    .progress .progress-right {
-        right: 0;
-    }
-
-    .progress .progress-right .progress-bar {
-        left: -100%;
-        border-top-left-radius: 80px;
-        border-bottom-left-radius: 80px;
-        border-right: 0;
-        -webkit-transform-origin: center right;
-        transform-origin: center right;
-    }
-
-    .progress .progress-value {
-        position: absolute;
-        top: 0;
-        left: 0;
-    }
-
-    body {
-        background: #dee2e6;
-        background: -webkit-linear-gradient(to right, #dee2e6, #dee2e6);
-        background: linear-gradient(to right, #dee2e6, #dee2e6);
-        min-height: 100vh;
-    }
-
-    .rounded-lg {
-        border-radius: 1rem;
-    }
-
-    .text-gray {
-        color: #000000;
-    }
-
-    div.h4 {
-        line-height: 1rem;
-    }
-</style>
-
-<script>
-    console.log('Entre 1')
-    $(document).ready(function () {
-        console.log('Entre 2')
-        Verificacion();
-    });
-    function Verificacion() {
-
-        $(".progress").each(function () {
-
-            var value = $(this).attr('data-value');
-            var left = $(this).find('.progress-left .progress-bar');
-            var right = $(this).find('.progress-right .progress-bar');
-
-            if (value > 0) {
-                if (value <= 50) {
-                    right.css('transform', 'rotate(' + percentageToDegrees(value) + 'deg)')
-                } else {
-                    right.css('transform', 'rotate(180deg)')
-                    left.css('transform', 'rotate(' + percentageToDegrees(value - 50) + 'deg)')
-                }
-            }
-
-        })
-
-        function percentageToDegrees(percentage) {
-
-            return percentage / 100 * 360
-
-        }
-
-    }
-
-    var progressBar = document.getElementById("barra_progreso");
-    var comentarios = document.getElementById("comentarios");
-    var estadotext = document.getElementById("comentarios");
-
-    var titulo1 = document.getElementById("titulo1");
-    var titulo2 = document.getElementById("titulo2");
-
-    var identificacion1 = document.getElementById("identificacion1");
-    var identificacion2 = document.getElementById("identificacion2");
-
-    var pasaporte1 = document.getElementById("pasaporte1");
-    var pasaporte2 = document.getElementById("pasaporte2");
-
-    var notas1 = document.getElementById("notas1");
-    var notas2 = document.getElementById("notas2");
-
-    var estudio1 = document.getElementById("estudio1");
-    var estudio2 = document.getElementById("estudio2");
-
-    var divtitulo = document.getElementById("div_titulo");
-    var dividentificacion = document.getElementById("div_identificacion");
-    var divpasaporte = document.getElementById("div_pasaporte");
-    var divnotas = document.getElementById("div_notas");
-    var divestudio = document.getElementById("div_estudio");
-
-    var divconvalidacion = document.getElementById("div_convalidacion");
-
-    var divprogretitulo = document.getElementById("div_progre_titulo");
-    var divprogreident = document.getElementById("div_progre_ident");
-    var divprogrepasaporte = document.getElementById("div_progre_pasaporte");
-    var divprogrenotas = document.getElementById("div_progre_notas");
-    var divprogreestudio = document.getElementById("div_progre_estudio");
-
-    var imgtitulo = document.getElementById("img_titulo");
-    var imgidentificacion = document.getElementById("img_ident");
-    var imgpasaporte = document.getElementById("img_pasaporte");
-    var imgnotas = document.getElementById("img_notas");
-    var imgestudio = document.getElementById("img_estudio");
-
-    // Obtener el estado del objeto de la base de datos en Django
-    var estado = "{{ estado }}";
-    var convalidacion = "{{ convalidacion }}";
-
-    var doc_titulo = "{{ documentos.tituloeducacion }}";
-    var doc_ident = "{{ documentos.identificacion }}";
-    var doc_pasaporte = "{{ documentos.foto }}";
-    var doc_notas = "{{ documentos.notas }}";
-    var doc_estudio = "{{ documentos.plan }}";
-
-    var documentocargado = document.getElementById("documentocargado");
-
-    switch (estado) {
-        case "Enviado":
-            progressBar.style.width = "10%";
-            break;
-        case "Recibido":
-            progressBar.style.width = "25%";
-            break;
-        case "En Revisión":
-            progressBar.style.width = "50%";
-            break;
-        case "Revisión de Convalidaciones":
-            progressBar.style.width = "75%";
-            break;
-        case "Aprobado":
-            progressBar.style.width = "100%";
-            progressBar.style.backgroundColor = "green";
-            aprobado();
-            break;
-        case "Corrección Requerida":
-            progressBar.style.width = "75%";
-            progressBar.style.backgroundColor = "rgb(255, 80, 0)";
-            correccion();
-            break;
-        case "Rechazado":
-            progressBar.style.width = "50%";
-            break;
-        default:
-            progressBar.style.width = "0%";
-    }
-
-    if (convalidacion == "True") {
-        divconvalidacion.style.display = "flex";
-    }
-
-    function correccion() {
-        if (doc_titulo == "False") {
-            divtitulo.style.display = "block";
-            titulo1.classList.remove('border-primary');
-            titulo1.classList.add('border-danger');
-
-            titulo2.classList.remove('border-primary');
-            titulo2.classList.add('border-danger');
-
-            imgtitulo.src = "{% static 'img/error.png' %}";
-            imgtitulo.width = 80;
-            imgtitulo.height = 80;
-
-            divprogretitulo.setAttribute("data-value", "0");
-        }
-
-        if (doc_ident == "False") {
-            dividentificacion.style.display = "block";
-            identificacion1.classList.remove('border-primary');
-            identificacion1.classList.add('border-danger');
-
-            identificacion2.classList.remove('border-primary');
-            identificacion2.classList.add('border-danger');
-
-            imgidentificacion.src = "{% static 'img/error.png' %}";
-            imgidentificacion.width = 80;
-            imgidentificacion.height = 80;
-
-            divprogreident.setAttribute("data-value", "0");
-        }
-
-        if (doc_pasaporte == "False") {
-            divpasaporte.style.display = "block";
-            pasaporte1.classList.remove('border-primary');
-            pasaporte1.classList.add('border-danger');
-
-            pasaporte2.classList.remove('border-primary');
-            pasaporte2.classList.add('border-danger');
-
-            imgpasaporte.src = "{% static 'img/error.png' %}";
-            imgpasaporte.width = 80;
-            imgpasaporte.height = 80;
-
-            divprogrepasaporte.setAttribute("data-value", "0");
-        }
-
-        if (convalidacion == "True") {
-            if (doc_notas == "False") {
-                divnotas.style.display = "block";
-                notas1.classList.remove('border-primary');
-                notas1.classList.add('border-danger');
-
-                notas2.classList.remove('border-primary');
-                notas2.classList.add('border-danger');
-
-                imgnotas.src = "{% static 'img/error.png' %}";
-                imgnotas.width = 80;
-                imgnotas.height = 80;
-
-                divprogrenotas.setAttribute("data-value", "0");
-            }
-
-            if (doc_estudio == "False") {
-                divestudio.style.display = "block";
-                estudio1.classList.remove('border-primary');
-                estudio1.classList.add('border-danger');
-
-                estudio2.classList.remove('border-primary');
-                estudio2.classList.add('border-danger');
-
-                imgestudio.src = "{% static 'img/error.png' %}";
-                imgestudio.width = 80;
-                imgestudio.height = 80;
-
-                divprogreestudio.setAttribute("data-value", "0");
-            }
-        }
-
-    }
-
-    function aprobado() {
-        titulo1.classList.remove('border-primary');
-        titulo1.classList.add('border-success');
-
-        titulo2.classList.remove('border-primary');
-        titulo2.classList.add('border-success');
-
-        imgtitulo.src = "{% static 'img/check.png' %}";
-        imgtitulo.width = 170;
-        imgtitulo.height = 170;
-
-        divprogretitulo.setAttribute("data-value", "100");
-
-        identificacion1.classList.remove('border-primary');
-        identificacion1.classList.add('border-success');
-
-        identificacion2.classList.remove('border-primary');
-        identificacion2.classList.add('border-success');
-
-        imgidentificacion.src = "{% static 'img/check.png' %}";
-        imgidentificacion.width = 170;
-        imgidentificacion.height = 170;
-
-        divprogreident.setAttribute("data-value", "100");
-
-        pasaporte1.classList.remove('border-primary');
-        pasaporte1.classList.add('border-success');
-
-        pasaporte2.classList.remove('border-primary');
-        pasaporte2.classList.add('border-success');
-
-        imgpasaporte.src = "{% static 'img/check.png' %}";
-        imgpasaporte.width = 170;
-        imgpasaporte.height = 170;
-
-        divprogrepasaporte.setAttribute("data-value", "100");
-
-        notas1.classList.remove('border-primary');
-        notas1.classList.add('border-success');
-
-        notas2.classList.remove('border-primary');
-        notas2.classList.add('border-success');
-
-        imgnotas.src = "{% static 'img/check.png' %}";
-        imgnotas.width = 170;
-        imgnotas.height = 170;
-
-        divprogrenotas.setAttribute("data-value", "100");
-
-        estudio1.classList.remove('border-primary');
-        estudio1.classList.add('border-success');
-
-        estudio2.classList.remove('border-primary');
-        estudio2.classList.add('border-success');
-
-        imgestudio.src = "{% static 'img/check.png' %}";
-        imgestudio.width = 170;
-        imgestudio.height = 170;
-
-        divprogreestudio.setAttribute("data-value", "100");
-    }
-
-    function cambiarestado(documento){
-        if (documento == "titulo"){
-            divtitulo.style.display = "none";
-            titulo1.classList.remove('border-danger');
-            titulo1.classList.add('border-primary');
-
-            titulo2.classList.remove('border-danger');
-            titulo2.classList.add('border-primary');
-
-            imgtitulo.src = "{% static 'img/pendiente.png' %}";
-            imgtitulo.width = 100;
-            imgtitulo.height = 100;
-
-            divprogretitulo.setAttribute("data-value", "50");
-            documentocargado.value = "titulo";
-            console.log(documentocargado);
-            Verificacion();
-        }
-
-        if (documento == "identificacion"){
-            dividentificacion.style.display = "none";
-            identificacion1.classList.remove('border-danger');
-            identificacion1.classList.add('border-primary');
-
-            identificacion2.classList.remove('border-danger');
-            identificacion2.classList.add('border-primary');
-
-            imgidentificacion.src = "{% static 'img/pendiente.png' %}";
-            imgidentificacion.width = 170;
-            imgidentificacion.height = 170;
-
-            divprogreident.setAttribute("data-value", "50");
-            documentocargado.value = "identificacion";
-            console.log(documentocargado);
-            Verificacion();
-        }
-
-        if (documento == "foto"){
-            divpasaporte.style.display = "none";
-            pasaporte1.classList.remove('border-danger');
-            pasaporte1.classList.add('border-primary');
-
-            pasaporte2.classList.remove('border-danger');
-            pasaporte2.classList.add('border-primary');
-
-            imgpasaporte.src = "{% static 'img/pendiente.png' %}";
-            imgpasaporte.width = 170;
-            imgpasaporte.height = 170;
-
-
-            divprogrepasaporte.setAttribute("data-value", "50");
-            documentocargado.value = "foto";
-            console.log(documentocargado);
-            Verificacion();
-        }
-
-        if (documento == "notas"){
-            divnotas.style.display = "none";
-            notas1.classList.remove('border-danger');
-            notas1.classList.add('border-primary');
-
-            notas2.classList.remove('border-danger');
-            notas2.classList.add('border-primary');
-
-            imgnotas.src = "{% static 'img/pendiente.png' %}";
-            imgnotas.width = 170;
-            imgnotas.height = 170;
-
-
-            divprogrenotas.setAttribute("data-value", "50");
-            documentocargado.value = "notas";
-            console.log(documentocargado);
-            Verificacion();
-        }
-
-        if (documento == "notas"){
-            divnotas.style.display = "none";
-            notas1.classList.remove('border-danger');
-            notas1.classList.add('border-primary');
-
-            notas2.classList.remove('border-danger');
-            notas2.classList.add('border-primary');
-
-            imgnotas.src = "{% static 'img/pendiente.png' %}";
-            imgnotas.width = 170;
-            imgnotas.height = 170;
-
-
-            divprogrenotas.setAttribute("data-value", "50");
-            documentocargado.value = "notas";
-            console.log(documentocargado);
-            Verificacion();
-        }
-
-        if (documento == "plan"){
-            divestudio.style.display = "none";
-            estudio1.classList.remove('border-danger');
-            estudio1.classList.add('border-primary');
-
-            estudio2.classList.remove('border-danger');
-            estudio2.classList.add('border-primary');
-
-            imgestudio.src = "{% static 'img/pendiente.png' %}";
-            imgestudio.width = 170;
-            imgestudio.height = 170;
-
-
-            divprogreestudio.setAttribute("data-value", "50");
-            documentocargado.value = "plan";
-            console.log(documentocargado);
-            Verificacion();
-        }
-    }
-
-</script>
 {% endblock content %}
