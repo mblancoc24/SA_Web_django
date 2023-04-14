@@ -120,6 +120,13 @@
                         <p>Añadir curso</p>
                     </a>
                 </li>
+                {% elif status == 4 %}
+                <li class="nav-item">
+                    <a href="{% url 'revision_form' id=id status=status %}" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        <p>Ver proceso</p>
+                    </a>
+                </li>
                 {% endif %}
                 {% endblock nav_links %}
                 {% endblock nav_links_outer %}

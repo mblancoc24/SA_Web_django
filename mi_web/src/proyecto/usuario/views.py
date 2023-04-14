@@ -524,7 +524,7 @@ def mostrar_foto(request):
 
 lock = threading.Lock()
 
-def enviar_archivo_a_odoo(request):
+def enviar_archivo_a_odoo(request, id, status):
     if request.method == 'POST':
         user = request.user
         user_id = user.pk
@@ -557,7 +557,8 @@ def enviar_archivo_a_odoo(request):
         
         if form.is_valid():
             form.save()
-            return redirect('revision_form')
+            context = {'id': id, 'status': status}
+            return redirect(reverse('revision_form', kwargs=context))
         else:
             return HttpResponse(status=400) 
     else:
@@ -658,7 +659,7 @@ def change_email_correct(request):
             # hola Victor
             return redirect('perfil_prospecto')
         
-def revision_formulario(request):
+def revision_formulario(request, id, status):
     user = request.user
     user_id = user.pk 
     usuario = get_object_or_404(usuarios, auth_user=user_id)
@@ -679,8 +680,10 @@ def revision_formulario(request):
         "estado": estado.estado_nombre,
         "convalidacion" : statusgeneral.convalidacion,
         "documentos": docs,
+        "id": id,
+        "status": status,
     }
-    return render(request, "Prospecto/revision_form.html", contexto)
+    return render(request, "Dashboard/Prospecto/revision_form.html", contexto)
 
 def corregirdata(request):
     user = request.user
