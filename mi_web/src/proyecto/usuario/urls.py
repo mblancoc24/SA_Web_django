@@ -89,7 +89,7 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
 
                path('guardar-perfil/', guardar_perfil, name='guardar_perfil'),
                
-               path('enviar-archivo-a-odoo/', enviar_archivo_a_odoo, name='enviar_archivo_a_odoo'),
+               path('prospecto/<int:id>/<int:status>/enviar-archivo-a-odoo/', enviar_archivo_a_odoo, name='enviar_archivo_a_odoo'),
                path('mostrar-foto/', mostrar_foto, name='mostrar_foto'),
                path('estudiante/<int:id>/<int:status>/', DashboardEstudianteView.as_view(), name='estudiante'),
                path('estudiante/<int:id>/<int:status>/perfil/', vistaPerfil.profile_view, name='perfil'),
@@ -99,7 +99,7 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
                path('cambio-correo/', change_email, name='cambio_correo'),
                path('change-email-correct/', change_email_correct, name='change_email_correct'),
                
-               path("revision-form/", revision_formulario, name="revision_form"),
+               path("prospecto/<int:id>/<int:status>/revision-form/", revision_formulario, name="revision_form"),
                path("corregir-data/", corregirdata, name="corregir_data"),
                ]
 

@@ -70,7 +70,7 @@
                 </button>
             </div>
             <div class="modal-body ">
-                <form method="post" action="{% url 'enviar_archivo_a_odoo' %}" enctype="multipart/form-data">
+                <form method="post" action="{% url 'enviar_archivo_a_odoo' id=id status=status %}" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="row ">
                     <div class="form-group col-md-4 col-sm-4 mb-3 ">
