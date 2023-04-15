@@ -12,10 +12,10 @@
         </div>
         <!-- END -->
 
-        <div class="row py-2">
+        <div class="row">
             <div class="col-lg-12 mx-auto">
-                <div class="card shadow mb-3 bg-white rounded-lg">
-                    <div class="card-body p-5">
+                <div class="card shadow bg-white rounded-lg" style=" height: 150px;">
+                    <div class="card-body" style="padding-top: 20px;">
                         <h4>Estado Actual: <span id="estado">{{ estado }}</span></h4>
                         <p id="comentarios" class="font-italic text-muted">{{ comentario }}</p>
 
@@ -36,188 +36,107 @@
             </p>
         </div>
         <!-- END -->
-        
+
         <form method="POST" action="{% url 'corregir_data' %}">
             {% csrf_token %}
             <div class="container">
-                <div class="row">
+                <div class="row justify-content-center align-items-center">
                     <div style="display: none;">
                         <input id="documentocargado" name="documentocargado" type="text" value="">
                     </div>
 
-                    <div class="col-xl-3 col-lg-6 mb-4 mx-auto">
-                        <div class="bg-white rounded-lg p-5 shadow">
-                            <h2 class="h6 font-weight-bold text-center mb-4">Tít. de Educ Media</h2>
+                    <div class="col-md-2">
+                        <div class="card shadow p-2" id="cardT">
+                            <h2 class="h6 font-weight-bold text-center mb-3">Tít. de Educ Media</h2>
                             <input type="hidden" id="tituloTF" value="{{ documentos.tituloeducacion }}">
-                            <!-- Progress bar 1 -->
-                            <div class="progress mx-auto" data-value='50' id="div_progre_titulo">
-                                <span class="progress-left">
-                                    <span id="titulo1" class="progress-bar border-primary"></span>
-                                </span>
-                                <span class="progress-right">
-                                    <span id="titulo2" class="progress-bar border-primary"></span>
-                                </span>
-                                <div
-                                    class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
-                                    <div class="h2 font-weight-bold">
-                                        <img id="img_titulo" src="{% static 'img/pendiente.png' %}" alt="">
+                            <div
+                                class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
+                                <div class="h2 font-weight-bold">
+                                    <img id="img_titulo" hidden src="{% static 'img/pendiente.png' %}" alt="">
+                                    <div id="spinner1" class="snippet" data-title="dot-flashing">
+                                        <div class="stage">
+                                            <div class="dot-flashing"></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <!-- END -->
-
-                            <!-- Demo info -->
-                            <div class="row text-center mt-4" id="div_titulo" style="display: none;">
-                                <label for="archivo">Subir Archivo</label>
-                                <input class="form-control" style="opacity: 0.65" type="file" id="floatingFile" name="titulo" value="titulo"/>
-                                <div class="text-center mt-2">
-                                    <button id="btnT" class="btn btn-primary btn-sm rounded fw-bold">Cargar</button>
-                                </div>
-                            </div>
-                            <!-- END -->
                         </div>
                     </div>
 
-                    <div class="col-xl-3 col-lg-6 mb-4 mx-auto">
-                        <div class="bg-white rounded-lg p-5 shadow">
-                            <h2 class="h6 font-weight-bold text-center mb-4">Identificación</h2>
+                    <div class="col-md-2">
+                        <div class="card shadow p-2">
+                            <h2 class="h6 font-weight-bold text-center mb-3">Identificación</h2>
                             <input type="hidden" id="identificacionTF" value="{{ documentos.identificacion }}">
-                            <!-- Progress bar 2 -->
-                            <div class="progress mx-auto" data-value='50' id="div_progre_ident">
-                                <span class="progress-left">
-                                    <span id="identificacion1" class="progress-bar border-primary"></span>
-                                </span>
-                                <span class="progress-right">
-                                    <span id="identificacion2" class="progress-bar border-primary"></span>
-                                </span>
-                                <div
-                                    class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
-                                    <div class="h2 font-weight-bold">
-                                        <img id="img_ident" src="{% static 'img/pendiente.png' %}" alt="">
+                            <div
+                                class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
+                                <div class="h2 font-weight-bold">
+                                    <img id="img_ident" hidden src="{% static 'img/pendiente.png' %}" alt="">
+                                    <div id="spinner2" class="snippet" data-title="dot-flashing">
+                                        <div class="stage">
+                                            <div class="dot-flashing"></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <!-- END -->
-
-                            <!-- Demo info -->
-                            <div class="row text-center mt-4" id="div_identificacion" style="display: none;">
-                                <label for="archivo">Subir Archivo</label>
-                                <input class="form-control" style="opacity: 0.65" type="file" id="floatingFile"
-                                    name="identificacion" />
-                                <div class="text-center mt-2">
-                                        <button id="btnI" class="btn btn-primary btn-sm rounded fw-bold">Cargar</button>
-                                </div>
-                            </div>
-                            <!-- END -->
                         </div>
                     </div>
 
-                    <div class="col-xl-3 col-lg-6 mb-4 mx-auto">
-                        <div class="bg-white rounded-lg p-5 shadow">
-                            <h2 class="h6 font-weight-bold text-center mb-4">Foto Tipo Pasaporte</h2>
+                    <div class="col-md-2">
+                        <div class="card shadow p-2">
+                            <h2 class="h6 font-weight-bold text-center mb-3">Foto Tipo Pasaporte</h2>
                             <input type="hidden" id="fotoTF" value="{{ documentos.foto }}">
-                            <!-- Progress bar 3 -->
-                            <div class="progress mx-auto" data-value='50' id="div_progre_pasaporte">
-                                <span class="progress-left">
-                                    <span id="pasaporte1" class="progress-bar border-primary"></span>
-                                </span>
-                                <span class="progress-right">
-                                    <span id="pasaporte2" class="progress-bar border-primary"></span>
-                                </span>
-                                <div
-                                    class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
-                                    <div class="h2 font-weight-bold">
-                                        <img id="img_pasaporte" src="{% static 'img/pendiente.png' %}" alt="">
+                            <div
+                                class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
+                                <div class="h2 font-weight-bold">
+                                    <img id="img_pasaporte" hidden src="{% static 'img/pendiente.png' %}" alt="">
+                                    <div id="spinner3" class="snippet" data-title="dot-flashing">
+                                        <div class="stage">
+                                            <div class="dot-flashing"></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <!-- END -->
-
-                            <!-- Demo info -->
-                            <div class="row text-center mt-4" id="div_pasaporte" style="display: none;">
-                                <label for="archivo">Subir Archivo</label>
-                                <input class="form-control" style="opacity: 0.65" type="file" id="floatingFile" name="pasaporte" />
-                                <div class="text-center mt-2">
-                                    <button id="btnF" class="btn btn-primary btn-sm rounded fw-bold">Cargar</button>
+                        </div>
+                    </div>
+                    <div class="col-md-2" id="div_convalidacion" style="display: none;">
+                        <input type="hidden" id="conv" value="{{ convalidacion }}">
+                        <div class="card shadow p-2">
+                            <h2 class="h6 font-weight-bold text-center mb-3">Cert. de Notas</h2>
+                            <input type="hidden" id="notaTF" value="{{ documentos.nota }}">
+                            <div
+                                class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
+                                <div class="h2 font-weight-bold">
+                                    <img id="img_notas" hidden src="{% static 'img/pendiente.png' %}" alt="">
+                                    <div id="spinner4" class="snippet" data-title="dot-flashing">
+                                        <div class="stage">
+                                            <div class="dot-flashing"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <!-- END -->
                         </div>
                     </div>
 
-                    <div class="row justify-content-center" id="div_convalidacion" style="display: none;">
-                        <input type="hidden" id="conv" value="{{ convalidacion }}">
-                        <div class="col-xl-3 col-lg-6 mb-4 mx-auto">
-                            <div class="bg-white rounded-lg p-5 shadow">
-                                <h2 class="h6 font-weight-bold text-center mb-4">Cert. de Notas</h2>
-                                <input type="hidden" id="notaTF" value="{{ documentos.nota }}">
-                                <!-- Progress bar 4 -->
-                                <div class="progress mx-auto" data-value='50' id="div_progre_notas">
-                                    <span class="progress-left">
-                                        <span id="notas1" class="progress-bar border-primary"></span>
-                                    </span>
-                                    <span class="progress-right">
-                                        <span id="notas2" class="progress-bar border-primary"></span>
-                                    </span>
-                                    <div
-                                        class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
-                                        <div class="h2 font-weight-bold">
-                                            <img id="img_notas" src="{% static 'img/pendiente.png' %}" alt="">
+                    <div class="col-md-2" id="div_convalidacion2" style="display: none;">
+                        <div class="card shadow p-2">
+                            <h2 class="h6 font-weight-bold text-center mb-3">Plan de Estudio</h2>
+                            <input type="hidden" id="planTF" value="{{ documentos.plan }}">
+                            <div
+                                class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
+                                <div class="h2 font-weight-bold">
+                                    <img id="img_estudio" hidden src="{% static 'img/pendiente.png' %}" alt="">
+                                    <div id="spinner5" class="snippet" data-title="dot-flashing">
+                                        <div class="stage">
+                                            <div class="dot-flashing"></div>
                                         </div>
                                     </div>
                                 </div>
-                                <!-- END -->
-
-                                <!-- Demo info -->
-                                <div class="row text-center mt-4" id="div_notas" style="display: none;">
-                                    <label for="archivo">Subir Archivo</label>
-                                    <input class="form-control" style="opacity: 0.65" type="file" id="floatingFile" name="notas" />
-                                    <div class="text-center mt-2">
-                                        <button id="btnN" class="btn btn-primary btn-sm rounded fw-bold">Cargar</button>
-                                    </div>
-                                </div>
-                                <!-- END -->
-                            </div>
-                        </div>
-
-                        <div class="col-xl-3 col-lg-6 mb-4 mx-auto">
-                            <div class="bg-white rounded-lg p-5 shadow">
-                                <h2 class="h6 font-weight-bold text-center mb-4">Plan de Estudio</h2>
-                                <input type="hidden" id="planTF" value="{{ documentos.plan }}">
-                                <!-- Progress bar 4 -->
-                                <div class="progress mx-auto" data-value='50' id="div_progre_estudio">
-                                    <span class="progress-left">
-                                        <span id="estudio1" class="progress-bar border-primary"></span>
-                                    </span>
-                                    <span class="progress-right">
-                                        <span id="estudio2" class="progress-bar border-primary"></span>
-                                    </span>
-                                    <div
-                                        class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
-                                        <div class="h2 font-weight-bold">
-                                            <img id="img_estudio" src="{% static 'img/pendiente.png' %}" alt="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- END -->
-
-                                <!-- Demo info -->
-                                <div class="row text-center mt-4" id="div_estudio" style="display: none;">
-                                    <label for="archivo">Subir Archivo</label>
-                                    <input class="form-control" style="opacity: 0.65" type="file" id="floatingFile"
-                                        name="planestudio" />
-                                        <div class="text-center mt-2">
-                                            <button id="btnP" class="btn btn-primary btn-sm rounded fw-bold">Cargar</button>
-                                        </div>
-                                </div>
-                                <!-- END -->
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </form>
-        
     </div>
 </div>
 {% endblock content %}

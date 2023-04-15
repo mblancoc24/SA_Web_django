@@ -44,28 +44,8 @@ document.addEventListener('DOMContentLoaded', () => {
     var comentarios = document.getElementById("comentarios");
     var estadotext = document.getElementById("comentarios");
 
-    var titulo1 = document.getElementById("titulo1");
-    var titulo2 = document.getElementById("titulo2");
-
-    var identificacion1 = document.getElementById("identificacion1");
-    var identificacion2 = document.getElementById("identificacion2");
-
-    var pasaporte1 = document.getElementById("pasaporte1");
-    var pasaporte2 = document.getElementById("pasaporte2");
-
-    var notas1 = document.getElementById("notas1");
-    var notas2 = document.getElementById("notas2");
-
-    var estudio1 = document.getElementById("estudio1");
-    var estudio2 = document.getElementById("estudio2");
-
-    var divtitulo = document.getElementById("div_titulo");
-    var dividentificacion = document.getElementById("div_identificacion");
-    var divpasaporte = document.getElementById("div_pasaporte");
-    var divnotas = document.getElementById("div_notas");
-    var divestudio = document.getElementById("div_estudio");
-
     var divconvalidacion = document.getElementById("div_convalidacion");
+    var divconvalidacion2 = document.getElementById("div_convalidacion2");
 
     var divprogretitulo = document.getElementById("div_progre_titulo");
     var divprogreident = document.getElementById("div_progre_ident");
@@ -79,6 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
     var imgnotas = document.getElementById("img_notas");
     var imgestudio = document.getElementById("img_estudio");
 
+    
     // Obtener el estado del objeto de la base de datos en Django
     var documentocargado = document.getElementById("documentocargado");
     switch (valor) {
@@ -102,26 +83,26 @@ document.addEventListener('DOMContentLoaded', () => {
         case "Corrección Requerida":
             progressBar.style.width = "75%";
             progressBar.style.backgroundColor = "rgb(255, 80, 0)";
-            var btnT = document.getElementById('btnT');
-            var btnI = document.getElementById('btnI');
-            var btnF = document.getElementById('btnF');
-            var btnN = document.getElementById('btnN');
-            var btnP = document.getElementById('btnP');
-            btnT.onclick = function () {
-                cambiarestado('titulo');
-            };
-            btnI.onclick = function () {
-                cambiarestado('identificacion');
-            };
-            btnF.onclick = function () {
-                cambiarestado('foto');
-            };
-            btnN.onclick = function () {
-                cambiarestado('nota');
-            };
-            btnP.onclick = function () {
-                cambiarestado('plan');
-            };
+            // var btnT = document.getElementById('btnT');
+            // var btnI = document.getElementById('btnI');
+            // var btnF = document.getElementById('btnF');
+            // var btnN = document.getElementById('btnN');
+            // var btnP = document.getElementById('btnP');
+            // btnT.onclick = function () {
+            //     cambiarestado('titulo');
+            // };
+            // btnI.onclick = function () {
+            //     cambiarestado('identificacion');
+            // };
+            // btnF.onclick = function () {
+            //     cambiarestado('foto');
+            // };
+            // btnN.onclick = function () {
+            //     cambiarestado('nota');
+            // };
+            // btnP.onclick = function () {
+            //     cambiarestado('plan');
+            // };
             correccion();
             break;
         case "Rechazado":
@@ -132,149 +113,121 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (convalidacion == "True") {
-        divconvalidacion.style.display = "flex";
+        divconvalidacion.style.display = "block";
+        divconvalidacion2.style.display = "block";
     }
 
     function correccion() {
+        var spinner1 = document.getElementById("spinner1");
+        var spinner2 = document.getElementById("spinner2");
+        var spinner3 = document.getElementById("spinner3");
+        var spinner4 = document.getElementById("spinner4");
+        var spinner5 = document.getElementById("spinner5");
+        var cardT = document.getElementById("cardT");
         if (doc_titulo == "False") {
-            divtitulo.style.display = "block";
-            titulo1.classList.remove('border-primary');
-            titulo1.classList.add('border-danger');
-
-            titulo2.classList.remove('border-primary');
-            titulo2.classList.add('border-danger');
 
             imgtitulo.src = "../../../../static/img/error.png";
-            imgtitulo.width = 80;
-            imgtitulo.height = 80;
-
-            divprogretitulo.setAttribute("data-value", "0");
+            imgtitulo.hidden = false;
+            cardT.style.backgroundColor = '#FF7F45';
+            spinner1.style.display = "none";
+            imgtitulo.width = 50;
+            imgtitulo.height = 50;
         }
 
         if (doc_ident == "False") {
-            dividentificacion.style.display = "block";
-            identificacion1.classList.remove('border-primary');
-            identificacion1.classList.add('border-danger');
 
-            identificacion2.classList.remove('border-primary');
-            identificacion2.classList.add('border-danger');
 
             imgidentificacion.src = "../../../../static/img/error.png";
-            imgidentificacion.width = 80;
-            imgidentificacion.height = 80;
+            imgidentificacion.hidden = false;
+            spinner2.style.display = "none";
+            imgidentificacion.width = 50;
+            imgidentificacion.height = 50;
 
-            divprogreident.setAttribute("data-value", "0");
         }
 
         if (doc_pasaporte == "False") {
-            divpasaporte.style.display = "block";
-            pasaporte1.classList.remove('border-primary');
-            pasaporte1.classList.add('border-danger');
 
-            pasaporte2.classList.remove('border-primary');
-            pasaporte2.classList.add('border-danger');
 
             imgpasaporte.src = "../../../../static/img/error.png";
-            imgpasaporte.width = 80;
-            imgpasaporte.height = 80;
+            imgpasaporte.hidden = false;
+            spinner3.style.display = "none";
+            imgpasaporte.width = 50;
+            imgpasaporte.height = 50;
 
-            divprogrepasaporte.setAttribute("data-value", "0");
         }
 
         if (convalidacion == "True") {
             if (doc_notas == "False") {
-                divnotas.style.display = "block";
-                notas1.classList.remove('border-primary');
-                notas1.classList.add('border-danger');
 
-                notas2.classList.remove('border-primary');
-                notas2.classList.add('border-danger');
+
 
                 imgnotas.src = "../../../../static/img/error.png";
-                imgnotas.width = 80;
-                imgnotas.height = 80;
+                imgnotas.hidden = false;
+                spinner4.style.display = "none";
+                imgnotas.width = 50;
+                imgnotas.height = 50;
 
-                divprogrenotas.setAttribute("data-value", "0");
             }
 
             if (doc_estudio == "False") {
-                divestudio.style.display = "block";
-                estudio1.classList.remove('border-primary');
-                estudio1.classList.add('border-danger');
 
-                estudio2.classList.remove('border-primary');
-                estudio2.classList.add('border-danger');
 
                 imgestudio.src = "../../../../static/img/error.png";
-                imgestudio.width = 80;
-                imgestudio.height = 80;
+                imgestudio.hidden = false;
+                spinner5.style.display = "none";
+                imgestudio.width = 50;
+                imgestudio.height = 50;
 
-                divprogreestudio.setAttribute("data-value", "0");
+
             }
         }
 
     }
 
     function aprobado() {
-        titulo1.classList.remove('border-primary');
-        titulo1.classList.add('border-success');
 
-        titulo2.classList.remove('border-primary');
-        titulo2.classList.add('border-success');
+        var spinner1 = document.getElementById("spinner1");
+        var spinner2 = document.getElementById("spinner2");
+        var spinner3 = document.getElementById("spinner3");
+        var spinner4 = document.getElementById("spinner4");
+        var spinner5 = document.getElementById("spinner5");
+        var cardT = document.getElementById("cardT");
 
         imgtitulo.src = "../../../../static/img/check.png";
-        imgtitulo.width = 170;
-        imgtitulo.height = 170;
+        imgtitulo.hidden = false;
+        cardT.style.backgroundColor = '#7FFF7F';
+        spinner1.style.display = "none";
+        imgtitulo.width = 50;
+        imgtitulo.height = 50;
 
-        divprogretitulo.setAttribute("data-value", "100");
-
-        identificacion1.classList.remove('border-primary');
-        identificacion1.classList.add('border-success');
-
-        identificacion2.classList.remove('border-primary');
-        identificacion2.classList.add('border-success');
 
         imgidentificacion.src = "../../../../static/img/check.png";
-        imgidentificacion.width = 170;
-        imgidentificacion.height = 170;
+        imgidentificacion.hidden = false;
+        spinner2.style.display = "none";
+        imgidentificacion.width = 50;
+        imgidentificacion.height = 50;
 
-        divprogreident.setAttribute("data-value", "100");
-
-        pasaporte1.classList.remove('border-primary');
-        pasaporte1.classList.add('border-success');
-
-        pasaporte2.classList.remove('border-primary');
-        pasaporte2.classList.add('border-success');
 
         imgpasaporte.src = "../../../../static/img/check.png";
-        imgpasaporte.width = 170;
-        imgpasaporte.height = 170;
+        imgpasaporte.hidden = false;
+        spinner3.style.display = "none";
+        imgpasaporte.width = 50;
+        imgpasaporte.height = 50;
 
-        divprogrepasaporte.setAttribute("data-value", "100");
-
-        notas1.classList.remove('border-primary');
-        notas1.classList.add('border-success');
-
-        notas2.classList.remove('border-primary');
-        notas2.classList.add('border-success');
 
         imgnotas.src = "../../../../static/img/check.png";
-        imgnotas.width = 170;
-        imgnotas.height = 170;
+        imgnotas.hidden = false;
+        spinner4.style.display = "none";
+        imgnotas.width = 50;
+        imgnotas.height = 50;
 
-        divprogrenotas.setAttribute("data-value", "100");
-
-        estudio1.classList.remove('border-primary');
-        estudio1.classList.add('border-success');
-
-        estudio2.classList.remove('border-primary');
-        estudio2.classList.add('border-success');
 
         imgestudio.src = "../../../../static/img/check.png";
-        imgestudio.width = 170;
-        imgestudio.height = 170;
+        imgestudio.hidden = false;
+        spinner5.style.display = "none";
+        imgestudio.width = 50;
+        imgestudio.height = 50;
 
-        divprogreestudio.setAttribute("data-value", "100");
     }
 
 

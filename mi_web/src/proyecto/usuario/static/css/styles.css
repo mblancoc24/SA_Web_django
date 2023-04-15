@@ -626,3 +626,18 @@ body {
 div.h4 {
   line-height: 1rem;
 }
+
+.dot-flashing {
+  background-color: red;
+  color: red;
+}
+
+.dot-flashing::after{
+  background-color: red;
+  color: red;
+}
+
+.dot-flashing::after{
+  background-color: red;
+  color: red;
+}
