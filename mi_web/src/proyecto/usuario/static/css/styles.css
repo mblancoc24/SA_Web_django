@@ -626,3 +626,31 @@ body {
 div.h4 {
   line-height: 1rem;
 }
+
+.dot-flashing {
+  background-color: red;
+  color: red;
+}
+
+.dot-flashing::after{
+  background-color: red;
+  color: red;
+}
+
+.dot-flashing::after{
+  background-color: red;
+  color: red;
+}
+
+.card-deck{
+  transition: transform .2s; /* Animation */
+  cursor: pointer;
+}
+
+.card-deck:hover {
+  transform: scale(1.1);
+}
+
+#btnPoper{
+  color: #d8d8d8;
+}
