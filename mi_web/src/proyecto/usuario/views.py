@@ -712,7 +712,7 @@ def corregirdata(request):
     statusgeneral = get_object_or_404(primerIngreso, usuario=usuario.pk)
     docs = get_object_or_404(documentos, usuario=usuario.pk)
     
-    formulariodata = [2, 3, False, usuario.pk, statusgeneral.comentario]
+    formulariodata = [2, 3, statusgeneral.convalidacion, usuario.pk, statusgeneral.comentario]
         
     form = FormularioPrimerIngreso({ 'etapa': formulariodata[0], 'estado': formulariodata[1], 'convalidacion': formulariodata[2],
                                         'usuario': formulariodata[3],'comentario': formulariodata[4]}, instance=statusgeneral)
