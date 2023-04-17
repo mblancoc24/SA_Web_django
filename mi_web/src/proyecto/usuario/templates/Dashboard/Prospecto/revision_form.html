@@ -38,9 +38,7 @@
         <!-- END -->
         <div class="container">
             <div class="row justify-content-center align-items-center">
-                <div style="display: none;">
-                    <input id="documentocargado" name="documentocargado" type="text" value="">
-                </div>
+                
                 <div class="col-xl-2 col-lg-6 mb-2">
                     {% if documentos.tituloeducacion %}
                     <div class="card-deck" id="btnINT">
@@ -257,6 +255,9 @@
         </div>
     </div>
     {% block modal_archivos %}
+    <div style="display: none;">
+        <input id="documentocargado" name="documentocargado" type="text" value="">
+    </div>
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalTitle" style="display: none"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -278,7 +279,7 @@
                             <input class="form-control mb-2" style="opacity: 0.65" type="file" id="floatingFile"
                                 name="titulo" />
                             <div class="text-center">
-                                <button onclick="cambiarestado('titulo')"
+                                <button id="btn_cambiarestado_titulo"
                                     class="btn btn-primary btn-sm rounded fw-bold">Cargar</button>
                             </div>
                         </div>
@@ -288,7 +289,7 @@
                             <input class="form-control mb-2" style="opacity: 0.65" type="file" id="floatingFile"
                                 name="identificacion" />
                             <div class="text-center">
-                                <button onclick="cambiarestado('identificacion')"
+                                <button id="btn_cambiarestado_ident"
                                     class="btn btn-primary btn-sm rounded fw-bold">Cargar</button>
                             </div>
                         </div>
@@ -298,7 +299,7 @@
                             <input class="form-control mb-2" style="opacity: 0.65" type="file" id="floatingFile"
                                 name="pasaporte" />
                             <div class="text-center">
-                                <button onclick="cambiarestado('foto')"
+                                <button id="btn_cambiarestado_foto"
                                     class="btn btn-primary btn-sm rounded fw-bold">Cargar</button>
                             </div>
                         </div>
@@ -308,7 +309,7 @@
                             <input class="form-control mb-2" style="opacity: 0.65" type="file" id="floatingFile"
                                 name="notas" />
                             <div class="text-center">
-                                <button onclick="cambiarestado('nota')"
+                                <button id="btn_cambiarestado_notas"
                                     class="btn btn-primary btn-sm rounded fw-bold">Cargar</button>
                             </div>
                         </div>
@@ -318,7 +319,7 @@
                             <input class="form-control mb-2" style="opacity: 0.65" type="file" id="floatingFile"
                                 name="planestudio" />
                             <div class="text-center">
-                                <button onclick="cambiarestado('plan')"
+                                <button id="btn_cambiarestado_estudio"
                                     class="btn btn-primary btn-sm rounded fw-bold">Cargar</button>
                             </div>
                         </div>

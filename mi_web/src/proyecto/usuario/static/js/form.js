@@ -1,5 +1,4 @@
 $(document).ready(function () {
-    Verificacion();
     $('[data-bs-toggle="popover"]').popover({
         placement : 'top',
         html : true,
@@ -11,26 +10,6 @@ $(document).ready(function () {
     });
 });
 
-function Verificacion() {
-    $(".progress").each(function () {
-        var value = $(this).attr('data-value');
-        var left = $(this).find('.progress-left .progress-bar');
-        var right = $(this).find('.progress-right .progress-bar');
-
-        if (value > 0) {
-            if (value <= 50) {
-                right.css('transform', 'rotate(' + percentageToDegrees(value) + 'deg)')
-            } else {
-                right.css('transform', 'rotate(180deg)')
-                left.css('transform', 'rotate(' + percentageToDegrees(value - 50) + 'deg)')
-            }
-        }
-    })
-
-    function percentageToDegrees(percentage) {
-        return percentage / 100 * 360
-    }
-}
 
 document.addEventListener('DOMContentLoaded', () => {
     var valor;
@@ -56,12 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
     var divconvalidacion = document.getElementById("div_convalidacion");
     var divconvalidacion2 = document.getElementById("div_convalidacion2");
 
-    var divprogretitulo = document.getElementById("div_progre_titulo");
-    var divprogreident = document.getElementById("div_progre_ident");
-    var divprogrepasaporte = document.getElementById("div_progre_pasaporte");
-    var divprogrenotas = document.getElementById("div_progre_notas");
-    var divprogreestudio = document.getElementById("div_progre_estudio");
-
     var imgtitulo = document.getElementById("img_titulo");
     var imgidentificacion = document.getElementById("img_ident");
     var imgpasaporte = document.getElementById("img_pasaporte");
@@ -71,6 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Obtener el estado del objeto de la base de datos en Django
     var documentocargado = document.getElementById("documentocargado");
+
     switch (valor) {
         case "Enviado":
             progressBar.style.width = "10%";
@@ -99,6 +73,12 @@ document.addEventListener('DOMContentLoaded', () => {
             var btnINN = document.getElementById('btnINN');
             var btnINP = document.getElementById('btnINP');
 
+            var btnCET = document.getElementById('btn_cambiarestado_titulo');
+            var btnCEI = document.getElementById('btn_cambiarestado_ident');
+            var btnCEF = document.getElementById('btn_cambiarestado_foto');
+            var btnCEN = document.getElementById('btn_cambiarestado_notas');
+            var btnCEE = document.getElementById('btn_cambiarestado_estudio');
+
             btnINT.onclick = function (){
                 cambiarInput('titulo');
             }
@@ -118,6 +98,28 @@ document.addEventListener('DOMContentLoaded', () => {
             btnINP.onclick = function (){
                 cambiarInput('plan');
             }
+
+
+            btnCET.onclick = function (){
+                cambiarestado("titulo");
+            }
+
+            btnCEI.onclick = function (){
+                cambiarestado('identificacion');
+            }
+
+            btnCEF.onclick = function (){
+                cambiarestado('foto');
+            }
+
+            btnCEN.onclick = function (){
+                cambiarestado('notas');
+            }
+
+            btnCEE.onclick = function (){
+                cambiarestado('plan');
+            }
+            
             correccion();
             break;
         case "Rechazado":
@@ -143,6 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
         var cardF = document.getElementById("cardF");
         var cardN = document.getElementById("cardN");
         var cardP = document.getElementById("cardP");
+
         if (doc_titulo == "False") {
 
             imgtitulo.src = "../../../../static/img/error.png";
@@ -255,121 +258,52 @@ document.addEventListener('DOMContentLoaded', () => {
         imgestudio.height = 50;
 
     }
-
-
-
+    
     function cambiarestado(documento) {
-        console.log("boton");
+        console.log(documento);
         if (documento == "titulo") {
-            divtitulo.style.display = "none";
-            titulo1.classList.remove('border-danger');
-            titulo1.classList.add('border-primary');
+            imgtitulo.hidden = true;
+            spinner1.style.display = "block";
+            cardT.style.backgroundColor = '#FFFFFF';
 
-            titulo2.classList.remove('border-danger');
-            titulo2.classList.add('border-primary');
-
-            imgtitulo.src = "../../../../static/img/pendiente.png";
-            imgtitulo.width = 100;
-            imgtitulo.height = 100;
-
-            divprogretitulo.setAttribute("data-value", "50");
             documentocargado.value = "titulo";
             console.log(documentocargado);
-            Verificacion();
         }
 
         if (documento == "identificacion") {
-            dividentificacion.style.display = "none";
-            identificacion1.classList.remove('border-danger');
-            identificacion1.classList.add('border-primary');
+            imgidentificacion.hidden = true;
+            spinner2.style.display = "block";
+            cardI.style.backgroundColor = '#FFFFFF';
 
-            identificacion2.classList.remove('border-danger');
-            identificacion2.classList.add('border-primary');
-
-            imgidentificacion.src = "../../../../static/img/pendiente.png";
-            imgidentificacion.width = 170;
-            imgidentificacion.height = 170;
-
-            divprogreident.setAttribute("data-value", "50");
             documentocargado.value = "identificacion";
             console.log(documentocargado);
-            Verificacion();
         }
 
         if (documento == "foto") {
-            divpasaporte.style.display = "none";
-            pasaporte1.classList.remove('border-danger');
-            pasaporte1.classList.add('border-primary');
+            imgpasaporte.hidden = true;
+            spinner3.style.display = "block";
+            cardF.style.backgroundColor = '#FFFFFF';
 
-            pasaporte2.classList.remove('border-danger');
-            pasaporte2.classList.add('border-primary');
-
-            imgpasaporte.src = "../../../../static/img/pendiente.png";
-            imgpasaporte.width = 170;
-            imgpasaporte.height = 170;
-
-
-            divprogrepasaporte.setAttribute("data-value", "50");
             documentocargado.value = "foto";
             console.log(documentocargado);
-            Verificacion();
         }
 
         if (documento == "notas") {
-            divnotas.style.display = "none";
-            notas1.classList.remove('border-danger');
-            notas1.classList.add('border-primary');
+            imgnotas.hidden = true;
+            spinner4.style.display = "block";
+            cardN.style.backgroundColor = '#FFFFFF';
 
-            notas2.classList.remove('border-danger');
-            notas2.classList.add('border-primary');
-
-            imgnotas.src = "../../../../static/img/pendiente.png";
-            imgnotas.width = 170;
-            imgnotas.height = 170;
-
-
-            divprogrenotas.setAttribute("data-value", "50");
             documentocargado.value = "notas";
             console.log(documentocargado);
-            Verificacion();
-        }
-
-        if (documento == "notas") {
-            divnotas.style.display = "none";
-            notas1.classList.remove('border-danger');
-            notas1.classList.add('border-primary');
-
-            notas2.classList.remove('border-danger');
-            notas2.classList.add('border-primary');
-
-            imgnotas.src = "../../../../static/img/pendiente.png";
-            imgnotas.width = 170;
-            imgnotas.height = 170;
-
-
-            divprogrenotas.setAttribute("data-value", "50");
-            documentocargado.value = "notas";
-            console.log(documentocargado);
-            Verificacion();
         }
 
         if (documento == "plan") {
-            divestudio.style.display = "none";
-            estudio1.classList.remove('border-danger');
-            estudio1.classList.add('border-primary');
+            imgestudio.hidden = true;
+            spinner5.style.display = "block";
+            cardP.style.backgroundColor = '#FFFFFF';
 
-            estudio2.classList.remove('border-danger');
-            estudio2.classList.add('border-primary');
-
-            imgestudio.src = "../../../../static/img/pendiente.png";
-            imgestudio.width = 170;
-            imgestudio.height = 170;
-
-
-            divprogreestudio.setAttribute("data-value", "50");
             documentocargado.value = "plan";
             console.log(documentocargado);
-            Verificacion();
         }
     }
 
