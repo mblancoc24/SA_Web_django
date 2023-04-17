@@ -672,9 +672,13 @@ def revision_formulario(request, id, status):
     estado = get_object_or_404(estados, id_estado=statusgeneral.estado_id)
     
     docs = get_object_or_404(documentos, usuario=usuario.pk)
+    
+    fotoperfil_obj = fotoperfil.objects.get(user=user_id) 
+    imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
 
     # Enviar el objeto y otros datos necesarios a la plantilla HTML
     contexto = {
+        "fotoperfil": imagen_url,
         "comentario": statusgeneral.comentario,
         "etapa": etapa.etapa_nombre,
         "estado": estado.estado_nombre,
