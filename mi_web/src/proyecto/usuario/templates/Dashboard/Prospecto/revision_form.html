@@ -43,7 +43,9 @@
                     {% if documentos.tituloeducacion %}
                     <div class="card-deck" id="btnINT">
                         <div class="card shadow p-2" id="cardT">
-                            <h2 class="h6 font-weight-bold text-center mb-3">Tít. de Educ Media</h2>
+                            <h2 class="h6 font-weight-bold text-center mb-3">Tít. de Educ Media <span
+                                class="bi bi-box-arrow-up-right" data-bs-toggle="popover" data-bs-container="body"
+                                data-bs-content="<a type='button' href='#modalArchivo' class='btn btn-primary' data-bs-toggle='modal'>Visualizar Archivo</a>" data-bs-trigger="hover focus"></span></h2>
                             <input type="hidden" id="tituloTF" value="{{ documentos.tituloeducacion }}">
                             <div
                                 class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
@@ -63,7 +65,9 @@
                     <div class="card-deck" id="btnINT" data-bs-toggle="modal" data-bs-target="#exampleModal">
 
                         <div class="card shadow p-2" id="cardT">
-                            <h2 class="h6 font-weight-bold text-center mb-3">Tít. de Educ Media</h2>
+                            <h2 class="h6 font-weight-bold text-center mb-3">Tít. de Educ Media <span
+                                    class="bi bi-box-arrow-up-right" data-bs-toggle="popover" data-bs-container="body"
+                                    data-bs-content="<a type='button' href='#modalArchivo' class='btn btn-primary' data-bs-toggle='modal'>Visualizar Archivo</a>" data-bs-trigger="hover focus"></span></h2>
                             <input type="hidden" id="tituloTF" value="{{ documentos.tituloeducacion }}">
                             <div
                                 class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
@@ -254,6 +258,7 @@
             </div>
         </div>
     </div>
+    
     {% block modal_archivos %}
     <div style="display: none;">
         <input id="documentocargado" name="documentocargado" type="text" value="">
@@ -263,7 +268,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content rounded-0">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modal_posgrado_instruccionesTitle">
+                    <h5 class="modal-title" id="exampleModalTitleTitle">
                         Subir nuevo archivo
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
@@ -329,5 +334,26 @@
         </div>
     </div>
     {% endblock modal_archivos %}
+
+    {% block modal_visualizarArchivo %}
+    <div class="modal fade" id="modalArchivo" tabindex="-1" aria-labelledby="modalArchivoTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content rounded-0">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalArchivoTitle">
+                        Visualizar archivo
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><span class="icon-close2"></span></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h1>Hola</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock modal_visualizarArchivo %}
 </div>
 {% endblock content %}
