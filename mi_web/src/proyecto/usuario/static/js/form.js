@@ -3,11 +3,25 @@ $(document).ready(function () {
     $('[data-bs-toggle="popover"]').popover({
         placement : 'top',
         html : true,
-        title : 'User Info <a href="#" class="close" data-bs-dismiss="alert">&times;</a>',
-        content : '<a type="button" id="btnPoper" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Ver archivo</a>'
+        title: 'Visualizar archivo',
+        trigger: "manual",
+    }).on('mouseenter', function(){
+        var _this = this;
+        $(this).popover('show');
+        $('.popover').on('mouseleave', function() {
+        $(_this).popover('hide');
+        });
+    }).on('mouseleave', function(){
+        var _this = this;
+        setTimeout(function() {
+        if (!$('.popover:hover').length) {
+            $(_this).popover('hide');
+        }
+        }, 100);
     });
+   
     $(document).on("click", ".popover .close" , function(){
-        $(this).parents(".popover").popover('hide');
+        $(this).closest('.popover').popover('hide');
     });
 });
 
