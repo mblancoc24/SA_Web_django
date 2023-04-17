@@ -185,6 +185,12 @@ class PaginaRegistroEstudiante(FormView):
                 form.save()
             
         if Usuarios is not None:
+            user = User.objects.get(username=username)
+            subject = 'Se ha creado su cuenta satisfactoriamente'
+            message = f'Bienvenido al portal academico UIA, su cuenta se ha creado satisfactoriamente con el usuario {user.username}, Saludos cordiales.'
+            email_from = settings.EMAIL_HOST_USER
+            recipient_list = [user.email, ]    
+            send_mail( subject, message, email_from, recipient_list )
             user = get_object_or_404(usuarios, auth_user=user_id)
             login(self.request, Usuarios)
             registrar_accion(user, 'El usuario '+ username +' se ha creado una cuenta como prospecto.')
