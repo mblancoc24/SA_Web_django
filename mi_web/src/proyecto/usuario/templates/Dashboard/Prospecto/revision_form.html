@@ -261,7 +261,6 @@
     
     {% block modal_archivos %}
     <div style="display: none;">
-        <input id="documentocargado" name="documentocargado" type="text" value="">
     </div>
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalTitle" style="display: none"
         aria-hidden="true">
@@ -278,6 +277,7 @@
                 <div class="modal-body">
                     <form method="POST" action="{% url 'corregir_data' %}">
                         {% csrf_token %}
+                        <input hidden id="documentocargado" name="documentocargado" type="text" value="">
                         <div class="row text-center mt-4" id="div_titulo" style="display: none;">
                             <h5 class="card-title text-center mb-5 fw-light fs-5 fw-bold"> Tít. de
                                 Educ Media </h5>

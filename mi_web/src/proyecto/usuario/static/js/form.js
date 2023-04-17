@@ -115,22 +115,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
             btnCET.onclick = function (){
-                cambiarestado("titulo");
+                console.log('entre 1')
+                documentocargado.value = "titulo";
+                cambiarestado('titulo');
             }
 
             btnCEI.onclick = function (){
+                documentocargado.value = "identificacion";
                 cambiarestado('identificacion');
             }
 
             btnCEF.onclick = function (){
+                documentocargado.innerText = "foto";
                 cambiarestado('foto');
             }
 
             btnCEN.onclick = function (){
+                documentocargado.value = "notas";
                 cambiarestado('notas');
             }
 
             btnCEE.onclick = function (){
+                documentocargado.value = "plan";
                 cambiarestado('plan');
             }
             
@@ -274,50 +280,35 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function cambiarestado(documento) {
-        console.log(documento);
+
         if (documento == "titulo") {
             imgtitulo.hidden = true;
             spinner1.style.display = "block";
             cardT.style.backgroundColor = '#FFFFFF';
-
-            documentocargado.value = "titulo";
-            console.log(documentocargado);
         }
 
         if (documento == "identificacion") {
             imgidentificacion.hidden = true;
             spinner2.style.display = "block";
             cardI.style.backgroundColor = '#FFFFFF';
-
-            documentocargado.value = "identificacion";
-            console.log(documentocargado);
         }
 
         if (documento == "foto") {
             imgpasaporte.hidden = true;
             spinner3.style.display = "block";
             cardF.style.backgroundColor = '#FFFFFF';
-
-            documentocargado.value = "foto";
-            console.log(documentocargado);
         }
 
         if (documento == "notas") {
             imgnotas.hidden = true;
             spinner4.style.display = "block";
             cardN.style.backgroundColor = '#FFFFFF';
-
-            documentocargado.value = "notas";
-            console.log(documentocargado);
         }
 
         if (documento == "plan") {
             imgestudio.hidden = true;
             spinner5.style.display = "block";
             cardP.style.backgroundColor = '#FFFFFF';
-
-            documentocargado.value = "plan";
-            console.log(documentocargado);
         }
     }
 
