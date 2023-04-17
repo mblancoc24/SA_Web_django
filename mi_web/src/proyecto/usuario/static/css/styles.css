@@ -641,3 +641,16 @@ div.h4 {
   background-color: red;
   color: red;
 }
+
+.card-deck{
+  transition: transform .2s; /* Animation */
+  cursor: pointer;
+}
+
+.card-deck:hover {
+  transform: scale(1.1);
+}
+
+#btnPoper{
+  color: #d8d8d8;
+}

@@ -1,11 +1,11 @@
 {% extends 'Dashboard/dashboard.html' %}
 {% load static %}
 {% block content %}
-<div class="container py-2">
+<div class="container">
     <div class="row justify-content-center">
         <!-- For demo purpose -->
-        <div class="col-lg-12 mx-auto mb-3 text-black text-center">
-            <h1 class="display-4">Proceso de Admisión de Primer Ingreso</h1>
+        <div class="col-lg-12 mx-auto text-black text-center">
+            <h1 class="display-8">Proceso de Admisión de Primer Ingreso</h1>
             <p class="lead mb-0">Las barras de proceso indicaran la etapa y estado en el que se encuentra tu admisión.
             </p>
             <p class="lead">Para mas detalles, dudas y consultas, llame al: 2212-5500 ext: 600</p>
@@ -14,8 +14,8 @@
 
         <div class="row">
             <div class="col-lg-12 mx-auto">
-                <div class="card shadow bg-white rounded-lg" style=" height: 150px;">
-                    <div class="card-body" style="padding-top: 20px;">
+                <div class="card shadow bg-white rounded-lg">
+                    <div class="card-body">
                         <h4>Estado Actual: <span id="estado">{{ estado }}</span></h4>
                         <p id="comentarios" class="font-italic text-muted">{{ comentario }}</p>
 
@@ -36,23 +36,24 @@
             </p>
         </div>
         <!-- END -->
-
-        <form method="POST" action="{% url 'corregir_data' %}">
-            {% csrf_token %}
-            <div class="container">
-                <div class="row justify-content-center align-items-center">
-                    <div style="display: none;">
-                        <input id="documentocargado" name="documentocargado" type="text" value="">
-                    </div>
-
-                    <div class="col-md-2">
+        <div class="container">
+            <div class="row justify-content-center align-items-center">
+                <div style="display: none;">
+                    <input id="documentocargado" name="documentocargado" type="text" value="">
+                </div>
+                <div class="col-xl-2 col-lg-6 mb-2">
+                    <div class="card-deck" data-bs-toggle="popover" title="Tít. de Educ Media" data-bs-trigger="hover focus" data-bs-placement="top">
                         <div class="card shadow p-2" id="cardT">
                             <h2 class="h6 font-weight-bold text-center mb-3">Tít. de Educ Media</h2>
                             <input type="hidden" id="tituloTF" value="{{ documentos.tituloeducacion }}">
                             <div
                                 class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
-                                <div class="h2 font-weight-bold">
-                                    <img id="img_titulo" hidden src="{% static 'img/pendiente.png' %}" alt="">
+                                <div class="h2 font-weight-bold d-flex align-items-center justify-content-center" style="width: 10px; height: 10px;">
+                                    {% if documentos.tituloeducacion %}
+                                    <a id="btnINT"><img id="img_titulo" src="" alt=""></a>
+                                    {% else%}
+                                    <a id="btnINT" data-bs-toggle="modal" data-bs-target="#exampleModal"><img id="img_titulo" class=" mb-2" src="{% static 'img/pendiente.png' %}" alt=""></a>
+                                    {% endif %}
                                     <div id="spinner1" class="snippet" data-title="dot-flashing">
                                         <div class="stage">
                                             <div class="dot-flashing"></div>
@@ -62,15 +63,20 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="col-md-2">
-                        <div class="card shadow p-2">
+                </div>
+                <div class="col-xl-2 col-lg-6 mb-2">
+                    <div class="card-deck" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-content="Disabled popover">
+                        <div class="card shadow p-2" id="cardI">
                             <h2 class="h6 font-weight-bold text-center mb-3">Identificación</h2>
                             <input type="hidden" id="identificacionTF" value="{{ documentos.identificacion }}">
                             <div
                                 class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
-                                <div class="h2 font-weight-bold">
-                                    <img id="img_ident" hidden src="{% static 'img/pendiente.png' %}" alt="">
+                                <div class="h2 font-weight-bold d-flex align-items-center justify-content-center" style="width: 10px; height: 10px;">
+                                    {% if documentos.identificacion %}
+                                    <a id="btnINI"><img id="img_ident" src="" alt=""></a>
+                                    {% else%}
+                                    <a id="btnINI" data-bs-toggle="modal" data-bs-target="#exampleModal"><img id="img_ident" class=" mb-2" src="{% static 'img/pendiente.png' %}" alt=""></a>
+                                    {% endif %}
                                     <div id="spinner2" class="snippet" data-title="dot-flashing">
                                         <div class="stage">
                                             <div class="dot-flashing"></div>
@@ -80,15 +86,21 @@
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="col-md-2">
-                        <div class="card shadow p-2">
+                <div class="col-xl-2 col-lg-6 mb-2">
+                    <div class="card-deck" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-content="Disabled popover">
+                        <div class="card shadow p-2" id="cardF">
                             <h2 class="h6 font-weight-bold text-center mb-3">Foto Tipo Pasaporte</h2>
                             <input type="hidden" id="fotoTF" value="{{ documentos.foto }}">
                             <div
                                 class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
-                                <div class="h2 font-weight-bold">
-                                    <img id="img_pasaporte" hidden src="{% static 'img/pendiente.png' %}" alt="">
+                                <div class="h2 font-weight-bold d-flex align-items-center justify-content-center" style="width: 10px; height: 10px;">
+                                    {% if documentos.foto %}
+                                    <a id="btnINF"><img id="img_pasaporte" src="" alt=""></a>
+                                    {% else%}
+                                    <a id="btnINF" data-bs-toggle="modal" data-bs-target="#exampleModal"><img id="img_pasaporte" class=" mb-2" src="{% static 'img/pendiente.png' %}" alt=""></a>
+                                    {% endif %}
                                     <div id="spinner3" class="snippet" data-title="dot-flashing">
                                         <div class="stage">
                                             <div class="dot-flashing"></div>
@@ -98,15 +110,21 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-2" id="div_convalidacion" style="display: none;">
+                </div>
+                <div class="col-xl-2 col-lg-6 mb-2" id="div_convalidacion" style="display: none;">
+                    <div class="card-deck" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-content="Disabled popover">
                         <input type="hidden" id="conv" value="{{ convalidacion }}">
-                        <div class="card shadow p-2">
+                        <div class="card shadow p-2" id="cardN">
                             <h2 class="h6 font-weight-bold text-center mb-3">Cert. de Notas</h2>
-                            <input type="hidden" id="notaTF" value="{{ documentos.nota }}">
+                            <input type="hidden" id="notaTF" value="{{ documentos.notas }}">
                             <div
                                 class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
-                                <div class="h2 font-weight-bold">
-                                    <img id="img_notas" hidden src="{% static 'img/pendiente.png' %}" alt="">
+                                <div class="h2 font-weight-bold d-flex align-items-center justify-content-center" style="width: 10px; height: 10px;">
+                                    {% if documentos.notas %}
+                                    <a id="btnINN"><img id="img_notas" src="" alt=""></a>
+                                    {% else%}
+                                    <a id="btnINN" data-bs-toggle="modal" data-bs-target="#exampleModal"><img id="img_notas" class=" mb-2" src="{% static 'img/pendiente.png' %}" alt=""></a>
+                                    {% endif %}
                                     <div id="spinner4" class="snippet" data-title="dot-flashing">
                                         <div class="stage">
                                             <div class="dot-flashing"></div>
@@ -116,15 +134,21 @@
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="col-md-2" id="div_convalidacion2" style="display: none;">
-                        <div class="card shadow p-2">
+                <div class="col-xl-2 col-lg-6 mb-2" id="div_convalidacion2" style="display: none;">
+                    <div class="card-deck" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-content="Disabled popover">
+                        <div class="card shadow p-2" id="cardP">
                             <h2 class="h6 font-weight-bold text-center mb-3">Plan de Estudio</h2>
                             <input type="hidden" id="planTF" value="{{ documentos.plan }}">
                             <div
                                 class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
-                                <div class="h2 font-weight-bold">
-                                    <img id="img_estudio" hidden src="{% static 'img/pendiente.png' %}" alt="">
+                                <div class="h2 font-weight-bold d-flex align-items-center justify-content-center" style="width: 10px; height: 10px;">
+                                    {% if documentos.plan %}
+                                    <a id="btnINP"><img id="img_estudio" src="" alt=""></a>
+                                    {% else%}
+                                    <a id="btnINP" data-bs-toggle="modal" data-bs-target="#exampleModal"><img id="img_estudio" class=" mb-2" src="{% static 'img/pendiente.png' %}" alt=""></a>
+                                    {% endif %}
                                     <div id="spinner5" class="snippet" data-title="dot-flashing">
                                         <div class="stage">
                                             <div class="dot-flashing"></div>
@@ -136,7 +160,74 @@
                     </div>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
+    {% block modal_archivos %}
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalTitle" style="display: none"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content rounded-0">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal_posgrado_instruccionesTitle">
+                        Subir nuevo archivo
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><span class="icon-close2"></span></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="{% url 'corregir_data' %}">
+                        {% csrf_token %}
+                        <div class="row text-center mt-4" id="div_titulo" style="display: none;">
+                            <h5 class="card-title text-center mb-5 fw-light fs-5 fw-bold"> Tít. de Educ Media </h5>
+                            <input class="form-control mb-2" style="opacity: 0.65" type="file" id="floatingFile"
+                                name="titulo" />
+                            <div class="text-center">
+                                <button onclick="cambiarestado('titulo')"
+                                    class="btn btn-primary btn-sm rounded fw-bold">Cargar</button>
+                            </div>
+                        </div>
+                        <div class="row text-center mt-4" id="div_identificacion" style="display: none;">
+                            <h5 class="card-title text-center mb-5 fw-light fs-5 fw-bold"> Identificación </h5>
+                            <input class="form-control mb-2" style="opacity: 0.65" type="file" id="floatingFile"
+                                name="identificacion" />
+                            <div class="text-center">
+                                <button onclick="cambiarestado('identificacion')"
+                                    class="btn btn-primary btn-sm rounded fw-bold">Cargar</button>
+                            </div>
+                        </div>
+                        <div class="row text-center mt-4" id="div_pasaporte" style="display: none;">
+                            <h5 class="card-title text-center mb-5 fw-light fs-5 fw-bold"> Foto Tipo Pasaporte </h5>
+                            <input class="form-control mb-2" style="opacity: 0.65" type="file" id="floatingFile"
+                                name="pasaporte" />
+                            <div class="text-center">
+                                <button onclick="cambiarestado('foto')"
+                                    class="btn btn-primary btn-sm rounded fw-bold">Cargar</button>
+                            </div>
+                        </div>
+                        <div class="row text-center mt-4" id="div_notas" style="display: none;">
+                            <h5 class="card-title text-center mb-5 fw-light fs-5 fw-bold"> Cert. de Notas </h5>
+                            <input class="form-control mb-2" style="opacity: 0.65" type="file" id="floatingFile"
+                                name="notas" />
+                            <div class="text-center">
+                                <button onclick="cambiarestado('nota')"
+                                    class="btn btn-primary btn-sm rounded fw-bold">Cargar</button>
+                            </div>
+                        </div>
+                        <div class="row text-center mt-4" id="div_estudio" style="display: none;">
+                            <h5 class="card-title text-center mb-5 fw-light fs-5 fw-bold"> Plan de Estudio </h5>
+                            <input class="form-control mb-2" style="opacity: 0.65" type="file" id="floatingFile"
+                                name="planestudio" />
+                            <div class="text-center">
+                                <button onclick="cambiarestado('plan')"
+                                    class="btn btn-primary btn-sm rounded fw-bold">Cargar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock modal_archivos %}
 </div>
 {% endblock content %}
