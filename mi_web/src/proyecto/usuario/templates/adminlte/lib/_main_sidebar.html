@@ -9,25 +9,27 @@
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-2 pb-3 mb-1 d-flex align-items-center">
             <div class="image">
-                
+
                 {% if fotoperfil %}
-                    <img src="{% url 'mostrar_foto' %}" class="rounded-circle p-1" alt="User Image" style="width: 50px; height: 50px;">
+                <img src="{% url 'mostrar_foto' %}" class="rounded-circle p-1" alt="User Image"
+                    style="width: 50px; height: 50px;">
                 {% else %}
-                    {% load static %}
-                    <img src="{% static 'img/user.png' %}" class="rounded-circle p-1" alt="User Image" style="width: 50px; height: 50px;">
+                {% load static %}
+                <img src="{% static 'img/user.png' %}" class="rounded-circle p-1" alt="User Image"
+                    style="width: 50px; height: 50px;">
                 {% endif %}
             </div>
             <div class="info">
-                
+
                 {% if status == 1 %}
-                    <a href="{% url 'perfil' id=id status=status %}" class="d-block">
-                        <i class="fa fa-user" aria-hidden="true"></i> {{ user.first_name }}</a>
+                <a href="{% url 'perfil' id=id status=status %}" class="d-block">
+                    <i class="fa fa-user" aria-hidden="true"></i> {{ user.first_name }}</a>
                 {% elif status == 4 %}
-                    <a href="{% url 'perfil_prospecto' id=id status=status %}" class="d-block">
-                        <i class="fa fa-user" aria-hidden="true"></i> {{ user.first_name }}</a>
+                <a href="{% url 'perfil_prospecto' id=id status=status %}" class="d-block">
+                    <i class="fa fa-user" aria-hidden="true"></i> {{ user.first_name }}</a>
                 {% else %}
-                    <a href="{% url 'perfil_profesor' id=id status=status %}" class="d-block">
-                        <i class="fa fa-user" aria-hidden="true"></i> {{ user.first_name }}</a>
+                <a href="{% url 'perfil_profesor' id=id status=status %}" class="d-block">
+                    <i class="fa fa-user" aria-hidden="true"></i> {{ user.first_name }}</a>
                 {% endif %}
             </div>
         </div>
@@ -40,19 +42,19 @@
                 {% block nav_links_outer %}
                 {% block nav_links %}
                 {% if status == 1 %}
-                    <li class="nav-item">
-                        <a href="{% url 'estudiante' id=id status=status %}" class="nav-link">
-                            <i class="fas fa-home"></i>
-                            <p>Home</p>
-                        </a>
-                    </li>
+                <li class="nav-item">
+                    <a href="{% url 'estudiante' id=id status=status %}" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        <p>Home</p>
+                    </a>
+                </li>
                 {% elif status == 4 %}
-                    <li class="nav-item">
-                        <a href="{% url 'usuario_prospecto' id=id status=status %}" class="nav-link">
-                            <i class="fas fa-home"></i>
-                            <p>Home</p>
-                        </a>
-                    </li>
+                <li class="nav-item">
+                    <a href="{% url 'usuario_prospecto' id=id status=status %}" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        <p>Home</p>
+                    </a>
+                </li>
                 {% else %}
                 <li class="nav-item">
                     <a href="{% url 'profesor' id=id status=status %}" class="nav-link">
@@ -66,7 +68,8 @@
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-object-group"></i>
                         <p>Profesor</p>
-                        <p><i class="right fas fa-angle-down"></i>
+                        <p>
+                            <i class="right fas fa-angle-down"></i>
                         </p>
                     </a>
                     <ul class="nav nav-treeview menu-open">
@@ -131,7 +134,8 @@
                 {% endblock nav_links %}
                 {% endblock nav_links_outer %}
             </ul>
-            <ul class="nav nav-pills nav-sidebar flex-column mt-auto .sidebar-bottom" data-widget="treeview" role="menu" data-accordion="false">
+            <ul class="nav nav-pills nav-sidebar flex-column mt-auto .sidebar-bottom" data-widget="treeview" role="menu"
+                data-accordion="false">
                 <li class="nav-item">
                     <a href="{% url 'logout' %}" class="nav-link">
                         <i class="fas fa-sign-out-alt"></i>

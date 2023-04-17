@@ -28,6 +28,11 @@ class Logueo(LoginView):
     fields = '__all__'
     redirect_authenticated_user = True
     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['cuenta'] = self.request.GET.get('cuenta')
+        return context
+    
     def form_valid(self, form):
         logout(self.request)
         # Get the user object from the form data
@@ -92,7 +97,6 @@ class PaginaRegistroEstudiante(FormView):
     template_name = 'usuario/registro_estudiantes.html'
     form_class = CustomUserCreationForm
     redirect_authenticated_user = True
-    success_url = reverse_lazy('login')
 
     def form_valid(self, form):
         es_profesor = self.request.POST.get('es_profesor')
@@ -191,7 +195,9 @@ class PaginaRegistroEstudiante(FormView):
             login(self.request, Usuarios)
             registrar_accion(user, 'El usuario '+ username +' se ha creado una cuenta como prospecto.')
             logout(self.request)
-        return super(PaginaRegistroEstudiante, self).form_valid(form)
+            # Agrega el contexto con el valor 'cuenta' para enviarlo junto con la redirección.
+            url = reverse('login') + '?cuenta=True'
+            return redirect(url)
 
     def get(self, *args, **kwargs):
         if self.request.user.is_authenticated:
@@ -678,9 +684,13 @@ def revision_formulario(request, id, status):
     estado = get_object_or_404(estados, id_estado=statusgeneral.estado_id)
     
     docs = get_object_or_404(documentos, usuario=usuario.pk)
+    
+    fotoperfil_obj = fotoperfil.objects.get(user=user_id) 
+    imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
 
     # Enviar el objeto y otros datos necesarios a la plantilla HTML
     contexto = {
+        "fotoperfil": imagen_url,
         "comentario": statusgeneral.comentario,
         "etapa": etapa.etapa_nombre,
         "estado": estado.estado_nombre,

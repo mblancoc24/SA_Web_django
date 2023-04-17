@@ -261,24 +261,165 @@
                     </div>
                 </form>
             </div>
-        </div>
+          </div>
+
+          <div class="form-floating mb-3 col-md-4" id="dis_pais" style="display: block;">
+            <select id="pais_select" class="form-select" onchange="obtenerPais(this)" name="pais_select"
+              data-placeholder="Seleccione Nacionalidad" onclick="cargarPais()">
+              <option style="opacity: 0.65" value="" disabled selected hidden>Seleccione Nacionalidad</option>
+            </select>
+            <label for="tipo" style="opacity: .65;">Nacionalidad</label>
+            <input type="hidden" id="pais" name="pais">
+          </div>
+
+          <div class="form-floating mb-3 col-md-4" id="dis_provincia" style="display: block;">
+            <select id="provincia_select" class="form-select" name="provincia_select"
+              data-placeholder="Selecione Provincia" onchange="obtenerProvincia(this)" onclick="cargarProvincias()">
+              <option style="opacity: 0.65" value="" disabled selected hidden>Seleccione Provincia</option>
+            </select>
+            <label for="tipo" style="opacity: .65;">Provincia</label>
+            <input type="hidden" id="provincia" name="provincia">
+          </div>
+
+          <div class="form-floating mb-3 col-md-4" id="dis_canton" style="display: block;">
+            <select id="canton_select" class="form-select" name="canton_select" data-placeholder="Selecione Canton"
+              onchange="obtenerCanton(this)">
+              <option style="opacity: 0.65" value="" disabled selected hidden>Seleccione Cantón</option>
+            </select>
+            <label for="tipo" style="opacity: .65;">Cantón</label>
+            <input type="hidden" id="canton" name="canton">
+          </div>
+
+          <div class="form-floating mb-3 col-md-4" id="dis_distrito" style="display: block;">
+            <select id="distrito_select" class="form-select" name="distrito_select"
+              data-placeholder="Selecione Distrito" onchange="obtenerDistrito(this)">
+              <option style="opacity: 0.65" value="" disabled selected hidden>Seleccione Distrito</option>
+            </select>
+            <label for="tipo" style="opacity: .65;">Distrito</label>
+            <input type="hidden" id="distrito" name="distrito">
+          </div>
+
+
+          <div class="form-floating mb-3 col-md-4" id="dis_correo" style="display: block;">
+            <div class="input-group">
+              <span class="input-group-text" id="basic-addon1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="43" fill="currentColor"
+                  class="bi bi-envelope-plus" viewBox="0 0 16 16">
+                  <path
+                    d="M2 2a2 2 0 0 0-2 2v8.01A2 2 0 0 0 2 14h5.5a.5.5 0 0 0 0-1H2a1 1 0 0 1-.966-.741l5.64-3.471L8 9.583l7-4.2V8.5a.5.5 0 0 0 1 0V4a2 2 0 0 0-2-2H2Zm3.708 6.208L1 11.105V5.383l4.708 2.825ZM1 4.217V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v.217l-7 4.2-7-4.2Z">
+                  </path>
+                  <path
+                    d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Zm-3.5-2a.5.5 0 0 0-.5.5v1h-1a.5.5 0 0 0 0 1h1v1a.5.5 0 0 0 1 0v-1h1a.5.5 0 0 0 0-1h-1v-1a.5.5 0 0 0-.5-.5Z">
+                  </path>
+                </svg>
+              </span>
+              <input type="email" class="form-control" id="correo" placeholder="Correo" name="email" required
+                pattern="(?![_.-])((?![_.-][_.-])[a-zA-Z\d_.-]){0,63}[a-zA-Z\d]@((?!-)((?!--)[a-zA-Z\d-]){0,63}[a-zA-Z\d]\.){1,2}([a-zA-Z]{2,14}\.)?[a-zA-Z]{2,14}">
+
+            </div>
+
+          </div>
+
+          <div class="form-floating mb-3 col-md-4" id="dis_contrasena" style="display: block;">
+            <div class="input-group mb-3 input-group-lg">
+              <span class="input-group-text" id="basic-addon1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="43" fill="currentColor"
+                  class="bi bi-pass-fill" viewBox="0 0 16 16">
+                  <path
+                    d="M10 0a2 2 0 1 1-4 0H3.5A1.5 1.5 0 0 0 2 1.5v13A1.5 1.5 0 0 0 3.5 16h9a1.5 1.5 0 0 0 1.5-1.5v-13A1.5 1.5 0 0 0 12.5 0H10ZM4.5 5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1Zm0 2h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1 0-1Z">
+                  </path>
+                </svg>
+              </span>
+              <input type="password" class="form-control" id="password1" placeholder="Contraseña" name="password1"
+                required>
+
+            </div>
+
+          </div>
+
+          <div class="form-floating mb-3 col-md-4" id="dis_confirmar" style="display: block;">
+            <div class="input-group mb-3 input-group-lg">
+              <span class="input-group-text" id="basic-addon1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="43" fill="currentColor"
+                  class="bi bi-pass-fill" viewBox="0 0 16 16">
+                  <path
+                    d="M10 0a2 2 0 1 1-4 0H3.5A1.5 1.5 0 0 0 2 1.5v13A1.5 1.5 0 0 0 3.5 16h9a1.5 1.5 0 0 0 1.5-1.5v-13A1.5 1.5 0 0 0 12.5 0H10ZM4.5 5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1Zm0 2h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1 0-1Z">
+                  </path>
+                </svg>
+              </span>
+              <input type="password" class="form-control" id="password2" placeholder="Confirmar contraseña"
+                name="password2" required>
+
+
+            </div>
+
+
+
+            <div class="jumbotron" id="cuenta_profesor" style="display: none;">
+              <h5 class="display-12">Se ha verificado que eres profesor. Los datos ya han sido recopilados
+                anteriormente.</h5>
+              </p>
+              <h5 class="display-12">Su correo institucional y contraseña de acceso de profesor serán los mismos para
+                acceso estudiantil. Por favor proceda a ingresar lo solicitado para finalizar verificacion y registrar.
+              </h5>
+              </p>
+              <input type="text" id="es_profesor" name="es_profesor" value="estudiante" hidden>
+            </div>
+
+            <div class="jumbotron" id="cuenta_estudiante" style="display: none;">
+              <h5 class="display-12">Se ha verificado que eres estudiante regular. Los datos ya han sido recopilados
+                anteriormente.</h5>
+              </p>
+              <h5 class="display-12">Su correo institucional y contraseña de acceso de estudiante serán los mismos para
+                acceso estudiantil. Por favor proceda a ingresar lo solicitado para finalizar verificacion y registrar.
+              </h5>
+              </p>
+            </div>
+
+            <div class="jumbotron" id="cuenta_estudianteprofesor" style="display: none;">
+              <h5 class="display-12">Se ha verificado que eres profesor y estudiante regular. Los datos ya han sido
+                recopilados anteriormente.</h5>
+              </p>
+              <h5 class="display-12">Su correo institucional y contraseña de acceso de profesor serán unificados con tu
+                acceso estudiantil. Por favor proceda a ingresar lo solicitado para finalizar verificacion y registrar.
+              </h5>
+              </p>
+            </div>
+
+
+            <span id='message'></span>
+          </div>
+
+          <div class="d-grid d-flex justify-content-center">
+
+            <button id="liveToastBtn" onclick="cantones()" type="submit"
+              class="w-100 btn btn-lg btn-primary btn-login fw-bold bi bi-save" style="max-width: 175px;">
+              Registrar</button>
+          </div>
+
+          <hr class="my-4">
+
+          <div class="d-grid mb-2">
+            <span class="ml-auto"> ¿Ya tienes una cuenta? <a href="{% url 'login' %}"
+                class="text-info bi bi-box-arrow-in-right"> Ingresar</a></span>
+          </div>
+        </form>
+      </div>
     </div>
+  </div>
 </div>
-
-
-
 <script>
-    flatpickr("#fechanacimiento", {
-        dateFormat: "d/m/Y",
-        
-    });
+  flatpickr("#fechanacimiento", {
+    dateFormat: "d/m/Y",
+
+  });
 
 
-    var provinciasCargadas = false;
+  var provinciasCargadas = false;
 
-function cargarProvincias() {
+  function cargarProvincias() {
     if (provinciasCargadas) {
-        return;
+      return;
     }
 
     var select = document.getElementById("provincia_select");
@@ -286,11 +427,11 @@ function cargarProvincias() {
     var url = "{% url 'obtener_provincia' %}";
     var request = new XMLHttpRequest();
     request.open('GET', url, true);
-    request.onload = function() {
+    request.onload = function () {
       if (request.status === 200) {
         var data = JSON.parse(request.responseText);
         select.options.length = 0;
-        for(key in data) {
+        for (key in data) {
           var option = document.createElement("option");
           option.value = key;
           option.text = data[key];
@@ -302,20 +443,20 @@ function cargarProvincias() {
       }
     };
     request.send();
-}
+  }
 
-function cargarCantones(valor) {
+  function cargarCantones(valor) {
     var select = document.getElementById("canton_select");
     var select2 = document.getElementById("distrito_select");
 
     var url = "/obtener-canton/?provincia_select=";
     var request = new XMLHttpRequest();
     request.open('GET', url + encodeURIComponent(valor), true);
-    request.onload = function() {
+    request.onload = function () {
       if (request.status === 200) {
         var data = JSON.parse(request.responseText);
         select.options.length = 0;
-        for(key in data) {
+        for (key in data) {
           var option = document.createElement("option");
           option.value = key;
           option.text = data[key];
@@ -326,19 +467,19 @@ function cargarCantones(valor) {
       }
     };
     request.send();
-}
+  }
 
-function cargarDistritos(valor1, valor2) {
+  function cargarDistritos(valor1, valor2) {
     var select = document.getElementById("distrito_select");
 
     var url = "/obtener-distrito/?provincia_select=" + encodeURIComponent(valor1) + "&canton_select=" + encodeURIComponent(valor2);
     var request = new XMLHttpRequest();
     request.open('GET', url, true);
-    request.onload = function() {
+    request.onload = function () {
       if (request.status === 200) {
         var data = JSON.parse(request.responseText);
         select.options.length = 0;
-        for(key in data) {
+        for (key in data) {
           var option = document.createElement("option");
           option.value = key;
           option.text = data[key];
@@ -348,13 +489,13 @@ function cargarDistritos(valor1, valor2) {
       }
     };
     request.send();
-}
+  }
 
-var paisCargadas = false;
+  var paisCargadas = false;
 
-function cargarPais() {
+  function cargarPais() {
     if (paisCargadas) {
-        return;
+      return;
     }
 
     var select = document.getElementById("pais_select");
@@ -364,10 +505,10 @@ function cargarPais() {
     var url = "{% url 'obtener_nacionalidad' %}";
     var request = new XMLHttpRequest();
     request.open('GET', url, true);
-    request.onload = function() {
+    request.onload = function () {
       if (request.status === 200) {
         var data = JSON.parse(request.responseText);
-        for(key in data) {
+        for (key in data) {
           var option = document.createElement("option");
           option.value = key;
           option.text = data[key];
@@ -377,39 +518,39 @@ function cargarPais() {
       }
     };
     request.send();
-}
+  }
 
-function dataCantones(select){
-  var valorSeleccionado = select.options[select.selectedIndex].value;
-  cargarCantones(valorSeleccionado);
-}
+  function dataCantones(select) {
+    var valorSeleccionado = select.options[select.selectedIndex].value;
+    cargarCantones(valorSeleccionado);
+  }
 
-function dataDistritos(select){
-  const miSelect = document.getElementById('provincia_select');
-  var valorSeleccionado = select.options[select.selectedIndex].value;
+  function dataDistritos(select) {
+    const miSelect = document.getElementById('provincia_select');
+    var valorSeleccionado = select.options[select.selectedIndex].value;
 
-  cargarDistritos(miSelect.value, valorSeleccionado);
-}
+    cargarDistritos(miSelect.value, valorSeleccionado);
+  }
 
 
-function obtenerPais(select) {
-  var textoSeleccionado = select.options[select.selectedIndex].text;
-  document.getElementById('pais').value = textoSeleccionado;
-}
-function obtenerProvincia(select) {
-  var textoSeleccionado = select.options[select.selectedIndex].text;
-  document.getElementById('provincia').value = textoSeleccionado;
-  dataCantones(select)
-}
-function obtenerCanton(select) {
-  var textoSeleccionado = select.options[select.selectedIndex].text;
-  document.getElementById('canton').value = textoSeleccionado;
-  dataDistritos(select)
-}
-function obtenerDistrito(select) {
-  var textoSeleccionado = select.options[select.selectedIndex].text;
-  document.getElementById('distrito').value = textoSeleccionado;
-}
+  function obtenerPais(select) {
+    var textoSeleccionado = select.options[select.selectedIndex].text;
+    document.getElementById('pais').value = textoSeleccionado;
+  }
+  function obtenerProvincia(select) {
+    var textoSeleccionado = select.options[select.selectedIndex].text;
+    document.getElementById('provincia').value = textoSeleccionado;
+    dataCantones(select)
+  }
+  function obtenerCanton(select) {
+    var textoSeleccionado = select.options[select.selectedIndex].text;
+    document.getElementById('canton').value = textoSeleccionado;
+    dataDistritos(select)
+  }
+  function obtenerDistrito(select) {
+    var textoSeleccionado = select.options[select.selectedIndex].text;
+    document.getElementById('distrito').value = textoSeleccionado;
+  }
 
 </script>
 
