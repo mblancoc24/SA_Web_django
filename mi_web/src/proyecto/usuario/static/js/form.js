@@ -1,26 +1,18 @@
 $(document).ready(function () {
-    $('[data-bs-toggle="popover"]').popover({
-        placement : 'top',
-        html : true,
-        title: 'Visualizar archivo',
-        trigger: "manual",
-    }).on('mouseenter', function(){
-        var _this = this;
-        $(this).popover('show');
-        $('.popover').on('mouseleave', function() {
-        $(_this).popover('hide');
-        });
-    }).on('mouseleave', function(){
-        var _this = this;
-        setTimeout(function() {
-        if (!$('.popover:hover').length) {
-            $(_this).popover('hide');
-        }
-        }, 100);
+    $('.linkTitulo').hover(function () {
+        $('#modalArchivoTitulo').modal('show');
     });
-   
-    $(document).on("click", ".popover .close" , function(){
-        $(this).closest('.popover').popover('hide');
+    $('.linkIdentificacion').hover(function () {
+        $('#modalArchivoIdentificacion').modal('show');
+    });
+    $('.linkFoto').hover(function () {
+        $('#modalArchivoFoto').modal('show');
+    });
+    $('.linkNota').hover(function () {
+        $('#modalArchivoNota').modal('show');
+    });
+    $('.linkPlan').hover(function () {
+        $('#modalArchivoPlan').modal('show');
     });
 });
 
@@ -55,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
     var imgnotas = document.getElementById("img_notas");
     var imgestudio = document.getElementById("img_estudio");
 
-    
+
     // Obtener el estado del objeto de la base de datos en Django
     var documentocargado = document.getElementById("documentocargado");
 
@@ -93,53 +85,53 @@ document.addEventListener('DOMContentLoaded', () => {
             var btnCEN = document.getElementById('btn_cambiarestado_notas');
             var btnCEE = document.getElementById('btn_cambiarestado_estudio');
 
-            btnINT.onclick = function (){
+            btnINT.onclick = function () {
                 cambiarInput('titulo');
             }
 
-            btnINI.onclick = function (){
+            btnINI.onclick = function () {
                 cambiarInput('identificacion');
             }
 
-            btnINF.onclick = function (){
+            btnINF.onclick = function () {
                 cambiarInput('foto');
             }
 
-            btnINN.onclick = function (){
+            btnINN.onclick = function () {
                 cambiarInput('nota');
             }
 
-            btnINP.onclick = function (){
+            btnINP.onclick = function () {
                 cambiarInput('plan');
             }
 
 
-            btnCET.onclick = function (){
+            btnCET.onclick = function () {
                 console.log('entre 1')
                 documentocargado.value = "titulo";
                 cambiarestado('titulo');
             }
 
-            btnCEI.onclick = function (){
+            btnCEI.onclick = function () {
                 documentocargado.value = "identificacion";
                 cambiarestado('identificacion');
             }
 
-            btnCEF.onclick = function (){
+            btnCEF.onclick = function () {
                 documentocargado.innerText = "foto";
                 cambiarestado('foto');
             }
 
-            btnCEN.onclick = function (){
+            btnCEN.onclick = function () {
                 documentocargado.value = "notas";
                 cambiarestado('notas');
             }
 
-            btnCEE.onclick = function (){
+            btnCEE.onclick = function () {
                 documentocargado.value = "plan";
                 cambiarestado('plan');
             }
-            
+
             correccion();
             break;
         case "Rechazado":
@@ -278,7 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
         imgestudio.height = 50;
 
     }
-    
+
     function cambiarestado(documento) {
 
         if (documento == "titulo") {
@@ -312,7 +304,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function cambiarInput(archivo){
+    function cambiarInput(archivo) {
         var formularioT = document.getElementById("div_titulo");
         var formularioI = document.getElementById("div_identificacion");
         var formularioF = document.getElementById("div_pasaporte");
@@ -323,22 +315,22 @@ document.addEventListener('DOMContentLoaded', () => {
         formularioF.style.display = "none";
         formularioN.style.display = "none";
         formularioP.style.display = "none";
-        if (archivo === 'titulo'){
+        if (archivo === 'titulo') {
             formularioT.style.display = "block";
         }
-        else if (archivo === 'identificacion'){
+        else if (archivo === 'identificacion') {
             formularioI.style.display = "block";
         }
-    
-        else if (archivo === 'foto'){
+
+        else if (archivo === 'foto') {
             formularioF.style.display = "block";
         }
-    
-        else if (archivo === 'nota'){
+
+        else if (archivo === 'nota') {
             formularioN.style.display = "block";
         }
-    
-        else if (archivo === 'plan'){
+
+        else if (archivo === 'plan') {
             formularioP.style.display = "block";
         }
     }
