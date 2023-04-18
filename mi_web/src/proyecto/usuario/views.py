@@ -13,6 +13,7 @@ from django.core.files.base import ContentFile
 from PIL import Image
 from odoorpc import ODOO
 import base64
+import os
 import threading
 import xmlrpc.client
 import requests
@@ -712,7 +713,33 @@ def corregirdata(request):
     statusgeneral = get_object_or_404(primerIngreso, usuario=usuario.pk)
     docs = get_object_or_404(documentos, usuario=usuario.pk)
     
-    formulariodata = [2, 3, statusgeneral.convalidacion, usuario.pk, statusgeneral.comentario]
+    i = 1
+    doc_no_corr = 0
+    while i <= 6:
+        if not docs.tituloeducacion and i == 1:
+            doc_no_corr+=1
+        
+        if not docs.titulouniversitario and i == 2:
+            doc_no_corr+=1
+            
+        if not docs.identificacion and i == 3:
+            doc_no_corr+=1
+            
+        if not docs.foto and i == 4:
+            doc_no_corr+=1
+            
+        if not docs.notas and i == 5:
+            doc_no_corr+=1
+            
+        if not docs.plan and i == 6:
+            doc_no_corr+=1
+            
+        i += 1
+    
+    if doc_no_corr == 1:
+        formulariodata = [2, 3, statusgeneral.convalidacion, usuario.pk, statusgeneral.comentario]
+    else:
+        formulariodata = [2, 5, statusgeneral.convalidacion, usuario.pk, statusgeneral.comentario]
         
     form = FormularioPrimerIngreso({ 'etapa': formulariodata[0], 'estado': formulariodata[1], 'convalidacion': formulariodata[2],
                                         'usuario': formulariodata[3],'comentario': formulariodata[4]}, instance=statusgeneral)
