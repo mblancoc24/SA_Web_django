@@ -542,40 +542,142 @@ def enviar_archivo_a_odoo(request, id, status):
         user = request.user
         user_id = user.pk
         estudiante = get_object_or_404(usuarios, auth_user=user_id)
-        foto = request.FILES.get('fotoperfil')
+        # foto = request.FILES.get('fotoperfil')
         
-        img_data = foto.read()
+        # img_data = foto.read()
         
-        # Convertir la imagen a bytes
-        img_bytes = bytearray(img_data)
+        # # Convertir la imagen a bytes
+        # img_bytes = bytearray(img_data)
 
-        # Crear el objeto UserFile y guardarlo en la base de datos
-        user_file = fotoperfil(user=estudiante, archivo=img_bytes)
-        user_file.save()
+        # # Crear el objeto UserFile y guardarlo en la base de datos
+        # user_file = fotoperfil(user=estudiante, archivo=img_bytes)
+        # user_file.save()
         
-        usuario = get_object_or_404(usuarios, auth_user=user_id)
-        formulariodata = [1, 1, False, usuario.pk,'Formulario Enviado Satisfactoriamente']
+        # usuario = get_object_or_404(usuarios, auth_user=user_id)
+        # formulariodata = [1, 1, False, usuario.pk,'Formulario Enviado Satisfactoriamente']
         
-        form = FormularioPrimerIngreso({ 'etapa': formulariodata[0], 'estado': formulariodata[1], 'convalidacion': formulariodata[2],
-                                        'usuario': formulariodata[3],'comentario': formulariodata[4]})
-        if form.is_valid():
-            form.save()
+        # form = FormularioPrimerIngreso({ 'etapa': formulariodata[0], 'estado': formulariodata[1], 'convalidacion': formulariodata[2],
+        #                                 'usuario': formulariodata[3],'comentario': formulariodata[4]})
+        # if form.is_valid():
+        #     form.save()
             
-        formulariodocumentos = [usuario.pk, True, False, True, True, True, True]
+        # formulariodocumentos = [usuario.pk, True, False, True, True, True, True]
         
-        form = FormularioDocumentos({'usuario': formulariodocumentos[0], 'tituloeducacion': formulariodocumentos[1],
-                                     'titulouniversitario': formulariodocumentos[2], 'identificacion': formulariodocumentos[3],
-                                     'foto': formulariodocumentos[4], 'notas': formulariodocumentos[5],
-                                     'plan': formulariodocumentos[6]})
+        # form = FormularioDocumentos({'usuario': formulariodocumentos[0], 'tituloeducacion': formulariodocumentos[1],
+        #                              'titulouniversitario': formulariodocumentos[2], 'identificacion': formulariodocumentos[3],
+        #                              'foto': formulariodocumentos[4], 'notas': formulariodocumentos[5],
+        #                              'plan': formulariodocumentos[6]})
         
-        if form.is_valid():
-            form.save()
-            context = {'id': id, 'status': status}
-            return redirect(reverse('revision_form', kwargs=context))
+        # if form.is_valid():
+        #     form.save()
+        #     context = {'id': id, 'status': status}
+            
+        # DSPACE ACTIONS      
+        session = requests.Session()
+
+        # Obtener el token CSRF
+        csrf_url = 'http://dspace.uia.ac.cr:8080/server/api/authn'
+        csrf_response = session.get(csrf_url)
+        if csrf_response.status_code == 200:
+            csrf_token = csrf_response.cookies.get('DSPACE-XSRF-COOKIE')
+            print('Token de CSRF:', csrf_token)
         else:
-            return HttpResponse(status=400) 
-    else:
-        return HttpResponse(status=400)
+            print('Error al obtener el token de CSRF')
+
+        # Autenticarse con DSpace utilizando el token CSRF
+        auth_url = 'http://dspace.uia.ac.cr:8080/server/api/authn/login'
+        username = 'pruebas_dspace@uia.ac.cr'
+        password = 'God69061'
+        data = {"user": username, "password": password}
+        headers = {"X-XSRF-TOKEN": csrf_token}
+        response = session.post(auth_url, data=data, headers=headers)
+
+        if response.status_code == 200:
+            token = response.text
+            print('Token de autenticación:', token)
+        else:
+            print('Error de autenticación')
+            
+        # Obtener el ID de la comunidad
+        community_name = "POSGRADOS"
+        community_url = "http://dspace.uia.ac.cr:8080/server/api/core/communities"
+        response = session.get(community_url, headers=headers)
+        communities = json.loads(response.text)
+        community_id = ""
+        for community in communities['_embedded']['communities']:
+            if community['name'] == community_name:
+                community_id = community['uuid']
+                break
+
+        # Obtener el ID de la colección
+        collection_name = "GRADOS"
+        collection_url = "http://dspace.uia.ac.cr:8080/server/api/core/communities/"+community_id+"/subcommunities"
+        response = session.get(collection_url, headers=headers)
+        collections = json.loads(response.text)
+        collection_id = ""
+        for collection in collections['_embedded']['subcommunities']:
+            if collection['name'] == collection_name:
+                collection_id = collection['uuid']
+                break
+            
+        upload_url = "http://dspace.uia.ac.cr:8080/server/api/submission/workspaceitems"
+        
+        metadata = [
+            {'key': 'dc.contributor.author', 'value': 'Jefry Lopez Meneses'},
+            # {'key': 'dc.date.accessioned', 'value': '2023-04-12T17:36:40Z'},
+            # {'key': 'dc.date.available', 'value': '2023-04-12T17:36:40Z'},
+            # {'key': 'dc.date.issued', 'value': '2022-01-01'},
+            # {'key': 'dc.description.provenance', 'value': 'Made available in DSpace'},
+            # {'key': 'dc.identifier.other', 'value': 'Bach-ADM-22002'},
+            # {'key': 'dc.identifier.uri', 'value': 'http://repositorio.uia.ac.cr:4000/handle/'},
+            # {'key': 'dc.language.iso', 'value': 'es'},
+            # {'key': 'dc.relation.ispartofseries', 'value': 'Bach-ADM-22002'},
+            {'key': 'dc.title', 'value': 'Análisis del proceso'},
+            # {'key': 'dc.type', 'value': 'Thesis'},
+        ]
+        
+        payload = {
+            'metadata': metadata
+        }
+        
+        # Obtener el archivo y sus metadatos del formulario HTML de Django
+        file = request.FILES['titulobachillerto']
+        file_name = file.name
+        title = 'Archivo'
+        author = 'Jefry Lopez'
+
+        # Crear el objeto de carga de archivo
+        files = {'file': (file_name, file, file.content_type)}
+        
+        # headers = {
+        #     'Content-Type': 'application/json',
+        #     'Accept': 'application/json'
+        # }
+        
+        new_header = {"Authorization": 'Bearer ' + csrf_token,
+                      "X-XSRF-TOKEN": csrf_token}
+        auth_header = {"Authorization": 'Bearer ' + csrf_token}
+        
+        response = session.post(upload_url, files=files, headers=new_header, data=payload)
+
+        if response.status_code == 201:
+            print('Archivo enviado con éxito')
+            bitstream_link = response.json()['bitstreams'][0]['link']
+            print('URL del archivo:', bitstream_link)
+        else:
+            print('Error al enviar el archivo')
+
+        # Cierre de sesión
+        logout_url = 'http://dspace.uia.ac.cr:8080/server/api/authn/logout'
+        
+        response = session.post(logout_url, headers=new_header)
+
+        if response.status_code == 204:
+            print('Sesión cerrada exitosamente')
+            return redirect(request.META.get('HTTP_REFERER'))
+        else:
+            print('Error al cerrar la sesión')
+        
     
 class SessionTimeoutView(LoginRequiredMixin):
     template_name = 'usuarios/login.html'
