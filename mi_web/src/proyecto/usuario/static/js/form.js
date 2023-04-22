@@ -162,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             imgtitulo.src = "../../../../static/img/error.png";
             imgtitulo.hidden = false;
-            cardT.style.backgroundColor = '#FF7F45';
+            cardT.style.backgroundColor = '#FFA67E';
             spinner1.style.display = "none";
             imgtitulo.width = 35;
             imgtitulo.height = 35;
@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (doc_ident == "False") {
 
             imgidentificacion.src = "../../../../static/img/error.png";
-            cardI.style.backgroundColor = '#FF7F45';
+            cardI.style.backgroundColor = '#FFA67E';
             imgidentificacion.hidden = false;
             spinner2.style.display = "none";
             imgidentificacion.width = 35;
@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (doc_pasaporte == "False") {
 
             imgpasaporte.src = "../../../../static/img/error.png";
-            cardF.style.backgroundColor = '#FF7F45';
+            cardF.style.backgroundColor = '#FFA67E';
             imgpasaporte.hidden = false;
             spinner3.style.display = "none";
             imgpasaporte.width = 35;
@@ -194,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (doc_notas == "False") {
 
                 imgnotas.src = "../../../../static/img/error.png";
-                cardN.style.backgroundColor = '#FF7F45';
+                cardN.style.backgroundColor = '#FFA67E';
                 imgnotas.hidden = false;
                 spinner4.style.display = "none";
                 imgnotas.width = 35;
@@ -205,7 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (doc_estudio == "False") {
 
                 imgestudio.src = "../../../../static/img/error.png";
-                cardP.style.backgroundColor = '#FF7F45';
+                cardP.style.backgroundColor = '#FFA67E';
                 imgestudio.hidden = false;
                 spinner5.style.display = "none";
                 imgestudio.width = 35;
