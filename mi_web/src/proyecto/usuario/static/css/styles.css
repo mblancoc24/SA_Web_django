@@ -289,6 +289,10 @@
 
 body {
   font-family: 'Abrade', sans-serif;
+  background: #dee2e6;
+  background: -webkit-linear-gradient(to right, #dee2e6, #dee2e6);
+  background: linear-gradient(to right, #dee2e6, #dee2e6);
+  min-height: 100vh;
 }
 
 .card-link:hover .card {
@@ -306,7 +310,7 @@ body {
 }
 
 #infoCard:hover {
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 
 #infoCard-img-top {
@@ -608,13 +612,6 @@ a {
   left: 0;
 }
 
-body {
-  background: #dee2e6;
-  background: -webkit-linear-gradient(to right, #dee2e6, #dee2e6);
-  background: linear-gradient(to right, #dee2e6, #dee2e6);
-  min-height: 100vh;
-}
-
 .rounded-lg {
   border-radius: 1rem;
 }
@@ -654,3 +651,28 @@ div.h4 {
 #btnPoper{
   color: #d8d8d8;
 }
+
+.main-header {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 1020;
+}
+
+/* .logout{
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+} */
+
+#navCerrar{
+  width: auto;
+}
+
+.main-sidebar{
+  width: 250px;
+}
+
+/* .nav-sidebar{
+  font-size: 15px;
+} */
