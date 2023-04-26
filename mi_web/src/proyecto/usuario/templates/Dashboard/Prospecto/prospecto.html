@@ -1,4 +1,9 @@
 {% extends 'Dashboard/dashboard.html' %}
+{% load static %}
+{% block style_sheets %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+<script src="{% static 'js/function.js' %}"></script>
+{% endblock %}
 {% block content %}
 <div class="container">
     <div class="row d-flex justify-content-center mt-3">
