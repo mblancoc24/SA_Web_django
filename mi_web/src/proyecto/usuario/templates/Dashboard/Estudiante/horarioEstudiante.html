@@ -1,0 +1,33 @@
+{% extends 'Dashboard/dashboard.html' %}
+{% load static %}
+{% block style_sheets %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+<!-- <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.0/fullcalendar.min.css' /> -->
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.6/index.global.min.js'></script>
+
+<!-- <script src="{% static 'js/calendar.js' %}"></script> -->
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 mb-3">
+            <div class="table-responsive-sm">
+                <table class="table table-bordered text-center">
+                    <thead>
+                        <tr class="bg-light-gray">
+                            <th></th>
+                            <th>Lunes(L)</th>
+                            <th>Martes(K)</th>
+                            <th>Miércoles(M)</th>
+                            <th>Jueves(J)</th>
+                            <th>Viernes(V)</th>
+                            <th>Sábado(S)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bodyHorarioEstudiante"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

@@ -746,3 +746,10 @@ def corregirdata(request):
     if form.is_valid():
         form.save()
         return redirect(request.META.get('HTTP_REFERER'))
+    
+class HorarioEstudianteView(LoginRequiredMixin, View):
+    login_url = ''  # Ruta de inicio de sesión
+    redirect_field_name = 'login'  # Nombre del campo de redirección
+
+    def get(self, request, id, status):
+        return render(request, 'Dashboard/Estudiante/horarioEstudiante.html', {'id': id, 'status': status})

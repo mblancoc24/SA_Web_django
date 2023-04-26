@@ -1,22 +1,22 @@
 {% extends 'adminlte/lib/_main_sidebar.html' %}
 {% block aside %}
+{% load static %}
 <aside class="main-sidebar sidebar-dark-primary" style="font: 1em sans-serif;">
     {% block logo %}
     <!-- Comentar o eliminar este bloque de código -->
+
     {% endblock %}
-    <div class="sidebar d-flex flex-column">
+    <div class="sidebar">
         {% block user_panel %}
         <!-- Sidebar user panel (optional) -->
-        <div class="user-panel mt-2 pb-3 mb-1 d-flex align-items-center">
+        <div class="user-panel mt-3 pb-3 mb-2 d-flex align-items-center">
             <div class="image">
-
                 {% if fotoperfil %}
-                <img src="{% url 'mostrar_foto' %}" class="rounded-circle p-1" alt="User Image"
-                    style="width: 50px; height: 50px;">
+                <img src="{% url 'mostrar_foto' %}" class="img-circle elevation-2" alt="User Image"
+                    style="width: 40px; height: 40px;">
                 {% else %}
-                {% load static %}
-                <img src="{% static 'img/user.png' %}" class="rounded-circle p-1" alt="User Image"
-                    style="width: 50px; height: 50px;">
+                <img src="{% static 'img/user.png' %}" class="img-circle elevation-2" alt="User Image"
+                    style="width: 40px; height: 40px;">
                 {% endif %}
             </div>
             <div class="info">
@@ -33,11 +33,11 @@
                 {% endif %}
             </div>
         </div>
-        <hr class="line">
         {% endblock %}
 
         {% block nav_links_ul %}
-        <nav class="mt-2">
+        <hr class="line">
+        <nav class="mt-1">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 {% block nav_links_outer %}
                 {% block nav_links %}
@@ -149,7 +149,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{% url 'horarioEstudiante' id=id status=status %}" class="nav-link" onclick="dataHorarioEstudiante();">
                                 <i class="nav-icon fas fa-clock"></i>
                                 <p>Horario</p>
                             </a>
@@ -242,16 +242,13 @@
                         </li>
                     </ul>
                 </li>
-            </ul>
-            <ul class="nav nav-pills nav-sidebar flex-column sidebar-bottom" id="navCerrar" data-widget="treeview" role="menu" data-accordion="false">
                 <li class="nav-item">
                     <a href="{% url 'logout' %}" class="nav-link">
                         <i class="fa fa-power-off"></i>
                         <p>Cerrar sesión</p>
                     </a>
                 </li>
-            </ul>
-            
+            </ul> 
         </nav>
         {% endblock nav_links_ul %}
     </div>

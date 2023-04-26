@@ -1,17 +1,15 @@
 {% extends 'adminlte/base.html'  %}
 {% block stylesheets %}
 {% include 'adminlte/lib/_styles.html' %}
-
-{% block style_sheets %}
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 {% load bootstrap5 %}
 {% bootstrap_css %}
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js'></script>
 {% bootstrap_javascript %}
 {% load static %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/three-dots/0.3.2/three-dots.min.css">
 <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css'> 
+{% block style_sheets %}
 <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-<script src="{% static 'js/form.js' %}"></script>
 {% endblock %}
 {% endblock %}
 {% block nav_header %}
