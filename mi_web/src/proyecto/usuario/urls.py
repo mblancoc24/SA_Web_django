@@ -24,8 +24,11 @@ from .views import (
                     change_email_correct,
                     revision_formulario,
                     corregirdata,
+                    microsoft_auth, 
+                    microsoft_callback,
                     DashboardEstudianteView,
-                    DashboardProfesorView
+                    DashboardProfesorView,
+                    MicrosoftLogoutView
                     )
 from django.contrib.auth.views import LogoutView
 from django.contrib.auth import views as auth_views
@@ -35,6 +38,11 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
                path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
                path('crear-usuario/', CrearUsuario.as_view(), name='crear-usuario'),
                path('sesion-expirada/', sesion_expirada, name='sesion_expirada'),
+               
+               path('microsoft-auth/', microsoft_auth, name='microsoft_auth'),
+               path('microsoft-callback/', microsoft_callback, name='microsoft_callback'),
+               
+               path('logout/', MicrosoftLogoutView.as_view(), name='logout'),
              
                path(
                 'change-password/',

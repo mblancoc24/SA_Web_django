@@ -2,22 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.files.storage import default_storage
 
-class usuarios(models.Model):
-    auth_user = models.ForeignKey(User,
-                                on_delete=models.CASCADE,
-                                null=True,
-                                blank=True)
-    activo = models.BooleanField(default=False)
-    es_profesor = models.BooleanField(default=False)
-    es_estudiante = models.BooleanField(default=False)
-    es_prospecto = models.BooleanField(default=True)
-    es_cursolibre = models.BooleanField(default=False)
-    fecha_creado = models.DateTimeField(auto_now_add=True)
-    
-
-    def __str__(self):
-        return self.auth_user
-
 class estudiantes(models.Model):
     id_estudiante = models.AutoField(primary_key=True)
     identificacion = models.CharField(max_length=22)
@@ -37,10 +21,6 @@ class estudiantes(models.Model):
     
 class prospecto(models.Model):
     id_prospecto = models.AutoField(primary_key=True)
-    user = models.ForeignKey(usuarios,
-                        on_delete=models.CASCADE,
-                        null=True,
-                        blank=True)
     identificacion = models.CharField(max_length=22)
     nombre = models.CharField(max_length=18)
     primer_apellido = models.CharField(max_length=18)
@@ -88,19 +68,25 @@ class profesor(models.Model):
     
 class RegistroLogsUser (models.Model):
     fechatiempo = models.DateTimeField(auto_now_add=True)
-    usuario = models.ForeignKey(usuarios, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(User,
+                            on_delete=models.CASCADE,
+                            null=True,
+                            blank=True)
     accion = models.CharField(max_length=300)
     
 class RegistroIDUserCambios (models.Model):
     fechatiempo = models.DateTimeField(auto_now_add=True)
-    usuario = models.ForeignKey(usuarios, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(User,
+                            on_delete=models.CASCADE,
+                            null=True,
+                            blank=True)
     tipo_ident_nueva = models.CharField(max_length=25)
     nueva_identificacion = models.CharField(max_length=25)
     antigua_identifiacion = models.CharField(max_length=25)
     tipo_ident_antigua = models.CharField(max_length=25)
     
 class fotoperfil(models.Model):
-    user = models.ForeignKey(usuarios,
+    user = models.ForeignKey(User,
                             on_delete=models.CASCADE,
                             null=True,
                             blank=True)
@@ -119,12 +105,18 @@ class primerIngreso (models.Model):
     etapa = models.ForeignKey(etapas, on_delete=models.CASCADE)
     estado = models.ForeignKey(estados, on_delete=models.CASCADE)
     convalidacion = models.BooleanField(default=False)
-    usuario = models.ForeignKey(usuarios, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(User,
+                            on_delete=models.CASCADE,
+                            null=True,
+                            blank=True)
     comentario = models.TextField(max_length=500)
     
 class documentos (models.Model):
     id_documento = models.AutoField(primary_key=True)
-    usuario = models.ForeignKey(usuarios, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(User,
+                            on_delete=models.CASCADE,
+                            null=True,
+                            blank=True)
     tituloeducacion = models.BooleanField(default=False)
     titulouniversitario = models.BooleanField(default=False)
     identificacion = models.BooleanField(default=False)

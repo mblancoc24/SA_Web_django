@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure--2@=j91puhc+fc(fbn%@-+_f%0c5df6-eh$-uvi25_6=_6ekd3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['example.com','localhost']
 
 
 # Application definition
@@ -74,6 +74,11 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'proyecto.wsgi.application'
+
+MICROSOFT_CLIENT_ID = '0e466cbd-1bf8-4a2e-bd45-3082fe39522f'
+MICROSOFT_CLIENT_SECRET = 'sTJ8Q~sjdhCsYsR79UuWslzPm-JkoA~qQi.ONcWK'
+MICROSOFT_AUTH_REDIRECT_URI = 'http://localhost:8000/microsoft-callback/'
+MICROSOFT_TENANT_ID = '9caf8b8b-3326-4fc1-b1ab-66951fb9734b'
 
 DOMAIN_NAME = 'http://localhost/'
 PROTOCOL = 'https'
