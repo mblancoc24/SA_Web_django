@@ -146,4 +146,23 @@ class MicrosoftGraphBackend(BaseBackend):
                     
         return type1
         
+    def get_user_data(request, usertype):
+        user = request.user
+        user = User.objects.filter(username=user.username)
         
+        if usertype == 'estudiante/profesor':
+            data = get_object_or_404(profesor, identificacion=user.username) 
+           
+        elif usertype == 'prospecto/profesor':    
+            data = get_object_or_404(prospecto, identificacion=user.username)
+        
+        elif usertype == 'profesor':
+            data = get_object_or_404(profesor, identificacion=user.username)
+            
+        elif usertype == 'estudiante':
+            data = get_object_or_404(estudiantes, identificacion=user.username)
+            
+        elif usertype == 'prospecto':
+            data = get_object_or_404(prospecto, identificacion=user.username)
+            
+        return data

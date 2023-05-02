@@ -204,8 +204,7 @@ class PaginaRegistroEstudiante(FormView):
                 
                 login(self.request, user)
                 
-                registrar_accion(user, 'El usuario ' + username +
-                                ' se ha creado una cuenta como prospecto.')
+                registrar_accion(user, 'El usuario '+ username +' se ha creado una cuenta como prospecto.')
                 
                 logout(self.request)
                 
@@ -562,7 +561,10 @@ def enviar_archivo_a_odoo(request, id, status):
         
         files_updated = dspace_processes.name_standardization(request, files)
         
-        save = save_profile_processes.save_profile_photo(request, files_updated)
+        save_data_dspace = dspace_processes.dspace_first_admission(request, files_updated)
+        
+        save_photo = save_profile_processes.save_profile_photo(request, request.FILES.get('fotoperfil'))
+        
         
         formulariodata = [1, 1, False, user.pk,'Formulario Enviado Satisfactoriamente']
         formulariodocumentos = [user.pk, True, False, True, True, True, True]

@@ -1,11 +1,19 @@
 import requests
 import json
 from django.core.files.storage import FileSystemStorage
+from django.contrib.auth.models import User
+from .backends import MicrosoftGraphBackend
+from datetime import date
+
 
 class dspace_processes():
     
-    def dspace_first_admission(request, files, data):
+    def dspace_first_admission(request, files):
         session = requests.Session()
+        user = request.user
+        user = User.objects.get(username=user.username)
+        user_type = MicrosoftGraphBackend.user_type(request)
+        user_data = MicrosoftGraphBackend.get_user_data(request, user_type)
         
         # Obtener el token CSRF
         csrf_url = 'http://dspace.uia.ac.cr:8080/server/api/authn'
@@ -60,13 +68,14 @@ class dspace_processes():
             "X-XSRF-TOKEN": csrf_token_login
         }
         upload_url = "http://dspace.uia.ac.cr:8080/server/api/core/items?owningCollection="+collection_id
+        fecha_actual = date.today()
         metadata = {
-            "name": "Prueba",
+            "name": "User",
             "metadata": {
-                "dc.title": [{"value": "Mi item 2"}],
-                "dc.contributor.author": [{"value": "Jefry Lopez M"}],
-                "dc.date.issued": [{"value": "2022-10-1"}],
-                "dc.publisher": [{"value": "Mi editorial"}]
+                "dc.title": [{"value": user_data.identificacion}],
+                "dc.contributor.author": [{"value": user_data.nombre +" "+ user_data.primer_apellido +" "+ user_data.segundo_apellido}],
+                "dc.date.issued": [{"value": fecha_actual.strftime('%Y-%m-%d')}],
+                "dc.publisher": [{"value": "Django"}]
             },
             "inArchive": True,
             "discoverable": True,
@@ -76,7 +85,7 @@ class dspace_processes():
         response = session.post(upload_url, data=json.dumps(metadata), headers=headers)
         if response.status_code == 200:
             print('Archivo enviado con éxito')
-            item_id = ''
+            item_id = 'b3994898-55fd-4a3b-8c51-8e22a8ec847d'
         else:
             print('Error al enviar el archivo')
         
@@ -95,28 +104,32 @@ class dspace_processes():
         response = session.post(upload_url, headers=headers, data=json.dumps(bundle))
         if response.status_code == 200:
             print('Archivo enviado con éxito')
+            bundle_id = ''
         else:
             print('Error al enviar el archivo')
             
         #Creacion de BITSTREAMS dentro de BUNDLE creado anteriormente
         
-        files
-        
         headers = {  
             "Authorization": token,           
             "X-XSRF-TOKEN": csrf_token_login,
         }
-        data = {
-            f'properties': '{ "name": "'+file.name+'", "metadata": { "dc.description": [ { "value": "example file", "language": null, "authority": null, "confidence": -1, "place": 0 }]}, "bundleName": "PRIMER_INGRESO" }'
-        }
         item_id = "b3994898-55fd-4a3b-8c51-8e22a8ec847d"
-        bundle_id2 = "79774be9-f1b8-47cc-994f-497f9b572990"
-        upload_url = "http://dspace.uia.ac.cr:8080/server/api/core/bundles/"+bundle_id2+"/bitstreams"
-        response = session.post(upload_url, headers=headers, data=data, files=files)
-        if response.status_code == 201:
-            print('Archivo enviado con éxito')
-        else:
-            print('Error al enviar el archivo')
+        bundle_id = "79774be9-f1b8-47cc-994f-497f9b572990"
+        
+        for dt in files:
+            record = files[dt]
+        
+            data = {
+                f'properties': '{ "name": "'+record['nombre']+'", "metadata": { "dc.description": [ { "value": "'+record['descripcion']+'", "language": null, "authority": null, "confidence": -1, "place": 0 }]}, "bundleName": "PRIMER_INGRESO" }'
+            }
+    
+            upload_url = "http://dspace.uia.ac.cr:8080/server/api/core/bundles/"+bundle_id+"/bitstreams"
+            response = session.post(upload_url, headers=headers, data=data, files=files)
+            if response.status_code == 201:
+                print('Archivo enviado con éxito')
+            else:
+                print('Error al enviar el archivo')
         
         # Cierre de sesión
         logout_url = 'http://dspace.uia.ac.cr:8080/server/api/authn/logout'
