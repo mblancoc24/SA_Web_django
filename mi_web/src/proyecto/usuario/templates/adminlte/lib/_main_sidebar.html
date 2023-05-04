@@ -149,13 +149,13 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{% url 'horarioEstudiante' id=id status=status %}" class="nav-link" onclick="dataHorarioEstudiante();">
+                            <a href="{% url 'horarioEstudiante' id=id status=status %}" class="nav-link">
                                 <i class="nav-icon fas fa-clock"></i>
                                 <p>Horario</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{% url 'planEstudio' id=id status=status %}" class="nav-link">
                                 <i class="nav-icon fas fa-scroll"></i>
                                 <p>Plan de Estudio</p>
                             </a>

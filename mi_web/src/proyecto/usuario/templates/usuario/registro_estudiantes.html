@@ -1,9 +1,5 @@
 {% extends 'usuario/principal.html' %}
 {% load static %}
-{% block extraJavaScript %}
-    <script src="{% static 'js/validacion.js' %}"></script>
-    <script src="{% static 'js/function.js' %}"></script>
-{% endblock %}
 {% block content %}
 
 <div class="row  ">
@@ -426,5 +422,8 @@
   }
 
 </script>
-
+{% block extraJavaScript %}
+    <script src="{% static 'js/validacion.js' %}"></script>
+    <script src="{% static 'js/function.js' %}"></script>
+{% endblock %}
 {% endblock content %}
