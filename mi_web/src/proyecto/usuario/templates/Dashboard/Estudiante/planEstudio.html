@@ -1,0 +1,54 @@
+{% extends 'Dashboard/dashboard.html' %}
+{% load static %}
+{% block style_sheets %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+<script src="{% static 'js/planEstudio.js' %}"></script>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center mt-3">
+        <div class="form-group col-md-4 col-sm-4 ">
+            <div id="idP" hidden>{{ id }}</div>
+            <div id="StatusP" hidden>{{ status }}</div>
+            <label for="carrera"><i class=""> Seleccione una carrera</i></label>
+            <select id="carrera" class="form-select select2" name="carrera">
+                <option value="" disabled selected hidden>Seleccione una carrera</option>
+                {% for data in carrera.carrera %}
+                <option value="{{ data }}">{{ data }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+            <div class="card shadow p-2">
+                <div class="row">
+                    <div class="col-md-12 estado"></div>
+                    <div class="col-md-4" style="text-align:center;">
+                        <i class="bi bi-check-lg color-box" style="color: #3bb80a;"></i>
+                        <p class="mb-0" style="display: inline-block;">Curso aprobado</p>
+                    </div>
+                    <div class="col-md-4" style="text-align:center; width: 300px;">
+                        <i class="bi bi-plus-lg color-box" style="color: #006a9f;"></i>
+                        <p class="mb-0" style="display: inline-block;">Cursos matriculables</p>
+                    </div>
+                    <div class="col-md-4" style="text-align:center;">
+                        <i class="bi bi-x-lg color-box" style="color: #83877b;"></i>
+                        <p class="mb-0" style="display: inline-block;">No cumple con los requisitos</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <div class="row justify-content-center">
+                <div class="col" id="mainTable">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+{% endblock content %}

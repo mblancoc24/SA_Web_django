@@ -1,8 +1,12 @@
 {% extends 'Dashboard/dashboard.html' %}
 {% load static %}
+{% block style_sheets %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+<script src="{% static 'js/form.js' %}"></script>
+{% endblock %}
 {% block content %}
 <div class="container">
-    <div class="row justify-content-center">
+    <div class="row justify-content-center mt-3">
         <!-- For demo purpose -->
         <div class="col-lg-12 mx-auto text-black text-center">
             <h1 class="display-8">Proceso de Admisión de Primer Ingreso</h1>
@@ -32,20 +36,21 @@
         <!-- For demo purpose -->
         <div class="col-lg-12 mx-auto mb-5 text-black text-center">
             <h2 class="display-10">Archivos Subidos</h2>
+            <p class="lead mb-0">Si desea visualizar el archivo puede posicionarse en el icono: <span class="bi bi-box-arrow-up-right "></span>
+            </p>
             <p class="lead mb-0">Si algun archivo debe ser corregido, te indicaremos con una X el archivo a corregir.
             </p>
         </div>
         <!-- END -->
         <div class="container">
             <div class="row justify-content-center align-items-center">
-                
+
                 <div class="col-xl-2 col-lg-6 mb-2">
                     {% if documentos.tituloeducacion %}
-                    <div class="card-deck" id="btnINT">
+                    <div class="card-deck mt-3" id="btnINT">
                         <div class="card shadow p-2" id="cardT">
                             <h2 class="h6 font-weight-bold text-center mb-3">Tít. de Educ Media <span
-                                class="bi bi-box-arrow-up-right" data-bs-toggle="popover" data-bs-container="body"
-                                data-bs-content="<a type='button' href='#modalArchivo' class='btn btn-primary' data-bs-toggle='modal'>Visualizar Archivo</a>" data-bs-trigger="hover focus"></span></h2>
+                                    class="bi bi-box-arrow-up-right linkTitulo"></h2>
                             <input type="hidden" id="tituloTF" value="{{ documentos.tituloeducacion }}">
                             <div
                                 class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
@@ -63,11 +68,9 @@
                     </div>
                     {% else%}
                     <div class="card-deck" id="btnINT" data-bs-toggle="modal" data-bs-target="#exampleModal">
-
                         <div class="card shadow p-2" id="cardT">
                             <h2 class="h6 font-weight-bold text-center mb-3">Tít. de Educ Media <span
-                                    class="bi bi-box-arrow-up-right" data-bs-toggle="popover" data-bs-container="body"
-                                    data-bs-content="<a type='button' href='#modalArchivo' class='btn btn-primary' data-bs-toggle='modal'>Visualizar Archivo</a>" data-bs-trigger="hover focus"></span></h2>
+                                    class="bi bi-box-arrow-up-right linkTitulo"></h2>
                             <input type="hidden" id="tituloTF" value="{{ documentos.tituloeducacion }}">
                             <div
                                 class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
@@ -89,7 +92,8 @@
                     {% if documentos.identificacion %}
                     <div class="card-deck" id="btnINI">
                         <div class="card shadow p-2" id="cardI">
-                            <h2 class="h6 font-weight-bold text-center mb-3">Identificación</h2>
+                            <h2 class="h6 font-weight-bold text-center mb-3">Identificación <span
+                                    class="bi bi-box-arrow-up-right linkIdentificacion"></h2>
                             <input type="hidden" id="identificacionTF" value="{{ documentos.identificacion }}">
                             <div
                                 class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
@@ -109,7 +113,8 @@
                     <div class="card-deck" id="btnINI" data-bs-toggle="modal" data-bs-target="#exampleModal">
 
                         <div class="card shadow p-2" id="cardI">
-                            <h2 class="h6 font-weight-bold text-center mb-3">Identificación</h2>
+                            <h2 class="h6 font-weight-bold text-center mb-3">Identificación <span
+                                    class="bi bi-box-arrow-up-right linkIdentificacion"></h2>
                             <input type="hidden" id="identificacionTF" value="{{ documentos.identificacion }}">
                             <div
                                 class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
@@ -132,7 +137,8 @@
                     {% if documentos.foto %}
                     <div class="card-deck" id="btnINF">
                         <div class="card shadow p-2" id="cardF">
-                            <h2 class="h6 font-weight-bold text-center mb-3">Foto Tipo Pasaporte</h2>
+                            <h2 class="h6 font-weight-bold text-center mb-3">Foto Pasaporte <span
+                                    class="bi bi-box-arrow-up-right linkFoto"></span></h2>
                             <input type="hidden" id="fotoTF" value="{{ documentos.foto }}">
                             <div
                                 class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
@@ -152,7 +158,8 @@
                     <div class="card-deck" id="btnINF" data-bs-toggle="modal" data-bs-target="#exampleModal">
 
                         <div class="card shadow p-2" id="cardF">
-                            <h2 class="h6 font-weight-bold text-center mb-3">Foto Tipo Pasaporte</h2>
+                            <h2 class="h6 font-weight-bold text-center mb-3">Foto Pasaporte <span
+                                    class="bi bi-box-arrow-up-right linkFoto"></h2>
                             <input type="hidden" id="fotoTF" value="{{ documentos.foto }}">
                             <div
                                 class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
@@ -175,7 +182,8 @@
                     {% if documentos.notas %}
                     <div class="card-deck" id="btnINN">
                         <div class="card shadow p-2" id="cardN">
-                            <h2 class="h6 font-weight-bold text-center mb-3">Cert. de Notas</h2>
+                            <h2 class="h6 font-weight-bold text-center mb-3">Cert. de Notas <span
+                                    class="bi bi-box-arrow-up-right linkNota"></h2>
                             <input type="hidden" id="notaTF" value="{{ documentos.notas }}">
                             <div
                                 class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
@@ -194,7 +202,8 @@
                     {% else%}
                     <div class="card-deck" id="btnINN" data-bs-toggle="modal" data-bs-target="#exampleModal">
                         <div class="card shadow p-2" id="cardN">
-                            <h2 class="h6 font-weight-bold text-center mb-3">Cert. de Notas</h2>
+                            <h2 class="h6 font-weight-bold text-center mb-3">Cert. de Notas <span
+                                    class="bi bi-box-arrow-up-right linkNota"></h2>
                             <input type="hidden" id="notaTF" value="{{ documentos.notas }}">
                             <div
                                 class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
@@ -217,7 +226,8 @@
                     {% if documentos.plan %}
                     <div class="card-deck" id="btnINP">
                         <div class="card shadow p-2" id="cardP">
-                            <h2 class="h6 font-weight-bold text-center mb-3">Plan de Estudio</h2>
+                            <h2 class="h6 font-weight-bold text-center mb-3">Plan de Estudio <span
+                                    class="bi bi-box-arrow-up-right linkPlan"></h2>
                             <input type="hidden" id="planTF" value="{{ documentos.plan }}">
                             <div
                                 class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
@@ -237,7 +247,8 @@
                     <div class="card-deck" id="btnINP" data-bs-toggle="modal" data-bs-target="#exampleModal">
 
                         <div class="card shadow p-2" id="cardP">
-                            <h2 class="h6 font-weight-bold text-center mb-3">Plan de Estudio</h2>
+                            <h2 class="h6 font-weight-bold text-center mb-3">Plan de Estudio <span
+                                    class="bi bi-box-arrow-up-right linkPlan"></h2>
                             <input type="hidden" id="planTF" value="{{ documentos.plan }}">
                             <div
                                 class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
@@ -258,7 +269,7 @@
             </div>
         </div>
     </div>
-    
+
     {% block modal_archivos %}
     <div style="display: none;">
     </div>
@@ -336,12 +347,11 @@
     {% endblock modal_archivos %}
 
     {% block modal_visualizarArchivo %}
-    <div class="modal fade" id="modalArchivo" tabindex="-1" aria-labelledby="modalArchivoTitle"
-        aria-hidden="true">
+    <div class="modal fade" id="modalArchivoTitulo" tabindex="-1" aria-labelledby="modalArchivoTituloTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content rounded-0">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalArchivoTitle">
+                    <h5 class="modal-title" id="modalArchivoTituloTitle">
                         Visualizar archivo
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
@@ -349,11 +359,85 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <h1>Hola</h1>
+                    <h1>Titulo</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalArchivoIdentificacion" tabindex="-1" aria-labelledby="modalArchivoIdentificacionTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content rounded-0">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalArchivoIdentificacionTitle">
+                        Visualizar archivo
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><span class="icon-close2"></span></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h1>Identificaion</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalArchivoFoto" tabindex="-1" aria-labelledby="modalArchivoFotoTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content rounded-0">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalArchivoFotoTitle">
+                        Visualizar archivo
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><span class="icon-close2"></span></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h1>Foto</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalArchivoNota" tabindex="-1" aria-labelledby="modalArchivoNotaTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content rounded-0">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalArchivoNotaTitle">
+                        Visualizar archivo
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><span class="icon-close2"></span></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h1>Nota</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalArchivoPlan" tabindex="-1" aria-labelledby="modalArchivoPlanTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content rounded-0">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalArchivoPlanTitle">
+                        Visualizar archivo
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><span class="icon-close2"></span></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h1>Plan</h1>
                 </div>
             </div>
         </div>
     </div>
     {% endblock modal_visualizarArchivo %}
 </div>
+<br>
+<br>
 {% endblock content %}
