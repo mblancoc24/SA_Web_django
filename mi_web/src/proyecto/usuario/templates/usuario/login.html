@@ -61,16 +61,23 @@
                             </div>
                         </div>
                         <div class="d-grid">
-                            <a href="{% url 'password_reset' %}" class="bi bi-pass" style="text-decoration: none;">
-                                Olvido su contraseña</a></span>
+                            <div class="links-container">
+                                <div class="left-link">
+                                  <a href="{% url 'registro_estudiantes' %}" class="bi bi-pass">Registrarse</a>
+                                </div>
+                                <div class="right-link">
+                                  <a href="{% url 'password_reset' %}" class="bi bi-pass" style="text-decoration: none;">Olvido su contraseña</a>
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </main>
                 <hr class="my-4">
                 <div class="d-flex text-center justify-content-center">
                     <div class="d-inline-block m-1">
-                        <a href="{% url 'registro_estudiantes' %}"
-                            class="btn btn-primary btn-sm rounded fw-bold bi bi-person-plus-fill"> Registrarse</a>
+                        <a class="btn btn-light microsoft" href="{% url 'microsoft_auth' %}">
+                            <img src="../static/img/microsoft_365.png" alt="Microsoft Logo">
+                        </a>
                     </div>
                 </div>
             </div>
@@ -114,4 +121,34 @@
     return new bootstrap.Popover(popoverTriggerEl)
     })
 </script>
+
+<style>
+    a.btn img {
+        width: 155px;
+        height: 21px;
+    }
+    .microsoft {
+        border-radius: 5px;
+        box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.4);
+        max-width: 155px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: auto;
+    }
+
+    .links-container {
+        display: flex;
+        justify-content: space-between;
+    }
+      
+    .left-link {
+        margin-right: auto;
+    }
+      
+    .right-link {
+        margin-left: auto;
+    }
+</style>
+
 {% endblock content %}

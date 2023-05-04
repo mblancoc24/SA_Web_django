@@ -117,8 +117,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 cambiarestado('identificacion');
             }
 
-            btnCEF.onclick = function () {
-                documentocargado.innerText = "foto";
+            btnCEF.onclick = function (){
+                documentocargado.value = "foto";
                 cambiarestado('foto');
             }
 
@@ -152,6 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
         var spinner3 = document.getElementById("spinner3");
         var spinner4 = document.getElementById("spinner4");
         var spinner5 = document.getElementById("spinner5");
+        
         var cardT = document.getElementById("cardT");
         var cardI = document.getElementById("cardI");
         var cardF = document.getElementById("cardF");
