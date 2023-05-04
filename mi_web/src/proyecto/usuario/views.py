@@ -747,9 +747,99 @@ def corregirdata(request):
         form.save()
         return redirect(request.META.get('HTTP_REFERER'))
     
-class HorarioEstudianteView(LoginRequiredMixin, View):
-    login_url = ''  # Ruta de inicio de sesión
-    redirect_field_name = 'login'  # Nombre del campo de redirección
+class HorarioEstudianteView(LoginRequiredMixin):
+    context_object_name = 'horarioEstudiante'
+    template_name = 'Dashboard/Estudiante/horarioEstudiante.html'
 
-    def get(self, request, id, status):
-        return render(request, 'Dashboard/Estudiante/horarioEstudiante.html', {'id': id, 'status': status})
+    def horario_view(request, id, status):
+        user = request.user
+        user_id = user.pk
+        fotoperfil_obj = fotoperfil.objects.get(user=user_id)
+        imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
+        url = 'https://mocki.io/v1/3c90bcb7-ee79-4d40-9944-cea729cac4ea'
+        response = requests.get(url)
+        data = json.loads(response.text)
+        auxHora = {}
+        for curso in data:
+            for horario in curso['horarios']:
+                if 'horario' in horario:
+                    aux = horario['horario']['horaInicio']
+                    dia = horario['horario']['dia']
+                    hora = horario['horario']['horaInicio'] + ':' + horario['horario']['minutosInicio'] + \
+                        ' - ' + horario['horario']['horaFin'] + \
+                        ':' + horario['horario']['minutoFin']
+                    if aux in auxHora:
+                        auxHora[aux]['horario'][dia] = hora
+                    else:
+                        auxHora[aux] = {'curso': curso['curso'],
+                            'horario': {dia: hora}}
+                                      
+            if 'horarioL' in horario:
+                aux = horario['horarioL']['horaInicio']
+                dia = horario['horarioL']['dia']
+                hora = horario['horarioL']['horaInicio'] + ':' + horario['horarioL']['minutosInicio'] + \
+                    ' - ' + horario['horarioL']['horaFin'] + \
+                    ':' + horario['horarioL']['minutoFin']
+                if aux in auxHora:
+                    auxHora[aux]['horario'][dia] = hora
+                else:
+                    auxHora[aux] = {'curso': curso['curso'],
+                        'horario': {dia: hora}}
+            if 'horarioR' in horario:
+                aux = horario['horarioR']['horaInicio']
+                dia = horario['horarioR']['dia']
+                hora = horario['horarioR']['horaInicio'] + ':' + horario['horarioR']['minutosInicio'] + \
+                    ' - ' + horario['horarioR']['horaFin'] + \
+                    ':' + horario['horarioR']['minutoFin']
+                if aux in auxHora:
+                    auxHora[aux]['horario'][dia] = hora
+                else:
+                    auxHora[aux] = {'curso': curso['curso'],
+                        'horario': {dia: hora}}
+        dias = ['L', 'K', 'M', 'J', 'V', 'S']
+        context = {
+            'user': user,
+            'fotoperfil': imagen_url,
+            'status': status,
+            'id': id,
+            'horarios': sorted(auxHora.items()),
+            'dias': dias
+        }
+        return render(request, 'Dashboard/Estudiante/horarioEstudiante.html', context)
+
+class PlanDeEstudioView(LoginRequiredMixin, View):
+    context_object_name = 'planEstudio'
+    template_name = 'Dashboard/Estudiante/planEstudio.html'
+    
+    def get_context_data(self, **kwargs):
+        user = self.request.user
+        user_id = user.pk
+        fotoperfil_obj = fotoperfil.objects.get(user=user_id)
+        imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
+        url = 'https://mocki.io/v1/e341f4ab-b010-4407-b991-3879d591cc05'
+        response = requests.get(url)
+        data = json.loads(response.text)
+        context = {
+            'user': user,
+            'fotoperfil': imagen_url,
+            'status': self.kwargs['status'],
+            'id': self.kwargs['id'],
+            'carrera': data
+        }
+        return context
+    
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        return render(request, self.template_name, context)
+
+
+class OtraClaseView(LoginRequiredMixin):
+    context_object_name = 'planEstudioCarrera'
+    template_name = 'Dashboard/Estudiante/planEstudio.html'
+    
+    def getPlan(request, id, status):
+        carrera = request.GET.get("carrera")
+        url = 'https://mocki.io/v1/541503ef-55d2-4da9-b987-218686960cf7'
+        response = requests.get(url)
+        data = response.json()
+        return JsonResponse(data, safe=False)

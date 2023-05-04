@@ -27,6 +27,8 @@ from .views import (
                     DashboardEstudianteView,
                     DashboardProfesorView,
                     HorarioEstudianteView,
+                    PlanDeEstudioView,
+                    OtraClaseView
                     )
 from django.contrib.auth.views import LogoutView
 from django.contrib.auth import views as auth_views
@@ -102,7 +104,9 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
                
                path("prospecto/<int:id>/<int:status>/revision-form/", revision_formulario, name="revision_form"),
                path("corregir-data/", corregirdata, name="corregir_data"),
-               path("prospecto/<int:id>/<int:status>/horario/", HorarioEstudianteView.as_view(), name='horarioEstudiante')
+               path("prospecto/<int:id>/<int:status>/horario/", HorarioEstudianteView.horario_view, name='horarioEstudiante'),
+               path("prospecto/<int:id>/<int:status>/plan/", PlanDeEstudioView.as_view(), name='planEstudio'),
+               path("prospecto/<int:id>/<int:status>/plan/carrera/", OtraClaseView.getPlan, name='planEstudioCarrera')
                ]
 
 
