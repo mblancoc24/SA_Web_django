@@ -72,10 +72,6 @@ function datacedula() {
     }
 }
 
-const loadingIndicator = document.getElementById('loading-indicator');
-loadingIndicator.classList.remove('hidden'); // Mostrar el indicador
-// Realizar la acción
-loadingIndicator.classList.add('hidden'); // Ocultar el indicador
 function datacarreras() {
     var select = document.getElementById("mi_select");
     select.options.length = 0; // Eliminamos todas las opciones anteriores

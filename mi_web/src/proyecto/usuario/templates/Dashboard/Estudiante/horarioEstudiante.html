@@ -1,0 +1,86 @@
+{% extends 'Dashboard/dashboard.html' %}
+{% load static %}
+{% block style_sheets %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+<script src="{% static 'js/horarioEstudiante.js' %}"></script>
+{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <div class="row d-flex justify-content-center mt-3 p-3">
+        <div class="col-md-12 col-sm-12 mb-5">
+            <div class="table-responsive-sm p-3">
+                <table class="table table-bordered text-center">
+                    <thead>
+                        <tr class="bg-light-gray">
+                            <th></th>
+                            <th>Lunes(L)</th>
+                            <th>Martes(K)</th>
+                            <th>Miércoles(M)</th>
+                            <th>Jueves(J)</th>
+                            <th>Viernes(V)</th>
+                            <th>Sábado(S)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bodyHorarioEstudiante">
+                        {% for hora, data in horarios %}
+                        <tr>
+                            <td>{{ hora }}:00</td>
+                            {% for dia in dias %}
+                            <td>
+                                {% for dia_hora, horario in data.horario.items %}
+                                {% if dia == dia_hora %}
+                                <span class="curso">{{ data.curso }}</span>
+                                <div>{{ horario }}
+                                {% with masInfo=data.curso %}
+                                
+                                {% endwith%}
+                                </div>
+                                {% endif %}
+                                {% endfor %}
+                                {% if dia not in data.horario %}
+                                <div>-</div>
+                                {% endif %}
+                            </td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<br>
+{% block modal_horario %}
+<div class="modal fade horario" tabindex="-1" aria-labelledby="modal_horarioTitle" style="display: none"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content rounded-4">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal_horarioTitle">
+                    Horario Curso
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><span class="icon-close2"></span></span>
+                </button>
+            </div>
+            <div class="modal-body ">
+                {{ masInfo }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock modal_horario %}
+
+{% endblock content %}
+
+ <!-- {% for hora, data in horarios %}
+                        {% for dia in dias %}
+                            {% for dia_hora, horario in data.horario.items %}
+                                {% if dia == dia_hora %}
+                                <span class="curso">{{ data.curso }} <br> horario: {{ horario }}</span>
+                                {% endif %}
+                            {% endfor %}
+                        {% endfor %}
+                    {% endfor %} -->
