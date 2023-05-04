@@ -22,6 +22,7 @@ from .dspace_processes import dspace_processes
 from .save_processes import save_profile_processes
 from .api_queries import enviar_data_odoo
 from django.core.cache import cache
+import json
 
 class Logueo(LoginView):
     template_name = 'usuario/login.html'
@@ -588,11 +589,6 @@ def enviar_archivo_a_odoo(request, id, status):
             if save and save_odoo:
                 context = {'id': id, 'status': status, 'data': save_data_dspace}
                 return revision_formulario (request, id, status)
-            
-        
-            
-        
-
     
 class HorarioEstudianteView(LoginRequiredMixin):
     context_object_name = 'horarioEstudiante'
