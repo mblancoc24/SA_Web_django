@@ -1,9 +1,8 @@
-# backends.py
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.backends import BaseBackend
 from django.contrib.auth.models import User
 import requests
-from .models import profesor, estudiantes, RegistroLogsUser, documentos, carreras, colegios, posgrados, fotoperfil, estados, etapas, primerIngreso, prospecto
+from .models import profesor, estudiantes, RegistroLogsUser, documentos, carreras, colegios, posgrados, fotoperfil, estados, primerIngreso, prospecto
 
 class MicrosoftGraphBackend(BaseBackend):
     
@@ -33,8 +32,6 @@ class MicrosoftGraphBackend(BaseBackend):
                 if user is not None:
                     user.backend = 'django.contrib.auth.backends.ModelBackend'
                     return user
-                else:
-                    pass
             except User.DoesNotExist:
                 # Si el usuario no existe, crear uno nuevo
                 user_data = response.json()
@@ -52,6 +49,13 @@ class MicrosoftGraphBackend(BaseBackend):
                         user.backend = 'django.contrib.auth.backends.ModelBackend'
                         return user
                 elif tipo_user == 'Profesores':
+                    profesor_usuario = get_object_or_404(profesor, correo_institucional=email)
+                    user = User.objects.create_user(username=profesor_usuario.identificacion, email=email, first_name=name, last_name=lastname)
+                    if user is not None:
+                        # Guarda el nombre completo del usuario en el perfil de usuario
+                        user.backend = 'django.contrib.auth.backends.ModelBackend'
+                        return user
+                elif tipo_user == 'Profesores y Estudiante':
                     profesor_usuario = get_object_or_404(profesor, correo_institucional=email)
                     user = User.objects.create_user(username=profesor_usuario.identificacion, email=email, first_name=name, last_name=lastname)
                     if user is not None:
@@ -101,6 +105,7 @@ class MicrosoftGraphBackend(BaseBackend):
                     'first_name': usuario.first_name,
                     'last_name': usuario.last_name
                 }
+                
         if usuario1 is not None and usuario2 is not None:
             
             try:
@@ -109,22 +114,12 @@ class MicrosoftGraphBackend(BaseBackend):
                     type1 = 'prospecto/profesor'
             except:
                 try:
-                    estudiante_user1 = get_object_or_404(estudiantes, correo_institucional=usuario1["email"])
-                    if estudiante_user1 is not None:
-                        type1 = 'estudiante/profesor'
-                except:
-                    try:
-                        prospecto_user2 = get_object_or_404(prospecto, correo_personal=usuario1["email"])
-                        if prospecto_user2 is not None:
-                            type1 = 'prospecto/profesor'
+                    prospecto_user2 = get_object_or_404(prospecto, correo_personal=usuario2["email"])
+                    if prospecto_user2 is not None:
+                        type1 = 'prospecto/profesor'
                         
-                    except:
-                        try:
-                            estudiante_user2 = get_object_or_404(estudiantes, correo_institucional=usuario1["email"])
-                            if estudiante_user2 is not None:
-                                type1 = 'estudiante/profesor'
-                        except:
-                            type1 = 'no existe'
+                except:
+                    type1 = 'no existe'
                 
         elif usuario1 is not None:
             try:
@@ -141,6 +136,13 @@ class MicrosoftGraphBackend(BaseBackend):
                         profesores_user1 = get_object_or_404(profesor, correo_institucional=usuario1["email"])
                         if profesores_user1 is not None:
                             type1 = 'profesor'
+                        
+                        try:
+                            estudiante_user1 = get_object_or_404(estudiantes, correo_institucional=usuario1["email"])
+                            if estudiante_user1 is not None:
+                                type1 = 'estudiante/profesor'
+                        except:
+                            pass
                     except:
                         type1 = 'no existe'
                     
@@ -148,7 +150,7 @@ class MicrosoftGraphBackend(BaseBackend):
         
     def get_user_data(request, usertype):
         user = request.user
-        user = User.objects.filter(username=user.username)
+        user = User.objects.get(username=user.username)
         
         if usertype == 'estudiante/profesor':
             data = get_object_or_404(profesor, identificacion=user.username) 

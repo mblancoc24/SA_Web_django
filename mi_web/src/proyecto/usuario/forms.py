@@ -38,7 +38,7 @@ class FormularioInfoEstudiante(forms.ModelForm):
 class FormularioPrimerIngreso(forms.ModelForm):
     class Meta:
         model = primerIngreso
-        fields = ('etapa','estado', 'convalidacion', 'usuario', 'comentario')
+        fields = ('estado', 'convalidacion', 'comentario', 'usuario')
         
 class FormularioDocumentos(forms.ModelForm):
     class Meta:

@@ -83,9 +83,10 @@ class dspace_processes():
             "type": "item"
         }
         response = session.post(upload_url, data=json.dumps(metadata), headers=headers)
-        if response.status_code == 200:
+        if response.status_code == 201:
             print('Archivo enviado con éxito')
-            item_id = 'b3994898-55fd-4a3b-8c51-8e22a8ec847d'
+            response_json = response.json()
+            item_id = response_json['id']
         else:
             print('Error al enviar el archivo')
         
@@ -102,9 +103,10 @@ class dspace_processes():
         }
         upload_url = "http://dspace.uia.ac.cr:8080/server/api/core/items/"+item_id+"/bundles"
         response = session.post(upload_url, headers=headers, data=json.dumps(bundle))
-        if response.status_code == 200:
+        if response.status_code == 201:
             print('Archivo enviado con éxito')
-            bundle_id = ''
+            response_json = response.json()
+            bundle_id = response_json['uuid']
         else:
             print('Error al enviar el archivo')
             
@@ -114,20 +116,25 @@ class dspace_processes():
             "Authorization": token,           
             "X-XSRF-TOKEN": csrf_token_login,
         }
-        item_id = "b3994898-55fd-4a3b-8c51-8e22a8ec847d"
-        bundle_id = "79774be9-f1b8-47cc-994f-497f9b572990"
+        
+        urls_dspace = []
         
         for dt in files:
             record = files[dt]
-        
+            file_processed = record['archivo']
             data = {
                 f'properties': '{ "name": "'+record['nombre']+'", "metadata": { "dc.description": [ { "value": "'+record['descripcion']+'", "language": null, "authority": null, "confidence": -1, "place": 0 }]}, "bundleName": "PRIMER_INGRESO" }'
             }
+            
+            data_file = {'file':(record['nombre'], file_processed, record['tipo'])}
     
             upload_url = "http://dspace.uia.ac.cr:8080/server/api/core/bundles/"+bundle_id+"/bitstreams"
-            response = session.post(upload_url, headers=headers, data=data, files=files)
+            response = session.post(upload_url, headers=headers, data=data, files=data_file)
             if response.status_code == 201:
                 print('Archivo enviado con éxito')
+                response_json = response.json()
+                bitstreams_id = response_json['id']
+                urls_dspace.append('http://dspace.uia.ac.cr:4000/bitstreams/'+bitstreams_id+'/download')
             else:
                 print('Error al enviar el archivo')
         
@@ -138,69 +145,111 @@ class dspace_processes():
 
         if response.status_code == 204:
             print('Sesión cerrada exitosamente')
+            if len(urls_dspace) == 3:
+                urls_dspace.append('N/A')
+                urls_dspace.append('N/A')
+                return urls_dspace
+            else:
+                return urls_dspace
         else:
             print('Error al cerrar la sesión')
             
     def name_standardization(request, files):
-        
-        fs = FileSystemStorage()
         user = request.user
         
-        foto = files["foto"]
-        titulo = files["titulo"]
-        identificacion = files["identificacion"]
-        certificacion = files["focertificacionto"]
-        plan = files["plan"]
-        
-        foto_type = foto.name
-        titulo_type = titulo.name
-        identificacion_type = identificacion.name
-        certificacion_type = certificacion.name
-        plan_type = plan.name
-        
-        foto_termination = foto_type.split(".")
-        titulo_termination = titulo_type.split(".")
-        identificacion_termination = identificacion_type.split(".")
-        certificacion_termination = certificacion_type.split(".")
-        plan_termination = plan_type.split(".")
-        
-        new_foto = 'fotoperfil_'+ user.username +'.'+ foto_termination[1]
-        new_titulo = 'tituloeducacion_'+ user.username +'.'+ titulo_termination[1]
-        new_identificacion = 'identificacion_'+ user.username +'.'+ identificacion_termination[1]
-        new_certificacion = 'record_academico_'+ user.username +'.'+ certificacion_termination[1]
-        new_plan = 'plan_estudio_'+ user.username +'.'+ plan_termination[1]
-        
-        files_updated = {
-            'foto': {
-                'nombre': new_foto,
-                'archivo': fs.save(new_foto, foto),
-                'descripcion': 'Foto de perfil tipo pasaporte',
-                'tipo': foto.content_type
-            },
-            'titulo': {
-                'nombre': new_titulo,
-                'archivo': fs.save(new_titulo, titulo),
-                'descripcion': 'Título de Educación Media',
-                'tipo': titulo.content_type
-            },
-            'identificacion': {
-                'nombre': new_identificacion,
-                'archivo': fs.save(new_identificacion, identificacion),
-                'descripcion': 'Identificación',
-                'tipo': identificacion.content_type
-            },
-            'certificacion': {
-                'nombre': new_certificacion,
-                'archivo': fs.save(new_certificacion, certificacion),
-                'descripcion': 'Record Academico o certificado de Notas del Curso',
-                'tipo': certificacion.content_type
-            },
-            'plan': {
-                'nombre': new_plan,
-                'archivo': fs.save(new_plan, plan),
-                'descripcion': 'Plan de Estudio - Contenido del Curso',
-                'tipo': plan.content_type
+        if files['convalidacion'] == 1:
+            foto = files["foto"]
+            titulo = files["titulo"]
+            identificacion = files["identificacion"]
+            certificacion = files["certificacion"]
+            plan = files["plan"]
+            
+            foto_type = foto.name
+            titulo_type = titulo.name
+            identificacion_type = identificacion.name
+            certificacion_type = certificacion.name
+            plan_type = plan.name
+            
+            foto_termination = foto_type.split(".")
+            titulo_termination = titulo_type.split(".")
+            identificacion_termination = identificacion_type.split(".")
+            certificacion_termination = certificacion_type.split(".")
+            plan_termination = plan_type.split(".")
+            
+            new_foto = 'fotoperfil_'+ user.username +'.'+ foto_termination[1]
+            new_titulo = 'tituloeducacion_'+ user.username +'.'+ titulo_termination[1]
+            new_identificacion = 'identificacion_'+ user.username +'.'+ identificacion_termination[1]
+            new_certificacion = 'record_academico_'+ user.username +'.'+ certificacion_termination[1]
+            new_plan = 'plan_estudio_'+ user.username +'.'+ plan_termination[1]
+            
+            files_updated = {
+                'titulo': {
+                    'nombre': new_titulo,
+                    'archivo': titulo,
+                    'descripcion': 'Título de Educación Media',
+                    'tipo': titulo.content_type
+                },
+                'identificacion': {
+                    'nombre': new_identificacion,
+                    'archivo': identificacion,
+                    'descripcion': 'Identificación',
+                    'tipo': identificacion.content_type
+                },
+                'certificacion': {
+                    'nombre': new_certificacion,
+                    'archivo': certificacion,
+                    'descripcion': 'Record Academico o certificado de Notas del Curso',
+                    'tipo': certificacion.content_type
+                },
+                'plan': {
+                    'nombre': new_plan,
+                    'archivo': plan,
+                    'descripcion': 'Plan de Estudio - Contenido del Curso',
+                    'tipo': plan.content_type
+                },
+                'foto': {
+                    'nombre': new_foto,
+                    'archivo': foto,
+                    'descripcion': 'Foto de perfil tipo pasaporte',
+                    'tipo': foto.content_type
+                }
             }
-        }
+        else:
+            foto = files["foto"]
+            titulo = files["titulo"]
+            identificacion = files["identificacion"]
+            
+            foto_type = foto.name
+            titulo_type = titulo.name
+            identificacion_type = identificacion.name
+            
+            foto_termination = foto_type.split(".")
+            titulo_termination = titulo_type.split(".")
+            identificacion_termination = identificacion_type.split(".")
+            
+            new_foto = 'fotoperfil_'+ user.username +'.'+ foto_termination[1]
+            new_titulo = 'tituloeducacion_'+ user.username +'.'+ titulo_termination[1]
+            new_identificacion = 'identificacion_'+ user.username +'.'+ identificacion_termination[1]
+            
+            files_updated = {
+                'titulo': {
+                    'nombre': new_titulo,
+                    'archivo': titulo,
+                    'descripcion': 'Título de Educación Media',
+                    'tipo': titulo.content_type
+                },
+                'identificacion': {
+                    'nombre': new_identificacion,
+                    'archivo': identificacion,
+                    'descripcion': 'Identificación',
+                    'tipo': identificacion.content_type
+                },
+                'foto': {
+                    'nombre': new_foto,
+                    'archivo': foto,
+                    'descripcion': 'Foto de perfil tipo pasaporte',
+                    'tipo': foto.content_type
+                }
+            }
         
         return files_updated
