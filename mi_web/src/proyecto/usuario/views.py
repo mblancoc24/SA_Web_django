@@ -21,6 +21,7 @@ from .backends import MicrosoftGraphBackend
 from .dspace_processes import dspace_processes
 from .save_processes import save_profile_processes
 from django.core.cache import cache
+import json
 
 class Logueo(LoginView):
     template_name = 'usuario/login.html'
@@ -573,11 +574,6 @@ def enviar_archivo_a_odoo(request, id, status):
 
         if save:
             context = {'id': id, 'status': status}
-            
-        
-            
-        
-
     
 class HorarioEstudianteView(LoginRequiredMixin):
     context_object_name = 'horarioEstudiante'
