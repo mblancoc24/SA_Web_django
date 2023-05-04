@@ -32,7 +32,10 @@ from .views import (
                     microsoft_callback,
                     DashboardEstudianteView,
                     DashboardProfesorView,
+
                     MicrosoftLogoutView,
+
+
                     HorarioEstudianteView,
                     PlanDeEstudioView,
                     OtraClaseView

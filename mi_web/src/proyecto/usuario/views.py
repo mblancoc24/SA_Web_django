@@ -690,4 +690,3 @@ class OtraClaseView(LoginRequiredMixin):
         response = requests.get(url)
         data = response.json()
         return JsonResponse(data, safe=False)
-
