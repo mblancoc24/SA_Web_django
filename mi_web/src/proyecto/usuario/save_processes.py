@@ -1,7 +1,7 @@
 from .forms import FormularioEstudiantes, FormularioDocumentos, FormularioPrimerIngreso, FormularioProfesor, FormularioProspecto, FormularioInfoEstudiante, CustomUserCreationForm
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
-from .models import profesor, estudiantes, RegistroLogsUser, documentos, carreras, colegios, posgrados, fotoperfil, estados, etapas, primerIngreso, prospecto
+from .models import profesor, estudiantes, RegistroLogsUser, documentos, carreras, colegios, posgrados, fotoperfil, estados, primerIngreso, prospecto
 
 class save_profile_processes():
     
@@ -69,8 +69,8 @@ class save_profile_processes():
             return False
     
     def save_documents(request, data1, data2):
-        form = FormularioPrimerIngreso({ 'etapa': data1[0], 'estado': data1[1], 
-                    'convalidacion': data1[2],'usuario': data1[3],'comentario': data1[4]})
+        form = FormularioPrimerIngreso({'estado': data1[0], 
+                    'convalidacion': data1[1],'comentario': data1[2],'usuario': data1[3]})
         
         if form.is_valid():
             form.save()
@@ -85,33 +85,81 @@ class save_profile_processes():
         else:
             return False
     
-    def update_documents(request, data1, data2):
-        user = request.user
+    def update_documents(data1, data2):
+        user = User.objects.get(username=data1[2])
+        
         statusgeneral = get_object_or_404(primerIngreso, usuario=user.pk)
         docs = get_object_or_404(documentos, usuario=user.pk)
         
-        form = FormularioPrimerIngreso({'etapa': data1[0], 'estado': data1[1], 'convalidacion': data1[2],
-                'usuario': data1[3], 'comentario': data1[4]}, instance=statusgeneral)
+        form = FormularioPrimerIngreso({'estado': data1[0], 
+                    'convalidacion': statusgeneral.convalidacion,'comentario': data1[1],'usuario': user.pk}, instance=statusgeneral)
         
         if form.is_valid():
             form.save()
             
-        form = FormularioDocumentos({'usuario': data2[0], 'tituloeducacion': data2[1],
-                                 'titulouniversitario': data2[2], 'identificacion': data2[3],
-                                 'foto': data2[4], 'notas': data2[5],
-                                 'plan': data2[6]}, instance=docs)
+        form = FormularioDocumentos({'usuario': user.pk, 'tituloeducacion': data2[1],
+                'titulouniversitario': docs.titulouniversitario, 'identificacion': data2[3],
+                'foto': data2[4], 'notas': data2[5],'plan': data2[6]}, instance=docs)
 
         if form.is_valid():
             form.save()
+            return True
+        else:
+            return False
             
-    def save_profile_photo(request, photo):
+    def update_user_prospecto(data):
+        user = User.objects.filter(username=data[0])
+        usuario1 = None
+        usuario2 = None
+
+        for index, usuario in enumerate(user):
+            if index == 0:
+                usuario1 = {
+                    'id': usuario.id,
+                    'username': usuario.username,
+                    'email': usuario.email,
+                    'first_name': usuario.first_name,
+                    'last_name': usuario.last_name
+                }
+            else:
+                usuario2 = {
+                    'id': usuario.id,
+                    'username': usuario.username,
+                    'email': usuario.email,
+                    'first_name': usuario.first_name,
+                    'last_name': usuario.last_name
+                }
+                
+        if usuario1 is not None and usuario2 is not None:
+            try:
+                prospecto_user1 = get_object_or_404(prospecto, correo_personal=usuario1["email"])
+                if prospecto_user1 is not None:
+                    prospecto_user1.delete()
+                    user = User.objects.get(email=usuario1["email"])
+                    user.delete()
+            except:
+                try:
+                    prospecto_user2 = get_object_or_404(prospecto, correo_personal=usuario2["email"])
+                    if prospecto_user2 is not None:
+                        prospecto_user2.delete()
+                        user = User.objects.get(email=usuario2["email"])
+                        user.delete()
+                        
+                except:
+                    return False
+        elif usuario1 is not None:
+            user = User.objects.get(email=usuario1["email"])
+            user.email = data[1]
+            user.save()
+            
+            user_prospecto = prospecto.objects.get(id_prospecto=user.username)
+            user_prospecto.delete()
+            return True
+    
+    def save_photo_perfil(request, photo):
         user = request.user
-
-        img_data = photo.read()
-
-        # Convertir la imagen a bytes
-        img_bytes = bytearray(img_data)
-
-        # Crear el objeto UserFile y guardarlo en la base de datos
-        user_file = fotoperfil(user=user, archivo=img_bytes)
-        user_file.save()
+        fotoperfil_instancia = fotoperfil()
+        fotoperfil_instancia.user = user
+        fotoperfil_instancia.archivo = photo.read()
+        fotoperfil_instancia.save()
+        return True

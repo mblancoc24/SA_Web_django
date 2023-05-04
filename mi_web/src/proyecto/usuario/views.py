@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import profesor, estudiantes, RegistroLogsUser, documentos, carreras, colegios, posgrados, fotoperfil, estados, etapas, primerIngreso, prospecto
+from .models import profesor, estudiantes, RegistroLogsUser, documentos, carreras, colegios, posgrados, fotoperfil, estados, primerIngreso, prospecto
 from .forms import FormularioEstudiantes, FormularioDocumentos, FormularioPrimerIngreso, FormularioProfesor, FormularioProspecto, FormularioInfoEstudiante, CustomUserCreationForm
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, FormView
@@ -20,6 +20,7 @@ from django.urls import reverse
 from .backends import MicrosoftGraphBackend
 from .dspace_processes import dspace_processes
 from .save_processes import save_profile_processes
+from .api_queries import enviar_data_odoo
 from django.core.cache import cache
 import json
 
@@ -212,23 +213,6 @@ class PaginaRegistroEstudiante(FormView):
                 # Agrega el contexto con el valor 'cuenta' para enviarlo junto con la redirección.
                 url = reverse('login') + '?cuenta=True'
                 return redirect(url)
-        
-        if Usuarios is not None:
-
-            user = User.objects.get(username=username)
-            subject = 'Se ha creado su cuenta satisfactoriamente'
-            message = f'Bienvenido al portal academico UIA, su cuenta se ha creado satisfactoriamente con el usuario {user.username}, Saludos cordiales.'
-            email_from = settings.EMAIL_HOST_USER
-            recipient_list = [user.email, ]
-            send_mail(subject, message, email_from, recipient_list)
-            user = get_object_or_404(user, auth_user=user.pk)
-            login(self.request, Usuarios)
-            registrar_accion(user, 'El usuario ' + username +' se ha creado una cuenta como prospecto.')
-            logout(self.request)
-
-            # Agrega el contexto con el valor 'cuenta' para enviarlo junto con la redirección.
-            url = reverse('login') + '?cuenta=True'
-            return redirect(url)
 
     def get(self, *args, **kwargs):
         if self.request.user.is_authenticated:
@@ -465,26 +449,33 @@ def revision_formulario(request, id, status):
     # Obtener el objeto de la base de datos según su ID
     statusgeneral = get_object_or_404(primerIngreso, usuario=user.pk)
 
-    etapa = get_object_or_404(etapas, id_etapa=statusgeneral.etapa_id)
-
     estado = get_object_or_404(estados, id_estado=statusgeneral.estado_id)
 
     docs = get_object_or_404(documentos, usuario=user.pk)
 
-    fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
-    imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
+    try:
+        fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
+        imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
 
-    # Enviar el objeto y otros datos necesarios a la plantilla HTML
-    contexto = {
-        "fotoperfil": imagen_url,
-        "comentario": statusgeneral.comentario,
-        "etapa": etapa.etapa_nombre,
-        "estado": estado.estado_nombre,
-        "convalidacion": statusgeneral.convalidacion,
-        "documentos": docs,
-        "id": id,
-        "status": status,
-    }
+        # Enviar el objeto y otros datos necesarios a la plantilla HTML
+        contexto = {
+            "fotoperfil": imagen_url,
+            "comentario": statusgeneral.comentario,
+            "estado": estado.estado_nombre,
+            "convalidacion": statusgeneral.convalidacion,
+            "documentos": docs,
+            "id": id,
+            "status": status,
+        }
+    except fotoperfil.DoesNotExist:
+        contexto = {
+            "comentario": statusgeneral.comentario,
+            "estado": estado.estado_nombre,
+            "convalidacion": statusgeneral.convalidacion,
+            "documentos": docs,
+            "id": id,
+            "status": status,
+        }
     return render(request, "Dashboard/Prospecto/revision_form.html", contexto)
 
 def corregirdata(request):
@@ -552,28 +543,52 @@ def corregirdata(request):
 def enviar_archivo_a_odoo(request, id, status):
     if request.method == 'POST':
         user = request.user
-        files = {
-            'foto': request.FILES.get('fotoperfil'),
-            'titulo':request.FILES.get('titulobachillerto'),
-            'identificacion': request.FILES.get('cedulafotografia'),
-            'certificacion': request.FILES.get('certificacionnotas'),
-            'plan': request.FILES.get('planestudio')
-        }
         
+        convalidacion = request.POST.get('convalidacion')
+        asesor = request.POST.get('asesor')
+        if convalidacion == '':
+            files = {
+                'convalidacion': 1,
+                'foto': request.FILES.get('fotoperfil'),
+                'titulo':request.FILES.get('titulobachillerto'),
+                'identificacion': request.FILES.get('cedulafotografia'),
+                'certificacion': request.FILES.get('certificacionnotas'),
+                'plan': request.FILES.get('planestudio')
+            }
+        else:
+            files = {
+                'convalidacion': 0,
+                'foto': request.FILES.get('fotoperfil'),
+                'titulo':request.FILES.get('titulobachillerto'),
+                'identificacion': request.FILES.get('cedulafotografia')
+            }
+            
         files_updated = dspace_processes.name_standardization(request, files)
         
         save_data_dspace = dspace_processes.dspace_first_admission(request, files_updated)
         
-        save_photo = save_profile_processes.save_profile_photo(request, request.FILES.get('fotoperfil'))
-        
-        
-        formulariodata = [1, 1, False, user.pk,'Formulario Enviado Satisfactoriamente']
-        formulariodocumentos = [user.pk, True, False, True, True, True, True]
-        
-        save = save_profile_processes.save_documents(request, formulariodata, formulariodocumentos)
+        if save_data_dspace is not None:
+            if convalidacion == '':
+                formulariodata = [1, True,'Formulario Enviado Satisfactoriamente', user.pk]
+                formulariodocumentos = [user.pk, False, False, True, True, True, True]
+            else:
+                formulariodata = [1, False,'Formulario Enviado Satisfactoriamente', user.pk]
+                formulariodocumentos = [user.pk, True, False, True, True, False, False]
+                
+            save_data_dspace.append(request.POST.get('colegio_select'))
+            save_data_dspace.append(request.POST.get('mi_select'))
+            if asesor == '':
+                save_data_dspace.append(request.POST.get('asesor_select'))
+            else:
+                save_data_dspace.append('N/A')
+            
+            save_odoo = enviar_data_odoo(request, save_data_dspace)
+            
+            save = save_profile_processes.save_documents(request, formulariodata, formulariodocumentos)
 
-        if save:
-            context = {'id': id, 'status': status}
+            if save and save_odoo:
+                context = {'id': id, 'status': status, 'data': save_data_dspace}
+                return revision_formulario (request, id, status)
     
 class HorarioEstudianteView(LoginRequiredMixin):
     context_object_name = 'horarioEstudiante'

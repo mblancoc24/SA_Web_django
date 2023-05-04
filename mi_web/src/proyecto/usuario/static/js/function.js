@@ -2,19 +2,6 @@ function datacedula() {
     var input = document.getElementById("identificacion");
     var input2 = document.getElementById("tipo").value;
 
-    var nacimiento = document.getElementById("dis_nacimiento");
-    var genero = document.getElementById("dis_genero");
-    var telefono = document.getElementById("dis_telefono");
-    var telefono2 = document.getElementById("dis_telefono2");
-    var nacionalidad = document.getElementById("dis_pais");
-    var provincia = document.getElementById("dis_provincia");
-    var canton = document.getElementById("dis_canton");
-    var distrito = document.getElementById("dis_distrito");
-    var cuenta_profesor = document.getElementById("cuenta_profesor");
-    var cuenta_estudiante = document.getElementById("cuenta_estudiante");
-    var cuenta_estudianteprofesor = document.getElementById("cuenta_estudianteprofesor");
-    var es_profesor = document.getElementById("es_profesor");
-
     if (input.value.length >= 10 && input.value.length <= 12 && input2 === "Dimex" || "Cédula Residente" || "Refugiado") {
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
