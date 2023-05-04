@@ -596,9 +596,6 @@ class HorarioEstudianteView(LoginRequiredMixin):
 
     def horario_view(request, id, status):
         user = request.user
-        user_id = user.pk
-        fotoperfil_obj = fotoperfil.objects.get(user=user_id)
-        imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
         url = 'https://mocki.io/v1/3c90bcb7-ee79-4d40-9944-cea729cac4ea'
         response = requests.get(url)
         data = json.loads(response.text)
@@ -640,14 +637,25 @@ class HorarioEstudianteView(LoginRequiredMixin):
                     auxHora[aux] = {'curso': curso['curso'],
                         'horario': {dia: hora}}
         dias = ['L', 'K', 'M', 'J', 'V', 'S']
-        context = {
-            'user': user,
-            'fotoperfil': imagen_url,
-            'status': status,
-            'id': id,
-            'horarios': sorted(auxHora.items()),
-            'dias': dias
-        }
+        try:
+            fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
+            imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
+            context = {
+                'user': user,
+                'fotoperfil': imagen_url,
+                'status': status,
+                'id': id,
+                'horarios': sorted(auxHora.items()),
+                'dias': dias
+            }
+        except fotoperfil.DoesNotExist:
+            context = {
+                'user': user,
+                'status': status,
+                'id': id,
+                'horarios': sorted(auxHora.items()),
+                'dias': dias
+            }
         return render(request, 'Dashboard/Estudiante/horarioEstudiante.html', context)
 
 class PlanDeEstudioView(LoginRequiredMixin, View):
@@ -656,25 +664,31 @@ class PlanDeEstudioView(LoginRequiredMixin, View):
     
     def get_context_data(self, **kwargs):
         user = self.request.user
-        user_id = user.pk
-        fotoperfil_obj = fotoperfil.objects.get(user=user_id)
-        imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
         url = 'https://mocki.io/v1/e341f4ab-b010-4407-b991-3879d591cc05'
         response = requests.get(url)
         data = json.loads(response.text)
-        context = {
-            'user': user,
-            'fotoperfil': imagen_url,
-            'status': self.kwargs['status'],
-            'id': self.kwargs['id'],
-            'carrera': data
-        }
+        try:
+            fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
+            imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
+            context = {
+                'user': user,
+                'fotoperfil': imagen_url,
+                'status': self.kwargs['status'],
+                'id': self.kwargs['id'],
+                'carrera': data
+            }
+        except fotoperfil.DoesNotExist:
+            context = {
+                'user': user,
+                'status': self.kwargs['status'],
+                'id': self.kwargs['id'],
+                'carrera': data
+            }
         return context
     
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
         return render(request, self.template_name, context)
-
 
 class OtraClaseView(LoginRequiredMixin):
     context_object_name = 'planEstudioCarrera'
