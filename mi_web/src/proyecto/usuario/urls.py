@@ -6,6 +6,10 @@ from .api_queries import(
                     obtener_distrito,
                     obtener_nacionalidad
                     )
+from .api_processes import (
+                    documents_status,
+                    user_update,
+                    )
 from .views import (
                     Logueo, 
                     PaginaRegistroEstudiante,
@@ -30,6 +34,7 @@ from .views import (
                     DashboardProfesorView,
 
                     MicrosoftLogoutView,
+
 
                     HorarioEstudianteView,
                     PlanDeEstudioView,
@@ -116,9 +121,12 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
                
                path("prospecto/<int:id>/<int:status>/revision-form/", revision_formulario, name="revision_form"),
                path("corregir-data/", corregirdata, name="corregir_data"),
+               path("documents-status/", documents_status, name="documents_status"),
+               path("user-update/", user_update, name="user_update"),
                path("prospecto/<int:id>/<int:status>/horario/", HorarioEstudianteView.horario_view, name='horarioEstudiante'),
                path("prospecto/<int:id>/<int:status>/plan/", PlanDeEstudioView.as_view(), name='planEstudio'),
                path("prospecto/<int:id>/<int:status>/plan/carrera/", OtraClaseView.getPlan, name='planEstudioCarrera')
+
                ]
 
 

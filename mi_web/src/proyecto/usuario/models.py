@@ -92,17 +92,12 @@ class fotoperfil(models.Model):
                             blank=True)
     archivo = models.BinaryField() 
     
-class etapas (models.Model):
-    id_etapa = models.AutoField(primary_key=True)
-    etapa_nombre = models.CharField(max_length=18)
-    
 class estados (models.Model):
     id_estado = models.AutoField(primary_key=True)
     estado_nombre = models.CharField(max_length=30)
     
 class primerIngreso (models.Model):
     id_fase = models.AutoField(primary_key=True)
-    etapa = models.ForeignKey(etapas, on_delete=models.CASCADE)
     estado = models.ForeignKey(estados, on_delete=models.CASCADE)
     convalidacion = models.BooleanField(default=False)
     usuario = models.ForeignKey(User,
