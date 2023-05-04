@@ -29,7 +29,7 @@ from .views import (
                     DashboardEstudianteView,
                     DashboardProfesorView,
 
-                    MicrosoftLogoutView
+                    MicrosoftLogoutView,
 
                     HorarioEstudianteView,
                     PlanDeEstudioView,
