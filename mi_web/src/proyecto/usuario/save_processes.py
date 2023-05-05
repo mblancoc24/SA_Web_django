@@ -85,14 +85,14 @@ class save_profile_processes():
         else:
             return False
     
-    def update_documents(data1, data2):
-        user = User.objects.get(username=data1[2])
+    def update_documents(request, data1, data2):
+        user = request.user
         
         statusgeneral = get_object_or_404(primerIngreso, usuario=user.pk)
         docs = get_object_or_404(documentos, usuario=user.pk)
         
-        form = FormularioPrimerIngreso({'estado': data1[0], 
-                    'convalidacion': statusgeneral.convalidacion,'comentario': data1[1],'usuario': user.pk}, instance=statusgeneral)
+        form = FormularioPrimerIngreso({'estado': data1[0], 'convalidacion': statusgeneral.convalidacion,
+                                        'comentario': data1[4],'usuario': user.pk}, instance=statusgeneral)
         
         if form.is_valid():
             form.save()

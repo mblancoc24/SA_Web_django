@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             btnCET.onclick = function () {
                 console.log('entre 1')
-                documentocargado.value = "titulo";
+                documentocargado.value = "tituloeducacion";
                 cambiarestado('titulo');
             }
 
@@ -118,17 +118,17 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             btnCEF.onclick = function (){
-                documentocargado.value = "foto";
+                documentocargado.value = "fotoperfil";
                 cambiarestado('foto');
             }
 
             btnCEN.onclick = function () {
-                documentocargado.value = "notas";
+                documentocargado.value = "record_academico";
                 cambiarestado('notas');
             }
 
             btnCEE.onclick = function () {
-                documentocargado.value = "plan";
+                documentocargado.value = "plan_estudio";
                 cambiarestado('plan');
             }
 
