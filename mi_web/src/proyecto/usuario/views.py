@@ -20,9 +20,10 @@ from django.urls import reverse
 from .backends import MicrosoftGraphBackend
 from .dspace_processes import dspace_processes
 from .save_processes import save_profile_processes
-from .api_queries import enviar_data_odoo
+from .api_queries import enviar_data_odoo, insert_urls, get_urls
 from django.core.cache import cache
 import json
+import base64
 
 class Logueo(LoginView):
     template_name = 'usuario/login.html'
@@ -32,6 +33,7 @@ class Logueo(LoginView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['cuenta'] = self.request.GET.get('cuenta')
+        cache.delete('urls_links')
         return context
 
     def form_valid(self, form):
@@ -452,7 +454,28 @@ def revision_formulario(request, id, status):
     estado = get_object_or_404(estados, id_estado=statusgeneral.estado_id)
 
     docs = get_object_or_404(documentos, usuario=user.pk)
-
+    
+    data_urls = get_urls(request)
+    
+    responses = dspace_processes.dspace_docs_visualization(data_urls)
+    
+    data_content = []
+    data_content_type = []
+    
+    for response in responses:
+        data_content.append(base64.b64encode(response.content).decode('utf-8'))
+        if 'pdf' in response.headers['Content-Type']:
+            data_content_type.append('pdf')
+        elif 'jpeg' in response.headers['Content-Type']:
+            data_content_type.append('jpeg')
+        elif 'png' in response.headers['Content-Type']:
+            data_content_type.append('png')
+            
+    if len(data_content) == 3:
+        data_content_type.append('N/A')
+        data_content_type.append('N/A')
+        
+    
     try:
         fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
         imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
@@ -464,6 +487,8 @@ def revision_formulario(request, id, status):
             "estado": estado.estado_nombre,
             "convalidacion": statusgeneral.convalidacion,
             "documentos": docs,
+            "data_content": data_content,
+            "data_type":data_content_type,
             "id": id,
             "status": status,
         }
@@ -473,15 +498,55 @@ def revision_formulario(request, id, status):
             "estado": estado.estado_nombre,
             "convalidacion": statusgeneral.convalidacion,
             "documentos": docs,
+            "data_content": data_content,
+            "data_type":data_content_type,
             "id": id,
             "status": status,
         }
     return render(request, "Dashboard/Prospecto/revision_form.html", contexto)
 
+def descargar_archivo(request, id):
+    # Obtiene el contenido del bitstream de la API de DSpace
+    responses = cache.get('urls_links')
+    response = responses[id]
+    # Establece el tipo de contenido según la extensión del archivo
+    if 'pdf' in response.headers['Content-Type']:
+        content_type = 'application/pdf'
+        extension = 'pdf'
+    elif 'jpeg' in response.headers['Content-Type']:
+        content_type = 'image/jpeg'
+        extension = 'jpg'
+    elif 'png' in response.headers['Content-Type']:
+        content_type = 'image/png'
+        extension = 'png'
+    else:
+        return HttpResponse('Tipo de archivo no soportado')
+
+    # Devuelve la respuesta como archivo descargable
+    response = HttpResponse(response.content, content_type=content_type)
+    response['Content-Disposition'] = f'attachment; filename="archivo.{extension}"'
+    return response
+
 def corregirdata(request):
     user = request.user
 
     datocargado = request.POST.get('documentocargado')
+    
+    if datocargado == 'tituloeducacion':
+        file_content = request.FILES.get('titulo')
+    elif datocargado == 'identificacion':
+        file_content = request.FILES.get('identificacion')
+    elif datocargado == 'fotoperfil':
+        file_content = request.FILES.get('pasaporte')
+    elif datocargado == 'record_academico':
+        file_content = request.FILES.get('notas')
+    elif datocargado == 'plan_estudio':
+        file_content = request.FILES.get('planestudio')
+        
+    
+    file_standardization = dspace_processes.name_file_correction_standardization(request, file_content, datocargado)
+        
+    save_file = dspace_processes.dspace_file_correction(request, file_standardization, datocargado)
 
     statusgeneral = get_object_or_404(primerIngreso, usuario=user.pk)
     docs = get_object_or_404(documentos, usuario=user.pk)
@@ -516,7 +581,7 @@ def corregirdata(request):
         formulariodata = [2, 5, statusgeneral.convalidacion,
                           user.pk, statusgeneral.comentario]
 
-    if datocargado == "titulo":
+    if datocargado == "tituloeducacion":
         formulariodocs = [user.pk, True, docs.titulouniversitario,
                           docs.identificacion, docs.foto, docs.notas, docs.plan]
     elif datocargado == "titulouniversitario":
@@ -525,13 +590,13 @@ def corregirdata(request):
     elif datocargado == "identificacion":
         formulariodocs = [user.pk, docs.tituloeducacion, docs.titulouniversitario,
                           True, docs.foto, docs.notas, docs.plan]
-    elif datocargado == "foto":
+    elif datocargado == "fotoperfil":
         formulariodocs = [user.pk, docs.tituloeducacion, docs.titulouniversitario,
                           docs.identificacion, True, docs.notas, docs.plan]
-    elif datocargado == "notas":
+    elif datocargado == "record_academico":
         formulariodocs = [user.pk, docs.tituloeducacion, docs.titulouniversitario,
                           docs.identificacion, docs.foto, True, docs.plan]
-    elif datocargado == "plan":
+    elif datocargado == "plan_estudio":
         formulariodocs = [user.pk, docs.tituloeducacion, docs.titulouniversitario,
                           docs.identificacion, docs.foto, docs.notas, True]
         
@@ -574,20 +639,24 @@ def enviar_archivo_a_odoo(request, id, status):
             else:
                 formulariodata = [1, False,'Formulario Enviado Satisfactoriamente', user.pk]
                 formulariodocumentos = [user.pk, True, False, True, True, False, False]
+                save_data_dspace.append('N/A')
+                save_data_dspace.append('N/A')
                 
             save_data_dspace.append(request.POST.get('colegio_select'))
             save_data_dspace.append(request.POST.get('mi_select'))
             if asesor == '':
                 save_data_dspace.append(request.POST.get('asesor_select'))
             else:
-                save_data_dspace.append('N/A')
+                save_data_dspace.append('Asesor')
             
             save_odoo = enviar_data_odoo(request, save_data_dspace)
             
             save = save_profile_processes.save_documents(request, formulariodata, formulariodocumentos)
 
             if save and save_odoo:
-                context = {'id': id, 'status': status, 'data': save_data_dspace}
+                data_urls = [save_data_dspace[0], save_data_dspace[1], save_data_dspace[2], save_data_dspace[3],
+                             save_data_dspace[4], save_data_dspace[5]]
+                insert_urls(request,data_urls)
                 return revision_formulario (request, id, status)
     
 class HorarioEstudianteView(LoginRequiredMixin):

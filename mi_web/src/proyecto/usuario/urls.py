@@ -30,12 +30,10 @@ from .views import (
                     corregirdata,
                     microsoft_auth, 
                     microsoft_callback,
+                    descargar_archivo,
                     DashboardEstudianteView,
                     DashboardProfesorView,
-
                     MicrosoftLogoutView,
-
-
                     HorarioEstudianteView,
                     PlanDeEstudioView,
                     DetallePlanDeEstudioView,
@@ -128,7 +126,7 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
                path("prospecto/<int:id>/<int:status>/plan/", PlanDeEstudioView.as_view(), name='planEstudio'),
                path("prospecto/<int:id>/<int:status>/plan/carrera/", DetallePlanDeEstudioView.getPlan, name='planEstudioCarrera'),
                path("prospecto/<int:id>/<int:status>/misCursos/", MisCursos.misCursos_view, name='misCursos')
-
+               path("descargar-archivo/<int:id>/", descargar_archivo, name="descargar_archivo"),
                ]
 
 
