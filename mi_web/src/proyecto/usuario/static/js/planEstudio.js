@@ -1,7 +1,7 @@
 var totalCurso;
-    var cursoAprovados;
-    var totalCreditos;
-    var creditosAprovados;
+var cursoAprovados;
+var totalCreditos;
+var creditosAprovados;
 $(document).ready(function () {
     const carreraSelect = document.getElementById('carrera');
     carreraSelect.onchange = function () {
@@ -25,28 +25,28 @@ $(document).ready(function () {
                     from: { color: "#FF9900" },
                     to: { color: "#00FF99" },
                     text: {
-                      value: '0',
-                      className: 'progress-text',
-                      style: {
-                        color: 'black',
-                        position: 'absolute',
-                        top: '50%',
-                        left: '50%',
-                        padding: 0,
-                        margin: 0,
-                        transform: 'translate(-50%, -50%)'
-                      }
+                        value: '0',
+                        className: 'progress-text',
+                        style: {
+                            color: 'black',
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            padding: 0,
+                            margin: 0,
+                            transform: 'translate(-50%, -50%)'
+                        }
                     },
                     step: (state, shape) => {
-                      shape.path.setAttribute("stroke", state.color);
-                      shape.setText(Math.round(shape.value() * 100) + ' %');
+                        shape.path.setAttribute("stroke", state.color);
+                        shape.setText(Math.round(shape.value() * 100) + ' %');
                     }
-                  });
-                  var porcentajeAprobados = (creditosAprovados / totalCreditos) * 100;
-                  var procentaje = porcentajeAprobados / 100;
-                  lineBar.animate(procentaje, {
+                });
+                var porcentajeAprobados = (creditosAprovados / totalCreditos) * 100;
+                var procentaje = porcentajeAprobados / 100;
+                lineBar.animate(procentaje, {
                     duration: 2000
-                  });
+                });
                 actualizarTabla(data);
             }
         };
@@ -54,17 +54,17 @@ $(document).ready(function () {
     }
 });
 
-function actualizarEstado(data){
-    
+function actualizarEstado(data) {
+
     data.forEach((cuatrimestreObj) => {
         cuatrimestreObj.cursos.forEach(curso => {
-            if (curso.curso){
-                totalCurso+=1;
-                totalCreditos+=curso.creditos;
+            if (curso.curso) {
+                totalCurso += 1;
+                totalCreditos += curso.creditos;
             }
-            if (curso.Aprovado){
-                cursoAprovados+=1;
-                creditosAprovados+=curso.creditos
+            if (curso.Aprovado) {
+                cursoAprovados += 1;
+                creditosAprovados += curso.creditos
             }
         });
     });
@@ -80,7 +80,7 @@ function actualizarEstado(data){
     var fieldset = document.createElement('fieldset');
     fieldset.className = 'border p-2 mb-2';
     var legend = document.createElement('legend');
-    legend.className = 'float-none w-auto p-2'
+    legend.className = 'float-none w-auto '
     legend.innerText = select.value.split("Con Enfasis En")[0];
     fieldset.appendChild(legend);
 
@@ -104,12 +104,12 @@ function actualizarEstado(data){
     var divEnfasis = document.createElement('div');
     divEnfasis.className = 'col-6 col-md-4';
     var pEnfasis = document.createElement('h6');
-    if ( select.value.split("Enfasis En")[1]){
-        pEnfasis.textContent = 'Enfasis: '+ select.value.split("Enfasis En")[1];
-    }else{
+    if (select.value.split("Enfasis En")[1]) {
+        pEnfasis.textContent = 'Enfasis: ' + select.value.split("Enfasis En")[1];
+    } else {
         pEnfasis.textContent = 'Enfasis: ';
     }
-    
+
 
     divGrado.appendChild(pGrado);
     divEnfasis.appendChild(pEnfasis);
@@ -145,14 +145,14 @@ function actualizarEstado(data){
     divCreditoA.appendChild(pCreditoA);
     divRowInfoCr.appendChild(divCreditoT);
     divRowInfoCr.appendChild(divCreditoA);
-    
+
     var divproceso = document.createElement('div');
     divproceso.className = 'col-md-12';
     var pProceso = document.createElement('h6');
     pProceso.textContent = 'Total Completado';
     var divEstado = document.createElement('div');
     divEstado.id = 'line-container';
-    
+
     divproceso.appendChild(pProceso);
     divproceso.appendChild(divEstado);
     divRowProceso.appendChild(divproceso);
@@ -173,7 +173,7 @@ function actualizarTabla(data) {
     var contenedor = document.querySelector('#mainTable');
     contenedor.innerHTML = '';
     data.forEach((cuatrimestreObj, index) => {
-        
+
         var divTablas = document.createElement('div');
         divTablas.className = 'card shadow';
         var divcard = document.createElement('div');
@@ -238,7 +238,7 @@ function actualizarTabla(data) {
         tr.appendChild(th4);
         thead.appendChild(tr);
 
-        
+
         var col = document.createElement('div');
         col.className = 'col-md-12';
         col.appendChild(divTable);
@@ -253,32 +253,32 @@ function actualizarTabla(data) {
         cuatrimestreObj.cursos.forEach(curso => {
             var trb = document.createElement('tr');
             trb.classList = 'principal';
-            
+
             var icons = document.createElement('i');
             var td_siglas = document.createElement('td');
-            
+
             td_siglas.style.width = '90px';
 
-            if(curso.curso){
-                if (curso.Aprovado){
+            if (curso.curso) {
+                if (curso.Aprovado) {
                     icons.className = 'bi bi-check-lg';
                     icons.style.color = '#3bb80a';
                     icons.style.fontSize = '16px';
                     td_siglas.appendChild(icons);
-                    td_siglas.appendChild(document.createTextNode(' '+curso.curso));
+                    td_siglas.appendChild(document.createTextNode(' ' + curso.curso));
                 }
-                else if (curso.Matriculable){
+                else if (curso.Matriculable) {
                     icons.className = 'bi bi-plus-lg color-box';
                     icons.style.color = '#006a9f';
                     icons.style.fontSize = '16px';
                     td_siglas.appendChild(icons);
-                    td_siglas.appendChild(document.createTextNode(' '+curso.curso));
-                }else{ 
+                    td_siglas.appendChild(document.createTextNode(' ' + curso.curso));
+                } else {
                     icons.className = 'bi bi-x-lg color-box';
                     icons.style.color = '#83877b';
                     td_siglas.appendChild(icons);
                     icons.style.fontSize = '16px';
-                    td_siglas.appendChild(document.createTextNode(' '+curso.curso));
+                    td_siglas.appendChild(document.createTextNode(' ' + curso.curso));
                 }
             }
 
@@ -289,7 +289,7 @@ function actualizarTabla(data) {
             td_requisito.appendChild(document.createTextNode(curso.requisitos));
 
             var td_costo = document.createElement('td');
-            td_costo.appendChild(document.createTextNode('₡'+curso.tarifa));
+            td_costo.appendChild(document.createTextNode('₡' + curso.tarifa));
 
             var td_creditos = document.createElement('td');
             td_creditos.appendChild(document.createTextNode(curso.creditos));
@@ -304,7 +304,7 @@ function actualizarTabla(data) {
         });
         contenedor.appendChild(divTablas);
     });
-    
+
 }
 
 function mostrarTabla(index) {
