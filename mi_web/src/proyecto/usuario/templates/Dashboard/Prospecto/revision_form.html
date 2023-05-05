@@ -360,7 +360,6 @@
                 </div>
                 <div class="modal-body">
                     <h2>Titulo</h2>
-                    <a href="{% url 'descargar_archivo' id=0 %}" class="w-100 btn btn-lg btn-primary btn-sm rounded fw-bold" style="max-width: 175px;" target="_blank">Descargar Documento</a>
                     {% if data_type.0 == 'pdf' %}
                         <iframe src="data:application/pdf;base64,{{ data_content.0 }}#toolbar=0" width="100%" height="600px"></iframe>
                     {% endif %}
@@ -388,7 +387,6 @@
                 </div>
                 <div class="modal-body">
                     <h2>Identificaion</h2>
-                    <a href="{% url 'descargar_archivo' id=1 %}" class="w-100 btn btn-lg btn-primary btn-sm rounded fw-bold" style="max-width: 175px;" target="_blank">Descargar Documento</a>
                     {% if data_type.1 == 'pdf' %}
                         <iframe src="data:application/pdf;base64,{{ data_content.1 }}#toolbar=0" width="100%" height="600px"></iframe>
                     {% endif %}
@@ -416,7 +414,6 @@
                 </div>
                 <div class="modal-body">
                     <h2>Foto</h2>
-                    <a href="{% url 'descargar_archivo' id=2 %}" class="w-100 btn btn-lg btn-primary btn-sm rounded fw-bold" style="max-width: 175px;" target="_blank">Descargar Documento</a>
                     {% if data_type.2 == 'pdf' %}
                         <iframe src="data:application/pdf;base64,{{ data_content.2 }}#toolbar=0" width="100%" height="600px"></iframe>
                     {% endif %}
@@ -444,7 +441,6 @@
                 </div>
                 <div class="modal-body">
                     <h2>Nota</h2>
-                    <a href="{% url 'descargar_archivo' id=3 %}" class="w-100 btn btn-lg btn-primary btn-sm rounded fw-bold" style="max-width: 175px;" target="_blank">Descargar Documento</a>
                     {% if data_type.3 == 'pdf' %}
                         <iframe src="data:application/pdf;base64,{{ data_content.3 }}#toolbar=0" width="100%" height="600px"></iframe>
                     {% endif %}
@@ -475,7 +471,6 @@
                 </div>
                 <div class="modal-body">
                     <h2>planestudio</h2>
-                    <a href="{% url 'descargar_archivo' id=4 %}" class="w-100 btn btn-lg btn-primary btn-sm rounded fw-bold" style="max-width: 175px;" target="_blank">Descargar Documento</a>
                     {% if data_type.4 == 'pdf' %}
                         <iframe src="data:application/pdf;base64,{{ data_content.4 }}#toolbar=0" width="100%" height="600px"></iframe>
                     {% endif %}
