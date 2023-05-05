@@ -1,6 +1,14 @@
+var totalCurso;
+    var cursoAprovados;
+    var totalCreditos;
+    var creditosAprovados;
 $(document).ready(function () {
     const carreraSelect = document.getElementById('carrera');
     carreraSelect.onchange = function () {
+        totalCurso = 0;
+        cursoAprovados = 0;
+        totalCreditos = 0;
+        creditosAprovados = 0;
         const id = document.getElementById('idP');
         const status = document.getElementById('StatusP');
         // Enviar una petición AJAX al servidor
@@ -11,6 +19,34 @@ $(document).ready(function () {
         xhr.onload = function () {
             if (xhr.status === 200) {
                 var data = JSON.parse(xhr.responseText);
+                actualizarEstado(data);
+                var lineBar = new ProgressBar.Line("#line-container", {
+                    trailWidth: 0.5,
+                    from: { color: "#FF9900" },
+                    to: { color: "#00FF99" },
+                    text: {
+                      value: '0',
+                      className: 'progress-text',
+                      style: {
+                        color: 'black',
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        padding: 0,
+                        margin: 0,
+                        transform: 'translate(-50%, -50%)'
+                      }
+                    },
+                    step: (state, shape) => {
+                      shape.path.setAttribute("stroke", state.color);
+                      shape.setText(Math.round(shape.value() * 100) + ' %');
+                    }
+                  });
+                  var porcentajeAprobados = (creditosAprovados / totalCreditos) * 100;
+                  var procentaje = porcentajeAprobados / 100;
+                  lineBar.animate(procentaje, {
+                    duration: 2000
+                  });
                 actualizarTabla(data);
             }
         };
@@ -18,22 +54,126 @@ $(document).ready(function () {
     }
 });
 
-function actualizarTabla(data) {
+function actualizarEstado(data){
+    
+    data.forEach((cuatrimestreObj) => {
+        cuatrimestreObj.cursos.forEach(curso => {
+            if (curso.curso){
+                totalCurso+=1;
+                totalCreditos+=curso.creditos;
+            }
+            if (curso.Aprovado){
+                cursoAprovados+=1;
+                creditosAprovados+=curso.creditos
+            }
+        });
+    });
+    var select = document.getElementById('carrera');
     var estadoDiv = document.querySelector('.estado');
+    estadoDiv.innerHTML = '';
+
     var divRowPlan = document.createElement('div');
     divRowPlan.className = 'row';
-    var divGrado = document.createElement('div');
-    divGrado.className = 'col-md-2';
-    var pGrado = document.createElement('p');
-    pGrado.textContent = 'Grado: ';
-    divGrado.appendChild(pGrado);
+    var divInfo = document.createElement('div');
+    divInfo.className = 'col-md-12';
 
-    divRowPlan.appendChild(divGrado);
+    var fieldset = document.createElement('fieldset');
+    fieldset.className = 'border p-2 mb-2';
+    var legend = document.createElement('legend');
+    legend.className = 'float-none w-auto p-2'
+    legend.innerText = select.value.split("Con Enfasis En")[0];
+    fieldset.appendChild(legend);
+
+    var divRowInfo = document.createElement('div');
+    divRowInfo.className = 'row';
+
+    var divRowInfoCu = document.createElement('div');
+    divRowInfoCu.className = 'row';
+
+    var divRowInfoCr = document.createElement('div');
+    divRowInfoCr.className = 'row';
+
+    var divRowProceso = document.createElement('div');
+    divRowProceso.className = 'row';
+
+    var divGrado = document.createElement('div');
+    divGrado.className = 'col-6 col-md-4';
+    var pGrado = document.createElement('h6');
+    pGrado.textContent = 'Grado: ' + select.value.split(" ")[0];
+
+    var divEnfasis = document.createElement('div');
+    divEnfasis.className = 'col-6 col-md-4';
+    var pEnfasis = document.createElement('h6');
+    if ( select.value.split("Enfasis En")[1]){
+        pEnfasis.textContent = 'Enfasis: '+ select.value.split("Enfasis En")[1];
+    }else{
+        pEnfasis.textContent = 'Enfasis: ';
+    }
+    
+
+    divGrado.appendChild(pGrado);
+    divEnfasis.appendChild(pEnfasis);
+    divRowInfo.appendChild(divGrado);
+    divRowInfo.appendChild(divEnfasis);
+
+    var divCursoT = document.createElement('div');
+    divCursoT.className = 'col-6 col-md-4';
+    var pCursoT = document.createElement('h6');
+    pCursoT.textContent = 'Total de Curso: ' + totalCurso;
+
+    var divCursoA = document.createElement('div');
+    divCursoA.className = 'col-6 col-md-4';
+    var pCursoA = document.createElement('h6');
+    pCursoA.textContent = 'Cursos Aprobados: ' + cursoAprovados;
+
+    divCursoT.appendChild(pCursoT);
+    divCursoA.appendChild(pCursoA);
+    divRowInfoCu.appendChild(divCursoT);
+    divRowInfoCu.appendChild(divCursoA);
+
+    var divCreditoT = document.createElement('div');
+    divCreditoT.className = 'col-6 col-md-4';
+    var pCreditoT = document.createElement('h6');
+    pCreditoT.textContent = 'Total de Créditos: ' + totalCreditos;
+
+    var divCreditoA = document.createElement('div');
+    divCreditoA.className = 'col-6 col-md-4';
+    var pCreditoA = document.createElement('h6');
+    pCreditoA.textContent = 'Créditos Aprobados: ' + creditosAprovados;
+
+    divCreditoT.appendChild(pCreditoT);
+    divCreditoA.appendChild(pCreditoA);
+    divRowInfoCr.appendChild(divCreditoT);
+    divRowInfoCr.appendChild(divCreditoA);
+    
+    var divproceso = document.createElement('div');
+    divproceso.className = 'col-md-12';
+    var pProceso = document.createElement('h6');
+    pProceso.textContent = 'Total Completado';
+    var divEstado = document.createElement('div');
+    divEstado.id = 'line-container';
+    
+    divproceso.appendChild(pProceso);
+    divproceso.appendChild(divEstado);
+    divRowProceso.appendChild(divproceso);
+
+    fieldset.appendChild(divRowInfo);
+    fieldset.appendChild(divRowInfoCu);
+    fieldset.appendChild(divRowInfoCr);
+    fieldset.appendChild(divRowProceso);
+
+    divInfo.appendChild(fieldset);
+
+    divRowPlan.appendChild(divInfo);
 
     estadoDiv.appendChild(divRowPlan);
+}
 
+function actualizarTabla(data) {
     var contenedor = document.querySelector('#mainTable');
+    contenedor.innerHTML = '';
     data.forEach((cuatrimestreObj, index) => {
+        
         var divTablas = document.createElement('div');
         divTablas.className = 'card shadow';
         var divcard = document.createElement('div');

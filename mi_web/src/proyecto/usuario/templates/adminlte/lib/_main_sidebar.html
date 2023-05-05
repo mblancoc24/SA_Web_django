@@ -23,13 +23,13 @@
 
                 {% if status == 1 %}
                 <a href="{% url 'perfil' id=id status=status %}" class="d-block">
-                    <i class="fa fa-user" aria-hidden="true"></i> {{ user.first_name }}</a>
+                    <i aria-hidden="true"></i> {{ user.first_name }}</a>
                 {% elif status == 4 %}
                 <a href="{% url 'perfil_prospecto' id=id status=status %}" class="d-block">
-                    <i class="fa fa-user" aria-hidden="true"></i> {{ user.first_name }}</a>
+                    <i  aria-hidden="true"></i> {{ user.first_name }}</a>
                 {% else %}
                 <a href="{% url 'perfil_profesor' id=id status=status %}" class="d-block">
-                    <i class="fa fa-user" aria-hidden="true"></i> {{ user.first_name }}</a>
+                    <i aria-hidden="true"></i> {{ user.first_name }}</a>
                 {% endif %}
             </div>
         </div>

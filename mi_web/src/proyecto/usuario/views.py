@@ -664,7 +664,7 @@ class PlanDeEstudioView(LoginRequiredMixin, View):
     
     def get_context_data(self, **kwargs):
         user = self.request.user
-        url = 'https://mocki.io/v1/e341f4ab-b010-4407-b991-3879d591cc05'
+        url = 'https://mocki.io/v1/b4bd88f6-2cb7-4a0a-8b9f-438fbd8b83c8'
         response = requests.get(url)
         data = json.loads(response.text)
         try:
@@ -696,7 +696,7 @@ class OtraClaseView(LoginRequiredMixin):
     
     def getPlan(request, id, status):
         carrera = request.GET.get("carrera")
-        url = 'https://mocki.io/v1/541503ef-55d2-4da9-b987-218686960cf7'
+        url = 'https://mocki.io/v1/bf64c0f4-12c3-4581-8099-71e553044eda'
         response = requests.get(url)
         data = response.json()
         return JsonResponse(data, safe=False)
