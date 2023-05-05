@@ -757,3 +757,16 @@ div.h4 {
   border-color: #e9ecef;
   background-color: #f6f9fc;
 }
+
+@media only screen and (max-width: 767px) {
+  .estado{
+    text-align: center;
+  }
+}
+
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+  /* Estilos para iPads */
+  .estado{
+    text-align: center;
+  }
+}
