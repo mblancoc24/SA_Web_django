@@ -769,3 +769,17 @@ div.h4 {
     text-align: center;
   }
 }
+
+.misCursoTabla {
+  border-radius: 10px;
+    overflow: hidden;
+}
+
+#datosHeader{
+  background-color: #000;
+  color: white;
+}
+
+#datos{
+  background-color: #E9F1FD;
+}

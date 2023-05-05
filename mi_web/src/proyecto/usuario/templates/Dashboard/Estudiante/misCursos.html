@@ -12,22 +12,22 @@
                 <h4 class="card-title" id="infoCardTitle">{{carrera.carrera}}</h4>
                 <h5 class="card-title" id="infoCardTitle">{{carrera.cuatrimestre}}</h5>
                 <div class="table-responsive-sm p-3">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered misCursoTabla">
                         {% for curso in carrera.cursos %}
                         <tbody>
                             <tr>
-                                <td colspan="6">
+                                <td id="datosHeader" colspan="6">
                                     {{curso.curso}}: {{curso.nombre}} 
                                 </td>
                             </tr>
                             <tr>
-                                <td style="width: 50px;">Sede:</td>
+                                <td id="datos" style="width: 50px;">Sede:</td>
                                 <td style="width: 50px;">{{curso.sede}} </td>
-                                <td style="width: 50px;">Grupo:</td>
+                                <td id="datos" style="width: 50px;">Grupo:</td>
                                 <td colspan="3" style="width: 80px;">{{curso.grupo}} </td>
                             </tr>
                             <tr>
-                                <td style="width: 50px;">Horario:</td>
+                                <td id="datos" style="width: 50px;">Horario:</td>
                                 {% for horario in curso.horarios %}
                                 <td colspan="5">
                                     {% if horario.horario %}
@@ -43,7 +43,7 @@
                                 {% endfor %}
                             </tr>
                             <tr>
-                                <td style="width: 50px;">Profesor:</td>
+                                <td id="datos" style="width: 50px;">Profesor:</td>
                                 <td colspan="6" style="width: 50px;">
                                     {% if curso.profesor %}
                                     {{curso.profesor}}
@@ -53,15 +53,15 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td style="width: 50px;">1 Parcial:</td>
+                                <td id="datos" style="width: 50px;">1 Parcial:</td>
                                 <td style="width: 50px;">{{curso.primerP}} </td>
-                                <td style="width: 50px;">2 Parcial:</td>
+                                <td id="datos" style="width: 50px;">2 Parcial:</td>
                                 <td style="width: 50px;">{{curso.segundoP}} </td>
-                                <td style="width: 120px;">Examen Final:</td>
+                                <td id="datos" style="width: 120px;">Examen Final:</td>
                                 <td style="width: 50px;">{{curso.examenF}} </td>
                             </tr>
                             <tr>
-                                <td style="width: 50px;">Nota Preliminar:</td>
+                                <td id="datos" style="width: 50px;">Nota Preliminar:</td>
                                 
                                 <td style="width: 50px;">
                                     {% if curso.notaP %}
@@ -70,7 +70,7 @@
                                     MAT
                                     {% endif %}
                                 </td> 
-                                <td style="width: 50px;">Examen Extraordinario:</td>    
+                                <td id="datos" style="width: 50px;">Examen Extraordinario:</td>    
                                 <td style="width: 50px;" colspan="3">
                                     {% if curso.examenE %}
                                     {{curso.examenE}} 
@@ -80,7 +80,7 @@
                                 </td>                           
                             </tr>
                             <tr>
-                                <td style="width: 50px;">Nota Final:</td>
+                                <td id="datos" style="width: 50px;">Nota Final:</td>
                                 <td style="width: 50px;" colspan="6">
                                     {% if curso.notaF %}
                                     {{curso.notaF}} 
