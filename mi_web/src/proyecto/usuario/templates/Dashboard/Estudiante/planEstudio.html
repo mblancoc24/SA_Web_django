@@ -8,11 +8,11 @@
 {% block content %}
 <div class="container">
     <div class="row justify-content-center mt-3">
-        <div class="form-group col-md-4 col-sm-4 ">
+        <div class="form-group col-md-6 col-sm-4 ">
             <div id="idP" hidden>{{ id }}</div>
             <div id="StatusP" hidden>{{ status }}</div>
             <label for="carrera"><i class=""> Seleccione una carrera</i></label>
-            <select id="carrera" class="form-select select2" name="carrera">
+            <select id="carrera" class="form-select" name="carrera">
                 <option value="" disabled selected hidden>Seleccione una carrera</option>
                 {% for data in carrera.carrera %}
                 <option value="{{ data }}">{{ data }}</option>

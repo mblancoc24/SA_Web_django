@@ -664,7 +664,7 @@ class PlanDeEstudioView(LoginRequiredMixin, View):
     
     def get_context_data(self, **kwargs):
         user = self.request.user
-        url = 'https://mocki.io/v1/b4bd88f6-2cb7-4a0a-8b9f-438fbd8b83c8'
+        url = 'https://mocki.io/v1/9da2b776-a811-4491-b5d9-6144abefb58c'
         response = requests.get(url)
         data = json.loads(response.text)
         try:
@@ -690,7 +690,7 @@ class PlanDeEstudioView(LoginRequiredMixin, View):
         context = self.get_context_data(**kwargs)
         return render(request, self.template_name, context)
 
-class OtraClaseView(LoginRequiredMixin):
+class DetallePlanDeEstudioView(LoginRequiredMixin):
     context_object_name = 'planEstudioCarrera'
     template_name = 'Dashboard/Estudiante/planEstudio.html'
     
@@ -700,3 +700,31 @@ class OtraClaseView(LoginRequiredMixin):
         response = requests.get(url)
         data = response.json()
         return JsonResponse(data, safe=False)
+    
+class MisCursos(LoginRequiredMixin):
+    context_object_name = 'misCursos'
+    template_name = 'Dashboard/Estudiante/misCursos.html'
+    
+    def misCursos_view(request, id, status):
+        url = 'https://mocki.io/v1/9c1031b5-7858-4c9f-bd15-e38be55845f2'
+        response = requests.get(url)
+        data = json.loads(response.text)
+        user = request.user
+        try:
+            fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
+            imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
+            context = {
+                'user': user,
+                'fotoperfil': imagen_url,
+                'status': status,
+                'id': id,
+                'misCursos': data
+            }
+        except fotoperfil.DoesNotExist:
+            context = {
+                'user': user,
+                'status': status,
+                'id': id,
+                'misCursos': data
+            }
+        return render(request, 'Dashboard/Estudiante/misCursos.html', context)

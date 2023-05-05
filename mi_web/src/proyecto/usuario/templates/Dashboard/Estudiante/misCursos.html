@@ -1,0 +1,101 @@
+{% extends 'Dashboard/dashboard.html' %}
+{% load static %}
+{% block style_sheets %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row d-flex justify-content-center mt-3">
+        <div class="col-md-12 col-sm-12 mb-5">
+            {% for carrera in misCursos.carreras %}
+            <div class="card shadow p-2">
+                <h4 class="card-title" id="infoCardTitle">{{carrera.carrera}}</h4>
+                <h5 class="card-title" id="infoCardTitle">{{carrera.cuatrimestre}}</h5>
+                <div class="table-responsive-sm p-3">
+                    <table class="table table-bordered">
+                        {% for curso in carrera.cursos %}
+                        <tbody>
+                            <tr>
+                                <td colspan="6">
+                                    {{curso.curso}}: {{curso.nombre}} 
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 50px;">Sede:</td>
+                                <td style="width: 50px;">{{curso.sede}} </td>
+                                <td style="width: 50px;">Grupo:</td>
+                                <td colspan="3" style="width: 80px;">{{curso.grupo}} </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 50px;">Horario:</td>
+                                {% for horario in curso.horarios %}
+                                <td colspan="5">
+                                    {% if horario.horario %}
+                                        Teoría: {{horario.horario.diaT}} ({{horario.horario.horaInicioT}}:{{horario.horario.minutoInicioT}}-{{horario.horario.horaFinT}}:{{horario.horario.minutoFinT}})
+                                    {% endif %}
+                                    {% if horario.horarioL %}
+                                    Laboratorio: {{horario.horarioL.diaL}} ({{horario.horarioL.horaInicioL}}:{{horario.horarioL.minutoInicioL}}-{{horario.horarioL.horaFinL}}:{{horario.horarioL.minutoFinL}})
+                                    {% endif %}
+                                    {% if horario.horarioR %}
+                                    Rotación: {{horario.horarioR.diaR}} ({{horario.horarioR.horaInicioR}}:{{horario.horarioR.minutoInicioR}}-{{horario.horarioR.horaFinR}}:{{horario.horarioR.minutoFinR}})
+                                    {% endif %}
+                                </td>
+                                {% endfor %}
+                            </tr>
+                            <tr>
+                                <td style="width: 50px;">Profesor:</td>
+                                <td colspan="6" style="width: 50px;">
+                                    {% if curso.profesor %}
+                                    {{curso.profesor}}
+                                    {%else%}
+                                    --
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 50px;">1 Parcial:</td>
+                                <td style="width: 50px;">{{curso.primerP}} </td>
+                                <td style="width: 50px;">2 Parcial:</td>
+                                <td style="width: 50px;">{{curso.segundoP}} </td>
+                                <td style="width: 120px;">Examen Final:</td>
+                                <td style="width: 50px;">{{curso.examenF}} </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 50px;">Nota Preliminar:</td>
+                                
+                                <td style="width: 50px;">
+                                    {% if curso.notaP %}
+                                    {{curso.primerP}} 
+                                    {%else%}
+                                    MAT
+                                    {% endif %}
+                                </td> 
+                                <td style="width: 50px;">Examen Extraordinario:</td>    
+                                <td style="width: 50px;" colspan="3">
+                                    {% if curso.examenE %}
+                                    {{curso.examenE}} 
+                                    {%else%}
+                                    --
+                                    {% endif %}
+                                </td>                           
+                            </tr>
+                            <tr>
+                                <td style="width: 50px;">Nota Final:</td>
+                                <td style="width: 50px;" colspan="6">
+                                    {% if curso.notaF %}
+                                    {{curso.notaF}} 
+                                    {%else%}
+                                    --
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </tbody>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -38,7 +38,8 @@ from .views import (
 
                     HorarioEstudianteView,
                     PlanDeEstudioView,
-                    OtraClaseView
+                    DetallePlanDeEstudioView,
+                    MisCursos
 
                     )
 from django.contrib.auth.views import LogoutView
@@ -125,7 +126,8 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
                path("user-update/", user_update, name="user_update"),
                path("prospecto/<int:id>/<int:status>/horario/", HorarioEstudianteView.horario_view, name='horarioEstudiante'),
                path("prospecto/<int:id>/<int:status>/plan/", PlanDeEstudioView.as_view(), name='planEstudio'),
-               path("prospecto/<int:id>/<int:status>/plan/carrera/", OtraClaseView.getPlan, name='planEstudioCarrera')
+               path("prospecto/<int:id>/<int:status>/plan/carrera/", DetallePlanDeEstudioView.getPlan, name='planEstudioCarrera'),
+               path("prospecto/<int:id>/<int:status>/misCursos/", MisCursos.misCursos_view, name='misCursos')
 
                ]
 
