@@ -711,11 +711,6 @@ div.h4 {
   background-color: #f7f7f7;
 }
 
-.cursoTabla {
-  border-radius: 10px;
-    overflow: hidden;
-}
-
 .tablaPlan th {
   border-bottom: none;
   background-color: #000;
@@ -782,4 +777,17 @@ div.h4 {
 
 #datos{
   background-color: #E9F1FD;
+}
+
+.buttonCarrera{
+  border: none;
+  text-decoration: none;
+  color: #000;
+  cursor: pointer;
+  transition: 0.3s ease;
+  border-radius: 5px;
+}
+
+.buttonCarrera:hover{
+  background-color: rgba(0, 255, 213, 0.301);
 }
