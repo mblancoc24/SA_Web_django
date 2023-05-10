@@ -733,9 +733,15 @@ class PlanDeEstudioView(LoginRequiredMixin, View):
     
     def get_context_data(self, **kwargs):
         user = self.request.user
-        url = 'https://mocki.io/v1/9da2b776-a811-4491-b5d9-6144abefb58c'
-        response = requests.get(url)
-        data = json.loads(response.text)
+        # url = 'http://192.168.11.196:8062/get_planes_estudio'
+        url = 'https://mocki.io/v1/1698cc3a-1447-45cc-bf6b-adb8e6eb3d5d'
+        idEstudiante = json.dumps({'identificacion': str(604150895)})
+        headers = {
+            'Content-Type': 'application/json'
+        }
+        # response = requests.request("GET", url, headers=headers, data=idEstudiante)
+        response = requests.request("GET", url)
+        data = json.loads(response.text)['result']
         try:
             fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
             imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
@@ -764,11 +770,20 @@ class DetallePlanDeEstudioView(LoginRequiredMixin):
     template_name = 'Dashboard/Estudiante/planEstudio.html'
     
     def getPlan(request, id, status):
-        carrera = request.GET.get("carrera")
-        url = 'https://mocki.io/v1/bf64c0f4-12c3-4581-8099-71e553044eda'
-        response = requests.get(url)
-        data = response.json()
-        return JsonResponse(data, safe=False)
+        plan = request.GET.get('carrera')
+        idEstudiante = json.dumps({'identificacion': str(604150895), 'plan': str(plan)})
+        print(idEstudiante)
+        # url = 'http://192.168.11.196:8062/get_planes_estudio_curricula'
+        url = 'https://mocki.io/v1/78d6e153-4de6-49de-b7a0-0023ed16fe3c'
+        headers = {
+            'Content-Type': 'application/json'
+        }
+        # response = requests.request("GET", url, headers=headers, data=idEstudiante)
+        response = requests.request("GET", url)
+        data = json.loads(response.text)['result']
+        plan = []
+        plan.append(data)
+        return JsonResponse(plan, safe=False)
     
 class MisCursos(LoginRequiredMixin):
     context_object_name = 'misCursos'

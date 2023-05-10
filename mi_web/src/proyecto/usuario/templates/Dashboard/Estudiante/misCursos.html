@@ -9,8 +9,12 @@
         <div class="col-md-12 col-sm-12 mb-5">
             {% for carrera in misCursos.carreras %}
             <div class="card shadow p-2">
-                <h4 class="card-title" id="infoCardTitle">{{carrera.carrera}}</h4>
-                <h5 class="card-title" id="infoCardTitle">{{carrera.cuatrimestre}}</h5>
+                <div class="col-md-4">
+                    <a class="card-title btn-md buttonCarrera" id="infoCardTitle">{{carrera.carrera}}</a>
+                </div>
+                <div class="col-md-4">
+                    <h5 class="card-title" id="infoCardTitle">{{carrera.cuatrimestre}}</h5>
+                </div>
                 <div class="table-responsive-sm p-3">
                     <table class="table table-bordered misCursoTabla">
                         {% for curso in carrera.cursos %}

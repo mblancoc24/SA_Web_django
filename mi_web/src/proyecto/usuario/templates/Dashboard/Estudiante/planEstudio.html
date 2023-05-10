@@ -6,22 +6,25 @@
 <script src="{% static 'js/planEstudio.js' %}"></script>
 {% endblock %}
 {% block content %}
-<div class="container">
+<div class="container-fluid">
     <div class="row justify-content-center mt-3">
         <div class="form-group col-md-6 col-sm-4 ">
             <div id="idP" hidden>{{ id }}</div>
             <div id="StatusP" hidden>{{ status }}</div>
-            <label for="carrera"><i class=""> Seleccione una carrera</i></label>
+            <label for="carrera"><i class=""> Seleccione un Pla de Estudio</i></label>
             <select id="carrera" class="form-select" name="carrera">
-                <option value="" disabled selected hidden>Seleccione una carrera</option>
-                {% for data in carrera.carrera %}
-                <option value="{{ data }}">{{ data }}</option>
-                {% endfor %}
+                <option value="" disabled selected hidden>Seleccione un Plan de Estudio</option>
+                <option value="{{ carrera.data.principal }}">{{ carrera.data.principal }}</option>
+                {% if carrera.data.secundarios %}
+                    {% for secundario in carrera.data.secundarios %}
+                        <option value="{{ secundario }}">{{ secundario }}</option>
+                    {% endfor %}
+                {% endif %}
             </select>
         </div>
     </div>
     <div class="row justify-content-center">
-        <div class="col-md-12">
+        <div class="col-12">
             <div class="card shadow p-2">
                 <div class="row">
                     <div class="col-md-12 estado"></div>
@@ -42,13 +45,8 @@
             </div>
         </div>
     </div>
-    <div class="row mt-3">
-        <div class="col-md-12">
-            <div class="row justify-content-center">
-                <div class="col" id="mainTable">
-
-                </div>
-            </div>
+    <div class="row">
+        <div class="col-12" id="mainTable">
         </div>
     </div>
 </div>
