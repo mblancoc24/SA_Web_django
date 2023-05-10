@@ -1,11 +1,8 @@
 import requests
 import json
-from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.models import User
-from .backends import MicrosoftGraphBackend
 from datetime import date
 from .api_queries import update_urls
-
 
 class dspace_processes():
     
@@ -13,8 +10,7 @@ class dspace_processes():
         session = requests.Session()
         user = request.user
         user = User.objects.get(username=user.username)
-        user_type = MicrosoftGraphBackend.user_type(request)
-        user_data = MicrosoftGraphBackend.get_user_data(request, user_type)
+        user_data = request.session.get('user_info')
         
         # Obtener el token CSRF
         csrf_url = 'http://dspace.uia.ac.cr:8080/server/api/authn'
@@ -73,8 +69,8 @@ class dspace_processes():
         metadata = {
             "name": "User",
             "metadata": {
-                "dc.title": [{"value": user_data.identificacion}],
-                "dc.contributor.author": [{"value": user_data.nombre +" "+ user_data.primer_apellido +" "+ user_data.segundo_apellido}],
+                "dc.title": [{"value": user_data['identificacion']}],
+                "dc.contributor.author": [{"value": user_data['nombre'] +" "+ user_data['primer_apellido'] +" "+ user_data['segundo_apellido']}],
                 "dc.date.issued": [{"value": fecha_actual.strftime('%Y-%m-%d')}],
                 "dc.publisher": [{"value": "Django"}]
             },
@@ -161,8 +157,6 @@ class dspace_processes():
         session = requests.Session()
         user = request.user
         user = User.objects.get(username=user.username)
-        user_type = MicrosoftGraphBackend.user_type(request)
-        user_data = MicrosoftGraphBackend.get_user_data(request, user_type)
         
         # Obtener el token CSRF
         csrf_url = 'http://dspace.uia.ac.cr:8080/server/api/authn'
@@ -317,7 +311,8 @@ class dspace_processes():
             "X-XSRF-TOKEN": csrf_token_login
         }
         data_content = []
-        del data_url['id_estudiante']
+        if 'id_estudiante' in data_url:
+            del data_url['id_estudiante']
         for url in data_url.values():
             if url != 'N/A':
                 upload_url = url
@@ -327,7 +322,6 @@ class dspace_processes():
                     data_content.append(response)
                 else:
                     print('Error al enviar el archivo')
-            
         return data_content
    
     def name_standardization(request, files):

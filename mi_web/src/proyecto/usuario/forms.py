@@ -15,7 +15,7 @@ class FormularioProspecto(forms.ModelForm):
     class Meta:
         model = prospecto
         fields = ('identificacion', 'nombre', 'primer_apellido','segundo_apellido', 'fecha_nacimiento', 'numero_telefonico', 
-                  'numero_telefonico2', 'correo_institucional', 'correo_personal', 'nacionalidad', 'provincia', 'canton', 'distrito', 'sexo')
+                  'numero_telefonico2', 'correo_institucional', 'correo_personal', 'nacionalidad', 'provincia', 'canton', 'distrito', 'direccion_exacta', 'sexo')
          
 
 class FormularioEstudiantes(forms.ModelForm):

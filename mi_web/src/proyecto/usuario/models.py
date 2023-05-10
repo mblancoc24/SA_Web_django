@@ -17,6 +17,7 @@ class estudiantes(models.Model):
     provincia = models.CharField(max_length=20)
     canton = models.CharField(max_length=20)
     distrito = models.CharField(max_length=20)
+    direccion_exacta = models.CharField(max_length=500)
     sexo = models.CharField(max_length=15)
     
 class prospecto(models.Model):
@@ -34,6 +35,7 @@ class prospecto(models.Model):
     provincia = models.CharField(max_length=20)
     canton = models.CharField(max_length=20)
     distrito = models.CharField(max_length=20)
+    direccion_exacta = models.CharField(max_length=500)
     sexo = models.CharField(max_length=15)
     
     
@@ -63,6 +65,7 @@ class profesor(models.Model):
     provincia = models.CharField(max_length=20)
     canton = models.CharField(max_length=20)
     distrito = models.CharField(max_length=20)
+    direccion_exacta = models.CharField(max_length=500)
     sexo = models.CharField(max_length=15)
     puesto_educativo = models.CharField(max_length=50)
     
