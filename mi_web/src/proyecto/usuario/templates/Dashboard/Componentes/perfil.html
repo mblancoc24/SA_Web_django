@@ -134,7 +134,7 @@
             <div class="modal-body">
                 <form method="POST" class="row g-3" enctype="multipart/form-data" action="{% url 'cambiar_foto' %}">
                     {% csrf_token %}
-                    <div class="row g-3">
+
                         <div class="form-floating mb-2 col-md-4" id="dis_provincia" style="display: block;">
                             <select id="provincia_select" class="form-select" name="provincia_select"
                                 data-placeholder="Selecione Provincia" onchange="obtenerProvincia(this)"
@@ -161,8 +161,7 @@
                             <label for="tipo" style="opacity: .65;">Distrito</label>
                             <input type="hidden" id="distrito" name="distrito">
                         </div>
-                    </div>
-                    <div class="row g-3">
+                    
                         <div class="form-floating mb-6 col-md-8">
                             <div class="input-group">
                             <span class="input-group-text" id="basic-addon1">
@@ -177,7 +176,7 @@
                                 </svg>
                             </span>
                             <input type="text" class="form-control"  value="{{ estudiante.direccion_exacta }}"  id="direccion_exacta" placeholder="Direccion Exacta" name="direccion_exacta"
-                                required>
+                                required style="height: 60px;">
                             </div>
                         </div>
 
@@ -194,7 +193,7 @@
                                   </path>
                                 </svg>
                               </span>
-                              <input type="text" class="form-control" value="{{ estudiante.numero_telefonico }}" id="telefono" placeholder="Número Telefónico" name="telefono">
+                              <input type="text" class="form-control" value="{{ estudiante.numero_telefonico }}" id="telefono" placeholder="Número Telefónico" name="telefono" style="height: 60px;">
                             </div>
                         </div>
 
@@ -212,10 +211,10 @@
                                 </svg>
                               </span>
                               <input type="text" class="form-control" value="{{ estudiante.numero_telefonico2 }}" id="telefono2" placeholder="Segundo Número Telefónico"
-                                name="telefono2">
+                                name="telefono2" style="height: 60px;">
                             </div>
                         </div>
-                    </div>
+                  
                     <div class="d-grid mb-2 d-flex justify-content-center">
                         <button type="submit" class="w-100 btn btn-lg btn-primary btn-sm rounded fw-bold"
                             style="max-width: 175px;">

@@ -791,3 +791,19 @@ div.h4 {
 .buttonCarrera:hover{
   background-color: rgba(0, 255, 213, 0.301);
 }
+
+#prematriculaBtn{
+  font-weight: 500;
+  background: #4FD1C5;
+  background: linear-gradient(90deg, rgba(129,230,217,1) 0%, rgba(79,209,197,1) 100%);
+  border: none;
+  border-radius: 1000px;
+  box-shadow: 6px 6px 6px rgba(79,209,197,.64);
+  transition: all 0.3s ease-in-out 0s;
+  cursor: pointer;
+  outline: none;
+}
+
+button:hover::before, button:focus::before {
+  opacity: 1;
+}
