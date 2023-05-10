@@ -88,8 +88,10 @@ def user_update(request):
             data = [id_value, email_value]
             
             save = save_profile_processes.update_user_prospecto(data)
+            
             if save:
                 # Procesar los datos y generar la respuesta en JSON
+                save_profile_processes.update_user_status(request, 'matricula', True)
                 response_data = {'result': 'ok'}
                 return JsonResponse(response_data)
             else:
