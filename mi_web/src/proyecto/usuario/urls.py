@@ -24,6 +24,7 @@ from .views import (
                     guardar_perfil,
                     enviar_archivo_a_odoo,
                     mostrar_foto,
+                    cambiar_foto,
                     change_email,
                     change_email_correct,
                     revision_formulario,
@@ -108,6 +109,7 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
                path('prospecto/<int:id>/<int:status>/enviar-archivo-a-odoo/', enviar_archivo_a_odoo, name='enviar_archivo_a_odoo'),
                
                path('mostrar-foto/', mostrar_foto, name='mostrar_foto'),
+               path('cambiar-foto/', cambiar_foto, name='cambiar_foto'),
                
                path('estudiante/<int:id>/<int:status>/', DashboardEstudianteView.as_view(), name='estudiante'),
                path('estudiante/<int:id>/<int:status>/perfil/', vistaPerfil.profile_view, name='perfil'),

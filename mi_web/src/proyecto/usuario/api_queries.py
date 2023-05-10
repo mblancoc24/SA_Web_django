@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 import requests
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import profesor, estudiantes, RegistroLogsUser, documentos, carreras, colegios, posgrados, fotoperfil, estados, primerIngreso, prospecto
+from .models import profesor, estudiantes, RegistroLogsUser, documentos, fotoperfil, estados, primerIngreso, prospecto
 import json
 from django.contrib.auth.models import User
 
@@ -70,6 +70,48 @@ def obtener_datos(request):
     data_completa = json.dumps(data)
     return JsonResponse(data_completa, safe=False)
 
+def get_student(id):
+    url = 'http://192.168.8.134:8000/get-student-info/'
+    data = {
+        'data':{
+            'id': id
+        }
+    }
+    new_header = {  
+        'Content-Type':'application/json'
+    }
+    
+    response = requests.post(url, headers=new_header, data=json.dumps(data))
+    result = response.json()
+        
+    if response.status_code == 200:
+        print('Sesión cerrada exitosamente')
+        return result
+    else:
+        print('Error al cerrar la sesión')
+        return False
+    
+def get_professor(id):
+    url = 'http://192.168.8.134:8000/get-profesor-info/'
+    data = {
+        'data':{
+            'id': id
+        }
+    }
+    new_header = {  
+        'Content-Type':'application/json'
+    }
+    
+    response = requests.post(url, headers=new_header, data=json.dumps(data))
+    result = response.json()
+        
+    if response.status_code == 200:
+        print('Sesión cerrada exitosamente')
+        return result
+    else:
+        print('Error al cerrar la sesión')
+        return False
+    
 def enviar_data_odoo(request, data):
     user = request.user
     prospecto_user = get_object_or_404(prospecto, identificacion=user.username)

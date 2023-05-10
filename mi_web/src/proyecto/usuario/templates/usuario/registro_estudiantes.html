@@ -183,6 +183,23 @@
             <label for="tipo" style="opacity: .65;">Distrito</label>
             <input type="hidden" id="distrito" name="distrito">
           </div>
+          <div class="form-floating mb-3 col-md-8">
+            <div class="input-group">
+              <span class="input-group-text" id="basic-addon1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="43" fill="currentColor"
+                  class="bi bi-person-vcard" viewBox="0 0 16 16">
+                  <path
+                    d="M5 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm4-2.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5ZM9 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4A.5.5 0 0 1 9 8Zm1 2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5Z">
+                  </path>
+                  <path
+                    d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2ZM1 4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H8.96c.026-.163.04-.33.04-.5C9 10.567 7.21 9 5 9c-2.086 0-3.8 1.398-3.984 3.181A1.006 1.006 0 0 1 1 12V4Z">
+                  </path>
+                </svg>
+              </span>
+              <input type="text" class="form-control " id="direccion_exacta" placeholder="Direccion Exacta" name="direccion_exacta"
+                required>
+            </div>
+          </div>
           <div class="form-floating mb-3 col-md-4" id="dis_correo" style="display: block;">
             <div class="input-group">
               <span class="input-group-text" id="basic-addon1">
@@ -226,36 +243,6 @@
               </span>
               <input type="password" class="form-control" id="password2" placeholder="Confirmar contraseña"
                 name="password2" required>
-            </div>
-            <div class="jumbotron" id="cuenta_profesor" style="display: none;">
-              <h5 class="display-12">Se ha verificado que eres profesor. Los datos ya han sido recopilados
-                anteriormente.</h5>
-              </p>
-              <h5 class="display-12">Su correo institucional y contraseña de acceso de profesor serán los mismos para
-                acceso estudiantil. Por favor proceda a ingresar lo solicitado para finalizar verificacion y registrar.
-              </h5>
-              </p>
-              <input type="text" id="es_profesor" name="es_profesor" value="estudiante" hidden>
-            </div>
-
-            <div class="jumbotron" id="cuenta_estudiante" style="display: none;">
-              <h5 class="display-12">Se ha verificado que eres estudiante regular. Los datos ya han sido recopilados
-                anteriormente.</h5>
-              </p>
-              <h5 class="display-12">Su correo institucional y contraseña de acceso de estudiante serán los mismos para
-                acceso estudiantil. Por favor proceda a ingresar lo solicitado para finalizar verificacion y registrar.
-              </h5>
-              </p>
-            </div>
-
-            <div class="jumbotron" id="cuenta_estudianteprofesor" style="display: none;">
-              <h5 class="display-12">Se ha verificado que eres profesor y estudiante regular. Los datos ya han sido
-                recopilados anteriormente.</h5>
-              </p>
-              <h5 class="display-12">Su correo institucional y contraseña de acceso de profesor serán unificados con tu
-                acceso estudiantil. Por favor proceda a ingresar lo solicitado para finalizar verificacion y registrar.
-              </h5>
-              </p>
             </div>
             <span id='message'></span>
           </div>

@@ -1,7 +1,7 @@
 from .forms import FormularioEstudiantes, FormularioDocumentos, FormularioPrimerIngreso, FormularioProfesor, FormularioProspecto, FormularioInfoEstudiante, CustomUserCreationForm
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
-from .models import profesor, estudiantes, RegistroLogsUser, documentos, carreras, colegios, posgrados, fotoperfil, estados, primerIngreso, prospecto
+from .models import profesor, estudiantes, RegistroLogsUser, documentos, fotoperfil, estados, primerIngreso, prospecto
 
 class save_profile_processes():
     
@@ -9,7 +9,7 @@ class save_profile_processes():
         form = FormularioProspecto({'identificacion': data[0], 'nombre': data[1], 'primer_apellido': data[2],
                 'segundo_apellido': data[3], 'fecha_nacimiento': data[4], 'numero_telefonico': data[5], 'numero_telefonico2': data[6],
                 'correo_institucional': data[7], 'correo_personal': data[8], 'nacionalidad': data[9], 'provincia': data[10],
-                'canton': data[11], 'distrito': data[12], 'sexo': data[13]})
+                'canton': data[11], 'distrito': data[12], 'direccion_exacta': data[13], 'sexo': data[14]})
             
         if form.is_valid():
             form.save()
@@ -53,14 +53,15 @@ class save_profile_processes():
         
     def update_prospecto(request, data):
         user = request.user
-        user = User.objects.get(username=user.username)
-        
+        user = User.objects.get(email=user.email)
+        user.email = data[8]
+        user.save()
         prospecto_user = get_object_or_404(prospecto, identificacion=user.username)
         
         form = FormularioProspecto({'identificacion': data[0], 'nombre': data[1], 'primer_apellido': data[2],
                     'segundo_apellido': data[3], 'fecha_nacimiento': data[4], 'numero_telefonico': data[5], 'numero_telefonico2': data[6],
                     'correo_institucional': data[7], 'correo_personal': data[8], 'nacionalidad': data[9], 'provincia': data[10],
-                    'canton': data[11], 'distrito': data[12], 'sexo': data[13]}, instance=prospecto_user)
+                    'canton': data[11], 'distrito': data[12], 'direccion_exacta': data[13], 'sexo': data[14]}, instance=prospecto_user)
 
         if form.is_valid():
             form.save()
@@ -106,7 +107,7 @@ class save_profile_processes():
             return True
         else:
             return False
-            
+                  
     def update_user_prospecto(data):
         user = User.objects.filter(username=data[0])
         usuario1 = None
@@ -155,11 +156,3 @@ class save_profile_processes():
             user_prospecto = prospecto.objects.get(id_prospecto=user.username)
             user_prospecto.delete()
             return True
-    
-    def save_photo_perfil(request, photo):
-        user = request.user
-        fotoperfil_instancia = fotoperfil()
-        fotoperfil_instancia.user = user
-        fotoperfil_instancia.archivo = photo.read()
-        fotoperfil_instancia.save()
-        return True
