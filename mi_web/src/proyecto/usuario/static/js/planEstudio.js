@@ -76,7 +76,7 @@ function actualizarEstado(data) {
     fieldset.className = 'border p-2 mb-2';
     var legend = document.createElement('legend');
     legend.className = 'float-none w-auto '
-    legend.innerText = select.value.split("CON ENFASIS EN")[0];
+    legend.innerText = select.value;
     fieldset.appendChild(legend);
 
     var divRowInfo = document.createElement('div');
