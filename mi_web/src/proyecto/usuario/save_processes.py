@@ -1,7 +1,7 @@
-from .forms import FormularioEstudiantes, FormularioDocumentos, FormularioPrimerIngreso, FormularioProfesor, FormularioProspecto, FormularioInfoEstudiante, CustomUserCreationForm
+from .forms import FormularioUserStatus, FormularioEstudiantes, FormularioDocumentos, FormularioPrimerIngreso, FormularioProfesor, FormularioProspecto, CustomUserCreationForm
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
-from .models import profesor, estudiantes, RegistroLogsUser, documentos, fotoperfil, estados, primerIngreso, prospecto
+from .models import profesor, estudiantes, documentos, primerIngreso, prospecto, user_status
 
 class save_profile_processes():
     
@@ -156,3 +156,37 @@ class save_profile_processes():
             user_prospecto = prospecto.objects.get(id_prospecto=user.username)
             user_prospecto.delete()
             return True
+        
+    def save_user_status(request, data):
+        form = FormularioUserStatus({'identificacion': data[0], 'activo': data[1], 'moroso': data[2],
+                                    'form': data[3], 'prematricula': data[4], 'matricula': data[5]})
+        
+        if form.is_valid():
+            form.save()
+            return True
+        else:
+            return False
+        
+    def update_user_status(request, data, value):
+        user = request.user
+        user_s = get_object_or_404(user_status, identificacion=user.username)
+        
+        if data == 'activo':
+            datos_estados = [user.username, value, user_s.moroso, user_s.form, user_s.prematricula, user_s.matricula]
+        elif data == 'moroso':
+            datos_estados = [user.username, user_s.activo, value, user_s.form, user_s.prematricula, user_s.matricula]
+        elif data == 'form':
+            datos_estados = [user.username, user_s.activo, user_s.moroso, value, user_s.prematricula, user_s.matricula]
+        elif data == 'prematricula':
+            datos_estados = [user.username, user_s.activo, user_s.moroso, user_s.form, value, user_s.matricula]
+        elif data == 'matricula':
+            datos_estados = [user.username, user_s.activo, user_s.moroso, user_s.form, user_s.prematricula, value]
+        
+        form = FormularioUserStatus({'identificacion': datos_estados[0], 'activo': datos_estados[1], 'moroso': datos_estados[2],
+                'form': datos_estados[3], 'prematricula': datos_estados[4], 'matricula': datos_estados[5]}, instance=user_s)
+        
+        if form.is_valid():
+            form.save()
+            return True
+        else:
+            return False

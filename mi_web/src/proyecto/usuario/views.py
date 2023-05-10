@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import profesor, estudiantes, RegistroLogsUser, documentos, carreras, colegios, posgrados, fotoperfil, estados, primerIngreso, prospecto
-from .forms import FormularioEstudiantes, FormularioDocumentos, FormularioPrimerIngreso, FormularioProfesor, FormularioProspecto, FormularioInfoEstudiante, CustomUserCreationForm
+from .models import profesor, estudiantes, RegistroLogsUser, documentos, user_status, carreras, colegios, posgrados, fotoperfil, estados, primerIngreso, prospecto
+from .forms import  CustomUserCreationForm
 from django.views.generic.list import ListView
-from django.views.generic.edit import CreateView, FormView
+from django.views.generic.edit import FormView
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -21,9 +21,7 @@ from .backends import MicrosoftGraphBackend
 from .dspace_processes import dspace_processes
 from .save_processes import save_profile_processes
 from .api_queries import enviar_data_odoo, insert_urls, get_urls
-from django.core.cache import cache
 import json
-from datetime import datetime
 import base64
 
 class Logueo(LoginView):
@@ -59,15 +57,20 @@ class Logueo(LoginView):
             
         self.request.session['user_info'] = prospecto_dict
         
+        status = get_object_or_404(user_status, identificacion=user.username)
+        
         if user is None:
             form.add_error('username', 'El usuario no existe en el sistema')
             logout(self.request)
             return super().form_invalid(form)
-        else:
+        elif status.activo:
             login(self.request, user)
             registrar_accion(user, 'El usuario {0} ha ingresado como prospecto.'.format(user.username))
             context = {'id': username, 'status': 4}
             return redirect(reverse('usuario_prospecto', kwargs=context))
+        else:
+            logout(self.request)
+            return super().form_invalid(form)
 
 def microsoft_auth(request):
     # Comprobar si ya existe una sesión de usuario
@@ -139,8 +142,8 @@ def microsoft_callback(request):
         
         user = MicrosoftGraphBackend.authenticate(request=request, access_token=access_token)
         tipo_user = request.session.get('user_info')
-        
-        if user is not None and tipo_user is not None:
+        status = get_object_or_404(user_status, identificacion=user.username)
+        if user is not None and tipo_user is not None and status.activo:
             if user.is_active:
                 login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                 if tipo_user['tipo'] == 'estudiante':
@@ -182,7 +185,6 @@ class MicrosoftLogoutView(LoginRequiredMixin, LogoutView):
                 
                 if response.status_code == 200:
                     request.session.flush()
-                    cache.clear()
                     print("Se ha cerrado sesión correctamente.")
                 else:
                     print("Error al cerrar sesión.")
@@ -227,6 +229,9 @@ class PaginaRegistroEstudiante(FormView):
         
         if save:
             user = User.objects.get(username=username)
+            
+            datos_estados = [username, True, False, 'NA', False, False]
+            save_profile_processes.save_user_status(self.request, datos_estados)
             
             if user is not None:
                 
@@ -573,9 +578,10 @@ def revision_formulario(request, id, status):
         }
     return render(request, "Dashboard/Prospecto/revision_form.html", contexto)
 
+#SIN USO
 def descargar_archivo(request, id):
     # Obtiene el contenido del bitstream de la API de DSpace
-    responses = cache.get('urls_links')
+    responses = request.session.get('urls')
     response = responses[id]
     # Establece el tipo de contenido según la extensión del archivo
     if 'pdf' in response.headers['Content-Type']:
@@ -725,6 +731,7 @@ def enviar_archivo_a_odoo(request, id, status):
             save = save_profile_processes.save_documents(request, formulariodata, formulariodocumentos)
 
             if save and save_odoo:
+                save_profile_processes.update_user_status(request, 'form', 'PI')
                 data_urls = [save_data_dspace[0], save_data_dspace[1], save_data_dspace[2], save_data_dspace[3],
                              save_data_dspace[4], save_data_dspace[5]]
                 insert_urls(request,data_urls)

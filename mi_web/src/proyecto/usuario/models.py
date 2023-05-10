@@ -39,15 +39,14 @@ class prospecto(models.Model):
     sexo = models.CharField(max_length=15)
     
     
-class info_estudiantes (models.Model):
-    id_info = models.AutoField(primary_key=True)
-    user = models.ForeignKey(prospecto,
-                            on_delete=models.CASCADE,
-                            null=True,
-                            blank=True)
-    ingresoeconomico = models.CharField(max_length=35)
-    carrera = models.CharField(max_length=100)
-    colegio = models.CharField(max_length=100)
+class user_status (models.Model):
+    id_user_status = models.AutoField(primary_key=True)
+    identificacion = models.CharField(max_length=22)
+    activo = models.BooleanField(default=True)
+    moroso = models.BooleanField(default=False)
+    form = models.CharField(max_length=2)
+    prematricula = models.BooleanField(default=False)
+    matricula = models.BooleanField(default=False)
 
 
 class profesor(models.Model):

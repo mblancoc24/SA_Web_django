@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 import requests
 from .api_queries import get_professor, get_student
 from .models import profesor, estudiantes, prospecto
+from .save_processes import save_profile_processes
 
 class MicrosoftGraphBackend(BaseBackend):
     
@@ -60,6 +61,8 @@ class MicrosoftGraphBackend(BaseBackend):
                 name = user_data.get('givenName')
                 lastname = user_data.get('surname')
                 
+                datos_estados = [id_user, True, False, 'ER', True, True]
+                
                 #Busqueda de usuario
                 if tipo_user == 'Estudiante':
                     estudiante_usuario = get_student(id_user)
@@ -70,6 +73,7 @@ class MicrosoftGraphBackend(BaseBackend):
                         request.session['user_info'] = estudiante_usuario
                         estudiante_usuario["tipo"] = "estudiante"
                         user.backend = 'django.contrib.auth.backends.ModelBackend'
+                        save_profile_processes.save_user_status(request, datos_estados)
                         return user
                 elif tipo_user == 'Profesores':
                     profesor_usuario = get_professor(id_user)
@@ -93,4 +97,5 @@ class MicrosoftGraphBackend(BaseBackend):
                         profesor_usuario["tipo"] = "estudiante/profesor"
                         request.session['user_info'] = profesor_usuario
                         user.backend = 'django.contrib.auth.backends.ModelBackend'
+                        save_profile_processes.save_user_status(request, datos_estados)
                         return user
