@@ -242,3 +242,22 @@ def update_urls(request, url_dspace, type):
     else:
         print('Error al cerrar la sesión')
         return False
+    
+def update_request(request, data):
+    user = request.user
+    # url = 'http://192.168.8.134:8000/update-request/'
+    
+    # new_header = {  
+    #     'Content-Type':'application/json'
+    # }
+    
+    # response = requests.post(url, headers=new_header, data=json.dumps(data))
+    # result = response.json()
+        
+    # if response.status_code == 200:
+    #     print('Sesión cerrada exitosamente')
+    #     return True
+    # else:
+    #     print('Error al cerrar la sesión')
+    #     return False
+    return True

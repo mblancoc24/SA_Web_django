@@ -20,7 +20,7 @@ from django.urls import reverse
 from .backends import MicrosoftGraphBackend
 from .dspace_processes import dspace_processes
 from .save_processes import save_profile_processes
-from .api_queries import enviar_data_odoo, insert_urls, get_urls
+from .api_queries import enviar_data_odoo, insert_urls, get_urls, update_request
 import json
 import base64
 
@@ -316,7 +316,7 @@ def posgradosselect(request):
 class vistaPerfil (LoginRequiredMixin):
     context_object_name = 'perfil_estudiante'
     template_name = 'Dashboard/Componentes/perfil.html'
-
+    
     def profile_view(request, id, status):
         user = request.user
         
@@ -449,6 +449,43 @@ def cambiar_foto(request):
     except:
         user_file.save()
     return redirect(request.META.get('HTTP_REFERER'))
+
+def enviar_solicitud(request):
+    user = request.user
+    
+    user_data = request.session.get('user_info')
+    
+    provincia = request.POST.get('provincia')
+    canton = request.POST.get('canton')
+    distrito = request.POST.get('distrito')
+    direccion = request.POST.get('direccion_exacta')
+    telefono = request.POST.get('telefono')
+    telefono2 = request.POST.get('telefono2')
+    email = request.POST.get('email')
+    
+    data_request = {'id': user.username}
+    
+    if provincia != 'NA':
+        data_request['provincia'] = provincia
+        data_request['canton'] = canton
+        data_request['distrito'] = distrito
+        
+    if direccion != user_data['direccion_exacta']:
+        data_request['direccion_exacta'] = direccion
+        
+    if telefono != str(user_data['numero_telefonico']):
+        data_request['numero_telefonico'] = telefono
+    
+    if telefono2 != str(user_data['numero_telefonico2']):
+        data_request['numero_telefonico2'] = telefono2   
+        
+    if email != user_data['correo_personal']:
+        data_request['correo_personal'] = email   
+    
+    send = update_request(request, data_request)
+    
+    if send:
+        return redirect(request.META.get('HTTP_REFERER'))
 
 class DashboardEstudianteView(LoginRequiredMixin, View):
     login_url = ''  # Ruta de inicio de sesión
@@ -890,3 +927,45 @@ class MisCursos(LoginRequiredMixin):
                 'misCursos': data
             }
         return render(request, 'Dashboard/Estudiante/misCursos.html', context)
+    
+class MatriculaView(LoginRequiredMixin, View):
+    context_object_name = 'matricula'
+    template_name = 'Dashboard/Estudiante/matriculaEstudiante.html'
+    
+    def get_context_data(self, **kwargs):
+        user = self.request.user
+        
+        url = 'https://mocki.io/v1/ccb975ab-0e1d-4852-8541-1311a736ae9d'
+        response = requests.request("GET", url)
+        data = json.loads(response.text)
+        registros = {}
+        i = 0
+        for curso in data[0]['data']['mallaCurricular'][0]['cursos']:
+            curso_cursos = curso['curso']
+            nombre_curso = curso['nombre']
+            creditos_curso = curso['creditos']
+            registros[str(i)] = {'curso':curso_cursos, 'nombre': nombre_curso, 'credito': creditos_curso}
+            i+=1
+            
+        try:
+            fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
+            imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
+            context = {
+                'registro': registros,
+                'user': user,
+                'fotoperfil': imagen_url,
+                'status': self.kwargs['status'],
+                'id': self.kwargs['id']
+            }
+        except fotoperfil.DoesNotExist:
+            context = {
+                'registro': registros,
+                'user': user,
+                'status': self.kwargs['status'],
+                'id': self.kwargs['id']
+            }
+        return context
+    
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        return render(request, self.template_name, context)
