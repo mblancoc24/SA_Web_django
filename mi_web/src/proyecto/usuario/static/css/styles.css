@@ -295,6 +295,10 @@ body {
   min-height: 100vh;
 }
 
+#bodyUia{
+  font-size: 100%;
+}
+
 .card-link:hover .card {
   background-color: #000000;
   border: 1px solid #000000;
@@ -888,4 +892,8 @@ a#microsofId img {
 
 .right-link {
   margin-left: auto;
+}
+
+#zoomIn, #zoomOut, #refres{
+  cursor: pointer;
 }
