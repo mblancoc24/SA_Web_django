@@ -45,21 +45,21 @@
                 <li class="nav-item">
                     <a href="{% url 'estudiante' id=id status=status %}" class="nav-link" onclick="ocultar()">
                         <i class="fas fa-home"></i>
-                        <p>Home</p>
+                        <p>Inicio</p>
                     </a>
                 </li>
                 {% elif status == 4 %}
                 <li class="nav-item">
                     <a href="{% url 'usuario_prospecto' id=id status=status %}" class="nav-link">
                         <i class="fas fa-home"></i>
-                        <p>Home</p>
+                        <p>Inicio</p>
                     </a>
                 </li>
                 {% else %}
                 <li class="nav-item">
                     <a href="{% url 'profesor' id=id status=status %}" class="nav-link">
                         <i class="fas fa-home"></i>
-                        <p>Home</p>
+                        <p>Inicio</p>
                     </a>
                 </li>
                 {% endif %}
