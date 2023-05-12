@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/progressbar.js/1.1.0/progressbar.min.js"></script>
 <script src="{% static 'js/planEstudio.js' %}"></script>
+<script src="{% static 'js/accesibilidad.js' %}"></script>
 {% endblock %}
 {% block content %}
 <div class="container-fluid">
@@ -16,9 +17,9 @@
                 <option value="" disabled selected hidden>Seleccione un Plan de Estudio</option>
                 <option value="{{ carrera.data.principal }}">{{ carrera.data.principal }}</option>
                 {% if carrera.data.secundarios %}
-                    {% for secundario in carrera.data.secundarios %}
-                        <option value="{{ secundario }}">{{ secundario }}</option>
-                    {% endfor %}
+                {% for secundario in carrera.data.secundarios %}
+                <option value="{{ secundario }}">{{ secundario }}</option>
+                {% endfor %}
                 {% endif %}
             </select>
         </div>
@@ -52,6 +53,60 @@
         <div class="col-12" id="mainTable">
         </div>
     </div>
+    <div class="position-fixed bottom-0 start-50 translate-middle-x p-3" style="z-index: 11">
+        <div id="liveToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <i class="bi bi-info-circle-fill "></i>
+                <span class="ml-2" id="toastContent"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
 </div>
 <br>
+{% block modal_prematricula %}
+<div class="modal fade" id="modal_prematricula" tabindex="-1" aria-labelledby="modal_prematriculaTitle"
+    style="display: none" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content rounded-4">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal_prematriculaTitle">
+                    Prematricula
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><span class="icon-close2"></span></span>
+                </button>
+            </div>
+            <div class="modal-body" id="prematriculaBody">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card shadow">
+                            <div class="card-header"></div>
+                            <div class="card-body table-responsive p-0">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" style="width: 20px;"></th>
+                                            <th scope="col" style="width: 100px;">Curso</th>
+                                            <th scope="col">Nombre</th>
+                                            <th scope="col" style="width: 90px;">Creditos</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="premTablaBody">
+
+                                    </tbody>
+                                </table>
+                                <div class="col-md-6 ml-auto" id="totalCreditos">
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock modal_prematricula %}
+
 {% endblock content %}

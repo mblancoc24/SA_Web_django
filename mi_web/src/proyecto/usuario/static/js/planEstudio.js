@@ -2,7 +2,14 @@ var totalCurso;
 var cursoAprovados;
 var totalCreditos;
 var creditosAprovados;
+var cursoPre = [];
+var cantidadCursos;
+var auxCantCursos;
 $(document).ready(function () {
+    var botonPrematricula = document.getElementById('prematriculaBtn');
+    botonPrematricula.onclick = function () {
+        mostrarPrematricula();
+    }
     const carreraSelect = document.getElementById('carrera');
     carreraSelect.onchange = function () {
         totalCurso = 0;
@@ -165,11 +172,12 @@ function actualizarTabla(data) {
     var contenedor = document.querySelector('#mainTable');
     contenedor.innerHTML = '';
     data.forEach(cuatrimestreObj => {
+        cantidadCursos = cuatrimestreObj.data.recargo;
+        auxCantCursos = cuatrimestreObj.data.recargo;
         var mallaCurricular = cuatrimestreObj.data.mallaCurricular;
         const cursosAprobados = data[0].data.cursosAprobadosCodigos.map(curso => curso.codigo);
-        console.log(cursosAprobados)
         mallaCurricular.forEach((curso, index) => {
-           
+
             var divTablas = document.createElement('div');
             divTablas.className = 'card shadow';
 
@@ -229,11 +237,16 @@ function actualizarTabla(data) {
             th3.scope = "col";
             th3.appendChild(document.createTextNode('Creditos'))
 
+            var th4 = document.createElement('th');
+            th4.scope = "col";
+            th4.appendChild(document.createTextNode('Prematricular'))
+
             tr.appendChild(thAp);
             tr.appendChild(th0);
             tr.appendChild(th1);
             tr.appendChild(th2);
             tr.appendChild(th3);
+            tr.appendChild(th4);
             thead.appendChild(tr);
             var tbody = document.createElement('tbody');
             tbody.id = 'PlanBody';
@@ -250,12 +263,16 @@ function actualizarTabla(data) {
                     var icons = document.createElement('i');
                     var td_apro = document.createElement('td');
                     td_apro.style.width = '10px';
-                    if(cursosAprobados.includes(items.curso)){
+                    var checkOpcion = document.createElement('input');
+                    checkOpcion.type = 'checkbox';
+                    checkOpcion.id = `${items.curso}-checkbox`;
+                    if (cursosAprobados.includes(items.curso)) {
                         icons.className = 'bi bi-check-lg';
                         icons.style.color = '#3bb80a';
                         icons.style.fontSize = '16px';
+                        checkOpcion.setAttribute("hidden", true);
                         td_apro.appendChild(icons);
-                    }else if(items.requisitos === ''){
+                    } else if (items.requisitos === '') {
                         icons.className = 'bi bi-plus-lg color-box';
                         icons.style.color = '#006a9f';
                         icons.style.fontSize = '16px';
@@ -265,25 +282,32 @@ function actualizarTabla(data) {
                         icons.style.color = '#006a9f';
                         icons.style.fontSize = '16px';
                         td_apro.appendChild(icons);
-                    }else{
+                    } else {
                         icons.className = 'bi bi-x-lg color-box';
                         icons.style.color = '#83877b';
                         icons.style.fontSize = '16px';
+                        checkOpcion.setAttribute('disabled', 'true');
                         td_apro.appendChild(icons);
                     }
                     var td_siglas = document.createElement('td');
                     var td_curso = document.createElement('td');
                     var td_requisito = document.createElement('td');
                     var td_creditos = document.createElement('td');
+                    var td_pre = document.createElement('td');
                     td_siglas.appendChild(document.createTextNode(' ' + items.curso));
                     td_curso.appendChild(document.createTextNode(items.nombre));
                     td_requisito.appendChild(document.createTextNode(items.requisitos));
                     td_creditos.appendChild(document.createTextNode(items.creditos));
+                    checkOpcion.onchange = function () {
+                        visualizar(items.curso, items.nombre, items.creditos, `${items.curso}-checkbox`);
+                    }
+                    td_pre.appendChild(checkOpcion);
                     trb.appendChild(td_apro);
                     trb.appendChild(td_siglas);
                     trb.appendChild(td_curso);
                     trb.appendChild(td_requisito);
                     trb.appendChild(td_creditos);
+                    trb.appendChild(td_pre);
                     tbody.appendChild(trb);
                 }
 
@@ -300,5 +324,95 @@ function mostrarTabla(index) {
         div.style.display = 'none';
     } else {
         div.style.display = '';
+    }
+}
+
+function visualizar(curso, nombre, creditos, id) {
+    const prematriculaOption = document.querySelector('#opcionPrematricula');
+    const cursoObj = {
+        curso: curso,
+        nombre: nombre,
+        creditos: creditos,
+    };
+    prematriculaOption.style.display = '';
+    var checkBox = document.getElementById(id);
+    var toast = document.querySelector('#liveToast');
+    var content = document.getElementById('toastContent');
+    console.log(cantidadCursos);
+    if (checkBox.checked && cantidadCursos > 0) {
+        cursoPre.push(cursoObj);
+        cantidadCursos -= 1;
+        var cursos = document.getElementById('cantCursos');
+        var auxCu = parseInt(cursos.innerText);
+        var totalCu = auxCu + 1;
+        cursos.innerText = totalCu;
+    } else if (!checkBox.checked) {
+        cursoPre.splice(cursoPre.indexOf(curso), 1);
+        cantidadCursos += 1;
+        var cursos = document.getElementById('cantCursos');
+        var auxCu = parseInt(cursos.innerText);
+        var totalCu = auxCu - 1;
+        cursos.innerText = totalCu;
+    } else {
+        content.innerText = `Solo puede prematricular ${auxCantCursos} cursos`;
+        checkBox.checked = false;
+        var toast = new bootstrap.Toast(toast, { delay: 3000 });
+        toast.show();
+    }
+}
+
+function mostrarPrematricula() {
+    var tbodyModal = document.getElementById('premTablaBody');
+    var totalCreditos = document.getElementById('totalCreditos');
+    tbodyModal.innerHTML = '';
+    
+    cursoPre.forEach(curso => {
+        var trTablaModal = document.createElement('tr');
+        trTablaModal.id = `${curso.curso}-fila`;
+        var tdCheckModal = document.createElement('td');
+        var tdSiglaModal = document.createElement('td');
+        var tdNombreModal = document.createElement('td');
+        var tdCreditoModal = document.createElement('td');
+
+        var checkTablaModal = document.createElement('input');
+        checkTablaModal.type = 'checkbox';
+        checkTablaModal.checked = 'true';
+        checkTablaModal.id = `${curso.curso}-preCheckModal`;
+        checkTablaModal.onchange = function () {
+            quitarPrematricula(`${curso.curso}-fila`, `${curso.curso}-checkbox`);
+        }
+        tdCheckModal.appendChild(checkTablaModal);
+        tdSiglaModal.appendChild(document.createTextNode(curso.curso));
+        tdNombreModal.appendChild(document.createTextNode(curso.nombre));
+        tdCreditoModal.appendChild(document.createTextNode(curso.creditos));
+
+        trTablaModal.appendChild(tdCheckModal);
+        trTablaModal.appendChild(tdSiglaModal);
+        trTablaModal.appendChild(tdNombreModal);
+        trTablaModal.appendChild(tdCreditoModal);
+
+        tbodyModal.appendChild(trTablaModal);
+    });
+
+}
+
+function quitarPrematricula(fila, checkId) {
+    console.log(cursoPre);
+    var cursos = document.getElementById('cantCursos');
+    var filaTablaModal = document.getElementById(fila);
+    filaTablaModal.parentNode.removeChild(filaTablaModal);
+    var checkBoxTabla = document.getElementById(checkId);
+    console.log(checkBoxTabla);
+    checkBoxTabla.checked = false;
+    var auxCu = parseInt(cursos.innerText);
+    var totalCu = auxCu - 1;
+    cursos.innerText = totalCu;
+    cantidadCursos += 1;
+
+    for (var i = 0; i < cursoPre.length; i++) {
+        if (`${cursoPre[i].curso}-fila` === fila) {
+            cursoPre.splice(i, 1);
+            break;
+        }
     }
 }
