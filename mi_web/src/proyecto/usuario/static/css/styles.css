@@ -798,7 +798,7 @@ div.h4 {
   background: linear-gradient(90deg, rgba(129,230,217,1) 0%, rgba(79,209,197,1) 100%);
   border: none;
   border-radius: 1000px;
-  box-shadow: 6px 6px 6px rgba(79,209,197,.64);
+  box-shadow: 4px 4px 4px rgba(79,209,197,.64);
   transition: all 0.3s ease-in-out 0s;
   cursor: pointer;
   outline: none;
@@ -806,4 +806,46 @@ div.h4 {
 
 button:hover::before, button:focus::before {
   opacity: 1;
+}
+
+@media(max-width: 768px) {
+  .mobile-hide {
+      display: none !important;
+  }
+}
+#liveToast{
+  width: 290px;
+}
+.toast-header {
+  background-color: #7bc5e2;
+  color: #000;
+}
+
+.accesibilidad.accesibilidad-dark::before {
+  right: 0;
+  transition: right .3s ease-in-out, display .3s ease-in-out;
+}
+
+.accesibilidad-dark {
+  background-color: #343a40;
+}
+
+aside.accesibilidad {
+  position: fixed;
+  top: 83px;
+  right: 0;
+  z-index: 1031;
+  width: 250px;
+  height: 612px;
+  display: none;
+  
+}
+
+aside.accesibilidad.active {
+  right: 0;
+  display: block;
+}
+
+.accesibilidad-content{
+  color: white;
 }
