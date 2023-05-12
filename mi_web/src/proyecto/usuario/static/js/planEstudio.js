@@ -6,6 +6,8 @@ var cursoPre = [];
 var cantidadCursos;
 var auxCantCursos;
 $(document).ready(function () {
+    const id = document.getElementById('idP');
+    const status = document.getElementById('StatusP');
     var botonPrematricula = document.getElementById('prematriculaBtn');
     botonPrematricula.onclick = function () {
         mostrarPrematricula();
@@ -16,8 +18,7 @@ $(document).ready(function () {
         cursoAprovados = 0;
         totalCreditos = 0;
         creditosAprovados = 0;
-        const id = document.getElementById('idP');
-        const status = document.getElementById('StatusP');
+
         var plan = document.getElementById('carrera').value;
         // Enviar una petición AJAX al servidor
         const url = `/prospecto/${id.textContent}/${status.textContent}/plan/carrera/`;
@@ -59,6 +60,10 @@ $(document).ready(function () {
             }
         };
         xhr.send();
+    }
+    var botonEnviarPrematricula = document.getElementById('enviarPrematricula');
+    botonEnviarPrematricula.onclick = function () {
+        enviarPrematricula(id.textContent, cursoPre);
     }
 });
 
@@ -363,41 +368,89 @@ function visualizar(curso, nombre, creditos, id) {
 
 function mostrarPrematricula() {
     var tbodyModal = document.getElementById('premTablaBody');
-    var totalCreditos = document.getElementById('totalCreditos');
+    var count = 0;
     tbodyModal.innerHTML = '';
-    
+
     cursoPre.forEach(curso => {
         var trTablaModal = document.createElement('tr');
         trTablaModal.id = `${curso.curso}-fila`;
+        trTablaModal.className = 'border-bottom';
         var tdCheckModal = document.createElement('td');
-        var tdSiglaModal = document.createElement('td');
-        var tdNombreModal = document.createElement('td');
-        var tdCreditoModal = document.createElement('td');
-
+        var divCheckModal = document.createElement('div');
         var checkTablaModal = document.createElement('input');
         checkTablaModal.type = 'checkbox';
         checkTablaModal.checked = 'true';
         checkTablaModal.id = `${curso.curso}-preCheckModal`;
         checkTablaModal.onchange = function () {
-            quitarPrematricula(`${curso.curso}-fila`, `${curso.curso}-checkbox`);
+            quitarPrematricula(`${curso.curso}-fila`, `${curso.curso}-checkbox`, curso.creditos);
         }
-        tdCheckModal.appendChild(checkTablaModal);
-        tdSiglaModal.appendChild(document.createTextNode(curso.curso));
-        tdNombreModal.appendChild(document.createTextNode(curso.nombre));
-        tdCreditoModal.appendChild(document.createTextNode(curso.creditos));
+        divCheckModal.className = 'd-flex align-items-center justify-content-center';
+        divCheckModal.appendChild(checkTablaModal);
+
+        var tdSiglaModal = document.createElement('td');
+        var divSiglaModal = document.createElement('div');
+        var spanSiglaModal = document.createElement('span');
+        divSiglaModal.className = 'd-flex align-items-center justify-content-center';
+        spanSiglaModal.className = 'pe-3 fw-normal';
+        spanSiglaModal.innerText = curso.curso;
+        divSiglaModal.appendChild(spanSiglaModal);
+
+        var tdNombreModal = document.createElement('td');
+        var divNombreModal = document.createElement('div');
+        var divNombrePModal = document.createElement('div');
+        var pNombreModal = document.createElement('p');
+        divNombreModal.className = 'd-flex align-items-center';
+        divNombrePModal.className = 'ps-3 d-flex flex-column justify-content';
+        pNombreModal.className = 'fw-normal';
+        pNombreModal.innerText = curso.nombre;
+        divNombrePModal.appendChild(pNombreModal);
+        divNombreModal.appendChild(divNombrePModal);
+
+        var tdCreditoModal = document.createElement('td');
+        var divCreditoModal = document.createElement('div');
+        var pCreditoModal = document.createElement('p');
+        var spanCreditoModal = document.createElement('span');
+        divCreditoModal.className = 'd-flex align-items-center justify-content-center';
+        pCreditoModal.className = 'pe-3';
+        spanCreditoModal.className = 'red';
+        spanCreditoModal.innerText = curso.creditos;
+        pCreditoModal.appendChild(spanCreditoModal);
+        divCreditoModal.appendChild(spanCreditoModal);
+
+        tdCheckModal.appendChild(divCheckModal);
+        tdSiglaModal.appendChild(divSiglaModal);
+        tdNombreModal.appendChild(divNombreModal);
+        tdCreditoModal.appendChild(divCreditoModal);
 
         trTablaModal.appendChild(tdCheckModal);
         trTablaModal.appendChild(tdSiglaModal);
         trTablaModal.appendChild(tdNombreModal);
         trTablaModal.appendChild(tdCreditoModal);
-
+        count += curso.creditos;
         tbodyModal.appendChild(trTablaModal);
     });
+    var trTotal = document.createElement('tr');
+    trTotal.className = 'border-bottom';
+    var tdTotalModal = document.createElement('td');
+    tdTotalModal.colSpan = '4'
+    var divTotalModal = document.createElement('div');
+    var spanTotalModal = document.createElement('span');
+    divTotalModal.className = 'd-flex align-items-center justify-content-end';
+    spanTotalModal.className = 'pe-3 fw-normal';
+    spanTotalModal.innerText = `Total de Creditos: ${count}`;
+    spanTotalModal.id = 'totalCreditos';
+    divTotalModal.appendChild(spanTotalModal);
+    tdTotalModal.appendChild(divTotalModal);
+    trTotal.appendChild(tdTotalModal);
 
+    tbodyModal.appendChild(trTotal);
 }
 
-function quitarPrematricula(fila, checkId) {
-    console.log(cursoPre);
+function quitarPrematricula(fila, checkId, credito) {
+    var totalCreditos = document.getElementById('totalCreditos');
+    var auxTotal = totalCreditos.innerText.split(': ');
+    var totalCr = auxTotal[1] - credito;
+    totalCreditos.innerText = `Total de Creditos: ${totalCr}`;
     var cursos = document.getElementById('cantCursos');
     var filaTablaModal = document.getElementById(fila);
     filaTablaModal.parentNode.removeChild(filaTablaModal);
@@ -415,4 +468,16 @@ function quitarPrematricula(fila, checkId) {
             break;
         }
     }
+}
+
+function enviarPrematricula(id, cursos) {
+    var prematricula = {
+        "id": id,
+        "cursos": []
+    };
+    cursos.forEach(sigla => {
+        prematricula.cursos.push(sigla.curso);
+    })
+    var prematriculaJSON = JSON.stringify(prematricula);
+    console.log(prematriculaJSON);
 }
