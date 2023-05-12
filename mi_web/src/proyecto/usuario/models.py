@@ -120,8 +120,7 @@ class documentos (models.Model):
     foto = models.BooleanField(default=False)
     notas = models.BooleanField(default=False)
     plan = models.BooleanField(default=False)
-    
-        
+     
 class posgrados (models.Model):
     nombre_carrera = models.CharField(max_length=100)
     id = models.AutoField(primary_key=True)

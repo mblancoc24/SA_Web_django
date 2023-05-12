@@ -53,7 +53,7 @@
                         <br>
                         <div class="d-grid mb-2">
                             <button type="submit"
-                                class="w-100 btn btn-lg btn-primary btn-login fw-bold bi bi-box-arrow-in-right"
+                                class="animated-button w-100 btn btn-lg btn-primary btn-login fw-bold bi bi-box-arrow-in-right"
                                 id="loading-indicator"> Ingresar</button>
 
                             <div id="loading-indicator" class="hidden">
@@ -97,7 +97,7 @@
         La cuenta se ha creado con exito. Puede proceder a iniciar sesion.
       </div>
     </div>
-  </div>
+</div>
 
 <style>
     #img_check {
@@ -118,7 +118,7 @@
 
     var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
     var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
-    return new bootstrap.Popover(popoverTriggerEl)
+        return new bootstrap.Popover(popoverTriggerEl)
     })
 </script>
 
@@ -149,6 +149,33 @@
     .right-link {
         margin-left: auto;
     }
+
+    .animated-button {
+        background-color: #4CAF50; /* color de fondo del botón */
+        border: none; /* borde del botón */
+        color: white; /* color del texto del botón */
+        padding: 15px 32px; /* tamaño del botón */
+        text-align: center; /* alineación del texto del botón */
+        text-decoration: none; /* decoración del texto del botón */
+        display: inline-block; /* muestra el botón como un elemento de bloque */
+        font-size: 16px; /* tamaño de fuente del texto del botón */
+        margin: 10px 2px; /* margen del botón */
+        cursor: pointer; /* cambia el cursor cuando se coloca sobre el botón */
+        animation: pulse 2s infinite; /* animación del botón */
+    }
+      
+    @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.1);
+        }
+        100% {
+          transform: scale(1);
+        }
+    }
+      
 </style>
 
 {% endblock content %}
