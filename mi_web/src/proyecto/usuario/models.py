@@ -38,7 +38,6 @@ class prospecto(models.Model):
     direccion_exacta = models.CharField(max_length=500)
     sexo = models.CharField(max_length=15)
     
-    
 class user_status (models.Model):
     id_user_status = models.AutoField(primary_key=True)
     identificacion = models.CharField(max_length=22)
@@ -47,7 +46,6 @@ class user_status (models.Model):
     form = models.CharField(max_length=2)
     prematricula = models.BooleanField(default=False)
     matricula = models.BooleanField(default=False)
-
 
 class profesor(models.Model):
     id_profesor= models.AutoField(primary_key=True)
@@ -120,6 +118,12 @@ class documentos (models.Model):
     foto = models.BooleanField(default=False)
     notas = models.BooleanField(default=False)
     plan = models.BooleanField(default=False)
+  
+class inclusivo(models.Model):
+    id_inclusivo = models.AutoField(primary_key=True)
+    identificacion = models.CharField(max_length=25)
+    sexo = models.CharField(max_length=50)
+    trato = models.CharField(max_length=60)
      
 class posgrados (models.Model):
     nombre_carrera = models.CharField(max_length=100)
@@ -141,7 +145,4 @@ class carreras (models.Model):
     
     class Meta:
         db_table = 'primer_ingreso'
-        
-
-        
         

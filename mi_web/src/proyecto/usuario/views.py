@@ -219,6 +219,13 @@ class PaginaRegistroEstudiante(FormView):
         direccion_exacta = self.request.POST.get('direccion_exacta')
         sexo = self.request.POST.get('Genero_select')
         
+        trato = self.request.POST.get('trato')
+        sexo2 = self.request.POST.get('sexo2')
+        
+        if sexo == 'otro':
+            dato_sexo = [username, sexo2, trato]
+            save_sexo = save_profile_processes.save_inclusivo(self.request, dato_sexo)
+        
         Usuarios = form.save()
 
         datos_estudiante = [username, nombre_estudiante, primerapellido,

@@ -1,5 +1,5 @@
 from django import forms
-from .models import estudiantes, profesor, user_status, prospecto, primerIngreso, documentos
+from .models import estudiantes, profesor, user_status, prospecto, primerIngreso, documentos, inclusivo
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
@@ -44,3 +44,9 @@ class FormularioDocumentos(forms.ModelForm):
     class Meta:
         model = documentos
         fields = ('usuario','tituloeducacion', 'titulouniversitario', 'identificacion', 'foto', 'notas', 'plan')
+        
+class FormularioInclusivo(forms.ModelForm):
+    class Meta:
+        model = inclusivo
+        fields = ('identificacion', 'sexo', 'trato')
+        
