@@ -53,7 +53,7 @@
                         <br>
                         <div class="d-grid mb-2">
                             <button type="submit"
-                                class="animated-button w-100 btn btn-lg btn-primary btn-login fw-bold bi bi-box-arrow-in-right"
+                                class="w-100 btn btn-lg btn-primary btn-login fw-bold bi bi-box-arrow-in-right"
                                 id="loading-indicator"> Ingresar</button>
 
                             <div id="loading-indicator" class="hidden">
@@ -75,7 +75,7 @@
                 <hr class="my-4">
                 <div class="d-flex text-center justify-content-center">
                     <div class="d-inline-block m-1">
-                        <a class="btn btn-light microsoft" href="{% url 'microsoft_auth' %}">
+                        <a class="btn btn-light microsoft" id="microsofId" href="{% url 'microsoft_auth' %}">
                             <img src="../static/img/microsoft_365.png" alt="Microsoft Logo">
                         </a>
                     </div>
@@ -121,61 +121,4 @@
         return new bootstrap.Popover(popoverTriggerEl)
     })
 </script>
-
-<style>
-    a.btn img {
-        width: 155px;
-        height: 21px;
-    }
-    .microsoft {
-        border-radius: 5px;
-        box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.4);
-        max-width: 155px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: auto;
-    }
-
-    .links-container {
-        display: flex;
-        justify-content: space-between;
-    }
-      
-    .left-link {
-        margin-right: auto;
-    }
-      
-    .right-link {
-        margin-left: auto;
-    }
-
-    .animated-button {
-        background-color: #4CAF50; /* color de fondo del botón */
-        border: none; /* borde del botón */
-        color: white; /* color del texto del botón */
-        padding: 15px 32px; /* tamaño del botón */
-        text-align: center; /* alineación del texto del botón */
-        text-decoration: none; /* decoración del texto del botón */
-        display: inline-block; /* muestra el botón como un elemento de bloque */
-        font-size: 16px; /* tamaño de fuente del texto del botón */
-        margin: 10px 2px; /* margen del botón */
-        cursor: pointer; /* cambia el cursor cuando se coloca sobre el botón */
-        animation: pulse 2s infinite; /* animación del botón */
-    }
-      
-    @keyframes pulse {
-        0% {
-          transform: scale(1);
-        }
-        50% {
-          transform: scale(1.1);
-        }
-        100% {
-          transform: scale(1);
-        }
-    }
-      
-</style>
-
 {% endblock content %}
