@@ -109,7 +109,7 @@
             </div>
           </div>
           <div class="form-floating mb-3 col-md-4" id="dis_genero" style="display: block;">
-            <select id="genero" class="form-select" name="Genero_select" data-placeholder="Genero">
+            <select id="genero" class="form-select" name="Genero_select" data-placeholder="Genero" onchange="checkOtro()">
               <option style="opacity: 0.65" value="" disabled selected hidden>Genero</option>
               <option value="femenino">Femenino</option>
               <option value="masculino">Masculino</option>
@@ -117,6 +117,8 @@
               <option value="otro">Otro</option>
             </select>
             <label for="tipo" style="opacity: .65;">Genero</label>
+            <input type="hidden" value="NA" id="otro_trato" name="trato">
+            <input type="hidden" value="NA" id="otro_sexo" name="sexo2">
           </div>
           <div class="form-floating mb-3 col-md-4" id="dis_telefono" style="display: block;">
             <div class="input-group">
@@ -265,7 +267,73 @@
   </div>
 </div>
 
+<!-- Model de Cambio de data -->
+{% block modal_inclusivo%}
+<div class="modal fade" id="modal_inclusivo" tabindex="-1" aria-labelledby="modal_inclusivoTitle"
+    style="display: none" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content rounded-4">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modal_inclusivoTitle">
+                INFORMACION EXTRA
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true"><span class="icon-close2"></span></span>
+            </button>
+          </div>
+            <div class="modal-body">
+              <div class="row">
+                    <div class="form-floating mb-3 col-md-6">
+                        <div class="input-group">
+                            <input type="text" class="form-control"
+                                id="trato2" placeholder="¿Cuál es tu sexo?" name="trato2"
+                                style="height: 60px;">
+                        </div>
+                    </div>
+                    <div class="form-floating col-md-6">
+                      <select id="tipoTrato" class="form-select form-select-sm mb-3">
+                        <option style="opacity: .65;" value="" disabled selected hidden>Trato
+                        </option>
+                        <option value="Mujer">Mujer</option>
+                        <option value="Hombre">Hombre</option>
+                        <option value="no_decirlo">Prefiero no decirlo</option>
+                        <option value="Otro">Otro</option>
+                      </select>
+                      <label for="tipo" style="opacity: .65;">Prefiero que me traten como</label>
+                    </div>
+                  </div>
+                    <div class="row d-grid mb-4 d-flex justify-content-center">
+                      <button type="submit" onclick="continuarGenero()" class="w-100 btn btn-lg btn-primary btn-sm rounded fw-bold"
+                        style="max-width: 175px;">
+                        <i class="fa fa-paper-plane" aria-hidden="true"></i> Continuar</button>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock modal_inclusivo %}
+
 <script>
+
+  function checkOtro() {
+    // Obtener el valor seleccionado del select
+    var selectedValue = document.getElementById("genero").value;
+    // Si se seleccionó "Otro", mostrar el modal
+    if (selectedValue === "otro") {
+      $('#modal_inclusivo').modal('show');
+    }
+  }
+
+  function continuarGenero(){
+    var inputValue = document.getElementById("trato2").value;
+    var selectedValue = document.getElementById("tipoTrato").value;
+
+    document.getElementById("otro_trato").value = inputValue;
+    document.getElementById("otro_sexo").value = selectedValue;
+
+    $('#modal_inclusivo').modal('hide');
+  }
+
   flatpickr("#fechanacimiento", {
     dateFormat: "d/m/Y",
 

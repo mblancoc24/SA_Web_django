@@ -1,7 +1,7 @@
-from .forms import FormularioUserStatus, FormularioEstudiantes, FormularioDocumentos, FormularioPrimerIngreso, FormularioProfesor, FormularioProspecto, CustomUserCreationForm
+from .forms import FormularioUserStatus, FormularioEstudiantes, FormularioInclusivo, FormularioDocumentos, FormularioPrimerIngreso, FormularioProfesor, FormularioProspecto, CustomUserCreationForm
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
-from .models import profesor, estudiantes, documentos, primerIngreso, prospecto, user_status
+from .models import profesor, estudiantes, documentos, primerIngreso, prospecto, user_status, inclusivo
 
 class save_profile_processes():
     
@@ -10,6 +10,15 @@ class save_profile_processes():
                 'segundo_apellido': data[3], 'fecha_nacimiento': data[4], 'numero_telefonico': data[5], 'numero_telefonico2': data[6],
                 'correo_institucional': data[7], 'correo_personal': data[8], 'nacionalidad': data[9], 'provincia': data[10],
                 'canton': data[11], 'distrito': data[12], 'direccion_exacta': data[13], 'sexo': data[14]})
+            
+        if form.is_valid():
+            form.save()
+            return True
+        else:
+            return False
+       
+    def save_inclusivo(reques, data):
+        form = FormularioInclusivo({'identificacion': data[0], 'sexo': data[1], 'trato': data[2]})
             
         if form.is_valid():
             form.save()
