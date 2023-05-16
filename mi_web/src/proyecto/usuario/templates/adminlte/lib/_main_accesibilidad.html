@@ -35,7 +35,7 @@
                     <div class="row">
                         <div class="col-md-4">
                             <a id="google_translate_element">
-                               <i class="bi bi-globe-americas"></i>
+                                <i class="bi bi-globe-americas"></i>
                             </a>
                         </div>
                     </div>
@@ -44,14 +44,26 @@
                 <fieldset class="border p-2 ml-2">
                     <legend class="float-none w-auto p-2">Ajuste de color:</legend>
                     <div class="row justify-content-center">
-                        <div class="col-md-4 ">
-                            <a id="google_translate_element">
-                               <i class="fas fa-duotone fa-eye-low-vision"></i>
+                        <div class="col-md-10">
+                            <div class="form-group">
+                                <label for="daltonismType">Tipo de daltonismo</label>
+                                <select class="form-control" id="daltonismType">
+                                    <option value="normal">Normal</option>
+                                    <option value="protanopia">Protanopia</option>
+                                    <option value="deuteranopia">Deuteranopia</option>
+                                    <option value="tritanopia">Tritanopia</option>
+                                    <option value="monochromacy">Monochromacy</option>
+                                    <option value="enhance-r">Enhance-R</option>
+                                    <option value="enhance-g">Enhance-G</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <a id="toggle-daltonism">
                             </a>
                         </div>
                     </div>
                 </fieldset>
-
             </div>
         </div>
     </div>

@@ -897,3 +897,81 @@ a#microsofId img {
 #zoomIn, #zoomOut, #refres{
   cursor: pointer;
 }
+
+#social-sidebar {
+  right: 0;
+  position: fixed;
+  top: 30%;
+  z-index: 9999; /* Establece un alto valor de z-index */
+}
+
+#social-sidebar li:first-child a {
+  border-top-left-radius: 5px;
+}
+
+#social-sidebar li:last-child a {
+  border-bottom-left-radius: 5px;
+}
+
+#social-sidebar a {
+  background: rgba(0, 0, 0, .7);
+  color: #fff;
+  text-decoration: none;
+  display: block;
+  height: 45px;
+  width: 25px;
+  font-size: 15px;
+  line-height: 50px;
+  position: relative;
+  text-align: center;
+  cursor: pointer;
+}
+
+#social-sidebar a:hover span {
+  right: 120%;
+  opacity: 1;
+}
+
+#social-sidebar a span {
+  font-size: 12px;
+  border-radius: 3px;
+  line-height: 24px;
+  /* left: -100%; */
+  margin-top: -16px;
+  opacity: 0;
+  padding: 4px 8px;
+  position: absolute;
+  top: 50%;
+}
+
+#social-sidebar a span:before {
+  content: "";
+  width: 0;
+	height: 0;
+	border-top: 20px solid #3B5998;
+	border-bottom: 20px solid #3B5998;
+	border-left: 20px solid#3B5998;
+}
+
+#social-sidebar a[class*="facebook"]:hover,
+#social-sidebar a[class*="facebook"] span,
+#social-sidebar a[class*="facebook"] span:before {
+  background: #3B5998;
+}
+
+#social-sidebar a[class*="instagram"]:hover,
+#social-sidebar a[class*="instagram"] span,
+#social-sidebar a[class*="instagram"] span:before {
+  background-color:  #e7246b ; /* Color de inicio del degradado */
+  background-image: linear-gradient(135deg,  #e7246b ,  #bb399f); /* Degradado de azul a púrpura oscuro */
+}
+
+#social-sidebar a[class*="chatBot"]:hover,
+#social-sidebar a[class*="chatBot"] span,
+#social-sidebar a[class*="chatBot"] span:before {
+  background-color:  #74ac9c   ; /* Color de inicio del degradado */
+}
+
+.liSocial{
+  list-style-type: none; /* Oculta el punto */
+}
