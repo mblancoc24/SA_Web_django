@@ -184,12 +184,13 @@ function actualizarTabla(data) {
         mallaCurricular.forEach((curso, index) => {
 
             var divTablas = document.createElement('div');
-            divTablas.className = 'card shadow';
+            divTablas.className = 'card shadow p-2';
 
             var divCardheader = document.createElement('div');
-            divCardheader.className = 'card-header';
+            divCardheader.className = 'card-header border-0 py-0';
+            divCardheader.id = 'planHeader';
             var divCardBody = document.createElement('div');
-            divCardBody.className = 'card-body table-responsive p-0 tablaPlan';
+            divCardBody.className = 'card-body table-responsive p-0 tablaPlan  mt-2';
             var tituloHeader = document.createElement('h3');
             tituloHeader.className = 'mb-2';
             var titulo = document.createElement('a');
@@ -224,6 +225,7 @@ function actualizarTabla(data) {
 
             var thAp = document.createElement('th');
             thAp.scope = "col";
+            thAp.className = 'd-none d-sm-table-cell';
             thAp.style.width = '10px';
 
             var th0 = document.createElement('th');
@@ -232,19 +234,29 @@ function actualizarTabla(data) {
 
             var th1 = document.createElement('th');
             th1.scope = "col";
-            th1.appendChild(document.createTextNode('Nombre'))
+            th1.appendChild(document.createTextNode('Nombre'));
 
             var th2 = document.createElement('th');
             th2.scope = "col";
-            th2.appendChild(document.createTextNode('Requisito'))
+            th2.className = 'd-none d-sm-table-cell';
+            th2.appendChild(document.createTextNode('Requisito'));
 
             var th3 = document.createElement('th');
             th3.scope = "col";
-            th3.appendChild(document.createTextNode('Creditos'))
+            th3.className = 'd-none d-sm-table-cell';
+            th3.appendChild(document.createTextNode('Creditos'));
 
             var th4 = document.createElement('th');
             th4.scope = "col";
-            th4.appendChild(document.createTextNode('Prematricular'))
+            var iconTh4 = document.createElement('i');
+            iconTh4.className = 'bi bi-clipboard';
+            th4.appendChild(iconTh4);
+
+            var th5 = document.createElement('th');
+            th5.scope = "col";
+            var iconTh5 = document.createElement('i');
+            iconTh5.className = 'bi bi-gear';
+            th5.appendChild(iconTh5);
 
             tr.appendChild(thAp);
             tr.appendChild(th0);
@@ -252,6 +264,7 @@ function actualizarTabla(data) {
             tr.appendChild(th2);
             tr.appendChild(th3);
             tr.appendChild(th4);
+            tr.appendChild(th5);
             thead.appendChild(tr);
             var tbody = document.createElement('tbody');
             tbody.id = 'PlanBody';
@@ -267,10 +280,20 @@ function actualizarTabla(data) {
                     trb.classList = 'principal';
                     var icons = document.createElement('i');
                     var td_apro = document.createElement('td');
+                    td_apro.className = 'd-none d-sm-table-cell';
                     td_apro.style.width = '10px';
                     var checkOpcion = document.createElement('input');
                     checkOpcion.type = 'checkbox';
                     checkOpcion.id = `${items.curso}-checkbox`;
+                    var btnLevantamiento = document.createElement('a');
+                    btnLevantamiento.className = 'link-info link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover';
+                    btnLevantamiento.onclick = function(){
+                        actualizarModal(items.curso);
+                    }
+                    var dots = document.createElement('i');
+                    dots.className = 'bi bi-three-dots-vertical';
+                    btnLevantamiento.appendChild(dots);
+                    var td_gest = document.createElement('td');
                     if (cursosAprobados.includes(items.curso)) {
                         icons.className = 'bi bi-check-lg';
                         icons.style.color = '#3bb80a';
@@ -291,14 +314,17 @@ function actualizarTabla(data) {
                         icons.className = 'bi bi-x-lg color-box';
                         icons.style.color = '#83877b';
                         icons.style.fontSize = '16px';
-                        checkOpcion.setAttribute('disabled', 'true');
+                        checkOpcion.setAttribute("hidden", true);
+                        td_gest.appendChild(btnLevantamiento);
                         td_apro.appendChild(icons);
                     }
+                    var td_pre = document.createElement('td');
                     var td_siglas = document.createElement('td');
                     var td_curso = document.createElement('td');
                     var td_requisito = document.createElement('td');
+                    td_requisito.className = 'd-none d-sm-table-cell';
                     var td_creditos = document.createElement('td');
-                    var td_pre = document.createElement('td');
+                    td_creditos.className = 'd-none d-sm-table-cell';
                     td_siglas.appendChild(document.createTextNode(' ' + items.curso));
                     td_curso.appendChild(document.createTextNode(items.nombre));
                     td_requisito.appendChild(document.createTextNode(items.requisitos));
@@ -313,6 +339,7 @@ function actualizarTabla(data) {
                     trb.appendChild(td_requisito);
                     trb.appendChild(td_creditos);
                     trb.appendChild(td_pre);
+                    trb.appendChild(td_gest);
                     tbody.appendChild(trb);
                 }
 
@@ -480,4 +507,11 @@ function enviarPrematricula(id, cursos) {
     })
     var prematriculaJSON = JSON.stringify(prematricula);
     console.log(prematriculaJSON);
+}
+
+function actualizarModal(curso){
+
+    var cursoModal = document.getElementById('cursoModal');
+    cursoModal.value = curso;
+    $('#modal_levantamiento').modal('show');
 }
