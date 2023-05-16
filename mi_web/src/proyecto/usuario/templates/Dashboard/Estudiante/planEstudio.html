@@ -5,7 +5,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/progressbar.js/1.1.0/progressbar.min.js"></script>
 <script src="{% static 'js/planEstudio.js' %}"></script>
 <script src="{% static 'js/accesibilidad.js' %}"></script>
-<script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<script type="text/javascript"
+    src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 {% endblock %}
 {% block content %}
 <div class="container-fluid">
@@ -114,8 +115,9 @@
                                     </tbody>
                                 </table>
                                 <div class="d-grid d-flex justify-content-center mt-2">
-                                    <button type="submit" class=" btn btn-sm btn-primary btn-login" id="enviarPrematricula"> Enviar Prematricula</button>
-                                  </div>
+                                    <button type="submit" class=" btn btn-sm btn-primary btn-login"
+                                        id="enviarPrematricula"> Enviar Prematricula</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -125,5 +127,46 @@
     </div>
 </div>
 {% endblock modal_prematricula %}
+
+{% block modal_levantamiento %}
+<div class="modal fade" id="modal_levantamiento" tabindex="-1" aria-labelledby="modal_levantamientoTitle"
+    style="display: none" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content rounded-4">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal_prematriculaTitle">
+                    Levantamiento de Requisito
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><span class="icon-close2"></span></span>
+                </button>
+            </div>
+            <div class="modal-body" id="levantamientoBody">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card shadow">
+                            <div class="card-body px-md-4 px-2 pt-3">
+                                <form method="POST" class="row g-3" enctype="multipart/form-data" action="{% url 'enviar_solicitud' %}">
+                                    {% csrf_token %}
+                                    <div class="form-floating mb-3 col-md-4">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control " id="cursoModal" placeholder="Curso" name="cursoModal" value="" disabled required>
+                                        </div>
+                                    </div>
+                                    <div class="form-floating mb-3 col-md-12">
+                                        <div class="input-group">
+                                            <textarea type="text" class="form-control " id="descripcionModal" placeholder="Descripcion" name="descripcionModal" rows="7" required></textarea>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock modal_levantamiento %}
 
 {% endblock content %}

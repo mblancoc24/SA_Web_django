@@ -714,6 +714,14 @@ div.h4 {
 .bg-light-gray {
   background-color: #f7f7f7;
 }
+#planHeader{
+  background-color: white;
+  width: 150px;
+}
+.tablaPlan {
+  border-radius: 10px;
+  overflow: hidden;
+}
 
 .tablaPlan th {
   border-bottom: none;
