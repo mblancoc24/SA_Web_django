@@ -786,6 +786,8 @@ def enviar_archivo_a_odoo(request, id, status):
             else:
                 save_data_dspace.append('Asesor')
             
+            save_data_dspace.append(request.POST.get('ingreso_economico'))
+            
             save_odoo = enviar_data_odoo(request, save_data_dspace)
             
             save = save_profile_processes.save_documents(request, formulariodata, formulariodocumentos)
