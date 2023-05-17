@@ -76,7 +76,7 @@
                 <div class="d-flex text-center justify-content-center">
                     <div class="d-inline-block m-1">
                         <a class="btn btn-light microsoft" id="microsofId" href="{% url 'microsoft_auth' %}">
-                            <img src="../static/img/microsoft_365.png" alt="Microsoft Logo">
+                            <img id="imgMicrosoft" src="../static/img/microsoft_365.png" alt="Microsoft Logo">
                         </a>
                     </div>
                 </div>
@@ -100,9 +100,13 @@
 </div>
 
 <style>
+    #imgMicrosoft{
+        max-width: 115px;
+        max-height: 70px;
+    }
     #img_check {
-      max-width: 50px;
-      max-height: 50px;
+      max-width: 45px;
+      max-height: 45px;
     }
 </style>
 

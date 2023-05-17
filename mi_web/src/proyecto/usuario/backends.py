@@ -3,7 +3,7 @@ from django.contrib.auth.backends import BaseBackend
 from django.contrib.auth.models import User
 import requests
 from .api_queries import get_professor, get_student
-from .models import profesor, estudiantes, prospecto
+from .models import prospecto
 from .save_processes import save_profile_processes
 
 class MicrosoftGraphBackend(BaseBackend):
