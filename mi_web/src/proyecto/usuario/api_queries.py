@@ -71,7 +71,7 @@ def obtener_datos(request):
     return JsonResponse(data_completa, safe=False)
 
 def get_student(id):
-    url = 'http://192.168.8.134:8000/get-student-info/'
+    url = 'http://192.168.8.165:8000/get-student-info/'
     data = {
         'data':{
             'id': id
@@ -92,7 +92,7 @@ def get_student(id):
         return False
     
 def get_professor(id):
-    url = 'http://192.168.8.134:8000/get-profesor-info/'
+    url = 'http://192.168.8.165:8000/get-profesor-info/'
     data = {
         'data':{
             'id': id
@@ -171,7 +171,7 @@ def get_urls_odoo(request, data):
     
 def insert_urls(request, urls):
     user = request.user
-    url = 'http://192.168.8.134:8000/insert-urls-student/'
+    url = 'http://192.168.8.165:8000/insert-urls-student/'
     data = {
         'data':{
             'id': user.username,
@@ -199,7 +199,7 @@ def insert_urls(request, urls):
 
 def get_urls(request):
     user = request.user
-    url = 'http://192.168.8.134:8000/get-urls-student/'
+    url = 'http://192.168.8.165:8000/get-urls-student/'
     data = {
         'data':{
             'id': user.username

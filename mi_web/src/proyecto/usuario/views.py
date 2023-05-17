@@ -6,6 +6,7 @@ from django.views.generic.edit import FormView
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.http import JsonResponse, HttpResponse
 from django.contrib.auth.models import User
@@ -173,14 +174,11 @@ class MicrosoftLogoutView(LoginRequiredMixin, LogoutView):
                 # Hacer una solicitud de cierre de sesión a través de la API de Microsoft Graph
                     
                 headers = {
-                    "Authorization": "Bearer " + request.session['access_token'],
-                    "Content-Type": "application/json"
+                    "Authorization": "Bearer " + request.session['access_token']
                 }
                 
-                client_id = settings.MICROSOFT_CLIENT_ID
-                redirect_uri = 'http://localhost:8000/microsoft-callback/'
+                revoke_url = f'https://graph.microsoft.com/v1.0/me/microsoft.graph.logout'
                 
-                revoke_url = f'https://login.live.com/oauth20_logout.srf?client_id='+client_id+'&redirect_uri='+redirect_uri
                 response = requests.post(revoke_url, headers=headers)
                 
                 if response.status_code == 200:
@@ -308,14 +306,17 @@ def registrar_accion(usuario, accion):
     registro = RegistroLogsUser(usuario=usuario, accion=accion)
     registro.save()
 
+@login_required
 def carrerasselect(request):
     valores = carreras.objects.values_list('nombre_carrera', flat=True)
     return JsonResponse(list(valores), safe=False)
 
+@login_required
 def colegiosselect(request):
     valores = colegios.objects.values_list('nombre_colegio', flat=True)
     return JsonResponse(list(valores), safe=False)
 
+@login_required
 def posgradosselect(request):
     valores = posgrados.objects.values_list('nombre_carrera', flat=True)
     return JsonResponse(list(valores), safe=False)
@@ -430,12 +431,14 @@ def guardar_perfil(request):
     else:
         return HttpResponse(status=400)
 
+@login_required
 def mostrar_foto(request):
     user = request.user
     foto_perfil = get_object_or_404(fotoperfil, user=user.pk)
     foto_bytes = bytes(foto_perfil.archivo)
     return HttpResponse(foto_bytes, content_type='image/png')
 
+@login_required
 def cambiar_foto(request):
     user = request.user
     foto = request.FILES.get('fotocambio')
@@ -457,6 +460,7 @@ def cambiar_foto(request):
         user_file.save()
     return redirect(request.META.get('HTTP_REFERER'))
 
+@login_required
 def enviar_solicitud(request):
     user = request.user
     
@@ -508,6 +512,7 @@ class DashboardProfesorView(LoginRequiredMixin, View):
     def get(self, request, id, status):
         return render(request, 'Dashboard/dashboard.html', {'id': id, 'status': status})
 
+@login_required
 def change_email(request):
     codigo = random.randint(100000, 999999)
 
@@ -522,6 +527,7 @@ def change_email(request):
 
     return render(request, 'usuario/cambio_correo_codigo.html', {'codigo': codigo})
 
+@login_required
 def change_email_correct(request):
     if request.method == 'POST':
         user = request.user
@@ -552,75 +558,83 @@ def change_email_correct(request):
         
         prospecto_user = get_object_or_404(prospecto, identificacion=user.username)
  
-def revision_formulario(request, id, status):
-    user = request.user
-
-    # Obtener el objeto de la base de datos según su ID
-    statusgeneral = get_object_or_404(primerIngreso, usuario=user.pk)
-
-    estado = get_object_or_404(estados, id_estado=statusgeneral.estado_id)
-
-    docs = get_object_or_404(documentos, usuario=user.pk)
+class RevisionFormView(LoginRequiredMixin, View):
+    context_object_name = 'revision_form'
+    template_name = 'Dashboard/Prospecto/revision_form.html'
     
-    if 'urls' in request.session:
-        data_urls = request.session.get('urls')
-    else:
-        data_urls = get_urls(request)
-        request.session['urls'] = data_urls
-    
-    data_content = []
-    data_content_type = []
-    
-    if 'urlsContent' in request.session: 
-        data_content = request.session.get('urlsContent')
-        data_content_type = request.session.get('urlsContentType')
-    else:
-        responses = dspace_processes.dspace_docs_visualization(data_urls)
+    def get_context_data(self, **kwargs):
+        user = self.request.user
+
+        # Obtener el objeto de la base de datos según su ID
+        statusgeneral = get_object_or_404(primerIngreso, usuario=user.pk)
+
+        estado = get_object_or_404(estados, id_estado=statusgeneral.estado_id)
+
+        docs = get_object_or_404(documentos, usuario=user.pk)
         
-        for response in responses:
-            data_content.append(base64.b64encode(response.content).decode('utf-8'))
-            if 'pdf' in response.headers['Content-Type']:
-                data_content_type.append('pdf')
-            elif 'jpeg' in response.headers['Content-Type']:
-                data_content_type.append('jpeg')
-            elif 'png' in response.headers['Content-Type']:
-                data_content_type.append('png')
-                
-        if len(data_content) == 3:
-            data_content_type.append('N/A')
-            data_content_type.append('N/A')
-    
-        request.session['urlsContent'] = data_content
-        request.session['urlsContentType'] = data_content_type
+        if 'urls' in self.request.session:
+            data_urls = self.request.session.get('urls')
+        else:
+            data_urls = get_urls(self.request)
+            self.request.session['urls'] = data_urls
         
-    try:
-        fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
-        imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
+        data_content = []
+        data_content_type = []
+        
+        if 'urlsContent' in self.request.session: 
+            data_content = self.request.session.get('urlsContent')
+            data_content_type = self.request.session.get('urlsContentType')
+        else:
+            responses = dspace_processes.dspace_docs_visualization(data_urls)
+            
+            for response in responses:
+                data_content.append(base64.b64encode(response.content).decode('utf-8'))
+                if 'pdf' in response.headers['Content-Type']:
+                    data_content_type.append('pdf')
+                elif 'jpeg' in response.headers['Content-Type']:
+                    data_content_type.append('jpeg')
+                elif 'png' in response.headers['Content-Type']:
+                    data_content_type.append('png')
+                    
+            if len(data_content) == 3:
+                data_content_type.append('N/A')
+                data_content_type.append('N/A')
+        
+            self.request.session['urlsContent'] = data_content
+            self.request.session['urlsContentType'] = data_content_type
+            
+        try:
+            fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
+            imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
 
-        # Enviar el objeto y otros datos necesarios a la plantilla HTML
-        contexto = {
-            "fotoperfil": imagen_url,
-            "comentario": statusgeneral.comentario,
-            "estado": estado.estado_nombre,
-            "convalidacion": statusgeneral.convalidacion,
-            "documentos": docs,
-            "data_content": data_content,
-            "data_type":data_content_type,
-            "id": id,
-            "status": status,
-        }
-    except fotoperfil.DoesNotExist:
-        contexto = {
-            "comentario": statusgeneral.comentario,
-            "estado": estado.estado_nombre,
-            "convalidacion": statusgeneral.convalidacion,
-            "documentos": docs,
-            "data_content": data_content,
-            "data_type":data_content_type,
-            "id": id,
-            "status": status,
-        }
-    return render(request, "Dashboard/Prospecto/revision_form.html", contexto)
+            # Enviar el objeto y otros datos necesarios a la plantilla HTML
+            context = {
+                "fotoperfil": imagen_url,
+                "comentario": statusgeneral.comentario,
+                "estado": estado.estado_nombre,
+                "convalidacion": statusgeneral.convalidacion,
+                "documentos": docs,
+                "data_content": data_content,
+                "data_type":data_content_type,
+                'status': self.kwargs['status'],
+                'id': self.kwargs['id']
+            }
+        except fotoperfil.DoesNotExist:
+            context = {
+                "comentario": statusgeneral.comentario,
+                "estado": estado.estado_nombre,
+                "convalidacion": statusgeneral.convalidacion,
+                "documentos": docs,
+                "data_content": data_content,
+                "data_type":data_content_type,
+                'status': self.kwargs['status'],
+                'id': self.kwargs['id']
+            }
+        return context
+            
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        return render(request, self.template_name, context)
 
 #SIN USO
 def descargar_archivo(request, id):
@@ -645,6 +659,7 @@ def descargar_archivo(request, id):
     response['Content-Disposition'] = f'attachment; filename="archivo.{extension}"'
     return response
 
+@login_required
 def corregirdata(request):
     user = request.user
 
@@ -726,6 +741,7 @@ def corregirdata(request):
         del request.session['urlsContentType']
         return redirect(request.META.get('HTTP_REFERER'))
 
+@login_required
 def enviar_archivo_a_odoo(request, id, status):
     if request.method == 'POST':
         user = request.user
@@ -779,7 +795,8 @@ def enviar_archivo_a_odoo(request, id, status):
                 data_urls = [save_data_dspace[0], save_data_dspace[1], save_data_dspace[2], save_data_dspace[3],
                              save_data_dspace[4], save_data_dspace[5]]
                 insert_urls(request,data_urls)
-                return revision_formulario (request, id, status)
+                context = {'id': user.username, 'status': 4}
+                return redirect(reverse('revision_form', kwargs=context))
     
 class HorarioEstudianteView(LoginRequiredMixin):
     context_object_name = 'horarioEstudiante'
@@ -967,6 +984,34 @@ class MatriculaView(LoginRequiredMixin, View):
         except fotoperfil.DoesNotExist:
             context = {
                 'registro': registros,
+                'user': user,
+                'status': self.kwargs['status'],
+                'id': self.kwargs['id']
+            }
+        return context
+    
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        return render(request, self.template_name, context)
+    
+class SuficienciaView(LoginRequiredMixin, View):
+    context_object_name = 'suficiencia'
+    template_name = 'Dashboard/Estudiante/suficienciaEstudiante.html'
+    
+    def get_context_data(self, **kwargs):
+        user = self.request.user
+        
+        try:
+            fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
+            imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
+            context = {
+                'user': user,
+                'fotoperfil': imagen_url,
+                'status': self.kwargs['status'],
+                'id': self.kwargs['id']
+            }
+        except fotoperfil.DoesNotExist:
+            context = {
                 'user': user,
                 'status': self.kwargs['status'],
                 'id': self.kwargs['id']
