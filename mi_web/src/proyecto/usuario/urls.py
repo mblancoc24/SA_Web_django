@@ -40,6 +40,8 @@ from .views import (
                     DetallePlanDeEstudioView,
                     MatriculaView,
                     MisCursos,
+                    EstadoDeCuentaEstudiante,
+                    codigoVerificacion,
                     SuficienciaView,
                     RevisionFormView,
                     )
@@ -134,6 +136,8 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
                path("prospecto/<int:id>/<int:status>/suficiencia/", SuficienciaView.as_view(), name='suficiencia'),
                
                path("descargar-archivo/<int:id>/", descargar_archivo, name="descargar_archivo"),
+               path("prospecto/<int:id>/<int:status>/estadoCuenta/", EstadoDeCuentaEstudiante.as_view(), name='estadoCuentaEstudiante'),
+               path('codigoVerificacion/', codigoVerificacion, name='codigoVerificacion'),
                ]
 
 
