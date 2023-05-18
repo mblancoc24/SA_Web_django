@@ -28,7 +28,6 @@ from .views import (
                     cambiar_foto,
                     change_email,
                     change_email_correct,
-                    revision_formulario,
                     corregirdata,
                     microsoft_auth, 
                     microsoft_callback,
@@ -43,7 +42,8 @@ from .views import (
                     MisCursos,
                     EstadoDeCuentaEstudiante,
                     codigoVerificacion,
-
+                    SuficienciaView,
+                    RevisionFormView,
                     )
 from django.contrib.auth.views import LogoutView
 from django.contrib.auth import views as auth_views
@@ -124,7 +124,7 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
                path('cambio-correo/', change_email, name='cambio_correo'),
                path('change-email-correct/', change_email_correct, name='change_email_correct'),
                
-               path("prospecto/<int:id>/<int:status>/revision-form/", revision_formulario, name="revision_form"),
+               path("prospecto/<int:id>/<int:status>/revision-form/", RevisionFormView.as_view(), name="revision_form"),
                path("corregir-data/", corregirdata, name="corregir_data"),
                path("documents-status/", documents_status, name="documents_status"),
                path("user-update/", user_update, name="user_update"),
@@ -133,6 +133,7 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
                path("prospecto/<int:id>/<int:status>/plan/carrera/", DetallePlanDeEstudioView.getPlan, name='planEstudioCarrera'),
                path("prospecto/<int:id>/<int:status>/misCursos/", MisCursos.misCursos_view, name='misCursos'),
                path("prospecto/<int:id>/<int:status>/matricula/", MatriculaView.as_view(), name='matricula'),
+               path("prospecto/<int:id>/<int:status>/suficiencia/", SuficienciaView.as_view(), name='suficiencia'),
                
                path("descargar-archivo/<int:id>/", descargar_archivo, name="descargar_archivo"),
                path("prospecto/<int:id>/<int:status>/estadoCuenta/", EstadoDeCuentaEstudiante.as_view(), name='estadoCuentaEstudiante'),
