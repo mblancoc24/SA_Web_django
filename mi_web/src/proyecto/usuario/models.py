@@ -23,9 +23,9 @@ class estudiantes(models.Model):
 class prospecto(models.Model):
     id_prospecto = models.AutoField(primary_key=True)
     identificacion = models.CharField(max_length=22)
-    nombre = models.CharField(max_length=18)
-    primer_apellido = models.CharField(max_length=18)
-    segundo_apellido = models.CharField(max_length=18)
+    nombre = models.CharField(max_length=50)
+    primer_apellido = models.CharField(max_length=50)
+    segundo_apellido = models.CharField(max_length=50)
     fecha_nacimiento = models.DateField()
     numero_telefonico = models.IntegerField(default=0)
     numero_telefonico2 = models.IntegerField(default=0)

@@ -24,7 +24,7 @@
                   href="#correoP">Correo</a>
               </li>
               <li class="nav-item tab-list__item">
-                <a class="next-step step-tab1 tab-list__link nav-link disabled" id="validarUl" data-bs-toggle="pill"
+                <a class="next-step step-tab1 tab-list__link nav-link disabled" onclick="llamarFunciones()" id="validarUl" data-bs-toggle="pill"
                   href="#validarP">Validar</a>
               </li>
             </ul>
@@ -299,33 +299,35 @@
                     <input type="password" class="form-control" id="password2" placeholder="Confirmar contraseña"
                       name="password2" required>
                   </div>
-                  <span id='message'></span>
+                  
                 </div>
+                <span id='message'></span>
               </div>
               <div class="d-flex justify-content-between">
                 <a type="button" class="btn btn-md btn-primary btn-login fw-bold fas fa-regular fa-arrow-left"
                   id="botonAnteriorCorreoP" onclick="mostrarAnterior()"></a>
-                  <a type="button" class="btn btn-md btn-primary btn-login fw-bold fas fa-regular fa-arrow-right disabled"
-                  id="botonSiguienteCorreoP" href="{% url 'codigoVerificacion' %}" onclick="mostrarSiguiente()">
+                <a type="button" class="btn btn-md btn-primary btn-login fw-bold fas fa-regular fa-arrow-right disabled"
+                  id="botonSiguienteCorreoP" onclick="llamarFunciones()">
                 </a>
               </div>
             </div>
             <div class="tab-pane container fade" id="validarP">
               <div class="row">
                 <div class="col-md-12 ">
-                  <h5 class="card-title text-center mb-4 fw-light fw-bold">Se envió al correo un código de verificación para registrarse</h5>
+                  <h5 class="card-title text-center mb-4 fw-light fw-bold">Se envió al correo un código de verificación
+                    para registrarse</h5>
                   <div class="d-flex justify-content-center">
                     <div class="mb-3 col-1 m-1" id="Código1" style="display: block;">
-                      <input type="text" class="form-control" id="input1" required>
+                      <input type="text" class="form-control" id="input1" maxlength="1" onkeyup="moverInput(event, 2)" required>
                     </div>
                     <div class="mb-3 col-1 m-1" id="Código2" style="display: block;">
-                      <input type="text" class="form-control" id="input2" required>
+                      <input type="text" class="form-control" id="input2" maxlength="1" onkeyup="moverInput(event, 3)" required>
                     </div>
                     <div class="mb-3 col-1 m-1" id="Código3" style="display: block;">
-                      <input type="text" class="form-control" id="input3" required>
+                      <input type="text" class="form-control" id="input3" maxlength="1" onkeyup="moverInput(event, 4)" required>
                     </div>
                     <div class="mb-3 col-1 m-1" id="Código4" style="display: block;">
-                      <input type="text" class="form-control" id="input4" required>
+                      <input type="text" class="form-control" id="input4" maxlength="1" oninput="verificarCodigo()" required>
                     </div>
                   </div>
                 </div>
@@ -589,6 +591,64 @@
       linkSiguiente.classList.add("active");
     }
   }
+  var codigo = 0;
+  var result;
+  function enviarCodigo() {
+    var nombre = document.getElementById("nombre");
+    var primer_apellido = document.getElementById("primerapellido");
+    var segundo_apellido = document.getElementById("segundoapellido");
+    var nombreCompleto = nombre.value + ' ' + primer_apellido.value + ' ' + segundo_apellido.value;
+    console.log(nombreCompleto);
+    var correo = document.getElementById("correo");
+    console.log(correo.value);
+    var url = "/codigoVerificacion/?nombre=" + encodeURIComponent(nombreCompleto) + "&correo=" + encodeURIComponent(correo.value);
+
+    var request = new XMLHttpRequest();
+    request.open('GET', url, true);
+
+    request.onload = function () {
+      if (request.status === 200) {
+        codigo = JSON.parse(request.responseText);
+        console.log(codigo)
+      }
+    };
+    request.send();
+  }
+ 
+  function llamarFunciones() {
+    validatePasswords()
+    if(!result){
+      if(codigo == 0){
+        enviarCodigo();
+      }
+      mostrarSiguiente();
+    }
+  }
+
+  function moverInput(evento, siguiente) {
+    const tamano = evento.target.value.length;
+    const maximo = evento.target.getAttribute("maxlength");
+
+    if (tamano >= maximo) {
+      if (siguiente <= 4) {
+        document.getElementById("input" + siguiente).focus();
+      } else {
+        document.getElementById("input" + siguiente).blur();
+      }
+    }
+  }
+
+  function verificarCodigo() {
+    var input1 = document.getElementById('input1');
+    var input2 = document.getElementById('input2');
+    var input3 = document.getElementById('input3');
+    var input4 = document.getElementById('input4');
+    var butonRegistrar = document.getElementById('registrarEstudiante');
+    var codigoCompleto = input1.value + input2.value + input3.value + input4.value;
+    const resultado = codigoCompleto == codigo;
+    butonRegistrar.classList.toggle('disabled', !resultado);
+  }
+
   $(document).ready(function () {
     tipoSelect.addEventListener('change', habilitarStep2);
     identificacion.addEventListener('input', habilitarStep2);
@@ -665,13 +725,39 @@
   }
 
   function habilitarStep4() {
+    codigo = 0;
     const correoValue = correo.value;
     const contrasenaValue = contrasena.value;
     const contrasena2Value = contrasena2.value;
     const resultado = correoValue && contrasenaValue && contrasena2Value;
 
     botonSiguienteCorreoP.classList.toggle('disabled', !resultado);
-    validarUl.classList.toggle('disabled', !resultado);
+  }
+
+  function validatePasswords() {
+    const passwordError = document.getElementById('message');
+    const passwordInput = document.getElementById('password1');
+    const passwordInput2 = document.getElementById('password2');
+    const password = passwordInput.value;
+    const password2 = passwordInput2.value;
+    const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_.:;,\-\+\]\[\}\{\¡\¿\'\?=\´~\"!°¬|])[A-Za-z\d!@#$%^&*()_.:;,\-\+\]\[\}\{\¡\¿\'\?=\´~\"!°¬|]{8,}$/;
+  
+    if (password !== password2) {
+			passwordError.textContent = "Las contraseñas no coinciden";
+      result = true;
+      botonSiguienteCorreoP.classList.toggle('disabled', result);
+      validarUl.classList.toggle('disabled', result);
+    } else if (!passwordPattern.test(password)) {
+			passwordError.textContent = "La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula, un número y un carácter especial.";
+      result = true;
+      botonSiguienteCorreoP.classList.toggle('disabled', result);
+      validarUl.classList.toggle('disabled', result);
+    } else {
+			passwordError.textContent = "";
+      result = false;
+      botonSiguienteCorreoP.classList.toggle('disabled', result);
+      validarUl.classList.toggle('disabled', result);
+    }
   }
 </script>
 {% block extraJavaScript %}

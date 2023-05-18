@@ -4,7 +4,8 @@ from .api_queries import(
                     obtener_provincia,
                     obtener_canton,
                     obtener_distrito,
-                    obtener_nacionalidad
+                    obtener_nacionalidad,
+                    obtener_fecha_unix,
                     )
 from .api_processes import (
                     documents_status,
@@ -44,6 +45,7 @@ from .views import (
                     codigoVerificacion,
                     SuficienciaView,
                     RevisionFormView,
+                    Payment,
                     )
 from django.contrib.auth.views import LogoutView
 from django.contrib.auth import views as auth_views
@@ -138,6 +140,8 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
                path("descargar-archivo/<int:id>/", descargar_archivo, name="descargar_archivo"),
                path("prospecto/<int:id>/<int:status>/estadoCuenta/", EstadoDeCuentaEstudiante.as_view(), name='estadoCuentaEstudiante'),
                path('codigoVerificacion/', codigoVerificacion, name='codigoVerificacion'),
+               path("prospecto/<int:id>/<int:status>/pagarMatricula/", Payment.as_view(), name='payment'),
+               path("obtener-time/", obtener_fecha_unix, name='obtener_time'),
                ]
 
 

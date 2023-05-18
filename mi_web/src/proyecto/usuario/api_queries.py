@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import profesor, estudiantes, RegistroLogsUser, documentos, fotoperfil, estados, primerIngreso, prospecto
 import json
 from django.contrib.auth.models import User
+import time
 
 def obtener_provincia(request):
     url = 'https://ubicaciones.paginasweb.cr/provincias.json'
@@ -69,6 +70,10 @@ def obtener_datos(request):
 
     data_completa = json.dumps(data)
     return JsonResponse(data_completa, safe=False)
+
+def obtener_fecha_unix(request):
+    fecha_actual = int(time.time())
+    return JsonResponse(fecha_actual, safe=False)
 
 def get_student(id):
     url = 'http://192.168.8.165:8000/get-student-info/'
