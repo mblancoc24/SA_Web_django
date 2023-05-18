@@ -105,3 +105,32 @@ def user_update(request):
         # Si la petición no es POST, devuelve un error
         response_data = {'error': 'Invalid request method'}
         return JsonResponse(response_data, status=400)
+    
+@csrf_exempt
+def solicitud_form(request):
+    #http://192.168.8.136:8000/solicitud-form/
+    
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            response_data = {'error': 'Invalid JSON'}
+            return JsonResponse(response_data, status=400)
+            
+        try:
+            if data is not None:
+                print (data)
+                # Procesar los datos y generar la respuesta en JSON
+                response_data = {'result': 'ok'}
+                return JsonResponse(response_data)
+            else:
+                response_data = {'error': 'Invalid request method'}
+                return JsonResponse(response_data, status=400)
+            
+        except KeyError:
+            response_data = {'error': 'Invalid request method'}
+            return JsonResponse(response_data, status=400)
+    else:
+        # Si la petición no es POST, devuelve un error
+        response_data = {'error': 'Invalid request method'}
+        return JsonResponse(response_data, status=400)
