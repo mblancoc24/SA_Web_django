@@ -9,6 +9,7 @@ from .api_queries import(
 from .api_processes import (
                     documents_status,
                     user_update,
+                    solicitud_form,
                     )
 from .views import (
                     Logueo, 
@@ -125,9 +126,12 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
                path('change-email-correct/', change_email_correct, name='change_email_correct'),
                
                path("prospecto/<int:id>/<int:status>/revision-form/", RevisionFormView.as_view(), name="revision_form"),
+
                path("corregir-data/", corregirdata, name="corregir_data"),
                path("documents-status/", documents_status, name="documents_status"),
                path("user-update/", user_update, name="user_update"),
+               path("solicitud-form/", solicitud_form, name="solicitud_form"),
+
                path("prospecto/<int:id>/<int:status>/horario/", HorarioEstudianteView.horario_view, name='horarioEstudiante'),
                path("prospecto/<int:id>/<int:status>/plan/", PlanDeEstudioView.as_view(), name='planEstudio'),
                path("prospecto/<int:id>/<int:status>/plan/carrera/", DetallePlanDeEstudioView.getPlan, name='planEstudioCarrera'),
