@@ -994,6 +994,27 @@ class MatriculaView(LoginRequiredMixin, View):
         context = self.get_context_data(**kwargs)
         return render(request, self.template_name, context)
     
+
+class EstadoDeCuentaEstudiante(LoginRequiredMixin, View):
+    context_object_name = 'estadoCuentaEstudiante'
+    template_name = 'Dashboard/Estudiante/estadoDeCuentaEstudiante.html'
+    
+    def get(self, request, id, status):
+        return render(request, self.template_name, {'id': id, 'status': status})
+
+def codigoVerificacion(request):
+    codigo = random.randint(1000, 9999)
+    correo_destinatario = request.POST['email']
+    username = request.POST['nombre']
+    print(correo_destinatario)
+    subject = 'Código de verificación'
+    message = f'Hola, {username}, este es el código para finalizar el proceso de registro.\n\nEl código es: {codigo}\n\nEL CODIGO SOLO ES VALIDO PARA EL DIA DE HOY.\n\nUn cordial saludo.\nUIA.'
+    email_from = settings.EMAIL_HOST_USER
+    recipient_list = [correo_destinatario,]
+
+    send_mail(subject, message, email_from, recipient_list)
+    pass
+  
 class SuficienciaView(LoginRequiredMixin, View):
     context_object_name = 'suficiencia'
     template_name = 'Dashboard/Estudiante/suficienciaEstudiante.html'

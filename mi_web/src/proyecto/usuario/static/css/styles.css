@@ -1,3 +1,12 @@
+:root {
+  --color-U-1: #000000;
+  --color-U-2: #FED141;
+  --color-U-3: #7474c1;
+  --color-U-4: #005151;
+  --color-U-5: #EF3340;
+  --color-U-6: #FFB25B;
+  --color-U-7: #FE5000;
+}
 @font-face {
   font-family: 'Abrade';
   src: url('../fonts/Abrade/Abrade-SemiLight.eot');
@@ -982,4 +991,20 @@ a#microsofId img {
 
 .liSocial{
   list-style-type: none; /* Oculta el punto */
+}
+
+
+@media (max-width: 767px) {
+  .tablaPlan td {
+    background-color: transparent;
+  }
+  #aprovado{
+    background-color: #cdfcba;
+  }
+  #matriculable{
+    background-color: #b8e6fd;
+  }
+  #noMatriculable{
+    background-color: #d1d1cf;
+  }
 }

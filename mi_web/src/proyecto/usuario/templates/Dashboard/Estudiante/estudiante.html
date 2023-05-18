@@ -1,12 +1,7 @@
 {% extends 'adminlte/base.html' %}
     {% block stylesheets %}
         {% include 'adminlte/lib/_styles.html' %}
-        {% block style_sheets %}
-            {% load static %}
-            <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-            <script src="{% static 'js/accesibilidad.js' %}"></script>
-            <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-        {% endblock %}
+
     {% endblock %}
     {% block nav_header %}
             {% include 'adminlte/lib/_main_header.html' %}
