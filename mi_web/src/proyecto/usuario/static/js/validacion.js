@@ -76,26 +76,5 @@ $(document).ready(function () {
       segundo.removeAttribute("readonly");
     }
   });
-
-  const password1 = $("#password1");
-  const password2 = $("#password2");
-  password1.on("input", validatePasswords);
-  password2.on("input", validatePasswords);
   $('.select2').select2();
 });
-
-function validatePasswords() {
-  const passwordInput = document.getElementById('password1');
-  const passwordInput2 = document.getElementById('password2');
-  const password = passwordInput.value;
-  const password2 = passwordInput2.value;
-  const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_.:;,\-\+\]\[\}\{\¡\¿\'\?=\´~\"!°¬|])[A-Za-z\d!@#$%^&*()_.:;,\-\+\]\[\}\{\¡\¿\'\?=\´~\"!°¬|]{8,}$/;
-
-  if (password !== password2) {
-    passwordInput2.setCustomValidity("Las contraseñas no coinciden");
-  } else if (!passwordPattern.test(password)) {
-    passwordInput2.setCustomValidity("La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula, un número y un carácter especial.");
-  } else {
-    passwordInput2.setCustomValidity("");
-  }
-}

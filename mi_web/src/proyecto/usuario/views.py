@@ -1006,8 +1006,8 @@ class EstadoDeCuentaEstudiante(LoginRequiredMixin, View):
 
 def codigoVerificacion(request):
     codigo = random.randint(1000, 9999)
-    correo_destinatario = request.POST['email']
-    username = request.POST['nombre']
+    correo_destinatario = request.GET.get("correo")
+    username = request.GET.get("nombre")
     print(correo_destinatario)
     subject = 'Código de verificación'
     message = f'Hola, {username}, este es el código para finalizar el proceso de registro.\n\nEl código es: {codigo}\n\nEL CODIGO SOLO ES VALIDO PARA EL DIA DE HOY.\n\nUn cordial saludo.\nUIA.'
@@ -1015,8 +1015,8 @@ def codigoVerificacion(request):
     recipient_list = [correo_destinatario,]
 
     send_mail(subject, message, email_from, recipient_list)
-    pass
-  
+    return JsonResponse(codigo, safe=False)
+
 class SuficienciaView(LoginRequiredMixin, View):
     context_object_name = 'suficiencia'
     template_name = 'Dashboard/Estudiante/suficienciaEstudiante.html'
@@ -1038,6 +1038,36 @@ class SuficienciaView(LoginRequiredMixin, View):
                 'user': user,
                 'status': self.kwargs['status'],
                 'id': self.kwargs['id']
+            }
+        return context
+    
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        return render(request, self.template_name, context)
+
+class Payment(LoginRequiredMixin, View):
+    context_object_name = 'payment'
+    template_name = 'Dashboard/Estudiante/payment.html'
+    
+    def get_context_data(self, **kwargs):
+        user = self.request.user
+        
+        try:
+            fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
+            imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
+            context = {
+                'user': user,
+                'fotoperfil': imagen_url,
+                'status': self.kwargs['status'],
+                'id': self.kwargs['id'],
+                'llamar_time': True
+            }
+        except fotoperfil.DoesNotExist:
+            context = {
+                'user': user,
+                'status': self.kwargs['status'],
+                'id': self.kwargs['id'],
+                'llamar_time': True
             }
         return context
     

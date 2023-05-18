@@ -1,0 +1,97 @@
+{% extends 'Dashboard/dashboard.html' %}
+{% load static %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow p-2">
+                <div class="row">
+                    <form class="row g-3" name="CredomaticPost" method="POST"
+                        action="https://credomatic.compassmerchantsolutions.com/api/transact.php">
+                        {% csrf_token %}
+                        <div class="row mt-3">
+                            <div class="form-floating mb-3 col-md-4" id="dis_type">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="type" name="type" readonly value="sale">
+                                </div>
+                            </div>
+                            <div class="form-floating mb-3 col-md-4" id="dis_key_id">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="key_id" name="key_id" readonly value="">
+                                </div>
+                            </div>
+                            <div class="form-floating mb-3 col-md-4" id="dis_hash">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="hash" name="hash" value="" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="form-floating mb-3 col-md-4" id="dis_time">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="time" name="time" value="" readonly>
+                                </div>
+                            </div>
+                            <div class="form-floating mb-3 col-md-4" id="dis_amount">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="amount" name="amount" value="" readonly>
+                                </div>
+                            </div>
+                            <div class="form-floating mb-3 col-md-4" id="dis_orderid">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="orderid" name="orderid" value=""
+                                        readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="form-floating mb-3 col-md-4" id="dis_processor_id">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="processor_id" name="processor_id"
+                                        value="" readonly>
+                                </div>
+                            </div>
+                            <div class="form-floating mb-3 col-md-4" id="dis_avs">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="avs" name="avs" value="" readonly>
+                                </div>
+                            </div>
+                            <div class="form-floating mb-3 col-md-4" id="dis_redirect">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="redirect" name="redirect" value=""
+                                        readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="form-floating mb-3 col-md-4" id="dis_ccnumber">
+                                <input type="text" class="form-control" id="ccnumber" name="ccnumber" value="">
+                                <label for="ccnumber">Numbero de tarjeta</label>
+                            </div>
+                            <div class="form-floating mb-3 col-md-4" id="dis_ccexp">
+                                <input type="text" class="form-control" id="ccexp" name="ccexp" value="">
+                                <label for="ccexp">Fecha de expiración</label>
+                            </div>
+                            <div class="form-floating mb-3 col-md-4" id="dis_cvv">
+                                <input type="text" class="form-control" id="cvv" name="cvv" value="">
+                                <label for="cvv">CVV</label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% block scripts %}
+<script src="{% static 'js/payment.js' %}"></script>
+  {% if llamar_time %}
+    <script>
+      window.onload = function() {
+        time(); // Llama al método time() al cargar la página
+      };
+    </script>
+  {% endif %}
+{% endblock %}
+{% endblock content %}
