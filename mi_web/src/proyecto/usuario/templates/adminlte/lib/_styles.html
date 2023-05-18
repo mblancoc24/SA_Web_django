@@ -1,0 +1,24 @@
+{% load static %}
+{% block styles %}
+<!-- Font Awesome -->
+<link rel="stylesheet" href="{% static 'admin-lte/plugins/fontawesome-free/css/all.min.css' %}">
+<!-- Ionicons -->
+<link rel="stylesheet" type="text/css" href="{% static 'admin-lte/dist/css/adminlte.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'admin-lte/plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+{% load bootstrap5 %}
+{% bootstrap_css %}
+<script src="{% static 'js/pluginJs/jquery.min.js' %}"></script>
+{% bootstrap_javascript %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/pluginCss/three-dots.min.css' %}">
+<link rel='stylesheet' href="{% static 'css/pluginCss/bootstrap-icons.min.css' %}"> 
+<link rel='stylesheet' href="{% static 'css/pluginCss/all.min.css' %}">
+<link rel="stylesheet" href="{% static 'css/pluginCss/material.css' %}" />
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+<script src="{% static 'js/accesibilidad.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/pluginJs/traductor.js' %}"></script>
+<script src="{% static 'js/pluginJs/progressbar.min.js' %}"></script>
+<script src="{% static 'js/planEstudio.js' %}"></script>
+<script src="{% static 'js/horarioEstudiante.js' %}"></script>
+{% endblock %}

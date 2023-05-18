@@ -1,11 +1,5 @@
 {% extends 'Dashboard/dashboard.html' %}
 {% load static %}
-{% block style_sheets %}
-<link rel="stylesheet" href="{% static 'css/styles.css' %}">
-<script src="{% static 'js/accesibilidad.js' %}"></script>
-<script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-<script src="https://cdn.jsdelivr.net/npm/@bjornlu/colorblind@1.0.3/dist/colorblind.min.js"></script>
-{% endblock %}
 {% block content %}
 <div class="container">
     <div class="row d-flex justify-content-center mt-3">
@@ -14,7 +8,7 @@
                 {% load static %}
                 <a data-bs-toggle="modal" data-bs-target="#modal_primer_ingreso" class="card-link"
                     onclick="llenardata()">
-                    <img src="{% static 'img/primer_ingreso.png' %}" class="card-img-top" alt="..." />
+                    <img src="{{ formPrimerIngreso }}" class="card-img-top" alt="..." />
                 </a>
 
                 <div class="card-body" id="infoCardBody">
@@ -30,7 +24,7 @@
         <div class="col-sm-4 col-lg-3 mb-3">
             <div class="card p-3 mb-2" id="infoCard">
                 <a data-bs-toggle="modal" data-bs-target="#modal_posgrado" class="card-link" onclick="dataposgrados()">
-                    <img src="{% static 'img/posgrados.png' %}" class="card-img-top" alt="..." />
+                    <img src="{{ formPosgrados }}" class="card-img-top" alt="..." />
                 </a>
 
                 <div class="card-body" id="infoCardBody">
@@ -45,7 +39,7 @@
         <div class="col-sm-4 col-lg-3 mb-3">
             <div class="card p-3 mb-2" id="infoCard">
                 <a data-bs-toggle="modal" data-bs-target="#modal_cursolibres" class="card-link">
-                    <img src="{% static 'img/cursos_libres.png' %}" class="card-img-top" alt="..." />
+                    <img src="{{ formCursoLibre }}" class="card-img-top" alt="..." />
                 </a>
 
                 <div class="card-body" id="infoCardBody">

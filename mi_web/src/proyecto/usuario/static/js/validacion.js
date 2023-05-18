@@ -63,23 +63,6 @@ $(document).ready(function () {
     $("#password2").val("");
   });
 
-  const password1 = $("#password1");
-  const password2 = $("#password2");
-
-  function validatePasswords() {
-    var password = password1.value;
-    var pattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
-    if (password1.val() !== password2.val()) {
-      password2[0].setCustomValidity("Contraseña no coinciden");
-    } else {
-      password2[0].setCustomValidity("");
-    }
-
-  }
-
-  password1.on("input", validatePasswords);
-  password2.on("input", validatePasswords);
-
   $("#identificacion").on("keydown", (e) => {
     if (e.which === 8) {
       var nombre = document.getElementById("nombre");
@@ -94,15 +77,25 @@ $(document).ready(function () {
     }
   });
 
-  var passwordField = document.getElementById("password1");
-  passwordField.addEventListener("input", function () {
-    var password = passwordField.value;
-    var pattern = /[A-Za-z0-9@#$%-/*.)(\-<>}{})]{8,}/;
-    if (pattern.test(password)) {
-      passwordField.setCustomValidity("");
-    } else {
-      passwordField.setCustomValidity("La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula, un número y un carácter especial.");
-    }
-  });
+  const password1 = $("#password1");
+  const password2 = $("#password2");
+  password1.on("input", validatePasswords);
+  password2.on("input", validatePasswords);
   $('.select2').select2();
 });
+
+function validatePasswords() {
+  const passwordInput = document.getElementById('password1');
+  const passwordInput2 = document.getElementById('password2');
+  const password = passwordInput.value;
+  const password2 = passwordInput2.value;
+  const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_.:;,\-\+\]\[\}\{\¡\¿\'\?=\´~\"!°¬|])[A-Za-z\d!@#$%^&*()_.:;,\-\+\]\[\}\{\¡\¿\'\?=\´~\"!°¬|]{8,}$/;
+
+  if (password !== password2) {
+    passwordInput2.setCustomValidity("Las contraseñas no coinciden");
+  } else if (!passwordPattern.test(password)) {
+    passwordInput2.setCustomValidity("La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula, un número y un carácter especial.");
+  } else {
+    passwordInput2.setCustomValidity("");
+  }
+}

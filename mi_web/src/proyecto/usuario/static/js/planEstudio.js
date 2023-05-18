@@ -295,6 +295,8 @@ function actualizarTabla(data) {
                     btnLevantamiento.appendChild(dots);
                     var td_gest = document.createElement('td');
                     if (cursosAprobados.includes(items.curso)) {
+                        trb.id = 'aprovado';
+                        
                         icons.className = 'bi bi-check-lg';
                         icons.style.color = '#3bb80a';
                         icons.style.fontSize = '16px';
@@ -302,16 +304,19 @@ function actualizarTabla(data) {
                         td_apro.appendChild(icons);
                     } else if (items.requisitos === '') {
                         icons.className = 'bi bi-plus-lg color-box';
+                        trb.id = 'matriculable';
                         icons.style.color = '#006a9f';
                         icons.style.fontSize = '16px';
                         td_apro.appendChild(icons);
                     } else if (items.requisitos.split(',').every(requisito => cursosAprobados.includes(requisito))) {
                         icons.className = 'bi bi-plus-lg color-box';
+                        trb.id = 'matriculable';
                         icons.style.color = '#006a9f';
                         icons.style.fontSize = '16px';
                         td_apro.appendChild(icons);
                     } else {
                         icons.className = 'bi bi-x-lg color-box';
+                        trb.id = 'noMatriculable';
                         icons.style.color = '#83877b';
                         icons.style.fontSize = '16px';
                         checkOpcion.setAttribute("hidden", true);
