@@ -160,6 +160,56 @@ class save_profile_processes():
         elif usuario1 is not None:
             user = User.objects.get(email=usuario1["email"])
             user.email = data[1]
+            user.is_active = True
+            user.save()
+            
+            user_prospecto = prospecto.objects.get(id_prospecto=user.username)
+            user_prospecto.delete()
+            return True
+        
+    def payment_update_user_prospecto(id):
+        user = User.objects.filter(username=id)
+        usuario1 = None
+        usuario2 = None
+
+        for index, usuario in enumerate(user):
+            if index == 0:
+                usuario1 = {
+                    'id': usuario.id,
+                    'username': usuario.username,
+                    'email': usuario.email,
+                    'first_name': usuario.first_name,
+                    'last_name': usuario.last_name
+                }
+            else:
+                usuario2 = {
+                    'id': usuario.id,
+                    'username': usuario.username,
+                    'email': usuario.email,
+                    'first_name': usuario.first_name,
+                    'last_name': usuario.last_name
+                }
+                
+        if usuario1 is not None and usuario2 is not None:
+            try:
+                prospecto_user1 = get_object_or_404(prospecto, correo_personal=usuario1["email"])
+                if prospecto_user1 is not None:
+                    prospecto_user1.delete()
+                    user = User.objects.get(email=usuario1["email"])
+                    user.delete()
+            except:
+                try:
+                    prospecto_user2 = get_object_or_404(prospecto, correo_personal=usuario2["email"])
+                    if prospecto_user2 is not None:
+                        prospecto_user2.delete()
+                        user = User.objects.get(email=usuario2["email"])
+                        user.delete()
+                        
+                except:
+                    return False
+        elif usuario1 is not None:
+            user = User.objects.get(email=usuario1["email"])
+            user.is_active = False
             user.save()
             
             user_prospecto = prospecto.objects.get(id_prospecto=user.username)

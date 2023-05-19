@@ -1,0 +1,76 @@
+{% extends 'Dashboard/dashboard.html' %}
+{% load static %}
+{% block content %}
+<div class="row">
+    <div class="col-6 mx-auto">
+        <div class="card border-0 shadow">
+            <div class="card-body">
+                <div class="text-center">
+                    {% if pago == 100 %}
+                    <img src="{% static 'img/approved.png' %}" alt="Imagen" style="width: 150px; height: 150px;">
+                    {% elif pago == 200 %}
+                    <img src="{% static 'img/denied.png' %}" alt="Imagen" style="width: 150px; height: 150px;">
+                    {% elif pago == 300 %}
+                    <img src="{% static 'img/errorpayment.png' %}" alt="Imagen" style="width: 150px; height: 150px;">
+                    {% endif %}
+                </div>
+                <div class="row text-center">
+                    {% if pago == 100 %}
+                    <h5 class="card-title mt-3 fw-light fs-5 fw-bold">Pago Confirmado</h5>
+                    {% elif pago == 200 %}
+                    <h5 class="card-title mt-3 fw-light fs-5 fw-bold">Pago Denegado</h5>
+                    {% elif pago == 300 %}
+                    <h5 class="card-title mt-3 fw-light fs-5 fw-bold">Transacción no Realizada</h5>
+                    {% endif %}
+                </div>
+                <div>
+                    {% if pago == 100 %}
+                    <div class="my-3 text-center">
+                        <p id="text" class="text-justify">
+                            En la próxima hora, serán enviadas a tu nuevo correo institucional con copia a tu correo personal, las credenciales de acceso a las siguientes plataformas estudiantiles:
+                        </p>
+                    </div>
+                    <ul>
+                        <li>E-Campus</li>
+                        <li>Biblioteca</li>
+                        <li>Correo Institucional</li>
+                        <li>Portal UIA</li>
+                    </ul>
+                    <div class="my-3 text-center">
+                        <p id="text" class="text-justify fs-7 fw-bold">
+                            *NOTA: Las credenciales enviadas permiten el acceso a las plataformas bajo el mismo usuario (correo institucional) y contraseña enviados.
+                        </p>
+                    </div>
+                    <div class="my-3 text-center">
+                        <p id="text" class="text-justify">
+                            Al finalizar, el acceso al Portar UIA será denegado hasta recibir las credenciales. Una vez recibidas podrás proceder a inicar sesión con el correo institucional.
+                        </p>
+                    </div>
+                    {% elif pago == 200 %}
+                    <div class="my-3 text-center">
+                        <p id="text" class="text-justify">
+                            Por favor, verificar fondos o bien ponerse en contacto con su entidad bancaria, ya que el metodo de pago utilizado ha sido denegado para realizar la transacción.
+                        </p>
+                    </div>
+                    {% elif pago == 300 %}
+                    <div class="my-3 text-center">
+                        <p id="text" class="text-justify">
+                            Por favor intentar nuevamente verificando que los datos de pago sean correctos. Si el error persiste por favor intentar más tarde.
+                        </p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="text-center mt-2 mb-2">
+                {% if pago == 100 %}
+                <a href="{% url 'logout' %}" class="btn btn-success">Finalizar</a>
+                {% elif pago == 200 or pago == 300 %}
+                <a href="{% url 'matricula' id=id status=status %}" class="btn btn-primary">Intentar de Nuevo</a>
+                {% endif %}
+            </div>
+        </div>
+        
+    </div>
+</div>
+    
+{% endblock content %}

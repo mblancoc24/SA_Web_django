@@ -996,7 +996,6 @@ class MatriculaView(LoginRequiredMixin, View):
         context = self.get_context_data(**kwargs)
         return render(request, self.template_name, context)
     
-
 class EstadoDeCuentaEstudiante(LoginRequiredMixin, View):
     context_object_name = 'estadoCuentaEstudiante'
     template_name = 'Dashboard/Estudiante/estadoDeCuentaEstudiante.html'
@@ -1045,7 +1044,40 @@ class SuficienciaView(LoginRequiredMixin, View):
         context = self.get_context_data(**kwargs)
         return render(request, self.template_name, context)
 
-class Payment(LoginRequiredMixin, View):
+class PaymentProspecto(LoginRequiredMixin, View):
+    context_object_name = 'payment'
+    template_name = 'Dashboard/Prospecto/paymentProspecto.html'
+    
+    def get_context_data(self, **kwargs):
+        user = self.request.user
+        orderid = ''+user.username+'-PagoMatricula'
+        self.request.session['orderid'] = orderid
+        try:
+            fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
+            imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
+            context = {
+                'user': user,
+                'fotoperfil': imagen_url,
+                'status': self.kwargs['status'],
+                'orderid': orderid,
+                'id': self.kwargs['id'],
+                'llamar_time': True
+            }
+        except fotoperfil.DoesNotExist:
+            context = {
+                'user': user,
+                'status': self.kwargs['status'],
+                'orderid': orderid,
+                'id': self.kwargs['id'],
+                'llamar_time': True
+            }
+        return context
+    
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        return render(request, self.template_name, context)
+    
+class PaymentEstudiante(LoginRequiredMixin, View):
     context_object_name = 'payment'
     template_name = 'Dashboard/Estudiante/payment.html'
     
