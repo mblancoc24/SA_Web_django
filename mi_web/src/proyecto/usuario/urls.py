@@ -1,4 +1,9 @@
 from django.urls import path
+from .payment import(
+                    obtener_keyiD,
+                    obtener_hash_entrada,
+                    PaymentApproved,
+                    )
 from .api_queries import(
                     obtener_datos,
                     obtener_provincia,
@@ -46,7 +51,8 @@ from .views import (
                     codigoVerificacion,
                     SuficienciaView,
                     RevisionFormView,
-                    Payment,
+                    PaymentProspecto,
+                    PaymentEstudiante,
                     )
 from django.contrib.auth.views import LogoutView
 from django.contrib.auth import views as auth_views
@@ -144,8 +150,13 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
                path("descargar-archivo/<int:id>/", descargar_archivo, name="descargar_archivo"),
                path("prospecto/<int:id>/<int:status>/estadoCuenta/", EstadoDeCuentaEstudiante.as_view(), name='estadoCuentaEstudiante'),
                path('codigoVerificacion/', codigoVerificacion, name='codigoVerificacion'),
-               path("prospecto/<int:id>/<int:status>/pagarMatricula/", Payment.as_view(), name='payment'),
+
+               path("prospecto/<int:id>/<int:status>/pagarMatricula/", PaymentProspecto.as_view(), name='payment_prospecto'),
+               path("estudiante/<int:id>/<int:status>/pagarMatricula/", PaymentEstudiante.as_view(), name='payment_estudiante'),
                path("obtener-time/", obtener_fecha_unix, name='obtener_time'),
+               path("obtener-key/", obtener_keyiD, name='obtener_key'),
+               path("hash-entrada/", obtener_hash_entrada, name='hash_entrada'),
+               path("prospecto/<int:id>/<int:status>/pago-realizado/", PaymentApproved.as_view(), name='pago_realizado'),
                ]
 
 

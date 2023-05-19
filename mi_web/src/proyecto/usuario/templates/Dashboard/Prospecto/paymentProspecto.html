@@ -38,7 +38,7 @@
                             </div>
                             <div class="form-floating mb-3 col-md-4" id="dis_orderid">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="orderid" name="orderid" value=""
+                                    <input type="text" class="form-control" id="orderid" name="orderid" value="{{ orderid }}"
                                         readonly>
                                 </div>
                             </div>
@@ -94,7 +94,6 @@
         time(); // Llama al método time() al cargar la página
         keyID();
         hashEntrada();
-        order();
       };
     </script>
   {% endif %}

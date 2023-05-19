@@ -73,6 +73,7 @@ def obtener_datos(request):
 
 def obtener_fecha_unix(request):
     fecha_actual = int(time.time())
+    request.session["timePy"] = fecha_actual
     return JsonResponse(fecha_actual, safe=False)
 
 def get_student(id):
