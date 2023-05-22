@@ -115,10 +115,11 @@ def microsoft_auth(request):
             'redirect_uri': redirect_uri,
             'response_type': 'code',
             'scope': 'openid email profile',
-            'response_mode': 'query'
+            'response_mode': 'query',
+            'prompt':'login'
         }
         url = 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize'
-        return redirect(f"{url}?client_id={params['client_id']}&redirect_uri={params['redirect_uri']}&response_type={params['response_type']}&scope={params['scope']}&response_mode={params['response_mode']}")
+        return redirect(f"{url}?client_id={params['client_id']}&redirect_uri={params['redirect_uri']}&response_type={params['response_type']}&scope={params['scope']}&response_mode={params['response_mode']}&prompt={params['prompt']}")
 
 def microsoft_callback(request):
     auth_code = request.GET.get('code')
@@ -130,7 +131,8 @@ def microsoft_callback(request):
         'redirect_uri': redirect_uri,
         'client_id': settings.MICROSOFT_CLIENT_ID,
         'client_secret': settings.MICROSOFT_CLIENT_SECRET,
-        'scope': 'openid email profile'
+        'scope': 'openid email profile',
+        'prompt':'login'
     }
     headers = {'Content-Type': 'application/x-www-form-urlencoded'}
     requests_response = requests.post(url, data=data, headers=headers)
@@ -183,6 +185,7 @@ class MicrosoftLogoutView(LoginRequiredMixin, LogoutView):
                 
                 if response.status_code == 200:
                     request.session.flush()
+                    logout(request)
                     print("Se ha cerrado sesión correctamente.")
                 else:
                     print("Error al cerrar sesión.")
@@ -1050,14 +1053,17 @@ class PaymentProspecto(LoginRequiredMixin, View):
     
     def get_context_data(self, **kwargs):
         user = self.request.user
-        orderid = ''+user.username+'-PagoMatricula'
-        self.request.session['orderid'] = orderid
+        if 'orderid' in self.request.session:
+            self.request.session['orderid'] = orderid
+        else:
+            orderid = ''+user.username+'-PagoMatricula'
+            self.request.session['orderid'] = orderid
         try:
             fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
             imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
             context = {
                 'user': user,
-                'fotoperfil': imagen_url,
+                'fotoperfil': imagen_url, 
                 'status': self.kwargs['status'],
                 'orderid': orderid,
                 'id': self.kwargs['id'],
