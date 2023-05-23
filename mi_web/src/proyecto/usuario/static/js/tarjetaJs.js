@@ -116,7 +116,7 @@ $(document).ready(function () {
                 ccicon.innerHTML = visa;
                 ccsingle.innerHTML = visa_single;
                 break;
-            
+
             case 'mastercard':
                 ccicon.innerHTML = mastercard;
                 ccsingle.innerHTML = mastercard_single;
@@ -138,7 +138,7 @@ const action = {
             if (i < 10) {
                 i = '0' + i;
             }
-            html += '<option value="' + i + '">' + i + '</ooption>'
+            html += '<option value="' + i + '">' + i + '</option>'
         }
         $('#monthInput').append(html);
 
