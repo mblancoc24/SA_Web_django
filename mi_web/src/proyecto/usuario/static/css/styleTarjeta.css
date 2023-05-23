@@ -1,5 +1,3 @@
-
-
 .cardTarjeta {
     height: 221px;
     position: relative;
@@ -7,7 +5,7 @@
     background-color: transparent;
 }
 
-.card-bar{
+.card-bar {
     margin-top: 10%;
     background: #ffffff52;
     height: 40px;
@@ -33,14 +31,14 @@
 .flip {
     transition: transform 0.5s;
     transform-style: preserve-3d;
-  }
-  
-  /* Rota la tarjeta en el eje Y para mostrar la parte trasera */
-  .flipped {
+}
+
+/* Rota la tarjeta en el eje Y para mostrar la parte trasera */
+.flipped {
     transform: rotateY(180deg);
-  }
-  
-  
+}
+
+
 /* FRONT OF CARD */
 #svgname {
     text-transform: uppercase;
@@ -161,16 +159,78 @@
     max-height: 60px;
 }
 
-.ccicon {
-    height: 38px;
-    position: absolute;
-    right: 6px;
-    top: calc(50% - 17px);
-    width: 60px;
-}
 
-#titleMatricula{
+#titleMatricula {
     font-weight: bold;
     text-align: center;
     padding-top: 2px;
+}
+
+#tarjetasCard {
+    width: 350px;
+    height: 75px
+}
+
+@media (max-width: 390px) {
+    #tarjetasCard {
+        width: 310px;
+        height: 75px
+    }
+}
+
+@media (max-width: 360px) {
+    #tarjetasCard {
+        width: 290px;
+        height: 75px
+    }
+}
+
+@media (max-width: 320px) {
+    #tarjetasCard {
+        width: 250px;
+        height: 65px
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    .frente, .atras {
+        position: absolute;
+        width: 80%;
+        height: 80%;
+        
+    }
+
+    .cardTarjeta{
+        margin-bottom: 155px;
+    }
+
+    #tarjetasCard {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+@media (max-width: 1440px) {
+    #cardTarjeta {
+        width: 290px;
+        height: 90px;
+        display: flex; /* Agrega la propiedad de flexbox */
+        justify-content: center; /* Centra horizontalmente el contenido */
+        align-items: center; /* Centra verticalmente el contenido */
+    }
+    .cardTarjeta{
+        margin-bottom: 230px;
+    }
+    .frente, .atras{
+        width: 695px;
+        height: 90px;
+    }
+
+    .formCard{
+        width: 720px;
+    }
+
+    .creditCard {
+        display: flex;
+    }
 }
