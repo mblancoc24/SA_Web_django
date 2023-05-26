@@ -63,7 +63,7 @@
             </div>
             <div class="text-center mt-2 mb-2">
                 {% if pago == 100 %}
-                <a href="{% url 'logout' %}" class="btn btn-success">Finalizar</a>
+                <a href="{% url 'pago_finalizado' id=user.username %}" class="btn btn-success">Finalizar</a>
                 {% elif pago == 200 or pago == 300 %}
                 <a href="{% url 'matricula' id=id status=status %}" class="btn btn-primary">Intentar de Nuevo</a>
                 {% endif %}
