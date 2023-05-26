@@ -1054,7 +1054,7 @@ class PaymentProspecto(LoginRequiredMixin, View):
     def get_context_data(self, **kwargs):
         user = self.request.user
         if 'orderid' in self.request.session:
-            orderid = self.request.session.get('orderid') 
+            orderid = self.request.session.get('orderid')
         else:
             orderid = ''+user.username+'-PagoMatricula'
             self.request.session['orderid'] = orderid
@@ -1112,6 +1112,7 @@ class PaymentEstudiante(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
         return render(request, self.template_name, context)
+    
     
 class HorarioPlanDeEstudioView(LoginRequiredMixin):
     context_object_name = 'horarioCursoPlan'

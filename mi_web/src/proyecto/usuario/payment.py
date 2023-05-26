@@ -34,11 +34,12 @@ class PaymentApproved(LoginRequiredMixin, View):
 
         if verification and response_code == '100':
             pago = 100
-            save_profile_processes.payment_update_user_prospecto(user.username)
         elif response_code == '200' or response_code == '202':
             pago = 200
         elif response_code == '300':
            pago = 300
+        else:
+            pago = 300
 
         try:
             fotoperfil_obj = fotoperfil.objects.get(user=user.pk)

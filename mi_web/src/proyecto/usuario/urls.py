@@ -17,6 +17,9 @@ from .api_processes import (
                     user_update,
                     solicitud_form,
                     )
+from .save_processes import(
+                    payment_update_user_prospecto
+                    )
 from .views import (
                     Logueo, 
                     PaginaRegistroEstudiante,
@@ -161,10 +164,12 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
                path("obtener-key/", obtener_keyiD, name='obtener_key'),
                path("hash-entrada/", obtener_hash_entrada, name='hash_entrada'),
                path("prospecto/<int:id>/<int:status>/pago-realizado/", PaymentApproved.as_view(), name='pago_realizado'),
+
                path("prospecto/<int:id>/<int:status>/plan/cursoPlanHorario/", HorarioPlanDeEstudioView.getHorario, name='horarioCursoPlan'),
                path("prospecto/<int:id>/<int:status>/ubicacion/", Ubicacion.ubicacion_view, name='ubicacion'),
                path("prospecto/<int:id>/<int:status>/contactenos/", Contactenos.contactenos_view, name='contactenos'),
                path("prospecto/<int:id>/<int:status>/plan/envioPrematricula/", EnvioPrematricula.envioPrematricula, name='envioPrematricula'),
+
+               path("prospecto/<int:id>/pago-finalizado/", payment_update_user_prospecto, name='pago_finalizado'),
+
                ]
-
-

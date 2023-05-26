@@ -884,19 +884,27 @@ aside.accesibilidad.active {
   color: white;
 }
 
-a#microsofId img {
-  width: 155px;
-  height: 21px;
+#imgMicrosoft{
+  max-width: 220px;
+  max-height: 55px;
 }
+
 .microsoft {
   border-radius: 5px;
   box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.4);
-  max-width: 175px;
   display: flex;
+  max-width: 200px;
+  max-height: 50px;
   justify-content: center;
   align-items: center;
   margin: auto;
 }
+
+#img_check {
+  max-width: 45px;
+  max-height: 45px;
+}
+
 
 .links-container {
   display: flex;
