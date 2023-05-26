@@ -57,16 +57,22 @@ function mostrar() {
 
 function aumentarFuente() {
     var contenido = document.getElementsByTagName("body")[0];
+    var footer = document.getElementsByTagName("footer")[0]; // Obtener el elemento del footer
     var tamañoActual = window.getComputedStyle(contenido, null).getPropertyValue("font-size");
+    console.log(tamañoActual);
     var tamañoNuevo = parseInt(tamañoActual) + 2;
     contenido.style.fontSize = tamañoNuevo + "px";
+    footer.style.fontSize = tamañoNuevo + "px"; // Aumentar el tamaño de fuente del footer
 }
+
 
 function disminuirFuente() {
     var contenido = document.getElementsByTagName("body")[0];
+    var footer = document.getElementsByTagName("footer")[0]; // Obtener el elemento del footer
     var tamañoActual = window.getComputedStyle(contenido, null).getPropertyValue("font-size");
     var tamañoNuevo = parseInt(tamañoActual) - 2;
     contenido.style.fontSize = tamañoNuevo + "px";
+    footer.style.fontSize = tamañoNuevo + "px"; // Aumentar el tamaño de fuente del footer
 }
 
 function restablecerFuente() {

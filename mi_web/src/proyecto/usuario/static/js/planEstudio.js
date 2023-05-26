@@ -3,6 +3,7 @@ var cursoAprovados;
 var totalCreditos;
 var creditosAprovados;
 var cursoPre = [];
+var horariosCurso = [];
 var cantidadCursos;
 var auxCantCursos;
 $(document).ready(function () {
@@ -63,7 +64,7 @@ $(document).ready(function () {
     }
     var botonEnviarPrematricula = document.getElementById('enviarPrematricula');
     botonEnviarPrematricula.onclick = function () {
-        enviarPrematricula(id.textContent, cursoPre);
+        enviarPrematricula(id.textContent);
     }
 });
 
@@ -112,8 +113,6 @@ function actualizarEstado(data) {
     divEnfasis.className = 'col-6 col-md-4';
     var pEnfasis = document.createElement('h6');
     pEnfasis.textContent = 'Enfasis: ' + data[0].data.enfasis;
-
-
 
     divGrado.appendChild(pGrado);
     divEnfasis.appendChild(pEnfasis);
@@ -287,7 +286,7 @@ function actualizarTabla(data) {
                     checkOpcion.id = `${items.curso}-checkbox`;
                     var btnLevantamiento = document.createElement('a');
                     btnLevantamiento.className = 'link-info link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover';
-                    btnLevantamiento.onclick = function(){
+                    btnLevantamiento.onclick = function () {
                         actualizarModal(items.curso);
                     }
                     var dots = document.createElement('i');
@@ -296,7 +295,7 @@ function actualizarTabla(data) {
                     var td_gest = document.createElement('td');
                     if (cursosAprobados.includes(items.curso)) {
                         trb.id = 'aprovado';
-                        
+
                         icons.className = 'bi bi-check-lg';
                         icons.style.color = '#3bb80a';
                         icons.style.fontSize = '16px';
@@ -378,6 +377,7 @@ function visualizar(curso, nombre, creditos, id) {
     console.log(cantidadCursos);
     if (checkBox.checked && cantidadCursos > 0) {
         cursoPre.push(cursoObj);
+        horariosCurso.push(curso);
         cantidadCursos -= 1;
         var cursos = document.getElementById('cantCursos');
         var auxCu = parseInt(cursos.innerText);
@@ -424,6 +424,7 @@ function mostrarPrematricula() {
         var spanSiglaModal = document.createElement('span');
         divSiglaModal.className = 'd-flex align-items-center justify-content-center';
         spanSiglaModal.className = 'pe-3 fw-normal';
+        spanSiglaModal.id = 'siglasCursos';
         spanSiglaModal.innerText = curso.curso;
         divSiglaModal.appendChild(spanSiglaModal);
 
@@ -449,15 +450,32 @@ function mostrarPrematricula() {
         pCreditoModal.appendChild(spanCreditoModal);
         divCreditoModal.appendChild(spanCreditoModal);
 
+        var tdSelectModal = document.createElement('td');
+        var divSelectModal = document.createElement('div');
+        var selectTablaModal = document.createElement('select');
+        var optionTablaSelectModal = document.createElement('option');
+        optionTablaSelectModal.setAttribute('disabled', true);
+        optionTablaSelectModal.setAttribute('selected', true);
+        optionTablaSelectModal.setAttribute('value', '');
+        optionTablaSelectModal.setAttribute('hidden', true);
+        optionTablaSelectModal.innerText = 'Horarios';
+        selectTablaModal.id = `${curso.curso}-horarios`;
+        selectTablaModal.appendChild(optionTablaSelectModal);
+        selectTablaModal.className = 'form-select form-select-sm';
+        divSelectModal.className = 'd-flex align-items-center justify-content-center';
+        divSelectModal.appendChild(selectTablaModal);
+
         tdCheckModal.appendChild(divCheckModal);
         tdSiglaModal.appendChild(divSiglaModal);
         tdNombreModal.appendChild(divNombreModal);
         tdCreditoModal.appendChild(divCreditoModal);
+        tdSelectModal.appendChild(divSelectModal);
 
         trTablaModal.appendChild(tdCheckModal);
         trTablaModal.appendChild(tdSiglaModal);
         trTablaModal.appendChild(tdNombreModal);
         trTablaModal.appendChild(tdCreditoModal);
+        trTablaModal.appendChild(tdSelectModal);
         count += curso.creditos;
         tbodyModal.appendChild(trTablaModal);
     });
@@ -476,6 +494,19 @@ function mostrarPrematricula() {
     trTotal.appendChild(tdTotalModal);
 
     tbodyModal.appendChild(trTotal);
+    const id = document.getElementById('idP');
+    const status = document.getElementById('StatusP');
+    const url = `/prospecto/${id.textContent}/${status.textContent}/plan/cursoPlanHorario/` + "?cursos=" + encodeURIComponent(horariosCurso);
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            var data = JSON.parse(xhr.responseText);
+            getHorarios(data);
+        }
+    };
+    xhr.send();
 }
 
 function quitarPrematricula(fila, checkId, credito) {
@@ -502,21 +533,86 @@ function quitarPrematricula(fila, checkId, credito) {
     }
 }
 
-function enviarPrematricula(id, cursos) {
-    var prematricula = {
-        "id": id,
-        "cursos": []
+function enviarPrematricula(id) {
+    var tabla = document.getElementById("premTablaBody");
+    var identificacion = document.getElementById('idP');
+    var status = document.getElementById('StatusP');
+    var cursos = [];
+    for (var i = 0; i < tabla.rows.length - 1; i++) {
+        var fila = tabla.rows[i];
+        var siglasCurso = fila.querySelector("#siglasCursos").textContent;
+        var horarioSelect = fila.querySelector("select").value;
+        var curso = {
+            "curso": siglasCurso,
+            "horario": horarioSelect
+        };
+        cursos.push(curso);
+    }
+    var jsonData = {
+        "identificacion": "604150895",
+        "cursos": cursos
     };
-    cursos.forEach(sigla => {
-        prematricula.cursos.push(sigla.curso);
-    })
-    var prematriculaJSON = JSON.stringify(prematricula);
-    console.log(prematriculaJSON);
+    var jsonString = JSON.stringify(jsonData);
+    console.log(jsonString);
+    var xhr = new XMLHttpRequest();
+    var url = `/prospecto/${identificacion.textContent}/${status.textContent}/plan/envioPrematricula/`;
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    
+    // Include the CSRF token in the request headers
+    var csrfToken = getCSRFToken(); // Replace with the actual function to get the CSRF token
+    xhr.setRequestHeader("X-CSRFToken", csrfToken);
+    
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            // The request was completed successfully
+            var response = JSON.parse(xhr.responseText);
+            console.log(response);
+            // Perform necessary actions with the server response
+        }
+    };
+    xhr.send(jsonString);
 }
 
-function actualizarModal(curso){
+function getCSRFToken() {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      var cookies = document.cookie.split(';');
+      for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i].trim();
+        // Extract the CSRF token from the cookie
+        if (cookie.substring(0, 'csrftoken'.length + 1) === 'csrftoken=') {
+          cookieValue = decodeURIComponent(cookie.substring('csrftoken'.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+function actualizarModal(curso) {
 
     var cursoModal = document.getElementById('cursoModal');
     cursoModal.value = curso;
     $('#modal_levantamiento').modal('show');
+}
+
+function getHorarios(data) {
+    var siglas = document.querySelectorAll('#siglasCursos');
+    data.forEach((horarios) => {
+        var horariosCurso = horarios.data.horarios;
+        horariosCurso.forEach(curso => {
+            siglas.forEach(function (elemento) {
+                if (elemento.textContent === curso.curso) {
+                    var selectId = document.getElementById(`${elemento.textContent}-horarios`);
+                    curso.horarios.forEach(horario => {
+                        var opcionSelect = document.createElement('option');
+                        opcionSelect.setAttribute('value', horario);
+                        opcionSelect.innerText = horario;
+                        selectId.appendChild(opcionSelect);
+                    });
+                }
+            });
+        });
+    });
 }
