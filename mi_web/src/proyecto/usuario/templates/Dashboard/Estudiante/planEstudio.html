@@ -8,63 +8,64 @@
 {% endblock %}
 {% endblock %}
 {% block content %}
-<div class="container-fluid">
-    <div class="row justify-content-center mt-3">
-        <div class="form-group col-md-6 col-sm-4 ">
-            <div id="idP" hidden>{{ id }}</div>
-            <div id="StatusP" hidden>{{ status }}</div>
-            <label for="carrera"><i class=""> Seleccione un Pla de Estudio</i></label>
-            <select id="carrera" class="form-select" name="carrera">
-                <option value="" disabled selected hidden>Seleccione un Plan de Estudio</option>
-                <option value="{{ carrera.data.principal }}">{{ carrera.data.principal }}</option>
-                {% if carrera.data.secundarios %}
-                {% for secundario in carrera.data.secundarios %}
-                <option value="{{ secundario }}">{{ secundario }}</option>
-                {% endfor %}
-                {% endif %}
-            </select>
+<div class="p-2">
+    <div class="col-md-12 card cardPerfilCol">
+        <div class="row p-2 mx-auto">
+            <div class="form-group col-md-6 col-sm-6 mx-auto">
+                <div id="idP" hidden>{{ id }}</div>
+                <div id="StatusP" hidden>{{ status }}</div>
+                <label for="carrera"><i class=""> Seleccione un Plan de Estudio</i></label>
+                <select id="carrera" class="form-select" name="carrera">
+                    <option value="" disabled selected hidden>Seleccione un Plan de Estudio</option>
+                    <option value="{{ carrera.data.principal }}">{{ carrera.data.principal }}</option>
+                    {% if carrera.data.secundarios %}
+                    {% for secundario in carrera.data.secundarios %}
+                    <option value="{{ secundario }}">{{ secundario }}</option>
+                    {% endfor %}
+                    {% endif %}
+                </select>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
-            <div class="card shadow p-2">
-                <div class="row">
-                    <div class="col-md-12 estado"></div>
-                    <div class="col-md-12" id="opciones">
-                        <div class="row justify-content-center">
-                            <div class="col-md-4" style="text-align:center;">
-                                <i class="bi bi-check-lg color-box" style="color: #3bb80a;"></i>
-                                <p class="mb-0" style="display: inline-block;">Curso aprobado</p>
-                            </div>
-                            <div class="col-md-4" style="text-align:center;">
-                                <i class="bi bi-plus-lg color-box" style="color: #006a9f;"></i>
-                                <p class="mb-0" style="display: inline-block;">Cursos matriculables</p>
-                            </div>
-                            <div class="col-md-4" style="text-align:center;">
-                                <i class="bi bi-x-lg color-box" style="color: #83877b;"></i>
-                                <p class="mb-0" style="display: inline-block;">No cumple con los requisitos</p>
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow p-2">
+                    <div class="row">
+                        <div class="col-md-12 estado"></div>
+                        <div class="col-md-12" id="opciones">
+                            <div class="row justify-content-center">
+                                <div class="col-12 col-sm-12 col-md" style="text-align:center;">
+                                    <i class="bi bi-check-lg color-box" style="color: #3bb80a;"></i>
+                                    <p class="mb-0" style="display: inline-block;">Curso aprobado</p>
+                                </div>
+                                <div class="col-12 col-sm-12 col-md" style="text-align:center;">
+                                    <i class="bi bi-plus-lg color-box" style="color: #006a9f;"></i>
+                                    <p class="mb-0" style="display: inline-block;">Cursos matriculables</p>
+                                </div>
+                                <div class="col-12 col-sm-12 col-md" style="text-align:center;">
+                                    <i class="bi bi-x-lg color-box" style="color: #83877b;"></i>
+                                    <p class="mb-0" style="display: inline-block;">No cumple con los requisitos</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-12" id="mainTable">
+        <div class="row">
+            <div class="col-12" id="mainTable">
+            </div>
         </div>
-    </div>
-    <div class="position-fixed bottom-0 start-50 translate-middle-x p-3" style="z-index: 11">
-        <div id="liveToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-header">
-                <i class="bi bi-info-circle-fill "></i>
-                <span class="ml-2" id="toastContent"></span>
-                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        <div class="position-fixed bottom-0 start-50 translate-middle-x p-3" style="z-index: 11">
+            <div id="liveToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header">
+                    <i class="bi bi-info-circle-fill "></i>
+                    <span class="ml-2" id="toastContent"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
             </div>
         </div>
     </div>
 </div>
-<br>
 {% block modal_prematricula %}
 <div class="modal fade" id="modal_prematricula" tabindex="-1" aria-labelledby="modal_prematriculaTitle"
     style="display: none" aria-hidden="true">
@@ -169,7 +170,7 @@
                     <div class="col-12">
                         <div class="card shadow">
                             <div class="card-body px-md-4 px-2 pt-3">
-                                <form method="POST" class="row g-3" enctype="multipart/form-data" action="{% url 'enviar_solicitud' %}">
+                                <form method="POST" class="row g-3" enctype="multipart/form-data" action="">
                                     {% csrf_token %}
                                     <div class="form-floating mb-3 col-md-4">
                                         <div class="input-group">
@@ -191,5 +192,4 @@
     </div>
 </div>
 {% endblock modal_levantamiento %}
-
 {% endblock content %}
