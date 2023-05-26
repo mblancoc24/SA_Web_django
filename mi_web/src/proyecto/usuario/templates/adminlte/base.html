@@ -21,65 +21,65 @@
 </head>
 <body class="hold-transition sidebar-mini {% block body_class %}{% block bodyclass %}layout-fixed {% endblock %}{% endblock %}" id="bodyUia">
 
-{% block body %}
-    <div class="wrapper">
-        {% block nav_header %}
-            {% include 'adminlte/lib/_main_header.html' %}
-        {% endblock %}
+    {% block body %}
+        <div class="wrapper">
+            {% block nav_header %}
+                {% include 'adminlte/lib/_main_header.html' %}
+            {% endblock %}
 
-        {% block nav_sidebar %}
-            {% include 'adminlte/lib/_main_sidebar.html' %}
-        {% endblock %}
+            {% block nav_sidebar %}
+                {% include 'adminlte/lib/_main_sidebar.html' %}
+            {% endblock %}
 
-        {% block social %}
-        {% include 'adminlte/lib/_main_social.html' %}
-        {% endblock %}
+            {% block social %}
+            {% include 'adminlte/lib/_main_social.html' %}
+            {% endblock %}
 
-        {% block content_wrapper %}
-        <div class="content-wrapper">
-            {% block content_header %}
-                <section class="content-header">
-                    {% block no_heading %}
-                        <h1>
-                            {% block page_name %}{% endblock %}
-                            <div class="header-actions">
-                                {% block page_actions %}{% endblock %}
-                            </div>
-                            {% block no_description %}
-                            <small>{% block page_description %}{% endblock %}</small>
+            {% block content_wrapper %}
+            <div class="content-wrapper">
+                {% block content_header %}
+                    <section class="content-header">
+                        {% block no_heading %}
+                            <h1>
+                                {% block page_name %}{% endblock %}
+                                <div class="header-actions">
+                                    {% block page_actions %}{% endblock %}
+                                </div>
+                                {% block no_description %}
+                                <small>{% block page_description %}{% endblock %}</small>
+                                {% endblock %}
+                            </h1>
+                            {% block breadcrumbs %}
+                                {# Breadcrumb implementation left to developers #}
                             {% endblock %}
-                        </h1>
-                        {% block breadcrumbs %}
-                            {# Breadcrumb implementation left to developers #}
-                        {% endblock %}
-                    {% endblock no_heading %}
+                        {% endblock no_heading %}
+                    </section>
+                {% endblock %}
+
+                {% block content_outer %}
+                <section class="content">
+                    {% block messages %}
+                        {% include 'adminlte/lib/_messages.html' %}
+                    {% endblock %}
+
+                    {% block content_block_wrap %}
+                        {% block content %}{% endblock %}
+                    {% endblock %}
                 </section>
-            {% endblock %}
-
-            {% block content_outer %}
-            <section class="content">
-                {% block messages %}
-                    {% include 'adminlte/lib/_messages.html' %}
                 {% endblock %}
 
-                {% block content_block_wrap %}
-                    {% block content %}{% endblock %}
-                {% endblock %}
-            </section>
+            </div>
+            {% endblock content_wrapper %}
+            {% block accesibilidad %}
+                {% include 'adminlte/lib/_main_accesibilidad.html' %}
+            {% endblock accesibilidad %}
+            {% block nav_footer %}
+                {% include 'adminlte/lib/_main_footer.html' %}
             {% endblock %}
+
+
 
         </div>
-        {% endblock content_wrapper %}
-        {% block accesibilidad %}
-            {% include 'adminlte/lib/_main_accesibilidad.html' %}
-        {% endblock accesibilidad %}
-        {% block nav_footer %}
-            {% include 'adminlte/lib/_main_footer.html' %}
-        {% endblock %}
-
-
-
-    </div>
     
     <svg style="display: none;">
 		<filter id="protanopia">

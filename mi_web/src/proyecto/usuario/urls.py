@@ -53,6 +53,10 @@ from .views import (
                     RevisionFormView,
                     PaymentProspecto,
                     PaymentEstudiante,
+                    HorarioPlanDeEstudioView,
+                    Ubicacion,
+                    Contactenos,
+                    EnvioPrematricula,
                     )
 from django.contrib.auth.views import LogoutView
 from django.contrib.auth import views as auth_views
@@ -157,6 +161,10 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
                path("obtener-key/", obtener_keyiD, name='obtener_key'),
                path("hash-entrada/", obtener_hash_entrada, name='hash_entrada'),
                path("prospecto/<int:id>/<int:status>/pago-realizado/", PaymentApproved.as_view(), name='pago_realizado'),
+               path("prospecto/<int:id>/<int:status>/plan/cursoPlanHorario/", HorarioPlanDeEstudioView.getHorario, name='horarioCursoPlan'),
+               path("prospecto/<int:id>/<int:status>/ubicacion/", Ubicacion.ubicacion_view, name='ubicacion'),
+               path("prospecto/<int:id>/<int:status>/contactenos/", Contactenos.contactenos_view, name='contactenos'),
+               path("prospecto/<int:id>/<int:status>/plan/envioPrematricula/", EnvioPrematricula.envioPrematricula, name='envioPrematricula'),
                ]
 
 

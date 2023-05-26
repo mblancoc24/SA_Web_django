@@ -163,74 +163,21 @@
 #titleMatricula {
     font-weight: bold;
     text-align: center;
-    padding-top: 2px;
+    padding-top: 13px;
 }
 
 #tarjetasCard {
-    width: 350px;
-    height: 75px
-}
-
-@media (max-width: 390px) {
-    #tarjetasCard {
-        width: 310px;
-        height: 75px
-    }
-}
-
-@media (max-width: 360px) {
-    #tarjetasCard {
-        width: 290px;
-        height: 75px
-    }
-}
-
-@media (max-width: 320px) {
-    #tarjetasCard {
-        width: 250px;
-        height: 65px
-    }
+    width: 100%;
+    height: 100%;
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
-    .frente, .atras {
-        position: absolute;
-        width: 80%;
-        height: 80%;
-        
-    }
-
     .cardTarjeta{
-        margin-bottom: 155px;
+        margin-bottom: 235px;
     }
-
-    #tarjetasCard {
+    .formCard{
         width: 100%;
         height: 100%;
     }
 }
 
-@media (max-width: 1440px) {
-    #cardTarjeta {
-        width: 290px;
-        height: 90px;
-        display: flex; /* Agrega la propiedad de flexbox */
-        justify-content: center; /* Centra horizontalmente el contenido */
-        align-items: center; /* Centra verticalmente el contenido */
-    }
-    .cardTarjeta{
-        margin-bottom: 230px;
-    }
-    .frente, .atras{
-        width: 695px;
-        height: 90px;
-    }
-
-    .formCard{
-        width: 720px;
-    }
-
-    .creditCard {
-        display: flex;
-    }
-}

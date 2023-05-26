@@ -1,108 +1,110 @@
 {% extends 'Dashboard/dashboard.html' %}
 {% block content %}
-<div class="container">
-    <div class="row ">
-        <div class="col-md-3 col-sm-12 border-right">
-            <div class="row mt-2">
-                <div class="col-md-12 mb-3">
-                    <div class="d-flex flex-column align-items-center text-center">
-                        {% if fotoperfil %}
-                        <img class="rounded-circle mt-5" width="200px" height="200px" src="{% url 'mostrar_foto' %}">
-                        {% else %}
-                        {% load static %}
-                        <img class="rounded-circle mt-5" width="200px" height="200px" src="{% static 'img/user.png' %}">
-                        {% endif %}
-                        <span class="font-weight-bold">{{ user.username }}</span>
-                        <span class="text-black-60"><span class="input-group-addon"><i class=""></i></span> {{ estudiante.correo_institucional }}</span>
-                        <span> </span>
+<div class="p-2">
+    <div class="col-md-12 card cardPerfilCol">
+        <div class="row p-2">
+            <div class="col-md-3 col-sm-12">
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <div class="d-flex flex-column align-items-center text-center">
+                            {% if fotoperfil %}
+                            <img class="rounded-circle mt-5" width="200px" height="200px" src="{% url 'mostrar_foto' %}">
+                            {% else %}
+                            {% load static %}
+                            <img class="rounded-circle mt-5" width="200px" height="200px" src="{% static 'img/user.png' %}">
+                            {% endif %}
+                            <span class="font-weight-bold">{{ user.username }}</span>
+                            <span class="text-black-60"><span class="input-group-addon"><i class=""></i></span> {{ estudiante.correo_institucional }}</span>
+                            <span> </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-10 mx-auto mb-2">
+                    <div class="text-center">
+                        <a href="{% url 'change_password' %}" class="text-info">
+                            <i class="fa-light fa-id-badge" aria-hidden="true"></i>
+                            <span class="sr-only"></span> Cambiar Contraseña</a>
+                    </div>
+                </div>
+                <div class="col-md-10 mx-auto mb-2">
+                    <div class="text-center mb-2">
+                        <a data-bs-toggle="modal" data-bs-target="#modal_foto" class="card-link">
+                            <i class="fa fa-envelope" aria-hidden="true"></i>
+                            <span class="sr-only"></span>Cambiar Foto de Perfil</a>
+                        </a>
                     </div>
                 </div>
             </div>
-            <div class="col-md-10 mx-auto mb-2">
-                <div class="text-center">
-                    <a href="{% url 'change_password' %}" class="text-info">
-                        <i class="fa-light fa-id-badge" aria-hidden="true"></i>
-                        <span class="sr-only"></span> Cambiar Contraseña</a>
-                </div>
-            </div>
-            <div class="col-md-10 mx-auto mb-2">
-                <div class="text-center mb-2">
-                    <a data-bs-toggle="modal" data-bs-target="#modal_foto" class="card-link">
-                        <i class="fa fa-envelope" aria-hidden="true"></i>
-                        <span class="sr-only"></span>Cambiar Foto de Perfil</a>
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-8 col-sm-12 border-right">
-            <div class="p-3 py-3">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h4 class="mx-auto">Información de Perfil</h4>
-                </div>
-                <div class="row ">
-                    <div class="col-md-6 col-sm-6 mb-3">
-                        <label class="labels">Nombre</label>
-                        <input type="text" class="form-control" placeholder="Nombre" value="{{ estudiante.nombre }}"
-                            readonly>
+            <div class="col-md-8 col-sm-12 mx-auto">
+                <div class="p-3 py-3">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="mx-auto">Información de Perfil</h4>
                     </div>
-                    <div class="col-md-6 col-sm-6 mb-3">
-                        <label class="labels">Apellidos</label>
-                        <input type="text" class="form-control"
-                            value="{{ estudiante.primer_apellido }} {{ estudiante.segundo_apellido }}"
-                            placeholder="Apellidos" readonly>
+                    <div class="row mb-3">
+                        <div class="col-md-6 col-sm-6">
+                            <label class="labels">Nombre</label>
+                            <input type="text" class="form-control" placeholder="Nombre" value="{{ estudiante.nombre }}"
+                                readonly>
+                        </div>
+                        <div class="col-md-6 col-sm-6">
+                            <label class="labels">Apellidos</label>
+                            <input type="text" class="form-control"
+                                value="{{ estudiante.primer_apellido }} {{ estudiante.segundo_apellido }}"
+                                placeholder="Apellidos" readonly>
+                        </div>
                     </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-md-6 col-sm-6 mb-3">
-                        <label class="labels">País</label>
-                        <input type="text" class="form-control" placeholder="Pais" value="{{ estudiante.nacionalidad }}"
-                            readonly>
+                    <div class="row mb-3">
+                        <div class="col-md-6 col-sm-6">
+                            <label class="labels">País</label>
+                            <input type="text" class="form-control" placeholder="Pais" value="{{ estudiante.nacionalidad }}"
+                                readonly>
+                        </div>
+                        <div class="col-md-6 col-sm-6">
+                            <label class="labels">Provincia</label>
+                            <input type="text" class="form-control" name="provincia" value="{{ estudiante.provincia }}"
+                                placeholder="Provincia" readonly>
+                        </div>
                     </div>
-                    <div class="col-md-6 col-sm-6 mb-3">
-                        <label class="labels">Provincia</label>
-                        <input type="text" class="form-control" name="provincia" value="{{ estudiante.provincia }}"
-                            placeholder="Provincia" readonly>
+                    <div class="row mb-3">
+                        <div class="col-md-6 col-sm-6">
+                            <label class="labels">Cantón</label>
+                            <input type="text" class="form-control" name="canton" placeholder="Canton"
+                                value="{{ estudiante.canton }}" readonly>
+                        </div>
+                        <div class="col-md-6 col-sm-6 mb-3">
+                            <label class="labels">Distrito</label>
+                            <input type="text" class="form-control" name="distrito" placeholder="Distrito"
+                                value="{{ estudiante.distrito }}" readonly>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="labels">Direccion Exacta</label>
+                            <input type="text" class="form-control" name="direccion_exacta" placeholder="Direccion Exacta"
+                                value="{{ estudiante.direccion_exacta }}" readonly>
+                        </div>
                     </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-md-6 col-sm-6 mb-3">
-                        <label class="labels">Cantón</label>
-                        <input type="text" class="form-control" name="canton" placeholder="Canton"
-                            value="{{ estudiante.canton }}" readonly>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="labels">Número Telefónico</label>
+                            <input type="text" class="form-control" placeholder="Numero Telefonico" name="numero_telefonico"
+                                value="{{ estudiante.numero_telefonico }}" readonly>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="labels">Segundo Número Telefónico</label>
+                            <input type="text" class="form-control" placeholder="Segundo Numero Telefonico"
+                                name="numero_telefonico2" value="{{ estudiante.numero_telefonico2 }}" readonly>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="labels">Correo Electrónico Personal</label>
+                            <input type="text" class="form-control" placeholder="Correo Personal" name="correo_personal"
+                                value="{{ estudiante.correo_personal }}" readonly>
+                        </div>
                     </div>
-                    <div class="col-md-6 col-sm-6 mb-3">
-                        <label class="labels">Distrito</label>
-                        <input type="text" class="form-control" name="distrito" placeholder="Distrito"
-                            value="{{ estudiante.distrito }}" readonly>
-                    </div>
-                    <div class="col-md-12 col-sm-6 mb-3">
-                        <label class="labels">Direccion Exacta</label>
-                        <input type="text" class="form-control" name="direccion_exacta" placeholder="Direccion Exacta"
-                            value="{{ estudiante.direccion_exacta }}" readonly>
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-md-6 mb-3">
-                        <label class="labels">Número Telefónico</label>
-                        <input type="text" class="form-control" placeholder="Numero Telefonico" name="numero_telefonico"
-                            value="{{ estudiante.numero_telefonico }}" readonly>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="labels">Segundo Número Telefónico</label>
-                        <input type="text" class="form-control" placeholder="Segundo Numero Telefonico"
-                            name="numero_telefonico2" value="{{ estudiante.numero_telefonico2 }}" readonly>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="labels">Correo Electrónico Personal</label>
-                        <input type="text" class="form-control" placeholder="Correo Personal" name="correo_personal"
-                            value="{{ estudiante.correo_personal }}" readonly>
-                    </div>
-                </div>
-                <div class="row mt-5">
-                    <div class="col-12 text-center">
-                        <button class="btn btn-primary profile-button" data-bs-toggle="modal"
-                            data-bs-target="#modal_actualizacion">
-                            <i class="fa fa-cloud" aria-hidden="true"></i> Actualizar Información Personal</button>
+                    <div class="row mt-3">
+                        <div class="col-12 text-center">
+                            <button class="btn btn-primary profile-button" data-bs-toggle="modal"
+                                data-bs-target="#modal_actualizacion">
+                                <i class="fa fa-cloud" aria-hidden="true"></i> Actualizar Información Personal</button>
+                        </div>
                     </div>
                 </div>
             </div>

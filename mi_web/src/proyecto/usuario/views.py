@@ -1054,7 +1054,7 @@ class PaymentProspecto(LoginRequiredMixin, View):
     def get_context_data(self, **kwargs):
         user = self.request.user
         if 'orderid' in self.request.session:
-            self.request.session['orderid'] = orderid
+            orderid = self.request.session.get('orderid') 
         else:
             orderid = ''+user.username+'-PagoMatricula'
             self.request.session['orderid'] = orderid
@@ -1112,3 +1112,90 @@ class PaymentEstudiante(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
         return render(request, self.template_name, context)
+    
+class HorarioPlanDeEstudioView(LoginRequiredMixin):
+    context_object_name = 'horarioCursoPlan'
+    template_name = 'Dashboard/Estudiante/planEstudio.html'
+    
+    def getHorario(request, id, status):
+        cursos = request.GET.get('cursos')
+        horarios = cursos.split(',')
+        horariosCurso = []
+        for horario in horarios:
+            horariosCurso.append(horario)
+        cursoSeleccionados = json.dumps({"cursos": horariosCurso})
+        url = 'http://192.168.11.196:8062/get_horarios_curso'
+        #url = 'https://mocki.io/v1/d9a2e78f-b511-4e9d-93dc-1fa8144696a5'
+        headers = {
+            'Content-Type': 'application/json'
+        }
+        response = requests.request("GET", url, headers=headers, data=cursoSeleccionados)
+        #response = requests.request("GET", url)
+        data = json.loads(response.text)['result']
+        horariosCursos = []
+        horariosCursos.append(data)
+        return JsonResponse(horariosCursos, safe=False)
+    
+class Ubicacion(LoginRequiredMixin):
+    
+    context_object_name = 'ubicacion'
+    def ubicacion_view(request, id, status):
+        user = request.user
+        
+        try:
+            fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
+            imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
+            context = {
+                'user': user,
+                'fotoperfil': imagen_url,
+                'status': status,
+                'id': id,
+            }
+        except fotoperfil.DoesNotExist:
+            context = {
+                'user': user,
+                'status': status,
+                'id': id,
+            }
+        return render(request, 'Dashboard/Componentes/ubicacion.html', context)
+    
+class EnvioPrematricula(LoginRequiredMixin, View):
+    context_object_name = 'envioPrematricula'
+    template_name = 'Dashboard/Estudiante/planEstudio.html'
+
+    def envioPrematricula(request, id, status):
+        json_data = json.loads(request.body)
+       
+        url = "http://192.168.11.196:8062/set_pre_matricula"
+        headers = {'Content-Type': 'application/json'}
+        payload = json.dumps(json_data)
+        response = requests.request("POST", url, headers=headers, data=payload)
+        data = json.loads(response.text)
+        request.session['subtotal'] = data['result']['data']['subtotal']
+        request.session['descuentoTotal'] = data['result']['data']['descuentoTotal']
+        request.session['preMatricula'] = data['result']['data']['preMatricula']
+        request.session['ordenVenta'] = data['result']['data']['ordenVenta']
+
+        return JsonResponse(data, safe=False)
+    
+class Contactenos(LoginRequiredMixin):
+    context_object_name = 'contactenos'
+    def contactenos_view(request, id, status):
+        user = request.user
+        
+        try:
+            fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
+            imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
+            context = {
+                'user': user,
+                'fotoperfil': imagen_url,
+                'status': status,
+                'id': id,
+            }
+        except fotoperfil.DoesNotExist:
+            context = {
+                'user': user,
+                'status': status,
+                'id': id,
+            }
+        return render(request, 'Dashboard/Componentes/contactenos.html', context)

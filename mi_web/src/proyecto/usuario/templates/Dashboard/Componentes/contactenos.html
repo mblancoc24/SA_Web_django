@@ -1,0 +1,42 @@
+{% extends 'Dashboard/dashboard.html' %}
+{% load static %}
+{% block content %}
+<div class="p-2 d-flex justify-content-center">
+    <div class="col-md-8 card mt-5">
+        <div class="row p-2">
+            <div class="card-body p-4 p-sm-5 p-2">
+                <div class="row">
+                    <div class="col-md-4">
+                        <ul class="tab-list nav flex-column nav-pills px-5">
+                            <li class="nav-item tab-list__item">
+                                <a class="next-step step-tab1 tab-list__link nav-link active" data-bs-toggle="pill" href="#sanjose">San José</a>
+                            </li>
+                            <li class="nav-item tab-list__item">
+                                <a class="next-step step-tab1 tab-list__link nav-link" data-bs-toggle="pill" href="#heredia">Heredia</a>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="col-md-8">
+                        <div class="tab-content mt-4">
+                            <div class="tab-pane container active" id="sanjose">
+                                <div class="row">
+                                    <p>Puedes comunicarse a la Universidad Internacional de las Américas de San José con el siguiente número telefónico.</p>
+                                    <span>TEL: 2212-5500 </span>
+                                </div>
+                            </div>
+                            <div class="tab-pane container fade" id="heredia">
+                                <div class="row">
+                                    <p>Puedes comunicarse a la Universidad Internacional de las Américas de Heredia con el siguiente número telefónico.</p>
+                                    <span>TEL: 2238-4131</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+    </div>
+</div>
+{% endblock content %}
