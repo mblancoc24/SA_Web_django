@@ -13,7 +13,7 @@
     <div class="row d-flex justify-content-center mt-5">
         <div class="col-md-12">
             <div class="row d-flex justify-content-center">
-                <div class="col-md-4">
+                <div class="col-md-4" id="creditCard">
                     <div class="cardTarjeta flip" id="flip">
                         <div class="frente">
                             <div id="ccsingle"></div>
@@ -50,7 +50,7 @@
                                     <g id="cchip">
                                         <g>
                                             <path class="st2" d="M168.1,143.6H82.9c-10.2,0-18.5-8.3-18.5-18.5V74.9c0-10.2,8.3-18.5,18.5-18.5h85.3
-                    c10.2,0,18.5,8.3,18.5,18.5v50.2C186.6,135.3,178.3,143.6,168.1,143.6z" />
+                            c10.2,0,18.5,8.3,18.5,18.5v50.2C186.6,135.3,178.3,143.6,168.1,143.6z" />
                                         </g>
                                         <g>
                                             <g>
@@ -61,10 +61,10 @@
                                             </g>
                                             <g>
                                                 <path class="st12" d="M125.5,130.8c-10.2,0-18.5-8.3-18.5-18.5c0-4.6,1.7-8.9,4.7-12.3c-3-3.4-4.7-7.7-4.7-12.3
-                        c0-10.2,8.3-18.5,18.5-18.5s18.5,8.3,18.5,18.5c0,4.6-1.7,8.9-4.7,12.3c3,3.4,4.7,7.7,4.7,12.3
-                        C143.9,122.5,135.7,130.8,125.5,130.8z M125.5,70.8c-9.3,0-16.9,7.6-16.9,16.9c0,4.4,1.7,8.6,4.8,11.8l0.5,0.5l-0.5,0.5
-                        c-3.1,3.2-4.8,7.4-4.8,11.8c0,9.3,7.6,16.9,16.9,16.9s16.9-7.6,16.9-16.9c0-4.4-1.7-8.6-4.8-11.8l-0.5-0.5l0.5-0.5
-                        c3.1-3.2,4.8-7.4,4.8-11.8C142.4,78.4,134.8,70.8,125.5,70.8z" />
+                            c0-10.2,8.3-18.5,18.5-18.5s18.5,8.3,18.5,18.5c0,4.6-1.7,8.9-4.7,12.3c3,3.4,4.7,7.7,4.7,12.3
+                            C143.9,122.5,135.7,130.8,125.5,130.8z M125.5,70.8c-9.3,0-16.9,7.6-16.9,16.9c0,4.4,1.7,8.6,4.8,11.8l0.5,0.5l-0.5,0.5
+                            c-3.1,3.2-4.8,7.4-4.8,11.8c0,9.3,7.6,16.9,16.9,16.9s16.9-7.6,16.9-16.9c0-4.4-1.7-8.6-4.8-11.8l-0.5-0.5l0.5-0.5
+                            c3.1-3.2,4.8-7.4,4.8-11.8C142.4,78.4,134.8,70.8,125.5,70.8z" />
                                             </g>
                                             <g>
                                                 <rect x="82.8" y="82.1" class="st12" width="25.8" height="1.5" />
@@ -130,25 +130,29 @@
                             </svg>
                         </div>
                     </div>
-                    <div class="card mt-5">
+                    <div class="card mt-5 tarjetasCard">
                         <div class="card-body">
-                            <img src="{% static 'img/tarjetas.png' %}" width="350" height="75">
+                            <img id="tarjetasCard" src="{% static 'img/tarjetas.png' %}">
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 formCard">
                     <div class="card">
                         <h2 id="titleMatricula">Pago de Matricula</h2>
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="cardInput">Número de la Tarjeta</label>
-                                <input required class="input card-input_field form-control" id="cardInput"
-                                    oninput="getNumber();">
-                                <svg id="ccicon" class="ccicon" width="750" height="471" viewBox="0 0 750 471"
-                                    version="1.1" xmlns="http://www.w3.org/2000/svg"
-                                    xmlns:xlink="http://www.w3.org/1999/xlink">
-
-                                </svg>
+                                <div class="input-group mb-3">
+                                    <input required class="input card-input_field form-control" id="cardInput" oninput="getNumber();">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text" id="basic-addon2" style="padding: 0; width: 50px;">
+                                            <svg id="ccicon" class="ccicon" version="1.1" id="Layer_1" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns"
+                                                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100%" height="100%" viewBox="0 0 750 471"
+                                                enable-background="new 0 0 750 471" xml:space="preserve">
+                                            </svg>
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label for="cardHolderInput">Títular de la Tarjeta</label>
@@ -166,7 +170,8 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="yearInput">Año</label>
-                                        <select required name="" class="form-control card-input_field" id="yearInput" onchange="getDate();">
+                                        <select required name="" class="form-control card-input_field" id="yearInput"
+                                            onchange="getDate();">
                                             <option class="disabled" readonly>Year</option>
                                         </select>
                                     </div>
@@ -174,7 +179,8 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="cvvInput">CVV</label>
-                                        <input required type="text" class="form-control card-input_field" id="cvvInput" oninput="getCvv();">
+                                        <input required type="text" class="form-control card-input_field" id="cvvInput"
+                                            oninput="getCvv();">
                                     </div>
                                 </div>
                             </div>
@@ -232,11 +238,13 @@
 
                                 <div class="row mt-3" style="display: none;">
                                     <div class="form-floating mb-3 col-md-4" id="dis_ccnumber">
-                                        <input type="text" class="form-control" id="ccnumber" name="ccnumber" value="" required>
+                                        <input type="text" class="form-control" id="ccnumber" name="ccnumber" value=""
+                                            required>
                                         <label for="ccnumber">Numbero de tarjeta</label>
                                     </div>
                                     <div class="form-floating mb-3 col-md-4" id="dis_ccexp">
-                                        <input type="text" class="form-control" id="ccexp" name="ccexp" value="" required>
+                                        <input type="text" class="form-control" id="ccexp" name="ccexp" value=""
+                                            required>
                                         <label for="ccexp">Fecha de expiración</label>
                                     </div>
                                     <div class="form-floating mb-3 col-md-4" id="dis_cvv">
