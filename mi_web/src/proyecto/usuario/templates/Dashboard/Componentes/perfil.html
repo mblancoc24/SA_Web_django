@@ -8,18 +8,21 @@
                     <div class="col-md-12 mb-3">
                         <div class="d-flex flex-column align-items-center text-center">
                             {% if fotoperfil %}
-                            <img class="rounded-circle mt-5" width="200px" height="200px" src="{% url 'mostrar_foto' %}">
+                            <img class="rounded-circle mt-5" width="200px" height="200px"
+                                src="{% url 'mostrar_foto' %}">
                             {% else %}
                             {% load static %}
-                            <img class="rounded-circle mt-5" width="200px" height="200px" src="{% static 'img/user.png' %}">
+                            <img class="rounded-circle mt-5" width="200px" height="200px"
+                                src="{% static 'img/user.png' %}">
                             {% endif %}
                             <span class="font-weight-bold">{{ user.username }}</span>
-                            <span class="text-black-60"><span class="input-group-addon"><i class=""></i></span> {{ estudiante.correo_institucional }}</span>
+                            <span class="text-black-60"><span class="input-group-addon"><i class=""></i></span> {{
+                                estudiante.correo_institucional }}</span>
                             <span> </span>
                         </div>
                     </div>
                 </div>
-            {% if status == 4 %}
+                {% if status == 4 %}
                 <div class="col-md-10 mx-auto mb-2">
                     <div class="text-center">
                         <a href="{% url 'change_password' %}" class="text-info">
@@ -36,7 +39,7 @@
                         </a>
                     </div>
                 </div>
-        </div>
+            </div>
             <div class="col-md-8 col-sm-12 mx-auto">
                 <div class="p-3 py-3">
                     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -58,8 +61,8 @@
                     <div class="row mb-3">
                         <div class="col-md-6 col-sm-6">
                             <label class="labels">País</label>
-                            <input type="text" class="form-control" placeholder="Pais" value="{{ estudiante.nacionalidad }}"
-                                readonly>
+                            <input type="text" class="form-control" placeholder="Pais"
+                                value="{{ estudiante.nacionalidad }}" readonly>
                         </div>
                         <div class="col-md-6 col-sm-6">
                             <label class="labels">Provincia</label>
@@ -80,15 +83,15 @@
                         </div>
                         <div class="col-md-12">
                             <label class="labels">Direccion Exacta</label>
-                            <input type="text" class="form-control" name="direccion_exacta" placeholder="Direccion Exacta"
-                                value="{{ estudiante.direccion_exacta }}" readonly>
+                            <input type="text" class="form-control" name="direccion_exacta"
+                                placeholder="Direccion Exacta" value="{{ estudiante.direccion_exacta }}" readonly>
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label class="labels">Número Telefónico</label>
-                            <input type="text" class="form-control" placeholder="Numero Telefonico" name="numero_telefonico"
-                                value="{{ estudiante.numero_telefonico }}" readonly>
+                            <input type="text" class="form-control" placeholder="Numero Telefonico"
+                                name="numero_telefonico" value="{{ estudiante.numero_telefonico }}" readonly>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="labels">Segundo Número Telefónico</label>
@@ -243,12 +246,12 @@
                         </div>
                     </div>
 
-                        <div class="d-grid d-flex justify-content-center">
-                            <button type="submit" id="liveToastBtn" onclick="solicitud()"
-                                class="btn btn-lg btn-primary btn-sm rounded fw-bold" style="max-width: 300px;">
-                                <i class="fa fa-paper-plane" aria-hidden="true"></i> Enviar Solicitud de Cambio de
-                                Datos</button>
-                        </div>
+                    <div class="d-grid d-flex justify-content-center">
+                        <button type="submit" id="liveToastBtn" onclick="solicitud()"
+                            class="btn btn-lg btn-primary btn-sm rounded fw-bold" style="max-width: 300px;">
+                            <i class="fa fa-paper-plane" aria-hidden="true"></i> Enviar Solicitud de Cambio de
+                            Datos</button>
+                    </div>
                 </form>
             </div>
         </div>
