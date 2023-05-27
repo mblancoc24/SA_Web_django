@@ -1132,3 +1132,7 @@ aside.accesibilidad.active {
 .modal_primer_ingreso, .modal_posgrado, .modal_cursolibres{
   max-width: 1200px;
 }
+
+#cardContactos{
+  width: 100%;
+}
