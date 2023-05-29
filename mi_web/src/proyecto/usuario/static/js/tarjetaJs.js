@@ -163,3 +163,25 @@ const action = {
         return action;
     }
 }
+
+function getNumber() {
+    var number = document.getElementById('cardInput');
+    var value = number.value.replace(/\s/g, "");
+    var numberForm = document.getElementById('ccnumber');
+    numberForm.value = value;
+}
+
+function getDate() {
+    var month = document.getElementById('monthInput');
+    var year = document.getElementById('yearInput');
+    var date = month.value + year.value.slice(-2);
+    var dateForm = document.getElementById('ccexp');
+    dateForm.value = date;
+
+}
+
+function getCvv() {
+    var cvv = document.getElementById('cvvInput');
+    var cvvForm = document.getElementById('cvv');
+    cvvForm.value = cvv.value;
+}
