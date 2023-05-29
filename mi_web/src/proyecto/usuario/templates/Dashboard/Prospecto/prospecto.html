@@ -1,6 +1,9 @@
 {% extends 'Dashboard/dashboard.html' %}
 {% load static %}
 {% block content %}
+{% block extra_js %}
+<script src="{% static 'js/formRegistros.js' %}"></script>
+{% endblock %}
 <div class="container">
     <div class="d-flex justify-content-center">
         <div class="col-md-12">
@@ -391,114 +394,5 @@
 {% endblock modal_instruccionescursolibres %}
 
 <!-- Modal Instrucciones -->
-<script>
-    function datacarreras() {
-        var select = $("#mi_select");
-        select.empty(); // Eliminamos todas las opciones anteriores
-        var opcionPorDefecto = new Option("Seleccione una carrera", "", true, true);
-        select.append(opcionPorDefecto);
-
-        fetch("/carrerasselect/")
-            .then((response) => response.json())
-            .then((data) => {
-                // Iteramos sobre los valores obtenidos
-                data.forEach(function (valor) {
-                    // Creamos una nueva opción y la agregamos al select
-                    var opcion = new Option(valor, valor);
-                    select.append(opcion);
-                });
-                // Inicializamos Select2 con el dropdownParent apuntando al modal
-                select.select2({
-                    dropdownParent: $("#modal_primer_ingreso"),
-                    width: "100%", // Ancho del dropdown
-                });
-            });
-    }
-
-    function datacolegios() {
-        var select = $("#colegio_select");
-        select.empty(); // Eliminamos todas las opciones anteriores
-        var opcionPorDefecto = new Option("Seleccione un colegio", "", true, true);
-        select.append(opcionPorDefecto);
-        fetch("/colegiosselect/")
-            .then((response) => response.json())
-            .then((data) => {
-                // Iteramos sobre los valores obtenidos
-                data.forEach(function (valor) {
-                    // Creamos una nueva opción y la agregamos al select
-                    var opcion = new Option(valor, valor);
-                    select.append(opcion);
-                });
-                select.select2({
-                    dropdownParent: $('#modal_primer_ingreso'),
-                    width: "100%", // Ancho del dropdown
-                });
-            });
-    }
-
-    function dataposgrados() {
-        var select = document.getElementById("posgradoselect");
-        select.options.length = 0; // Eliminamos todas las opciones anteriores
-        var opcionPorDefecto = new Option("Seleccione una posgrado", "", true, true);
-        select.append(opcionPorDefecto);
-
-        fetch("/posgradosselect/")
-            .then((response) => response.json())
-            .then((data) => {
-                // Iteramos sobre los valores obtenidos
-                data.forEach(function (valor) {
-                    // Creamos una nueva opción y la agregamos al select
-                    var opcion = new Option(valor, valor);
-                    select.append(opcion);
-                });
-                // Inicializamos Select2 con el dropdownParent apuntando al modal
-                select.select2({
-                    dropdownParent: $("#modal_posgrado"),
-                    width: "100%", // Ancho del dropdown
-                });
-            });
-    }
-
-    function llenardata() {
-        datacolegios();
-        datacarreras();
-    }
-
-    const checkbox = document.getElementById("convalidacion");
-    const div = document.getElementById("certificacion");
-    const div2 = document.getElementById("plan");
-
-    checkbox.addEventListener("change", function () {
-        if (this.checked) {
-            div.style.display = "block";
-            div2.style.display = "block";
-        } else {
-            div.style.display = "none";
-            div2.style.display = "none";
-        }
-    });
-
-    const checkbox2 = document.getElementById("asesor");
-    const div3 = document.getElementById("select_asesor");
-    checkbox2.addEventListener("change", function () {
-        if (this.checked) {
-            div3.style.display = "block";
-        } else {
-            div3.style.display = "none";
-        }
-    });
-    const checkbox3 = document.getElementById("asesor2");
-    const div4 = document.getElementById("select_asesor2");
-    checkbox3.addEventListener("change", function () {
-        if (this.checked) {
-            div4.style.display = "block";
-        } else {
-            div4.style.display = "none";
-        }
-    });
-</script>
-{% block extra_js %}
-<script src="{% static 'js/function.js' %}"></script>
-{% endblock %}
 
 {% endblock content %}
