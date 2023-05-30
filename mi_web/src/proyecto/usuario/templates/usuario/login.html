@@ -3,8 +3,8 @@
 {% block content %}
 
 <div class="row mt-5">
-    <div class="col-sm-9 col-md-7 col-lg-5 mx-auto mt-5 mb-5">
-        <div class="card border-0 shadow rounded-3 my-5 mx-auto">
+    <div class="col-12 col-sm-12 col-md-7 col-lg-5 mx-auto mt-5 mb-5">
+        <div class="card border-0 rounded-3 my-5 mx-auto cardPerfilCol">
             <div class="card-body p-4 p-sm-5">
                 <h5 class="card-title text-center mb-5 fw-light fs-5 fw-bold"> UIA Digital Campus </h5>
                 {% if form.errors %}
@@ -51,7 +51,7 @@
                             </div>
                         </div>
                         <br>
-                        <div class="d-grid mb-2">
+                        <div class="d-grid mb-3">
                             <button type="submit"
                                 class="w-100 btn btn-lg btn-primary btn-login fw-bold bi bi-box-arrow-in-right"
                                 id="loading-indicator"> Ingresar</button>
@@ -61,12 +61,17 @@
                             </div>
                         </div>
                         <div class="d-grid">
-                            <div class="links-container">
-                                <div class="left-link">
-                                  <a href="{% url 'registro_estudiantes' %}" class="bi bi-pass">Registrarse</a>
+                            <div class="row d-flex justify-content-center">
+                                <div class="col-md-6 text-center">
+                                    <div class="centered-link">
+                                        <a href="{% url 'registro_estudiantes' %}" class="bi bi-pass">Registrarse</a>
+                                    </div>
                                 </div>
-                                <div class="right-link">
-                                  <a href="{% url 'password_reset' %}" class="bi bi-pass" style="text-decoration: none;">Olvido su contraseña</a>
+                                <div class="col-md-6 text-center">
+                                    <div class="centered-link">
+                                        <a href="{% url 'password_reset' %}" class="bi bi-pass"
+                                            style="text-decoration: none;">Olvido su contraseña</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -86,16 +91,16 @@
 </div>
 <div class="toast-container position-fixed bottom-0 end-0 p-4">
     <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-      <div class="toast-header">
-        {% load static %}
-        <img id="img_check" src="{% static 'img/check.png' %}" class="rounded me-2" alt="...">
-        <strong class="me-auto">Registro Estudiantil</strong>
-        <small class="text-muted">just now</small>
-        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-      </div>
-      <div class="toast-body">
-        La cuenta se ha creado con exito. Puede proceder a iniciar sesion.
-      </div>
+        <div class="toast-header">
+            {% load static %}
+            <img id="img_check" src="{% static 'img/check.png' %}" class="rounded me-2" alt="...">
+            <strong class="me-auto">Registro Estudiantil</strong>
+            <small class="text-muted">just now</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            La cuenta se ha creado con exito. Puede proceder a iniciar sesion.
+        </div>
     </div>
 </div>
 
