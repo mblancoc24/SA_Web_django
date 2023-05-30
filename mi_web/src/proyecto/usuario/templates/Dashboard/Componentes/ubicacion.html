@@ -1,5 +1,11 @@
 {% extends 'Dashboard/dashboard.html' %}
 {% load static %}
+{% block stylesheets %}
+{% include 'adminlte/lib/_styles.html' %}
+{% block style_sheets %}
+<script src="{% static 'js/ubicacion.js' %}"></script>
+{% endblock %}
+{% endblock %}
 {% block content %}
 <div class="p-2">
     <div class="col-md-12 card">
@@ -20,9 +26,7 @@
                 <div class="tab-pane container active" id="sanjose">
                     <div class="row">
                         <div class="embed-responsive embed-responsive-21by9">
-                            <iframe class="embed-responsive-item"
-                            src="https://embed.waze.com/iframe?zoom=16&lat=9.935880&lon=-84.068123&ct=livemap&pin=1&nav=1&search=0"
-                            allowfullscreen></iframe>
+                            <iframe id="iframeSanJose" src="" width="600" height="450" style="border:0;"></iframe>
                         </div>
                         <div class="d-flex justify-content-center mt-3">
                             <a class="btn btn-primary" href="https://www.waze.com/ul?ll=9.935880,-84.068123&navigate=yes" target="_blank">Cómo llegar en Waze</a>
@@ -32,9 +36,7 @@
                 <div class="tab-pane container fade" id="heredia">
                     <div class="row">
                         <div class="embed-responsive embed-responsive-21by9">
-                            <iframe class="embed-responsive-item"
-                            src="https://embed.waze.com/iframe?zoom=16&lat=10.001754&lon=-84.117637&ct=livemap&pin=1&nav=1&search=0"
-                            allowfullscreen></iframe>
+                            <iframe id="iframeHeredia" src="" width="600" height="450" style="border:0;"></iframe>
                         </div>
                         <div class="d-flex justify-content-center mt-3">
                             <a class="btn btn-primary" href="https://www.waze.com/ul?ll=10.001754,-84.117637&navigate=yes" target="_blank">Cómo llegar en Waze</a>

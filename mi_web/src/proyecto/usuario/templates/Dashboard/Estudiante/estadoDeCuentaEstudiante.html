@@ -1,9 +1,29 @@
 {% extends 'Dashboard/dashboard.html' %}
 {% load static %}
+{% block stylesheets %}
+{% include 'adminlte/lib/_styles.html' %}
 {% block style_sheets %}
-<link rel="stylesheet" href="{% static 'css/styles.css' %}">
-
+<script src="{% static 'js/horarioEstudiante.js' %}"></script>
+{% endblock %}
 {% endblock %}
 {% block content %}
-
+<div class="p-2">
+    <div class="col-md-12 card cardPerfilCol">
+        <div class="row p-2">
+            <div class="mb-3">
+                <div class="row">
+                    <div class="col-md-12 mt-2">
+                        <h2 class="card-title" id="infoCardTitleCuenta">Estado de Cuenta</h2>
+                    </div>
+                    <div class="col-md-12 mt-2">
+                        <span>En esta página podrá consultar los detalles de su estado de cuenta financiero con la
+                            Universidad. Aquí podrá ver si tiene financiamiento disponible para realizar su matrícula,
+                            si tiene algún saldo a favor para uso en pagos futuros, así como la lista de los
+                            financiamientos que tiene abiertos con la universidad y su estado actual de pago.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

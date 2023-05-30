@@ -146,6 +146,23 @@
                                 </li>
                             </ul>
                         </li>
+                        <li class="nav-item has-tree-view ">
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-money-bill"></i>
+                                <p>Financiero</p>
+                                <p>
+                                    <i class="right fas fa-angle-down"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview menu-open">
+                                <li class="nav-item">
+                                    <a href="{% url 'estadoCuentaEstudiante' id=id status=status %}"  class="nav-link">
+                                        <i class="fas fa-list-alt"></i>
+                                        <p>Estado de Cuenta</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                         <li class="nav-item">
                             <a href="{% url 'ubicacion' id=id status=status %}" class="nav-link">
                                 <i class="fas fa-map-marker-alt"></i>

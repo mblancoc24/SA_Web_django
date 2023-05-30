@@ -83,7 +83,7 @@ function actualizarEstado(data) {
     var divRowPlan = document.createElement('div');
     divRowPlan.className = 'row';
     var divInfo = document.createElement('div');
-    divInfo.className = 'col-md-12';
+    divInfo.className = 'col-12 col-md-12';
 
     var fieldset = document.createElement('fieldset');
     fieldset.className = 'border p-2 mb-2';
