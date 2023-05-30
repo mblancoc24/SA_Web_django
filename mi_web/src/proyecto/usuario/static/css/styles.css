@@ -844,3 +844,71 @@ aside.accesibilidad.active {
 #infoCardTitleCuenta{
   font-weight: bold;
 }
+
+.alltext {
+  box-sizing: border-box;
+  list-style: none;
+  font-family: 'Montserrat', sans-serif;
+  color: black;
+}
+
+.titulo{
+  font-size: 18px;
+}
+
+small {
+  font-size: 14px;
+}
+
+.smalltotal{
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.cart {
+  line-height: 1;
+}
+
+.b-bottom {
+  border-bottom: 2px dotted black;
+  padding-bottom: 20px;
+}
+
+#matriculaP {
+  margin: 0px;
+}
+
+table input {
+  width: 40px;
+  border: 1px solid #eee;
+}
+
+input:focus {
+  border: 1px solid #eee;
+  outline: none
+}
+
+.payment-summary .unregistered {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #eee;
+  text-transform: uppercase;
+  font-size: 14px;
+}
+
+.payment-summary input {
+  width: 100%;
+  margin-right: 20px;
+}
+
+.payment-summary .sale {
+  width: 100%;
+  text-transform: uppercase;
+  font-size: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5PX 0;
+}
