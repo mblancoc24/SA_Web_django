@@ -840,3 +840,7 @@ aside.accesibilidad.active {
 #cardContactos{
   width: 100%;
 }
+
+#infoCardTitleCuenta{
+  font-weight: bold;
+}
