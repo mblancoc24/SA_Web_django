@@ -1,4 +1,5 @@
-function mostrarDivLegal(id) {
+function mostrarDivLegal(id, event) {
+    
     const divLegal = document.querySelectorAll('.divLegal');
     divLegal.forEach((div) => {
         if (div.id === id) {
