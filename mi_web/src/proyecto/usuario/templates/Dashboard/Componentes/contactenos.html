@@ -1,8 +1,27 @@
 {% extends 'Dashboard/dashboard.html' %}
 {% load static %}
 {% block content %}
-<div class="p-2 d-flex justify-content-center mx-auto  md-0 mt-lg-5">
-    <div class="col-md-10 card cardPerfilCol  md-0 mt-lg-5">
+{% if response %}
+<div class="row d-flex justify-content-center mx-auto mb-0">
+    <div class="col-md-4">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <span>Se envio el correo correctamente</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+{% elif response == False %}
+<div class="row d-flex justify-content-center mx-auto mb-0">
+    <div class="col-md-4">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span>Correo no se envio correctamente</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+{% endif %}
+<div class="p-2 d-flex justify-content-center ">
+    <div class="col-md-10 card cardPerfilCol mx-auto  md-0 mt-lg-5">
         <div class="card-body p-4 p-sm-5 p-2">
             <div class="row">
                 <ul class="tab-list nav nav-pills nav-fill px-5">
@@ -17,30 +36,148 @@
                 </ul>
             </div>
             <div class="tab-content mt-4">
-                <div class="tab-pane container active" id="sanjose">
+                <div class="tab-pane container fade show active" id="sanjose">
                     <div class="row">
-                        <p>Puedes comunicarse a la Universidad Internacional de las Américas de San José con el siguiente número
+                        <p>Puedes comunicarse a la Universidad Internacional de las Américas de San José con el
+                            siguiente número
                             de telefono</p>
-                        <span>TEL: 2212-5500 </span>
+                        <span class="mb-3">TEL: 2212-5500 </span>
+                        <a data-bs-toggle="modal" href="#" data-bs-target="#modal_contactenos"
+                            onclick="setEmail('sendSanjose');">Contáctenos</a>
                     </div>
                 </div>
-                <div class="tab-pane container fade" id="heredia">
+                <div class="tab-pane container fade show" id="heredia">
                     <div class="row">
-                        <p>Puedes comunicarse a la Universidad Internacional de las Américas de Heredia con el siguiente número
+                        <p>Puedes comunicarse a la Universidad Internacional de las Américas de Heredia con el siguiente
+                            número
                             de telefono</p>
-                        <span>TEL: 2238-4131</span>
+                        <span class="mb-3">TEL: 2238-4131</span>
+                        <a data-bs-toggle="modal" href="#" data-bs-target="#modal_contactenos"
+                            onclick="setEmail('sendheredia');">Contáctenos</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+{% block modal_contactenos %}
+<div class="modal fade" id="modal_contactenos" tabindex="-1" aria-labelledby="modal_contactenosTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg modal_contactenos">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal_contactenosTitle">Contáctenos</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="col-12 col-lg-12 col-md-12 col-sm-12 order-md-last d-flex align-item-strech h-100">
+                    <div class="w-100 p-3 card rounded ">
+                        <form method="post" id="contactoForm" name="contactoForm" class="contactoForm p-2"
+                            novalidate="novalidate" action="{% url 'envioConsulta' id=id status=status %}">
+                            {% csrf_token %}
+                            <div class="row mb-3">
+                                <fieldset class="border mb-3">
+                                    <legend class="float-none w-auto">Información Personal</legend>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="label" for="nombre">Nombre Completo</label>
+                                                <input type="text" class="form-control" name="nombre" id="nombre"
+                                                    placeholder="Nombre Completo">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="label" for="correo">Correo</label>
+                                                <input type="email" class="form-control" name="correo" id="correo"
+                                                    placeholder="Correo">
+                                                <input type="email" class="form-control" name="correoSend"
+                                                    id="correoSend" placeholder="Correo" hidden value='true'>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <fieldset class="border mb-3">
+                                    <legend class="float-none w-auto">Seleccione el Departamento</legend>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-check form-check-inline">
+                                                <label class="label" for="registro">Registro</label>
+                                                <input type="radio" class="form-check-input" name="departamento"
+                                                    id="registro" value="Registro" checked>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 text-left">
+                                            <div class="form-check form-check-inline">
+                                                <label class="label" for="soporte">Soporte Técnico</label>
+                                                <input type="radio" class="form-check-input" name="departamento"
+                                                    id="soporte" value="Soporte Técnico">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <fieldset class="border">
+                                    <legend class="float-none w-auto">Descripción del Problema</legend>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <select class="form-select" aria-label="Categorias" id="categorias"
+                                                name="categorias">
+                                                <option selected disabled hidden>Categorias</option>
+                                                <option value="Consulta Generales">Consulta Generales
+                                                </option>
+                                                <option value="Consulta sobre mis cursos">Consulta sobre mis
+                                                    cursos</option>
+                                                <option value="Corrección de Notas">Corrección de Notas
+                                                </option>
+                                                <option value="No me aparecen mis cursos">No me aparecen mis
+                                                    cursos</option>
+                                                <option value="Comentarios y Quejas">Comentarios y Quejas
+                                                </option>
+                                                <option value="Otros">Otros</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="label" for="correo">Ahora, por favor describa
+                                                    su problema. Debe incluir toda la información que usted
+                                                    considere necesaria para nosotros poder brindarle la
+                                                    asistencia que solicita.</label>
+                                                <textarea name="mensaje" class="form-control" id="mensaje" cols="30"
+                                                    rows="40" placeholder="Mensaje" spellcheck="false"
+                                                    style="height: 100px; resize: vertical;"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="d-flex justify-content-center">
+                                <button type="submit" class="btn btn-md btn-primary btn-login fw-bold"><i
+                                        class="fa-solid fa-paper-plane"></i> Enviar mensaje</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock modal_contactenos %}
 <script>
-    $(document).ready(function() {
-        $('.nav-link').click(function() {
+    $(document).ready(function () {
+        $('.nav-link').click(function () {
             $('.nav-link').removeClass('active'); // Remover clase "active" de todos los enlaces
             $(this).addClass('active'); // Agregar clase "active" al enlace clicado
         });
+
     });
+    function setEmail(id) {
+        var correoSend = document.getElementById('correoSend');
+        if (id === 'sendSanjose') {
+            correoSend.value = true;
+        } else {
+            correoSend.value = false;
+        }
+    }
 </script>
 {% endblock content %}

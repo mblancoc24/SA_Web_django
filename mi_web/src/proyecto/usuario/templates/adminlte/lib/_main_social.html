@@ -1,3 +1,10 @@
+{% load static %}
+{% block stylesheets %}
+{% include 'adminlte/lib/_styles.html' %}
+{% block style_sheets %}
+<script src="{% static 'js/chatBot.js' %}"></script>
+{% endblock %}
+{% endblock %}
 <nav id="social-sidebar">
     <ul style="margin: 0;">
         <li class="liSocial">
@@ -23,9 +30,27 @@
             </a>
         </li>
         <li class="liSocial" id="liSocial">
-            <a href='#' target="_blank" class="entypo-chatBot">
+            <a class="entypo-chatBot" id="chatBotButton" onclick="mostrarForm()">
                 <i class="fas fa-robot"></i>
             </a>
         </li>
     </ul>
 </nav>
+
+<div class="chat-box" id="floatingForm" style="display: none;">
+    <div class="chat-box-header">
+        UIA Chat
+        <span class="chat-box-toggle"><a onclick="mostrarForm()"><i class="bi bi-x-lg"></i></a></span>
+    </div>
+    <div class="chat-box-body">
+        <div class="chat-box-overlay">
+        </div>
+        <div class="chat-logs" id="chat-logs" style="overflow-y: auto;">
+            
+        </div>
+    </div>
+    <div class="chat-input">
+        <textarea type="text" id="chat-input" name="message" placeholder="Enviar un mensaje..." value=""></textarea>
+        <button type="submit" class="chat-submit" id="chat-submit" onclick="sendMessage()"><i class="bi bi-send-plus-fill"></i></button>
+    </div>
+</div>
