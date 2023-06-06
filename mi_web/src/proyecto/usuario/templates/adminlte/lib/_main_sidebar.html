@@ -1,7 +1,7 @@
 {% extends 'adminlte/lib/_main_sidebar.html' %}
 {% block aside %}
 {% load static %}
-<aside class="main-sidebar sidebar-dark-primary" style="font: 1em sans-serif;">
+<aside class="main-sidebar sidebar-dark-primary">
     {% block logo %}
     <!-- Comentar o eliminar este bloque de código -->
 
@@ -177,6 +177,29 @@
                         </li>
                         <li class="nav-item has-tree-view ">
                             <a href="#" class="nav-link">
+                                <i class="fas fa-solid fa-gavel"></i>
+                                <p>Legal</p>
+                                <p>
+                                    <i class="right fas fa-angle-down"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview menu-open">
+                                <li class="nav-item">
+                                    <a href="{% url 'politicas' id=id status=status %}" class="nav-link">
+                                        <i class="fas fa-shield-alt"></i>
+                                        <p>Política de Privacidad</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{% url 'terminos' id=id status=status %}" class="nav-link">
+                                        <i class="fas fa-file-contract"></i>
+                                        <p>Términos y Condiciones</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item has-tree-view ">
+                            <a href="#" class="nav-link">
                                 <i class="fas fa-external-link-alt"></i>
                                 <p>Enlaces</p>
                                 <p>
@@ -192,14 +215,14 @@
                                 </li>
                             </ul>
                         </li>
+                        <li class="nav-item sidebar-bottom">
+                            <a href="{% url 'logout' %}" class="nav-link">
+                                <i class="fa fa-power-off"></i>
+                                <p>Cerrar sesión</p>
+                            </a>
+                        </li>
                     {% endblock %}
                 {% endblock %}
-                <li class="nav-item">
-                    <a href="{% url 'logout' %}" class="nav-link">
-                        <i class="fa fa-power-off"></i>
-                        <p>Cerrar sesión</p>
-                    </a>
-                </li>
             </ul>
         </nav>
         {% endblock %}

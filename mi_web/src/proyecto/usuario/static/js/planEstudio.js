@@ -22,9 +22,10 @@ $(document).ready(function () {
 
         var plan = document.getElementById('carrera').value;
         // Enviar una petición AJAX al servidor
+        //const url = `/prospecto/${id.textContent}/${status.textContent}/plan/carrera/?carrera=` + encodeURIComponent(plan);
         const url = `/prospecto/${id.textContent}/${status.textContent}/plan/carrera/`;
         const xhr = new XMLHttpRequest();
-        xhr.open('GET', url);
+        xhr.open('GET', url, true);
         xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
         xhr.onload = function () {
             if (xhr.status === 200) {

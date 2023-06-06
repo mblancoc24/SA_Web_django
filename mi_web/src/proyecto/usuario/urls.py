@@ -60,6 +60,9 @@ from .views import (
                     Ubicacion,
                     Contactenos,
                     EnvioPrematricula,
+                    Politicas,
+                    Terminos,
+                    EnvioDeConsultas,
                     )
 from django.contrib.auth.views import LogoutView
 from django.contrib.auth import views as auth_views
@@ -171,5 +174,8 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
                path("prospecto/<int:id>/<int:status>/plan/envioPrematricula/", EnvioPrematricula.envioPrematricula, name='envioPrematricula'),
 
                path("prospecto/<int:id>/pago-finalizado/", payment_update_user_prospecto, name='pago_finalizado'),
-
+               
+               path("prospecto/<int:id>/<int:status>/politicas/", Politicas.politicas_view, name='politicas'),
+               path("prospecto/<int:id>/<int:status>/terminos/", Terminos.terminos_view, name='terminos'),
+               path("prospecto/<int:id>/<int:status>/envioConsulta/", EnvioDeConsultas.envioDeConsultas, name='envioConsulta'),
                ]

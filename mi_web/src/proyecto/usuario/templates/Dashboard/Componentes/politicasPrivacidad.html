@@ -1,0 +1,366 @@
+{% extends 'Dashboard/dashboard.html' %}
+{% load static %}
+{% block stylesheets %}
+{% include 'adminlte/lib/_styles.html' %}
+{% block style_sheets %}
+<script src="{% static 'js/legal.js' %}"></script>
+{% endblock %}
+{% endblock %}
+{% block content %}
+<div class="p-2">
+    <div class="col-md-12 card cardPerfilCol">
+        <div class="row p-2">
+            <div class="card-body">
+                <div class="row p-2" id="divLegal">
+                    <div class="col-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                            <a class="font-italic mb-4 divLegalHover" href="#" onclick="mostrarDivLegal('divPrivacidad');">Política de Privacidad
+                            </a>
+                        <div class="divLegal" id="divPrivacidad">
+                            <p class="font-italic text-muted mb-2">
+                                La Universidad Internacional de las Americas ("Universidad Internacional de las
+                                Americas")
+                                se toma la privacidad y la protección de su información personal ("Información
+                                Personal")
+                                muy en serio. Cuando visite el sistema académico en línea de la Universidad
+                                Internacional de
+                                las Americas ("Sistema Académico"), el sitio web de la Universidad Internacional de las
+                                Americas ("Sitio") y/o solicite productos y servicios (de forma colectiva, "Productos")
+                                de
+                                La Universidad Internacional de las Americas, confirma que acepta las prácticas y las
+                                directrices que se encuentran en esta política de privacidad ("Política de privacidad").
+                                A
+                                menos que se indique lo contrario, los términos en mayúsculas tienen los mismos
+                                significados
+                                que los estipulados en los Términos y Condiciones Generales de Venta, donde puede
+                                encontrarlos y que incluye esta Política de privacidad como anexo de referencia.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                        <a class="font-italic mb-4 divLegalHover" href="#" onclick="mostrarDivLegal('divCobertura');">Cobertura de esta
+                            Política de Privacidad</a>
+                        <div class="divLegal" style="display: none;" id="divCobertura">
+                            <p class="font-italic text-muted mb-2">Esta Política de Privacidad describe el uso que la
+                                Universidad Internacional de las Americas da a la Información personal y la Información
+                                anónima que recogemos cuando visita el Sistema Académico y/o adquiere un
+                                Producto/Servicio.
+                                Esta Política de Privacidad no se aplica al uso de su Información Personal que recogen
+                                terceras partes que la Universidad Internacional de las Americas no posee o controla o
+                                que
+                                no apoyan a la Universidad Internacional de las Americas en el suministro del Sistema
+                                Académico o de los Productos.
+
+                                CUANDO VISITA EL SISTEMA ACADÉMICO, ENCARGA PRODUCTOS O ENVÍA INFORMACIÓN PERSONAL DE
+                                OTRA
+                                FORMA MEDIANTE EL SISTEMA ACADÉMICO, USTED DA SU CONSENTIMIENTO EXPRESO PARA QUE SE
+                                PROCESE
+                                SU INFORMACIÓN PERSONAL SEGÚN ESTA POLÍTICA DE PRIVACIDAD.</p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                        <a class="font-italic mb-4 divLegalHover" href="#" onclick="mostrarDivLegal('divPersonal');">Controlador de
+                            Información Personal</a>
+                        <div class="divLegal" style="display: none;" id="divPersonal">
+                            <p class="font-italic text-muted mb-2">
+                                Cualquier Información Personal del visitante que se facilite o recoja el Sistema
+                                Académico
+                                y/o al encargar Productos de la Universidad Internacional de las Americas, la controla
+                                la
+                                Universidad Internacional de las Americas, S.A., San José, Costa Rica ("Controlador de
+                                datos").
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                        <a class="font-italic mb-4 divLegalHover" href="#" onclick="mostrarDivLegal('divTipos');">Tipos y uso de la
+                            información que recogemos</a>
+                        <div class="divLegal" style="display: none;" id="divTipos">
+                            <p class="font-italic text-muted mb-2">
+                                Por lo general, la Información Personal que nos envía la utilizamos para su registro,
+                                para
+                                facilitarle los Productos que adquiere, procesar los pagos, responder a sus solicitudes,
+                                definir las características, rendimiento y el apoyo del Sistema Académico con mayor
+                                precisión y para ofrecerle información, oportunidades y servicios adicionales. También
+                                utilizamos esta información para evitar o detectar fraudes o abusos en nuestro sitio web
+                                y
+                                hacer posible que terceras partes lleven a cabo funciones técnicas, logísticas o de otro
+                                tipo en nuestra representación.
+
+                                A continuación, se encuentran los tipos de información que recogemos así como su uso
+                                concreto.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                        <a class="font-italic mb-4 divLegalHover" href="#" onclick="mostrarDivLegal('divInformacion');">Información personal
+                        </a>
+                        <div class="divLegal" style="display: none;" id="divInformacion">
+                            <p class="font-italic text-muted mb-2">
+                                La "Información Personal" es información que se puede identificar personalmente, tal
+                                como
+                                nombres, direcciones, direcciones de correo electrónico o números de teléfono, así como
+                                otra
+                                información no pública que está relacionada con la anterior.
+
+                                Recogemos la siguiente Información Personal que nos envía de forma voluntaria:
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                        <a class="font-italic mb-4 divLegalHover" href="#" onclick="mostrarDivLegal('divFuentes');">Información Personal de
+                            otras fuentes</a>
+                        <div class="divLegal" style="display: none;" id="divFuentes">
+                            <p class="font-italic text-muted mb-2">
+                                Puede que recibamos Información Personal sobre usted de otras fuentes como teléfono o
+                                fax o de terceras partes que presten servicios en relación al Sistema Académico/Sitios.
+                                Puede que añadamos esta información a los datos que ya hemos recogido sobre usted
+                                mediante el Sistema Académico/ Sitio.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                        <a class="font-italic mb-4 divLegalHover" href="#" onclick="mostrarDivLegal('divDivulgacion');">Divulgación de
+                            Información Personal</a>
+                        <div class="divLegal" style="display: none;" id="divDivulgacion">
+                            <p class="font-italic text-muted mb-2">
+                                Excepto si se afirma lo contrario en esta Política de Privacidad, no utilizamos o
+                                compartimos su Información Personal con terceras partes a menos que nos lo pida o
+                                autorice. No venderemos ni alquilaremos ningún tipo de Información Personal a terceras
+                                partes con fines de mercadotecnia y solo compartiremos su información personal con
+                                terceras partes tal y como se describe a continuación.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                        <a class="font-italic mb-4 divLegalHover" href="#" onclick="mostrarDivLegal('divProveedor');">Proveedor de Productos
+                            del Sistema Académico</a>
+                        <div class="divLegal" style="display: none;" id="divProveedor">
+                            <p class="font-italic text-muted mb-2">
+                                Facilitaremos la Información Personal a los proveedores de los productos que se ofrezcan
+                                en el Sistema Académico para permitirles que se los proporcionen, registrarle en calidad
+                                de usuarios autorizados, proporcionarle ayuda y actualizaciones y otros fines similares.
+                                Tenga en cuenta que los proveedores utilizan su Información Personal según su propia
+                                política de privacidad, que puede ser distinta a esta Política de Privacidad. Si desea
+                                saber la forma en la que los proveedores recogen, utilizan y difunden la Información
+                                Personal, visite su sitio web y revise su política de privacidad.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                        <a class="font-italic mb-4 divLegalHover" href="#" onclick="mostrarDivLegal('divProveedorT');">Proveedores de
+                            servicios de terceras partes</a>
+                        <div class="divLegal" style="display: none;" id="divProveedorT">
+                            <p class="font-italic text-muted mb-2">
+                                Puede que facilitemos su Información Personal a proveedores de servicios de terceras
+                                partes que trabajan en representación de o con nosotros para ofrecerle el Sistema
+                                Académico y los Productos, el servicio de atención al cliente, facilitar la comunicación
+                                con los clientes y operar en el Sitio y en el Sistema Académico. Los ejemplos de dichos
+                                servicios incluyen comunicación con usted vía correo electrónico, procesamiento de
+                                operaciones de pago, envío de Productos, filtrar pedidos para actividades fraudulentas,
+                                cumplir con las leyes aplicables y/o atender a los clientes y cumplir los servicios para
+                                nosotros. Sin embargo, estos proveedores no tienen ningún derecho independiente para
+                                utilizar esta información salvo para ayudarnos con el Sistema Académico, sus procesos
+                                relacionados y los Productos.
+
+                                Para evitar incumplimientos en los pagos, nos reservamos el derecho de obtener
+                                información sobre su solvencia de terceras partes para algunos métodos de pago (débito
+                                directo, orden de compra), por ejemplo, según procesos matemático-estadísticos. En este
+                                caso, se le informará explícitamente durante el proceso de compra.
+
+                                En caso de no reembolso de una operación de débito directo no provocada por una
+                                revocación del titular de la cuenta, nos reservamos el derecho de comunicar la
+                                información de su cuenta (número de cuenta, número de ruta bancaria) a una tercera parte
+                                que guarde estos datos en un archivo seguro y los envíe a otras empresas que participen
+                                en el procedimiento de débito directo. Se eliminará el bloqueo una vez liquidada la
+                                cantidad facturada.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                        <a class="font-italic mb-4 divLegalHover" href="#" onclick="mostrarDivLegal('divCumplimiento');">Cumplimiento de la
+                            ley, autoridades y agencias gubernamentales</a>
+                        <div class="divLegal" style="display: none;" id="divCumplimiento">
+                            <p class="font-italic text-muted mb-2">
+                                Puede que transmitamos información que hemos recogido de y acerca de usted (incluida la
+                                Información Personal) si creemos que tal divulgación es necesaria para
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                        <a class="font-italic mb-4 divLegalHover" href="#" onclick="mostrarDivLegal('divTraspaso');">Traspaso de empresas</a>
+                        <div class="divLegal" style="display: none;" id="divTraspaso">
+                            <p class="font-italic text-muted mb-2">
+                                En caso de que la Universidad Internacional de las Americas pase por un traspaso
+                                empresarial, como una fusión o adquisición por parte de otra empresa o venta de parte o
+                                del total de sus activos, es probable que su Información Personal se encuentre entre los
+                                activos que se transfieran. Usted manifiesta su acuerdo con que dichos traspasos pueden
+                                tener lugar y con que cualquier comprador de la Universidad Internacional de las
+                                Americas o de sus activos puede continuar utilizando su Información Personal, como está
+                                estipulado en esta Política de Privacidad. Por tanto, por medio de la presente, usted
+                                expresa su consentimiento a que la Universidad Internacional de las Americas comparta su
+                                Información Personal en dichas circunstancias.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                        <a class="font-italic mb-4 divLegalHover" href="#" onclick="mostrarDivLegal('divSeguridad');">Seguridad y
+                            confidencialidad de los datos</a>
+                        <div class="divLegal" style="display: none;" id="divSeguridad">
+                            <p class="font-italic text-muted mb-2">
+                                A fin de mantener la mayor protección de nuestros clientes, nos adherimos a las normas y
+                                disposiciones industriales aplicables. Así, mantenemos medidas y procedimientos físicos,
+                                electrónicos y de gestión adecuados y razonables desde el punto de vista comercial para
+                                garantizar la seguridad de su Información Personal durante la recogida, la transmisión y
+                                el almacenamiento de datos. Solo las personas autorizadas que están familiarizadas con
+                                las políticas de privacidad de datos de la Universidad Internacional de las Americas
+                                tienen acceso a sus datos. No obstante, ninguna empresa, incluida la Universidad
+                                Internacional de las Americas, puede eliminar por completo los riesgos de seguridad
+                                relativos a la Información Personal.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                        <a class="font-italic mb-4 divLegalHover" href="#" onclick="mostrarDivLegal('divSecure');">Secure Socket Layer</a>
+                        <div class="divLegal" style="display: none;" id="divSecure">
+                            <p class="font-italic text-muted mb-2">
+                                La Universidad Internacional de las Americas cumple en su totalidad con PCI DSS (Payment
+                                Card Industry Data Security Standard) para mejorar la seguridad de los datos de la
+                                tarjeta de pago y facilitar un entorno seguro de comercio electrónico para nuestros
+                                clientes. El estándar PCI DSS establece los requisitos para la arquitectura en red, el
+                                desarrollo de software, la gestión de seguridad y otras medidas proactivas básicas para
+                                garantizar la seguridad de las operaciones con tarjeta de crédito.
+
+                                Por consiguiente, solo revelamos los cuatro últimos dígitos de su tarjeta de crédito
+                                cuando confirmamos un pedido. Por supuesto, transmitimos el número de tarjeta de crédito
+                                completo al procesador adecuado de pago durante el procesamiento del pedido. Debido a
+                                los requisitos de PCI DSS, esta transferencia se asegura mediante el uso de SSL.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                        <a class="font-italic mb-4 divLegalHover" href="#" onclick="mostrarDivLegal('divCredito');">Datos de la tarjeta de
+                            crédito</a>
+                        <div class="divLegal" style="display: none;" id="divCredito">
+                            <p class="font-italic text-muted mb-2">
+                                La Universidad Internacional de las Americas cumple en su totalidad con PCI DSS (Payment
+                                Card Industry Data Security Standard) para mejorar la seguridad de los datos de la
+                                tarjeta de pago y facilitar un entorno seguro de comercio electrónico para nuestros
+                                clientes. El estándar PCI DSS establece los requisitos para la arquitectura en red, el
+                                desarrollo de software, la gestión de seguridad y otras medidas proactivas básicas para
+                                garantizar la seguridad de las operaciones con tarjeta de crédito.
+
+                                Por consiguiente, solo revelamos los cuatro últimos dígitos de su tarjeta de crédito
+                                cuando confirmamos un pedido. Por supuesto, transmitimos el número de tarjeta de crédito
+                                completo al procesador adecuado de pago durante el procesamiento del pedido. Debido a
+                                los requisitos de PCI DSS, esta transferencia se asegura mediante el uso de SSL.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                        <a class="font-italic mb-4 divLegalHover" href="#" onclick="mostrarDivLegal('divRevision');">Revisión y corrección de
+                            Información Personal</a>
+                        <div class="divLegal" style="display: none;" id="divRevision">
+                            <p class="font-italic text-muted mb-2">
+                                Para revisar, corregir, bloquear o eliminar su Información Personal almacenada, envíenos
+                                una breve solicitud por escrito, por correo postal o por correo electrónico (véase a
+                                continuación). En caso de que, a pesar de nuestros intentos de mantener los datos
+                                correctos y actualizados, se guarde información falsa, la modificaremos cuando lo
+                                solicite. Es normal que reciba una respuesta a su solicitud en el plazo de treinta (30)
+                                días.
+
+                                Si desea más información sobre si almacenamos Información Personal sobre usted y sobre
+                                estos datos o temas de privacidad de datos, póngase en contacto por escrito con nuestro
+                                agente de privacidad de datos-:
+
+                                Universidad Internacional de las Americas
+                                San José, Costa Rica
+
+                                Dirección de correo electrónico: sa-en-linea@uia.ac.cr
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                        <a class="font-italic mb-4 divLegalHover" href="#" onclick="mostrarDivLegal('divConservación');">Conservación de datos
+                        </a>
+                        <div class="divLegal" style="display: none;" id="divConservación">
+                            <p class="font-italic text-muted mb-2">
+                                La Universidad Internacional de las Americas conservará los datos personales que
+                                procesemos en representación de nuestros clientes hasta que sea necesario para
+                                suministrar los servicios. La Universidad Internacional de las Americas conservará y
+                                utilizará esta Información Personal de la manera necesaria para cumplir con sus
+                                obligaciones legales, resolver conflictos y hacer cumplir nuestros acuerdos.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                        <a class="font-italic mb-4 divLegalHover" href="#" onclick="mostrarDivLegal('divCuenta');">Tenga en cuenta</a>
+                        <div class="divLegal" style="display: none;" id="divCuenta">
+                            <p class="font-italic text-muted mb-2">
+                                Tras la finalización total de su relación contractual con la Universidad Internacional
+                                de las Americas, sus datos (incluyendo la Información Personal) se bloquearán, si así lo
+                                solicita, en los sistemas internos de la Universidad Internacional de las Americas para
+                                que no se procesen más y se eliminarán una vez expirado el período legal obligatorio de
+                                retención.
+
+                                Está manifiesto su acuerdo con que cualquier eliminación de su Información Personal solo
+                                abarca los datos relativos a usted como persona. La Universidad Internacional de las
+                                Americas no tendrá responsabilidad alguna ante usted por cualquier cierre de su Cuenta o
+                                eliminación asociada de su Información Personal o datos.
+
+                                Cuando eliminemos Información Personal que hemos recogido de o sobre usted, se eliminará
+                                de nuestras bases de datos activas pero puede que permanezca en nuestros archivos.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                        <a class="font-italic mb-4 divLegalHover" href="#" onclick="mostrarDivLegal('divEnlaces');">Enlaces a otros sitios web
+                        </a>
+                        <div class="divLegal" style="display: none;" id="divEnlaces">
+                            <p class="font-italic text-muted mb-2">
+                                El Sitio puede contener enlaces a otros sitios web que la Universidad Internacional de
+                                las Americas no posee o controla. La difusión de dichos enlaces se hace para su
+                                comodidad y no suponen nuestra adhesión a dichos sitios web, su localización o
+                                contenidos. No tenemos el control, no revisamos y no somos responsables de las políticas
+                                de privacidad ni del contenido mostrado en otros sitios web de este tipo. Tenga en
+                                cuenta que los términos de nuestra Política de Privacidad no se aplican a ningún sitio
+                                web externo.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                        <a class="font-italic mb-4 divLegalHover" href="#" onclick="mostrarDivLegal('divMenores');">Privacidad de menores</a>
+                        <div class="divLegal" style="display: none;" id="divMenores">
+                            <p class="font-italic text-muted mb-2">
+                                En principio, las personas menores de dieciocho (18) años no deben comunicarnos ninguna
+                                Información Personal sin el consentimiento de alguno de sus padres o tutor legal. No
+                                pediremos de forma intencionada Información Personal de menores, ni la recogeremos o
+                                comunicaremos.
+
+                                Aviso a los residentes de los Estados Unidos: No recogemos de forma intencionada ni
+                                mantenemos información de aquellos visitantes del Sitio que tengan menos de trece (13)
+                                años.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                        <a class="font-italic mb-4 divLegalHover" href="#" onclick="mostrarDivLegal('divVersiones');">Cambios en esta Política
+                            de Privacidad y en las versiones anteriores</a>
+                        <div class="divLegal" style="display: none;" id="divVersiones">
+                            <p class="font-italic text-muted mb-2">
+                                Esta Política de Privacidad es un documento vivo. Como parte de los Términos y
+                                Condiciones Generales de Venta, esta Política de Privacidad está sujeta a modificaciones
+                                esporádicas de acuerdo con los Términos y Condiciones Generales de Venta. Además, puede
+                                que actualicemos esta Política de Privacidad para reflejar los cambios en nuestras
+                                prácticas informativas. Si realizamos cualquier cambio material, se lo notificaremos
+                                mediante un aviso en este Sitio antes de que sea efectivo. Le animamos a que revise
+                                periódicamente esta página para obtener información actualizada sobre nuestras prácticas
+                                de privacidad.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

@@ -915,14 +915,14 @@ class DetallePlanDeEstudioView(LoginRequiredMixin):
     
     def getPlan(request, id, status):
         plan = request.GET.get('carrera')
-        idEstudiante = json.dumps({'identificacion': str(604150895), 'plan': str(plan)})
-        print(idEstudiante)
-        # url = 'http://192.168.11.196:8062/get_planes_estudio_curricula'
+        #idEstudiante = json.dumps({'identificacion': str(604150895), 'plan': str(plan)})
+        #print(idEstudiante)
+        url = 'http://192.168.11.196:8062/get_planes_estudio_curricula'
         url = 'https://mocki.io/v1/78d6e153-4de6-49de-b7a0-0023ed16fe3c'
         headers = {
             'Content-Type': 'application/json'
         }
-        # response = requests.request("GET", url, headers=headers, data=idEstudiante)
+        #response = requests.request("GET", url, headers=headers, data=idEstudiante)
         response = requests.request("GET", url)
         data = json.loads(response.text)['result']
         plan = []
@@ -1198,5 +1198,98 @@ class Contactenos(LoginRequiredMixin):
                 'user': user,
                 'status': status,
                 'id': id,
+            }
+        return render(request, 'Dashboard/Componentes/contactenos.html', context)
+    
+class Politicas(LoginRequiredMixin):
+    context_object_name = 'politicas'
+    def politicas_view(request, id, status):
+        user = request.user
+        
+        try:
+            fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
+            imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
+            context = {
+                'user': user,
+                'fotoperfil': imagen_url,
+                'status': status,
+                'id': id,
+            }
+        except fotoperfil.DoesNotExist:
+            context = {
+                'user': user,
+                'status': status,
+                'id': id,
+            }
+        return render(request, 'Dashboard/Componentes/politicasPrivacidad.html', context)
+    
+class Terminos(LoginRequiredMixin):
+    context_object_name = 'terminos'
+    def terminos_view(request, id, status):
+        user = request.user
+        try:
+            fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
+            imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
+            context = {
+                'user': user,
+                'fotoperfil': imagen_url,
+                'status': status,
+                'id': id,
+            }
+        except fotoperfil.DoesNotExist:
+            context = {
+                'user': user,
+                'status': status,
+                'id': id,
+            }
+        return render(request, 'Dashboard/Componentes/TerminosCondiciones.html', context)
+
+class EnvioDeConsultas(LoginRequiredMixin):
+    context_object_name = 'envioDeConsultas'
+    def envioDeConsultas(request, id, status):
+        user = request.user
+        correoSend = request.POST.get('correoSend')
+        nombre = request.POST.get('nombre')
+        correo = request.POST.get('correo')
+        radios = request.POST.get('departamento')
+        categoria = request.POST.get('categorias')
+        mensaje = request.POST.get('mensaje')
+        correoSend = ''
+        if correoSend == True:
+            if radios == 'Registro':
+                correoSend = 'victorfern27@gmail.com'
+            else:
+                correoSend = 'victorfern48@gmail.com'
+        else:
+            if radios == 'Registro':
+                correoSend = 'victor2722v@gmail.com'
+            else:
+                correoSend = 'victfern48@gmail.com'
+
+        subject = categoria
+        message = f'Hola soy, {nombre},\n\n{mensaje}'
+        email_from = correo
+        recipient_list = [correoSend,]
+        try:
+            send_mail(subject, message, email_from, recipient_list)
+            mensaje_enviado = True
+        except Exception:
+            mensaje_enviado = False
+        try:
+            fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
+            imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
+            context = {
+                'user': user,
+                'fotoperfil': imagen_url,
+                'status': status,
+                'id': id,
+                'response' : mensaje_enviado
+            }
+        except fotoperfil.DoesNotExist:
+            context = {
+                'user': user,
+                'status': status,
+                'id': id,
+                'response' : mensaje_enviado
             }
         return render(request, 'Dashboard/Componentes/contactenos.html', context)
