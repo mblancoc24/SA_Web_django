@@ -234,7 +234,7 @@ footer .row a {
 .sidebar-bottom {
   position: fixed;
   bottom: 0;
-  width: 100%;
+  width: 15%;
 }
 
 a {
@@ -803,18 +803,26 @@ aside.accesibilidad.active {
   #cardFormularios {
       width: 300px;
   }
-
+  .sidebar-bottom {
+    width: 240px;
+  }
 }
 
 @media (min-width: 576px) and (max-width: 767px) {
   .cardPerfilCol {
     width: 100%;
   }
+  .sidebar-bottom {
+    width: 230px;
+  }
 }
 
 @media only screen and (min-width: 1200px) {
   #rowCardFormulario {
       justify-content: center !important;
+  }
+  .sidebar-bottom {
+    width: 230px;
   }
 }
 
@@ -831,6 +839,9 @@ aside.accesibilidad.active {
   .cardPerfilCol {
     width: 100%; /* Ajusta el valor según tus necesidades */
     padding-left: 25px;
+  }
+  .sidebar-bottom {
+    width: 230px;
   }
 }
 
