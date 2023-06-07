@@ -68,3 +68,12 @@ function dataposgrados() {
             });
         });
 }
+
+function show(id){
+    var show = document.getElementById(id);
+    if (show.style.display !== 'none') {
+        show.style.display = 'none';
+    } else {
+        show.style.display = '';
+    }
+}

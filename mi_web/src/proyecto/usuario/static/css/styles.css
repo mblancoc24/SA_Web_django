@@ -685,14 +685,20 @@ aside.accesibilidad.active {
 #social-sidebar a[class*="facebook"]:hover,
 #social-sidebar a[class*="facebook"] span,
 #social-sidebar a[class*="facebook"] span:before {
-  background: #3B5998;
+  background-color: #1877F2;
 }
 
 #social-sidebar a[class*="instagram"]:hover,
 #social-sidebar a[class*="instagram"] span,
 #social-sidebar a[class*="instagram"] span:before {
-  background-color:  #e7246b ; /* Color de inicio del degradado */
-  background-image: linear-gradient(135deg,  #e7246b ,  #bb399f); /* Degradado de azul a púrpura oscuro */
+  background-image: linear-gradient(to right, #FEDA75, #FA7E1E, #D62976, #962FBF, #4F5BD5);
+  background-image: linear-gradient(to top, #F58529, #DD2A7B, #8134AF, #515BD4);
+}
+
+#social-sidebar a[class*="twitter"]:hover,
+#social-sidebar a[class*="twitter"] span,
+#social-sidebar a[class*="twitter"] span:before {
+  background-color:  #55ACEE ; /* Color de inicio del degradado */
 }
 
 #social-sidebar a[class*="chatBot"]:hover,
