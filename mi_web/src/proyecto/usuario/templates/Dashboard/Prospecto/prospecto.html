@@ -72,8 +72,7 @@
 
 <!-- Model de Primer Ingreso -->
 {% block modal_primerIngreso %}
-<div class="modal fade" id="modal_primer_ingreso" tabindex="-1" aria-labelledby="modal_primer_ingresoTitle"
-    aria-hidden="true">
+<div class="modal fade" id="modal_primer_ingreso" tabindex="-1" aria-labelledby="modal_primer_ingresoTitle">
     <div class="modal-dialog modal-dialog-centered modal-xl modal_primer_ingreso">
         <div class="modal-content">
             <div class="modal-header">
@@ -86,28 +85,28 @@
                     <div class="row ">
                         <div class="form-group col-12 col-sm-6 mb-3 ">
                             <div class="mb-3">
-                                <label for="floatingFile">
+                                <label for="floatingFileP">
                                     <i class="fa fa-upload" aria-hidden="true"></i> Título de Educación Media
                                 </label>
                                 <input class="form-control custom-file-input" style="opacity: 0.65" type="file"
-                                    id="floatingFile" name="titulobachillerto" accept-language="es" />
+                                    id="floatingFileP" name="titulobachillerto" accept-language="es" />
                             </div>
                         </div>
                         <div class="form-group col-12 col-sm-6 mb-3 ">
                             <div class="mb-3">
-                                <label for="floatingFile">
+                                <label for="floatingFile1">
                                     <i class="fa fa-upload" aria-hidden="true"></i> Identificación (fotografía ambos
                                     lados)
                                 </label>
-                                <input class="form-control" style="opacity: 0.65" type="file" id="floatingFile"
+                                <input class="form-control" style="opacity: 0.65" type="file" id="floatingFile1"
                                     name="cedulafotografia" />
                             </div>
                         </div>
                         <div class="form-group col-12 col-sm-6 mb-3">
-                            <label for="floatingFile">
+                            <label for="floatingFile2">
                                 <i class="fa fa-upload" aria-hidden="true"></i> Foto tuya de perfil visible
                             </label>
-                            <input class="form-control" style="opacity: 0.65" type="file" id="floatingFile"
+                            <input class="form-control" style="opacity: 0.65" type="file" id="floatingFile2"
                                 name="fotoperfil" />
                         </div>
 
@@ -115,7 +114,7 @@
                             <label for="tipo"><i class="bi bi-wallet-fill"> Seleccione tipo de ingreso
                                     económico</i></label>
                             <select id="ingreso_economico" class="form-select select2" name="ingreso_economico"
-                                required>
+                                required title="Ingreso Economico">
                                 <option value="" disabled selected hidden>Tipos de Ingreso Económico</option>
                                 <option value="Asalariado">Asalariado</option>
                                 <option value="Independiente">Ingresos Propios</option>
@@ -127,7 +126,7 @@
                         <div class="form-group col-12 col-sm-6 mb-3">
                             <label for="lblcarrera"><i class="bi bi-book-fill"> Colegio de procedencia</i></label>
                             <select id="colegio_select" class="form-select" name="colegio_select"
-                                data-placeholder="Colegio donde egresó">
+                                data-placeholder="Colegio donde egresó" title="Colegio">
                                 <option value="" disabled selected hidden></option>
                             </select>
                         </div>
@@ -135,7 +134,7 @@
                         <div class="form-group col-12 col-sm-6 mb-3 dropdown-parent">
                             <label for="lblcarrera">Seleccione una carrera</label>
                             <select id="mi_select" class="form-select selectorbuscador" name="mi_select"
-                                data-placeholder="Seleccione la carrera">
+                                data-placeholder="Seleccione la carrera" title="Carrera">
                                 <option style="opacity: 0.65" value="" disabled selected hidden>
                                 </option>
                             </select>
@@ -150,8 +149,8 @@
                     </div>
                     <div class="row" style="display: none;" id="certificaciones">
                         <div id="certificacion" class="form-group col-12 col-sm-6 ">
-                            <label for="floatingFile">Certificación de Notas del Curso</label>
-                            <input class="form-control" style="opacity: 0.65" type="file" id="floatingFile"
+                            <label for="floatingFileN">Certificación de Notas del Curso</label>
+                            <input class="form-control" style="opacity: 0.65" type="file" id="floatingFileN"
                                 name="certificacionnotas" />
                         </div>
 
@@ -172,7 +171,7 @@
                             style="display: none;">
                             <label for="lblcarrera">Seleccione el asesor que te ha atendido</label>
                             <select id="asesor_select" class="form-select selectorbuscador" name="asesor_select"
-                                data-placeholder="Seleccione el asesor que te ha atendido">
+                                data-placeholder="Seleccione el asesor que te ha atendido" title="Asesor">
                                 <option style="opacity: 0.65" value="" disabled selected hidden>Seleccion asesor
                                 </option>
                             </select>
@@ -191,7 +190,7 @@
 
 <!-- Model de Posgrado -->
 {% block modal_posgrado %}
-<div class="modal fade" id="modal_posgrado" tabindex="-1" aria-labelledby="modal_posgradoTitle" aria-hidden="true">
+<div class="modal fade" id="modal_posgrado" tabindex="-1" aria-labelledby="modal_posgradoTitle">
     <div class="modal-dialog modal-dialog-centered modal-xl modal_posgrado">
         <div class="modal-content rounded-4">
             <div class="modal-header">
@@ -204,21 +203,21 @@
                     <div class="row ">
                         <div class="form-group col-12 col-sm-6 mb-3 ">
                             <div class="mb-3">
-                                <label for="floatingFile">
+                                <label for="floatingFile11">
                                     <i class="fa fa-upload" aria-hidden="true"></i>Título Universitario</label>
-                                <input class="form-control" type="file" id="floatingFile" style="opacity: 0.65"
+                                <input class="form-control" type="file" id="floatingFile11" style="opacity: 0.65"
                                     name="titulobachillerto" />
                             </div>
                         </div>
 
                         <div class="form-group col-12 col-sm-6 mb-3 ">
                             <div class="mb-3">
-                                <label for="floatingFile">
+                                <label for="floatingFile12">
                                     <i class="fa fa-upload" aria-hidden="true"></i> Identificación (fotografía visible
                                     por
                                     ambos lados)
                                 </label>
-                                <input class="form-control" style="opacity: 0.65" type="file" id="floatingFile"
+                                <input class="form-control" style="opacity: 0.65" type="file" id="floatingFile12"
                                     name="cedulafotografia" />
                             </div>
                         </div>
@@ -226,17 +225,17 @@
                     <div class="row ">
                         <div class="form-group col-12 col-sm-6 mb-3 ">
                             <div class="mb-3">
-                                <label for="floatingFile">
+                                <label for="floatingFile22">
                                     <i class="fa fa-upload" aria-hidden="true"></i>Foto de perfil visible</label>
-                                <input class="form-control" type="file" id="floatingFile" style="opacity: 0.65"
+                                <input class="form-control" type="file" id="floatingFile22" style="opacity: 0.65"
                                     name="fotoperfil" />
                             </div>
                         </div>
                         <div class="form-group col-12 col-sm-6 mb-3 ">
                             <div class="mb-3">
                                 <label for="tipo">Seleccione tipo de ingreso económico</label>
-                                <select id="ingreso_economico" class="form-select select2" name="ingreso_economico"
-                                    required>
+                                <select id="ingreso_economicoP" class="form-select select2" name="ingreso_economicoP"
+                                    required title="Ingreso Economico">
                                     <option style="opacity: .65;" value="" disabled selected hidden>Tipos de Ingreso
                                         Económico
                                     </option>
@@ -252,7 +251,7 @@
                             <div class="mb-3">
                                 <label for="tipo">Especialidad de Interes</label>
                                 <select id="posgradoselect" class="form-select selectorbuscador" name="posgradoselect"
-                                    data-placeholder="Seleccione la Especialidad">
+                                    data-placeholder="Seleccione la Especialidad" title="Especialidad">
                                     <option style="opacity: 0.65" value="" disabled selected hidden>
                                         Seleccione la Especialidad
                                     </option>
@@ -272,8 +271,8 @@
                     <div class="form-group col-12 col-sm-6 dropdown-parent" id="select_asesor2" style="display: none;">
                         <div class="mb-3">
                             <label for="lblcarrera">Seleccione el asesor que te ha atendido</label>
-                            <select id="asesor_select" class="form-select selectorbuscador" name="asesor_select"
-                                data-placeholder="Seleccione el asesor que te ha atendido">
+                            <select id="asesor_selectP" class="form-select selectorbuscador" name="asesor_selectP"
+                                data-placeholder="Seleccione el asesor que te ha atendido" title="Asesor">
                                 <option style="opacity: 0.65" value="" disabled selected hidden>Seleccion asesor
                                 </option>
                             </select>
@@ -295,7 +294,7 @@
 <!-- Modal Curso Libres -->
 {% block modal_cursolibres %}
 <div class="modal fade" id="modal_cursolibres" tabindex="-1" aria-labelledby="modal_cursolibresTitle"
-    style="display: none" aria-hidden="true" style="display: block;">
+    style="display: none" style="display: block;">
     <div class="modal-dialog modal-dialog-centered modal-xl modal_cursolibres" role="document">
         <div class="modal-content rounded-4">
             <div class="modal-header">
@@ -310,11 +309,11 @@
                 <form method="POST">
                     {% csrf_token %}
                     <div class="form-group mb-3">
-                        <label for="floatingFile">
+                        <label for="floatingFileC">
                             <i class="fa fa-upload" aria-hidden="true"></i>
                             Identificación (fotografía visible por ambos lados)</label>
 
-                        <input class="form-control" style="opacity: 0.65" type="file" id="floatingFile"
+                        <input class="form-control" style="opacity: 0.65" type="file" id="floatingFileC"
                             name="cedulafotografia" />
                     </div>
                 </form>
@@ -333,7 +332,7 @@
 <!-- Modal Instrucciones -->
 {% block modal_instruccionesprimerIngreso %}
 <div class="modal fade" id="modal_primer_ingreso_instrucciones" tabindex="-1"
-    aria-labelledby="modal_primer_ingreso_instruccionesTitle" style="display: none" aria-hidden="true">
+    aria-labelledby="modal_primer_ingreso_instruccionesTitle" style="display: none">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content rounded-0">
             <div class="modal-header">
@@ -354,7 +353,7 @@
 
 {% block modal_instruccionesposgrados %}
 <div class="modal fade" id="modal_posgrado_instrucciones" tabindex="-1"
-    aria-labelledby="modal_posgrado_instruccionesTitle" style="display: none" aria-hidden="true">
+    aria-labelledby="modal_posgrado_instruccionesTitle" style="display: none">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content rounded-0">
             <div class="modal-header">
@@ -375,7 +374,7 @@
 
 {% block modal_instruccionescursolibres %}
 <div class="modal fade" id="modal_cursos_libres_instrucciones" tabindex="-1"
-    aria-labelledby="modal_cursos_libres_instruccionesTitle" style="display: none" aria-hidden="true">
+    aria-labelledby="modal_cursos_libres_instruccionesTitle" style="display: none">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content rounded-0">
             <div class="modal-header">

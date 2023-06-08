@@ -234,7 +234,7 @@ footer .row a {
 .sidebar-bottom {
   position: fixed;
   bottom: 0;
-  width: 15%;
+  width: 100%;
 }
 
 a {
@@ -1108,4 +1108,8 @@ cursor:pointer;
 
 #infoContactos{
   background-color: var(--color-U-6);
+}
+
+.google-translate-select {
+  width: 100%;
 }

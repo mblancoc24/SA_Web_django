@@ -47,8 +47,8 @@ function datacolegios() {
 }
 
 function dataposgrados() {
-    var select = document.getElementById("posgradoselect");
-    select.options.length = 0; // Eliminamos todas las opciones anteriores
+    var select = $("#posgradoselect");
+    select.empty(); // Eliminamos todas las opciones anteriores
     var opcionPorDefecto = new Option("Seleccione una posgrado", "", true, true);
     select.append(opcionPorDefecto);
 
@@ -61,7 +61,6 @@ function dataposgrados() {
                 var opcion = new Option(valor, valor);
                 select.append(opcion);
             });
-            // Inicializamos Select2 con el dropdownParent apuntando al modal
             select.select2({
                 dropdownParent: $("#modal_posgrado"),
                 width: "100%", // Ancho del dropdown
