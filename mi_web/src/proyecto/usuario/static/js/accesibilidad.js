@@ -18,10 +18,6 @@ $(document).ready(function () {
         restablecerFuente();
     }
 
-    var traducir = document.getElementById('google_translate_element');
-    traducir.onclick = function () {
-        googleTranslateElementInit();
-    }
     var daltonize = document.getElementById('daltonismType');
     daltonize.onchange = function () {
         changeColor();
@@ -44,6 +40,8 @@ $(document).ready(function () {
         sidebar.classList.toggle('active');
         navbar.style.zIndex = sidebar.classList.contains('active') ? -1 : 10;
     });
+    loadGoogleTranslateAPI();
+    $('.google-translate-select').select2();
 });
 
 function mostrar() {
@@ -83,25 +81,27 @@ function restablecerFuente() {
 }
 
 function googleTranslateElementInit() {
-    var allLanguages = [
-        'af', 'sq', 'am', 'ar', 'hy', 'az', 'eu', 'be', 'bn', 'bs', 'bg', 'ca', 'ceb', 'ny', 'zh-CN',
-        'zh-TW', 'co', 'hr', 'cs', 'da', 'nl', 'en', 'eo', 'et', 'tl', 'fi', 'fr', 'fy', 'gl', 'ka',
-        'de', 'el', 'gu', 'ht', 'ha', 'haw', 'iw', 'hi', 'hmn', 'hu', 'is', 'ig', 'id', 'ga', 'it',
-        'ja', 'jw', 'kn', 'kk', 'km', 'rw', 'ko', 'ku', 'ky', 'lo', 'la', 'lv', 'lt', 'lb', 'mk',
-        'mg', 'ms', 'ml', 'mt', 'mi', 'mr', 'mn', 'my', 'ne', 'no', 'or', 'ps', 'fa', 'pl', 'pt',
-        'pa', 'ro', 'ru', 'sm', 'gd', 'sr', 'st', 'sn', 'sd', 'si', 'sk', 'sl', 'so', 'es', 'su',
-        'sw', 'sv', 'tg', 'ta', 'tt', 'te', 'th', 'tr', 'tk', 'uk', 'ur', 'ug', 'uz', 'vi', 'cy',
-        'xh', 'yi', 'yo', 'zu'
-    ];
-
-    var allLanguagesString = allLanguages.join(',');
-
-    new google.translate.TranslateElement({
+    new google.translate.TranslateElement(
+      {
         pageLanguage: 'es',
-        includedLanguages: allLanguagesString,
-        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-    }, 'google_translate_element');
-}
+        autoDisplay: false,
+        gaTrack: true,
+      },
+      'google_translate_element'
+    );
+
+    // Add 'select2' styles to the language dropdown
+    const googleTranslateSelect = document.querySelector('.goog-te-combo');
+    googleTranslateSelect.classList.add('google-translate-select');
+    googleTranslateSelect.classList.add('form-select');
+  }
+
+  // Load the Google Translate API script
+  function loadGoogleTranslateAPI() {
+    const script = document.createElement('script');
+    script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+    document.body.appendChild(script);
+  }
 
 function changeColor() {
     var type = document.getElementById('daltonismType').value;

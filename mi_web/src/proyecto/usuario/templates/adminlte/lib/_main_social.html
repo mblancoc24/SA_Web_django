@@ -1,10 +1,4 @@
 {% load static %}
-{% block stylesheets %}
-{% include 'adminlte/lib/_styles.html' %}
-{% block style_sheets %}
-<script src="{% static 'js/chatBot.js' %}"></script>
-{% endblock %}
-{% endblock %}
 <nav id="social-sidebar">
     <ul style="margin: 0;">
         <li class="liSocial">
@@ -20,22 +14,22 @@
             </a>
         </li>
         <li class="liSocial" id="liSocial">
-            <a href='https://www.facebook.com/UIA.CR/' target="_blank" class="entypo-facebook">
+            <a href='https://www.facebook.com/UIA.CR/' target="_blank" class="entypo-facebook" title="Redes Sociales">
                 <i class="bi bi-facebook"></i>
             </a>
         </li>
         <li class="liSocial" id="liSocial">
-            <a href='https://twitter.com/uia_cr?lang=es' target="_blank" class="entypo-twitter">
+            <a href='https://twitter.com/uia_cr?lang=es' target="_blank" class="entypo-twitter" title="Redes Sociales">
                 <i class="bi bi-twitter"></i>
             </a>
         </li>
         <li class="liSocial" id="liSocial">
-            <a href='https://www.instagram.com/uiacr' target="_blank" class="entypo-instagram">
+            <a href='https://www.instagram.com/uiacr' target="_blank" class="entypo-instagram" title="Redes Sociales">
                 <i class="bi bi-instagram"></i>
             </a>
         </li>
         <li class="liSocial" id="liSocial">
-            <a class="entypo-chatBot" id="chatBotButton" onclick="mostrarForm()">
+            <a class="entypo-chatBot" id="chatBotButton" onclick="mostrarForm()" title="Chat">
                 <i class="fas fa-robot"></i>
             </a>
         </li>
@@ -56,6 +50,6 @@
     </div>
     <div class="chat-input">
         <textarea type="text" id="chat-input" name="message" placeholder="Enviar un mensaje..." value=""></textarea>
-        <button type="submit" class="chat-submit" id="chat-submit" onclick="sendMessage()"><i class="bi bi-send-plus-fill"></i></button>
+        <button type="submit" class="chat-submit" id="chat-submit" onclick="sendMessage()" title="Envia mensaje"><i class="bi bi-send-plus-fill"></i></button>
     </div>
 </div>

@@ -60,12 +60,6 @@
                                 </a>
                             </li>
                         {% endif %}
-                        <li class="nav-item">
-                            <a href="{% url 'revision_form' id=id status=status %}" class="nav-link">
-                                <i class="bi bi-folder-fill"></i>
-                                <p>Ver proceso</p>
-                            </a>
-                        </li>
                         <li class="nav-item has-tree-view ">
                             <a href="#" class="nav-link">
                                 <i class="fas fas fa-info-circle"></i>
@@ -83,86 +77,112 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="nav-item has-tree-view menu-open">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-cloud"></i>
-                                <p>Servicios en línea</p>
-                                <p>
-                                    <i class="right fas fa-angle-down"></i>
-                                </p>
+                        <li class="nav-item">
+                            <a href="{% url 'revision_form' id=id status=status %}" class="nav-link">
+                                <i class="bi bi-folder-fill"></i>
+                                <p>Ver proceso</p>
                             </a>
-                            <ul class="nav nav-treeview menu-open">
-                                <li class="nav-item has-tree-view">
-                                    <a href="#" class="nav-link">
-                                        <i class="fas fa-chalkboard"></i>
-                                        <p>Cursos</p>
-                                        <p>
-                                            <i class="right fas fa-angle-down"></i>
-                                        </p>
-                                    </a>
-                                    <ul class="nav nav-treeview menu-open">
-                                        <li class="nav-item">
-                                            <a href="{% url 'misCursos' id=id status=status %}" class="nav-link">
-                                                <i class="nav-icon fas fa-book-open"></i>
-                                                <p>Mis Cursos</p>
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="{% url 'horarioEstudiante' id=id status=status %}" class="nav-link">
-                                                <i class="nav-icon fas fa-clock"></i>
-                                                <p>Horario</p>
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="{% url 'planEstudio' id=id status=status %}" class="nav-link">
-                                                <i class="nav-icon fas fa-scroll"></i>
-                                                <p>Plan de Estudio</p>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{% url 'matricula' id=id status=status %}" class="nav-link">
-                                        <i class="nav-icon fas fa-edit"></i>
-                                        <p>Matricula</p>
-                                    </a>
-                                </li>
-                            </ul>
                         </li>
-                        <li class="nav-item has-tree-view ">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-file-alt"></i>
-                                <p>Trámites</p>
-                                <p>
-                                    <i class="right fas fa-angle-down"></i>
-                                </p>
+                        
+                        {% if status == 1 %}
+                            <li class="nav-item has-tree-view menu-open">
+                                <a href="#" class="nav-link">
+                                    <i class="fas fa-cloud"></i>
+                                    <p>Servicios en línea</p>
+                                    <p>
+                                        <i class="right fas fa-angle-down"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview menu-open">
+                                    <li class="nav-item has-tree-view">
+                                        <a href="#" class="nav-link">
+                                            <i class="fas fa-chalkboard"></i>
+                                            <p>Cursos</p>
+                                            <p>
+                                                <i class="right fas fa-angle-down"></i>
+                                            </p>
+                                        </a>
+                                        <ul class="nav nav-treeview menu-open">
+                                            <li class="nav-item">
+                                                <a href="{% url 'misCursos' id=id status=status %}" class="nav-link">
+                                                    <i class="nav-icon fas fa-book-open"></i>
+                                                    <p>Mis Cursos</p>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="{% url 'horarioEstudiante' id=id status=status %}" class="nav-link">
+                                                    <i class="nav-icon fas fa-clock"></i>
+                                                    <p>Horario</p>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="{% url 'planEstudio' id=id status=status %}" class="nav-link">
+                                                    <i class="nav-icon fas fa-scroll"></i>
+                                                    <p>Plan de Estudio</p>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{% url 'matricula' id=id status=status %}" class="nav-link">
+                                            <i class="nav-icon fas fa-edit"></i>
+                                            <p>Matricula</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="nav-item has-tree-view ">
+                                <a href="#" class="nav-link">
+                                    <i class="fas fa-file-alt"></i>
+                                    <p>Trámites</p>
+                                    <p>
+                                        <i class="right fas fa-angle-down"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview menu-open">
+                                    <li class="nav-item">
+                                        <a href="{% url 'suficiencia' id=id status=status %}"  class="nav-link">
+                                            <i class="fa-solid fa-handshake-angle"></i>
+                                            <p>Suficiencia</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="nav-item has-tree-view ">
+                                <a href="#" class="nav-link">
+                                    <i class="fas fa-money-bill"></i>
+                                    <p>Financiero</p>
+                                    <p>
+                                        <i class="right fas fa-angle-down"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview menu-open">
+                                    <li class="nav-item">
+                                        <a href="{% url 'estadoCuentaEstudiante' id=id status=status %}"  class="nav-link">
+                                            <i class="fas fa-list-alt"></i>
+                                            <p>Estado de Cuenta</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        {% endif %}
+                        {% if status == 2 %}
+                        <li class="nav-item">
+                            <a href="{% url 'ubicacion' id=id status=status %}" class="nav-link">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <p>Profesor</p>
                             </a>
-                            <ul class="nav nav-treeview menu-open">
-                                <li class="nav-item">
-                                    <a href="{% url 'suficiencia' id=id status=status %}"  class="nav-link">
-                                        <i class="fa-solid fa-handshake-angle"></i>
-                                        <p>Suficiencia</p>
-                                    </a>
-                                </li>
-                            </ul>
                         </li>
-                        <li class="nav-item has-tree-view ">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-money-bill"></i>
-                                <p>Financiero</p>
-                                <p>
-                                    <i class="right fas fa-angle-down"></i>
-                                </p>
+                        {% endif %}
+
+                        {% if status == 3 %}
+                        <li class="nav-item">
+                            <a href="{% url 'ubicacion' id=id status=status %}" class="nav-link">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <p>Estudiante/Profesor</p>
                             </a>
-                            <ul class="nav nav-treeview menu-open">
-                                <li class="nav-item">
-                                    <a href="{% url 'estadoCuentaEstudiante' id=id status=status %}"  class="nav-link">
-                                        <i class="fas fa-list-alt"></i>
-                                        <p>Estado de Cuenta</p>
-                                    </a>
-                                </li>
-                            </ul>
                         </li>
+                        {% endif %}
                         <li class="nav-item">
                             <a href="{% url 'ubicacion' id=id status=status %}" class="nav-link">
                                 <i class="fas fa-map-marker-alt"></i>
@@ -221,12 +241,14 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="nav-item has-tree-view ">
-                            <a href="https://erp.uia.ac.cr/jobs" target="_blank" class="nav-link">
-                                <i class="fas fa-briefcase"></i>
-                                <p>Bolsa de Empleo</p>
-                            </a>
-                        </li>
+                        {% if status == 1 %}
+                            <li class="nav-item has-tree-view ">
+                                <a href="https://erp.uia.ac.cr/jobs" target="_blank" class="nav-link">
+                                    <i class="fas fa-briefcase"></i>
+                                    <p>Bolsa de Empleo</p>
+                                </a>
+                            </li>
+                        {% endif %}
                         <li class="nav-item sidebar-bottom">
                             <a href="{% url 'logout' %}" class="nav-link">
                                 <i class="fa fa-power-off"></i>
