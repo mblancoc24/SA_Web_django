@@ -1113,7 +1113,6 @@ class PaymentEstudiante(LoginRequiredMixin, View):
         context = self.get_context_data(**kwargs)
         return render(request, self.template_name, context)
     
-    
 class HorarioPlanDeEstudioView(LoginRequiredMixin):
     context_object_name = 'horarioCursoPlan'
     template_name = 'Dashboard/Estudiante/planEstudio.html'

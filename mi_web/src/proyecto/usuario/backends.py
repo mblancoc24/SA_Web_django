@@ -41,7 +41,7 @@ class MicrosoftGraphBackend(BaseBackend):
                         estudiante_usuario = get_student(id_user)
                         estudiante_usuario["tipo"] = "estudiante"
                         request.session['user_info'] = estudiante_usuario
-                    elif tipo_user == 'Profesores':
+                    elif tipo_user == 'Profesor':
                         profesor_usuario = get_professor(id_user)
                         request.session['user_info'] = profesor_usuario
                         try:
@@ -75,7 +75,7 @@ class MicrosoftGraphBackend(BaseBackend):
                         user.backend = 'django.contrib.auth.backends.ModelBackend'
                         save_profile_processes.save_user_status(request, datos_estados)
                         return user
-                elif tipo_user == 'Profesores':
+                elif tipo_user == 'Profesor':
                     profesor_usuario = get_professor(id_user)
                     user = User.objects.create_user(username=profesor_usuario.get('identificacion'), email=email, first_name=name, last_name=lastname)
                     if user is not None:
