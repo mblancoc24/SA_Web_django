@@ -833,6 +833,26 @@ aside.accesibilidad.active {
   }
 }
 
+@media (max-width: 568px) and (max-height: 575px) {
+  #cardFormularios {
+    width: 300px;
+  }
+
+  .sidebar-bottom {
+    width: 225px;
+  }
+}
+
+@media (max-height: 720px) {
+  .sidebar-bottom {
+    width: 235px;
+  }
+}
+@media (max-height: 915px) {
+  .sidebar-bottom {
+    width: 235px;
+  }
+}
 @media (min-width: 576px) and (max-width: 767px) {
   .cardPerfilCol {
     width: 100%;
@@ -1178,3 +1198,9 @@ input:focus {
 .pass{
   width: 56px;
 }
+.skiptranslate {
+  color: white !important;
+  }
+.skiptranslate a {
+  color: white !important;
+  }
