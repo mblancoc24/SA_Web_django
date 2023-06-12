@@ -94,6 +94,7 @@ function googleTranslateElementInit() {
     const googleTranslateSelect = document.querySelector('.goog-te-combo');
     googleTranslateSelect.classList.add('google-translate-select');
     googleTranslateSelect.classList.add('form-select');
+    $('#skiptranslate').text('Hola');
   }
 
   // Load the Google Translate API script
