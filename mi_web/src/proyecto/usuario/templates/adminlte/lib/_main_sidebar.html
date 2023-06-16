@@ -235,6 +235,15 @@
                                 </li>
                             </ul>
                         </li>
+                        {% if status == 2 %}
+                        <li class="nav-item">
+                            <a href="{% url 'usuario_prospecto' id=id status=status %}" class="nav-link">
+                                <i class="fa-solid fa-graduation-cap"></i>
+                                <p>Estudiar en UIA</p>
+                            </a>
+                        </li>
+                        {% endif %}
+
                         {% if status == 1 or status == 2  or status == 3 %}
                             <li class="nav-item has-tree-view ">
                                 <a href="https://erp.uia.ac.cr/jobs" target="_blank" class="nav-link">
