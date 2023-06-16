@@ -43,12 +43,13 @@
                                             {% url 'estudiante' type=type id=id status=status %}
                                         {% elif status == 4 %}
                                             {% url 'usuario_prospecto' type=type id=id status=status %}
-                                        {% else %}
+                                        {% elif status == 2 %}
                                             {% url 'profesor' type=type id=id status=status %}
                                         {% endif %}
                                         " class="nav-link" onclick="ocultar()">
                                     <i class="fas fa-home"></i>
                                     <p>Inicio</p>
+                                    <p>{{ type }}{{ status }}</p>
                                 </a>
                             </li>
                         <li class="nav-item has-tree-view ">
@@ -237,7 +238,7 @@
                         </li>
                         {% if status == 2 %}
                         <li class="nav-item">
-                            <a href="{% url 'usuario_prospecto' id=id status=status %}" class="nav-link">
+                            <a href="{% url 'usuario_prospecto' type=type id=id status=status %}" class="nav-link">
                                 <i class="fa-solid fa-graduation-cap"></i>
                                 <p>Estudiar en UIA</p>
                             </a>

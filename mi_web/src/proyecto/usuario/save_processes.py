@@ -162,7 +162,7 @@ class save_profile_processes():
             datos_estados = [user.username, user_s.activo,
                              user_s.moroso, user_s.form, value, user_s.matricula]
         elif data == 'matricula':
-            datos_estados = [user.username, user_s.activo,
+            datos_estados = [user_s.identificacion, user_s.activo,
                              user_s.moroso, user_s.form, user_s.prematricula, value]
 
         form = FormularioUserStatus({'identificacion': datos_estados[0], 'activo': datos_estados[1], 'moroso': datos_estados[2],

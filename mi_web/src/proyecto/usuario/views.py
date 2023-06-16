@@ -1288,7 +1288,6 @@ class Ubicacion(LoginRequiredMixin):
         elif type == "profesor":
             return render(request, 'Dashboard/Componentes/ubicacion.html', context)
         
-    
 class EnvioPrematricula(LoginRequiredMixin, View):
     context_object_name = 'envioPrematricula'
     template_name = 'Dashboard/Estudiante/planEstudio.html'
@@ -1389,8 +1388,7 @@ class Terminos(LoginRequiredMixin):
             return render(request, 'Dashboard/Componentes/TerminosCondiciones.html', context)
         elif type == "profesor":
             return render(request, 'Dashboard/Componentes/TerminosCondiciones.html', context)
-        
-
+    
 class EnvioDeConsultas(LoginRequiredMixin): 
     context_object_name = 'envioDeConsultas'
     def envioDeConsultas(request,type, id, status):
