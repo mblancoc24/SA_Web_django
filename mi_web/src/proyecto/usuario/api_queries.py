@@ -118,9 +118,7 @@ def get_professor(id):
         print('Error al cerrar la sesión')
         return False
     
-def enviar_data_odoo(request, data):
-    user = request.user
-    prospecto_user = get_object_or_404(prospecto, identificacion=user.username)
+def enviar_data_odoo(request, data, prospecto_user):
     url = 'http://192.168.11.196:8062/create_prospecto'
     data = {
         "identificacion": prospecto_user.identificacion,

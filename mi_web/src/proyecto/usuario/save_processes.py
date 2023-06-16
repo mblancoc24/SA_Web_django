@@ -124,57 +124,16 @@ class save_profile_processes():
             return False
 
     def update_user_prospecto(data):
-        user = User.objects.filter(username=data[0])
-        usuario1 = None
-        usuario2 = None
+        user = User.objects.get(username=data[0])
+        
+        user.email = data[1]
+        user.is_active = True
+        user.password = 'Soporteti1818$'
+        user.save()
 
-        for index, usuario in enumerate(user):
-            if index == 0:
-                usuario1 = {
-                    'id': usuario.id,
-                    'username': usuario.username,
-                    'email': usuario.email,
-                    'first_name': usuario.first_name,
-                    'last_name': usuario.last_name
-                }
-            else:
-                usuario2 = {
-                    'id': usuario.id,
-                    'username': usuario.username,
-                    'email': usuario.email,
-                    'first_name': usuario.first_name,
-                    'last_name': usuario.last_name
-                }
-
-        if usuario1 is not None and usuario2 is not None:
-            try:
-                prospecto_user1 = get_object_or_404(
-                    prospecto, correo_personal=usuario1["email"])
-                if prospecto_user1 is not None:
-                    prospecto_user1.delete()
-                    user = User.objects.get(email=usuario1["email"])
-                    user.delete()
-            except:
-                try:
-                    prospecto_user2 = get_object_or_404(
-                        prospecto, correo_personal=usuario2["email"])
-                    if prospecto_user2 is not None:
-                        prospecto_user2.delete()
-                        user = User.objects.get(email=usuario2["email"])
-                        user.delete()
-
-                except:
-                    return False
-        elif usuario1 is not None:
-            user = User.objects.get(email=usuario1["email"])
-            user.email = data[1]
-            user.is_active = True
-            user.password = 'Soporteti1818$'
-            user.save()
-
-            user_prospecto = prospecto.objects.get(id_prospecto=user.username)
-            user_prospecto.delete()
-            return True
+        user_prospecto = get_object_or_404(prospecto, identificacion=user.username)
+        user_prospecto.delete()
+        return True
 
     def save_user_status(request, data):
         form = FormularioUserStatus({'identificacion': data[0], 'activo': data[1], 'moroso': data[2],
@@ -214,7 +173,6 @@ class save_profile_processes():
             return True
         else:
             return False
-
 
 def payment_update_user_prospecto(request, id):
     user = User.objects.filter(username=id)
