@@ -227,7 +227,7 @@ def get_urls(request):
     
 def update_urls(request, url_dspace, type):
     user = request.user
-    url = 'http://192.168.8.134:8000/update-urls-student/'
+    url = 'http://192.168.8.165:8000/update-urls-student/'
     data = {
         'data':{
             'id': user.username,
