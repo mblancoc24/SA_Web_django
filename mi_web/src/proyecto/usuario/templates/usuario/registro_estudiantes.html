@@ -19,24 +19,24 @@
                   Personal</a>
               </li>
               <li class="nav-item tab-list__item">
-                <a class="next-step step-tab1 tab-list__link nav-link disabled" id="direccionUl" data-bs-toggle="pill"
+                <a class="next-step step-tab1 tab-list__link nav-link " id="direccionUl" data-bs-toggle="pill"
                   href="#direccionP">Dirección</a>
               </li>
               <li class="nav-item tab-list__item">
-                <a class="next-step step-tab1 tab-list__link nav-link disabled" id="correoUl" data-bs-toggle="pill"
+                <a class="next-step step-tab1 tab-list__link nav-link " id="correoUl" data-bs-toggle="pill"
                   href="#correoP">Correo</a>
               </li>
               <li class="nav-item tab-list__item">
-                <a class="next-step step-tab1 tab-list__link nav-link disabled" onclick="llamarFunciones()" id="validarUl" data-bs-toggle="pill"
-                  href="#validarP">Validar</a>
+                <a class="next-step step-tab1 tab-list__link nav-link " onclick="llamarFunciones()" id="validarUl"
+                  data-bs-toggle="pill" href="#validarP">Validar</a>
               </li>
             </ul>
           </div>
           <div class="tab-content mt-4">
-            <div class="tab-pane container active" id="datosP">
+            <div class="tab-pane container fade show active" id="datosP">
               <div class="row">
-                <div class="form-floating col-md-6">
-                  <select id="tipo" class="form-select form-select-sm mb-3" onchange="change();">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-3">
+                  <select id="tipo" class="form-select" onchange="change();">
                     <option style="opacity: .65;" value="" disabled selected hidden>Tipo de identificación
                     </option>
                     <option value="Cédula">Cédula Física</option>
@@ -46,99 +46,53 @@
                     <option value="Permiso">Permiso de Trabajo</option>
                     <option value="Refugiado">Refugiado</option>
                   </select>
-                  <label for="tipo" style="opacity: .65;">Tipo de identificación</label>
                 </div>
-                <div class="form-floating mb-3 col-md-6">
+                <div class="form-floating mb-3 col-12 col-sm-12 col-md-6 col-lg-6">
                   <div class="input-group">
-                    <span class="input-group-text" id="basic-addon1">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="43" fill="currentColor"
-                        class="bi bi-person-vcard" viewBox="0 0 16 16">
-                        <path
-                          d="M5 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm4-2.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5ZM9 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4A.5.5 0 0 1 9 8Zm1 2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5Z">
-                        </path>
-                        <path
-                          d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2ZM1 4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H8.96c.026-.163.04-.33.04-.5C9 10.567 7.21 9 5 9c-2.086 0-3.8 1.398-3.984 3.181A1.006 1.006 0 0 1 1 12V4Z">
-                        </path>
-                      </svg>
-                    </span>
-                    <input type="text" class="form-control " id="identificacion" placeholder="Identificación"
+                    <span class="input-group-text d-flex justify-content-center fas fa-regular fa-address-card fa-lg"
+                      id="basic-addon1"></span>
+                    <input type="text" class="form-control" id="identificacion" placeholder="Identificación"
                       name="username" onkeyup="datacedula()" disabled required>
                   </div>
                 </div>
               </div>
               <div class="row">
-                <div class="form-floating mb-3 col-md-4">
+                <div class="form-floating mb-3 col-12 col-sm-12 col-md-4 col-lg-4">
                   <div class="input-group">
-                    <span class="input-group-text " id="basic-addon1">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="43" fill="currentColor"
-                        class="bi bi-person-fill-add" viewBox="0 0 16 16">
-                        <path
-                          d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0Zm-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z">
-                        </path>
-                        <path
-                          d="M2 13c0 1 1 1 1 1h5.256A4.493 4.493 0 0 1 8 12.5a4.49 4.49 0 0 1 1.544-3.393C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4Z">
-                        </path>
-                      </svg>
-                    </span>
+                    <span class="input-group-text d-flex justify-content-center fas fa-regular fa-user-plus fa-lg"
+                      id="basic-addon1"></span>
                     <input type="text" class="form-control" id="nombre" placeholder="Nombre" name="first_name" readonly
                       required>
                   </div>
                 </div>
-                <div class="form-floating mb-3 col-md-4">
+                <div class="form-floating mb-3 col-12 col-sm-12 col-md-4 col-lg-4">
                   <div class="input-group">
-                    <span class="input-group-text " id="basic-addon1">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="43" fill="currentColor"
-                        class="bi bi-person-fill-add" viewBox="0 0 16 16">
-                        <path
-                          d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0Zm-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z">
-                        </path>
-                        <path
-                          d="M2 13c0 1 1 1 1 1h5.256A4.493 4.493 0 0 1 8 12.5a4.49 4.49 0 0 1 1.544-3.393C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4Z">
-                        </path>
-                      </svg>
-                    </span>
+                    <span class="input-group-text d-flex justify-content-center fas fa-regular fa-user-plus fa-lg"
+                      id="basic-addon1"></span>
                     <input type="text" class="form-control" id="primerapellido" placeholder="Primer Apellido"
                       name="last_name" readonly required>
                   </div>
                 </div>
-                <div class="form-floating mb-3 col-md-4">
+                <div class="form-floating mb-3 col-12 col-sm-12 col-md-4 col-lg-4">
                   <div class="input-group">
-                    <span class="input-group-text " id="basic-addon1">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="43" fill="currentColor"
-                        class="bi bi-person-fill-add" viewBox="0 0 16 16">
-                        <path
-                          d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0Zm-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z">
-                        </path>
-                        <path
-                          d="M2 13c0 1 1 1 1 1h5.256A4.493 4.493 0 0 1 8 12.5a4.49 4.49 0 0 1 1.544-3.393C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4Z">
-                        </path>
-                      </svg>
-                    </span>
+                    <span class="input-group-text d-flex justify-content-center fas fa-regular fa-user-plus fa-lg"
+                      id="basic-addon1"></span>
                     <input type="text" class="form-control" id="segundoapellido" placeholder="Segundo Apellido"
                       name="segundoapellido" readonly required>
                   </div>
                 </div>
               </div>
               <div class="row">
-                <div class="form-floating  mb-3 col-md-6" id="dis_nacimiento" style="display: block;">
+                <div class="form-floating  mb-3 col-12 col-sm-12 col-md-6 col-lg-6" id="dis_nacimiento"
+                  style="display: block;">
                   <div class="input-group">
-                    <span class="input-group-text" id="basic-addon1">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="43" fill="currentColor"
-                        class="bi bi-calendar-week" viewBox="0 0 16 16">
-                        <path
-                          d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm-5 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z">
-                        </path>
-                        <path
-                          d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z">
-                        </path>
-                      </svg>
-                    </span>
-                    <label for="fechanacimiento"></label>
+                    <span class="input-group-text fas fa-solid fa-calendar-days fa-lg d-flex justify-content-center"
+                      id="basic-addon1"></span>
                     <input class="form-control flatpickr flatpickr-input active" data-id="datetime" id="fechanacimiento"
                       readonly="readonly" placeholder="Fecha de nacimiento. dd/mm/yyyy" name="fechanacimiento" />
                   </div>
                 </div>
-                <div class="form-floating mb-3 col-md-6" id="dis_genero" style="display: block;">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-3" id="dis_genero" style="display: block;">
                   <select id="genero" class="form-select" name="Genero_select" data-placeholder="Genero"
                     onchange="checkOtro()">
                     <option style="opacity: 0.65" value="" disabled selected hidden>Genero</option>
@@ -147,52 +101,34 @@
                     <option value="no_decirlo">Prefiero no decirlo</option>
                     <option value="otro">Otro</option>
                   </select>
-                  <label for="tipo" style="opacity: .65;">Genero</label>
                   <input type="hidden" value="NA" id="otro_trato" name="trato">
                   <input type="hidden" value="NA" id="otro_sexo" name="sexo2">
                 </div>
               </div>
               <div class="row">
-                <div class="form-floating mb-3 col-md-4" id="dis_telefono" style="display: block;">
+                <div class="form-floating mb-3 col-12 col-sm-12 col-md-4 col-lg-4" id="dis_telefono"
+                  style="display: block;">
                   <div class="input-group">
-                    <span class="input-group-text" id="basic-addon1">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="43" fill="currentColor"
-                        class="bi bi-telephone-plus" viewBox="0 0 16 16">
-                        <path
-                          d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z">
-                        </path>
-                        <path fill-rule="evenodd"
-                          d="M12.5 1a.5.5 0 0 1 .5.5V3h1.5a.5.5 0 0 1 0 1H13v1.5a.5.5 0 0 1-1 0V4h-1.5a.5.5 0 0 1 0-1H12V1.5a.5.5 0 0 1 .5-.5z">
-                        </path>
-                      </svg>
-                    </span>
+                    <i class="fa-solid fa-phone-plus"></i>
+                    <span class="input-group-text d-flex justify-content-center fas fa-solid fa-phone fa-lg"
+                      id="basic-addon1"></span>
                     <input type="text" class="form-control" id="telefono" placeholder="Número Telefónico"
                       name="telefono">
                   </div>
                 </div>
-                <div class="form-floating mb-3 col-md-4" id="dis_telefono2" style="display: block;">
+                <div class="form-floating mb-3 col-12 col-sm-12 col-md-4 col-lg-4" id="dis_telefono2"
+                  style="display: block;">
                   <div class="input-group">
-                    <span class="input-group-text" id="basic-addon1">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="43" fill="currentColor"
-                        class="bi bi-telephone-plus" viewBox="0 0 16 16">
-                        <path
-                          d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z">
-                        </path>
-                        <path fill-rule="evenodd"
-                          d="M12.5 1a.5.5 0 0 1 .5.5V3h1.5a.5.5 0 0 1 0 1H13v1.5a.5.5 0 0 1-1 0V4h-1.5a.5.5 0 0 1 0-1H12V1.5a.5.5 0 0 1 .5-.5z">
-                        </path>
-                      </svg>
-                    </span>
+                    <span class="input-group-text d-flex justify-content-center fas fa-solid fa-phone fa-lg"
+                      id="basic-addon1"></span>
                     <input type="text" class="form-control" id="telefono2" placeholder="Segundo Número Telefónico"
                       name="telefono2">
                   </div>
                 </div>
-                <div class="form-floating mb-3 col-md-4" id="dis_pais" style="display: block;">
-                  <select id="pais_select" class="form-select" onchange="obtenerPais(this)" name="pais_select"
-                    data-placeholder="Seleccione Nacionalidad" onclick="cargarPais()">
-                    <option style="opacity: 0.65" value="" disabled selected hidden>Seleccione Nacionalidad</option>
+                <div class="col-md-4 mb-3" id="dis_pais" style="display: block;">
+                  <select id="pais_select" class="form-select select2" onchange="obtenerPais(this)" name="pais_select"
+                    data-placeholder="Seleccione Nacionalidad">
                   </select>
-                  <label for="tipo" style="opacity: .65;">Nacionalidad</label>
                   <input type="hidden" id="pais" name="pais">
                 </div>
               </div>
@@ -202,48 +138,36 @@
                 </a>
               </div>
             </div>
-            <div class="tab-pane container fade" id="direccionP">
+            <div class="tab-pane container fade show" id="direccionP">
               <div class="row">
-                <div class="form-floating mb-3 col-md-4" id="dis_provincia" style="display: block;">
+                <div class="mb-3 col-12 col-sm-12 col-md-4 col-lg-4" id="dis_provincia" style="display: block;">
                   <select id="provincia_select" class="form-select" name="provincia_select"
                     data-placeholder="Selecione Provincia" onchange="obtenerProvincia(this)"
                     onclick="cargarProvincias()">
                     <option style="opacity: 0.65" value="" disabled selected hidden>Seleccione Provincia</option>
                   </select>
-                  <label for="tipo" style="opacity: .65;">Provincia</label>
                   <input type="hidden" id="provincia" name="provincia">
                 </div>
-                <div class="form-floating mb-3 col-md-4" id="dis_canton" style="display: block;">
+                <div class="mb-3 col-12 col-sm-12 col-md-4 col-lg-4" id="dis_canton" style="display: block;">
                   <select id="canton_select" class="form-select" name="canton_select"
                     data-placeholder="Selecione Canton" onchange="obtenerCanton(this)">
                     <option style="opacity: 0.65" value="" disabled selected hidden>Seleccione Cantón</option>
                   </select>
-                  <label for="tipo" style="opacity: .65;">Cantón</label>
                   <input type="hidden" id="canton" name="canton">
                 </div>
-                <div class="form-floating mb-3 col-md-4" id="dis_distrito" style="display: block;">
+                <div class="mb-3 col-12 col-sm-12 col-md-4 col-lg-4" id="dis_distrito" style="display: block;">
                   <select id="distrito_select" class="form-select" name="distrito_select"
                     data-placeholder="Selecione Distrito" onchange="obtenerDistrito(this)">
                     <option style="opacity: 0.65" value="" disabled selected hidden>Seleccione Distrito</option>
                   </select>
-                  <label for="tipo" style="opacity: .65;">Distrito</label>
                   <input type="hidden" id="distrito" name="distrito">
                 </div>
               </div>
               <div class="row">
-                <div class="form-floating mb-3 col-md-12">
+                <div class="form-floating mb-3 col-12 col-sm-12 col-md-12 col-lg-12">
                   <div class="input-group">
-                    <span class="input-group-text" id="basic-addon1">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="43" fill="currentColor"
-                        class="bi bi-person-vcard" viewBox="0 0 16 16">
-                        <path
-                          d="M5 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm4-2.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5ZM9 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4A.5.5 0 0 1 9 8Zm1 2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5Z">
-                        </path>
-                        <path
-                          d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2ZM1 4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H8.96c.026-.163.04-.33.04-.5C9 10.567 7.21 9 5 9c-2.086 0-3.8 1.398-3.984 3.181A1.006 1.006 0 0 1 1 12V4Z">
-                        </path>
-                      </svg>
-                    </span>
+                    <span class="input-group-text d-flex justify-content-center fas fa-solid fa-address-book fa-xl"
+                      id="basic-addon1"></span>
                     <input type="text" class="form-control " id="direccion_exacta" placeholder="Direccion Exacta"
                       name="direccion_exacta" required>
                   </div>
@@ -256,53 +180,35 @@
                   id="botonSiguienteDireccionP" onclick="mostrarSiguiente()"></a>
               </div>
             </div>
-            <div class="tab-pane container fade" id="correoP">
+            <div class="tab-pane container fade show" id="correoP">
               <div class="row">
-                <div class="form-floating mb-3 col-md-4" id="dis_correo" style="display: block;">
+                <div class="form-floating mb-3 col-12 col-sm-12 col-md-4 col-lg-4" id="dis_correo"
+                  style="display: block;">
                   <div class="input-group">
-                    <span class="input-group-text" id="basic-addon1">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="43" fill="currentColor"
-                        class="bi bi-envelope-plus" viewBox="0 0 16 16">
-                        <path
-                          d="M2 2a2 2 0 0 0-2 2v8.01A2 2 0 0 0 2 14h5.5a.5.5 0 0 0 0-1H2a1 1 0 0 1-.966-.741l5.64-3.471L8 9.583l7-4.2V8.5a.5.5 0 0 0 1 0V4a2 2 0 0 0-2-2H2Zm3.708 6.208L1 11.105V5.383l4.708 2.825ZM1 4.217V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v.217l-7 4.2-7-4.2Z">
-                        </path>
-                        <path
-                          d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Zm-3.5-2a.5.5 0 0 0-.5.5v1h-1a.5.5 0 0 0 0 1h1v1a.5.5 0 0 0 1 0v-1h1a.5.5 0 0 0 0-1h-1v-1a.5.5 0 0 0-.5-.5Z">
-                        </path>
-                      </svg>
-                    </span>
+                    <span class="input-group-text d-flex justify-content-center fas fa-regular fa-envelope fa-lg"
+                      id="basic-addon1"></span>
                     <input type="email" class="form-control" id="correo" placeholder="Correo" name="email" required
                       pattern="(?![_.-])((?![_.-][_.-])[a-zA-Z\d_.-]){0,63}[a-zA-Z\d]@((?!-)((?!--)[a-zA-Z\d-]){0,63}[a-zA-Z\d]\.){1,2}([a-zA-Z]{2,14}\.)?[a-zA-Z]{2,14}">
                   </div>
                 </div>
-                <div class="form-floating mb-3 col-md-4" id="dis_contrasena" style="display: block;">
+                <div class="form-floating mb-3 col-12 col-sm-12 col-md-4 col-lg-4" id="dis_contrasena"
+                  style="display: block;">
                   <div class="input-group mb-3 input-group-lg">
-                    <span class="input-group-text" id="basic-addon1">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="38" fill="currentColor"
-                        class="bi bi-pass-fill" viewBox="0 0 16 16">
-                        <path
-                          d="M10 0a2 2 0 1 1-4 0H3.5A1.5 1.5 0 0 0 2 1.5v13A1.5 1.5 0 0 0 3.5 16h9a1.5 1.5 0 0 0 1.5-1.5v-13A1.5 1.5 0 0 0 12.5 0H10ZM4.5 5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1Zm0 2h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1 0-1Z">
-                        </path>
-                      </svg>
-                    </span>
+                    <span class="input-group-text d-flex justify-content-center fas fa-lock fa-lg"
+                      id="basic-addon1"></span>
                     <input type="password" class="form-control" id="password1" placeholder="Contraseña" name="password1"
                       required>
                   </div>
                 </div>
-                <div class="form-floating mb-3 col-md-4" id="dis_confirmar" style="display: block;">
+                <div class="form-floating mb-3 col-12 col-sm-12 col-md-4 col-lg-4" id="dis_confirmar"
+                  style="display: block;">
                   <div class="input-group mb-3 input-group-lg">
-                    <span class="input-group-text" id="basic-addon1">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="38" fill="currentColor"
-                        class="bi bi-pass-fill" viewBox="0 0 16 16">
-                        <path
-                          d="M10 0a2 2 0 1 1-4 0H3.5A1.5 1.5 0 0 0 2 1.5v13A1.5 1.5 0 0 0 3.5 16h9a1.5 1.5 0 0 0 1.5-1.5v-13A1.5 1.5 0 0 0 12.5 0H10ZM4.5 5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1Zm0 2h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1 0-1Z">
-                        </path>
-                      </svg>
+                    <span class="input-group-text d-flex justify-content-center fas fa-lock fa-lg" id="basic-addon1">
                     </span>
                     <input type="password" class="form-control" id="password2" placeholder="Confirmar contraseña"
                       name="password2" required>
                   </div>
-                  
+
                 </div>
                 <span id='message'></span>
               </div>
@@ -314,28 +220,32 @@
                 </a>
               </div>
             </div>
-            <div class="tab-pane container fade" id="validarP">
+            <div class="tab-pane container fade show" id="validarP">
               <div class="row">
-                <div class="col-md-12 ">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12 ">
                   <h5 class="card-title text-center mb-4 fw-light fw-bold">Se envió al correo un código de verificación
                     para registrarse</h5>
                   <div class="d-flex justify-content-center">
-                    <div class="mb-3 col-1 m-1" id="Código1" style="display: block;">
-                      <input type="text" class="form-control" id="input1" maxlength="1" onkeyup="moverInput(event, 2)" required>
+                    <div class="mb-3 col-1 col-sm-1 col-md-1 col-lg-1 m-1" id="Código1" style="display: block;">
+                      <input type="text" class="form-control" id="input1" maxlength="1" onkeyup="moverInput(event, 2)"
+                        required>
                     </div>
-                    <div class="mb-3 col-1 m-1" id="Código2" style="display: block;">
-                      <input type="text" class="form-control" id="input2" maxlength="1" onkeyup="moverInput(event, 3)" required>
+                    <div class="mb-3 col-1 col-sm-1 col-md-1 col-lg-1 m-1" id="Código2" style="display: block;">
+                      <input type="text" class="form-control" id="input2" maxlength="1" onkeyup="moverInput(event, 3)"
+                        required>
                     </div>
-                    <div class="mb-3 col-1 m-1" id="Código3" style="display: block;">
-                      <input type="text" class="form-control" id="input3" maxlength="1" onkeyup="moverInput(event, 4)" required>
+                    <div class="mb-3 col-1 col-sm-1 col-md-1 col-lg-1 m-1" id="Código3" style="display: block;">
+                      <input type="text" class="form-control" id="input3" maxlength="1" onkeyup="moverInput(event, 4)"
+                        required>
                     </div>
-                    <div class="mb-3 col-1 m-1" id="Código4" style="display: block;">
-                      <input type="text" class="form-control" id="input4" maxlength="1" oninput="verificarCodigo()" required>
+                    <div class="mb-3 col-1 col-sm-1 col-md-1 col-lg-1 m-1" id="Código4" style="display: block;">
+                      <input type="text" class="form-control" id="input4" maxlength="1" oninput="verificarCodigo()"
+                        required>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="d-flex justify-content-between">
+              <div class="d-flex flex-row justify-content-between align-items-center">
                 <a type="button" class="btn btn-md btn-primary btn-login fw-bold fas fa-regular fa-arrow-left"
                   id="botonAnteriorCorreoP" onclick="mostrarAnterior()"></a>
                 <button type="submit" class="btn btn-md btn-primary btn-login fw-bold bi bi-save disabled"
@@ -398,7 +308,84 @@
   </div>
 </div>
 {% endblock modal_inclusivo %}
+<style>
+  .select2-selection__rendered {
+    line-height: 31px !important;
+  }
 
+  .select2-container .select2-selection--single {
+    height: 56px !important;
+  }
+
+  .select2-selection__arrow {
+    height: 34px !important;
+  }
+
+  @media (max-width: 319px) {
+    .d-flex {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .mb-3 {
+      margin-bottom: 10px;
+    }
+    .watch .mt-5 {
+      margin-top: 0 !important;
+      /* Anula el margen superior */
+    }
+
+    .my-2 {
+      margin-top: 0 !important;
+    }
+
+    .cardPerfilCol {
+      margin-top: 0 !important;
+      margin-left: -10px;
+      width: 170px;
+    }
+
+.input-group{
+  width: 115px
+}
+    #basic-addon1{
+      margin-left: -35px;
+    }
+
+    .select2-selection__rendered {
+      line-height: 31px !important;
+    }
+
+    .select2-container .select2-selection--single {
+      margin-left: -35px;
+      width: 152px !important;
+    }
+
+    .select2-selection__arrow {
+      height: 34px !important;
+    }
+
+    .tab-list {
+      margin-left: 15px !important;
+    }
+
+    #tipo, #genero, #distrito_select, #provincia_select, #canton_select{
+      margin-left: -35px !important;
+      width: 150px;
+    }
+    #registrarEstudiante{
+      margin-left: 5px !important;
+      font-size: 0;
+      width: 50px;
+    
+    }
+    #registrarEstudiante::before {
+      display: inline-block;
+      font-family: "Font Awesome"; /* Asegúrate de tener la fuente Font Awesome cargada */
+      font-size: 20px; /* Ajusta el tamaño del icono según sea necesario */
+    }
+  }
+</style>
 <script>
   flatpickr("#fechanacimiento", {
     dateFormat: "d/m/Y",

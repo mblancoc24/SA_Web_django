@@ -172,32 +172,27 @@ function cargarDistritos(valor1, valor2) {
 }
 
 var paisCargadas = false;
-
 function cargarPais() {
     if (paisCargadas) {
         return;
     }
-
-    var select = document.getElementById("pais_select");
-
-    select.options.length = 0; // Eliminamos todas las opciones anteriores
-
-    var url = "/obtener-nacionalidad/";
-    var request = new XMLHttpRequest();
-    request.open('GET', url, true);
-    request.onload = function () {
-        if (request.status === 200) {
-            var data = JSON.parse(request.responseText);
-            for (key in data) {
-                var option = document.createElement("option");
-                option.value = key;
-                option.text = data[key];
-                select.add(option);
-            }
+    var select = $('#pais_select');
+    select.empty(); // Eliminamos todas las opciones anteriores
+    var opcionPorDefecto = new Option("Seleccione Nacionalidad", "", true, true);
+    select.append(opcionPorDefecto);
+    fetch("/obtener-nacionalidad/")
+        .then((response) => response.json())
+        .then((data) => {
+            data.forEach(function (valor) {
+                // Creamos una nueva opción y la agregamos al select
+                var opcion = new Option(valor, valor);
+                select.append(opcion);
+            });
             paisCargadas = true;
-        }
-    };
-    request.send();
+            $('#pais_select').select2({
+                width: "100%", // Ancho del dropdown
+            });
+        });
 }
 
 function dataCantones(select) {
@@ -333,6 +328,8 @@ $(document).ready(function () {
     $('#provincia_select, #distrito_select, #canton_select, #direccion_exacta').on('change input', habilitarStep3);
 
     $('#correo, #password1, #password2').on('input', habilitarStep4);
+
+    cargarPais();
 });
 
 function habilitarStep2() {

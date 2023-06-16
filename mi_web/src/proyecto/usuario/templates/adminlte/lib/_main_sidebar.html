@@ -38,28 +38,19 @@
             <ul role="list" class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 {% block nav_links_outer %}
                     {% block nav_links %}
-                        {% if status == 1 %}
                             <li class="nav-item">
-                                <a href="{% url 'estudiante' id=id status=status %}" class="nav-link" onclick="ocultar()">
+                                <a href="{% if status == 1 %}
+                                            {% url 'estudiante' id=id status=status %}
+                                        {% elif status == 4 %}
+                                            {% url 'usuario_prospecto' id=id status=status %}
+                                        {% else %}
+                                            {% url 'profesor' id=id status=status %}
+                                        {% endif %}
+                                        " class="nav-link" onclick="ocultar()">
                                     <i class="fas fa-home"></i>
                                     <p>Inicio</p>
                                 </a>
                             </li>
-                            {% elif status == 4 %}
-                            <li class="nav-item">
-                                <a href="{% url 'usuario_prospecto' id=id status=status %}" class="nav-link">
-                                    <i class="fas fa-home"></i>
-                                    <p>Inicio</p>
-                                </a>
-                            </li>
-                            {% else %}
-                            <li class="nav-item">
-                                <a href="{% url 'profesor' id=id status=status %}" class="nav-link">
-                                    <i class="fas fa-home"></i>
-                                    <p>Inicio</p>
-                                </a>
-                            </li>
-                        {% endif %}
                         <li class="nav-item has-tree-view ">
                             <a href="#" class="nav-link">
                                 <i class="fas fas fa-info-circle"></i>
@@ -165,17 +156,14 @@
                                     </li>
                                 </ul>
                             </li>
-                        {% endif %}
-                        {% if status == 2 %}
+                        {% elif status == 2 %}
                         <li class="nav-item">
                             <a href="{% url 'ubicacion' id=id status=status %}" class="nav-link">
                                 <i class="fas fa-map-marker-alt"></i>
                                 <p>Profesor</p>
                             </a>
                         </li>
-                        {% endif %}
-
-                        {% if status == 3 %}
+                        {% elif status == 3 %}
                         <li class="nav-item">
                             <a href="{% url 'ubicacion' id=id status=status %}" class="nav-link">
                                 <i class="fas fa-map-marker-alt"></i>
@@ -249,7 +237,8 @@
                             </a>
                         </li>
                         {% endif %}
-                        {% if status == 1 %}
+
+                        {% if status == 1 or status == 2  or status == 3 %}
                             <li class="nav-item has-tree-view ">
                                 <a href="https://erp.uia.ac.cr/jobs" target="_blank" class="nav-link">
                                     <i class="fas fa-briefcase"></i>
