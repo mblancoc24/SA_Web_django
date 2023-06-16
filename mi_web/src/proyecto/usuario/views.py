@@ -21,7 +21,7 @@ from django.urls import reverse
 from .backends import MicrosoftGraphBackend
 from .dspace_processes import dspace_processes
 from .save_processes import save_profile_processes
-from .api_queries import enviar_data_odoo, insert_urls, get_urls, update_request
+from .api_queries import enviar_data_odoo, insert_urls, get_urls, update_request, get_professor
 import json
 import base64
 
@@ -92,9 +92,12 @@ def microsoft_auth(request):
                 if user.is_active:
                     login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                     if tipo_user['tipo'] == 'estudiante':
-                        registrar_accion(user, 'El usuario {0} ha ingresado como estudiante.'.format(user.username))
-                        context = {'id': user.username, 'status': 1}
-                        return redirect(reverse('estudiante', kwargs=context))
+                        status = get_object_or_404(user_status, identificacion=user.username)
+                        if status.activo:
+                            registrar_accion(user, 'El usuario {0} ha ingresado como estudiante.'.format(user.username))
+                            context = {'id': user.username, 'status': 1}
+                            return redirect(reverse('estudiante', kwargs=context))
+                        ##AGREGAR INFO
                     
                     elif tipo_user['tipo'] == 'profesor' or tipo_user['tipo'] == 'prospecto/profesor':
                         registrar_accion(user, 'El usuario {0} ha ingresado como profesor.'.format(user.username))
@@ -145,14 +148,17 @@ def microsoft_callback(request):
         
         user = MicrosoftGraphBackend.authenticate(request=request, access_token=access_token)
         tipo_user = request.session.get('user_info')
-        status = get_object_or_404(user_status, identificacion=user.username)
-        if user is not None and tipo_user is not None and status.activo:
+        
+        if user is not None and tipo_user is not None:
             if user.is_active:
                 login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                 if tipo_user['tipo'] == 'estudiante':
-                    registrar_accion(user, 'El usuario {0} ha ingresado como estudiante.'.format(user.username))
-                    context = {'id': user.username, 'status': 1}
-                    return redirect(reverse('estudiante', kwargs=context))
+                    status = get_object_or_404(user_status, identificacion=user.username)
+                    if status.activo:
+                        registrar_accion(user, 'El usuario {0} ha ingresado como estudiante.'.format(user.username))
+                        context = {'id': user.username, 'status': 1}
+                        return redirect(reverse('estudiante', kwargs=context))
+                    ##AGREGAR INFO
                 
                 elif tipo_user['tipo'] == 'profesor' or tipo_user['tipo'] == 'prospecto/profesor':
                     registrar_accion(user, 'El usuario {0} ha ingresado como profesor.'.format(user.username))
@@ -748,6 +754,16 @@ def corregirdata(request):
 def enviar_archivo_a_odoo(request, id, status):
     if request.method == 'POST':
         user = request.user
+
+        if status == 2:
+            prospecto_user = get_professor(user.username)
+            save_profile_processes.save_prospecto(request, list(prospecto_user.values()))
+            prospecto_user = get_object_or_404(prospecto, identificacion=user.username)
+            datos_estados = [prospecto_user.username, True, False, 'NA', False, False]
+            save_profile_processes.save_user_status(request, datos_estados)
+        elif status == 4:
+            prospecto_user = get_object_or_404(prospecto, identificacion=user.username)
+
         
         convalidacion = request.POST.get('convalidacion')
         asesor = request.POST.get('asesor')
@@ -791,7 +807,7 @@ def enviar_archivo_a_odoo(request, id, status):
             
             save_data_dspace.append(request.POST.get('ingreso_economico'))
             
-            save_odoo = enviar_data_odoo(request, save_data_dspace)
+            save_odoo = enviar_data_odoo(request, save_data_dspace, prospecto_user)
             
             save = save_profile_processes.save_documents(request, formulariodata, formulariodocumentos)
 
@@ -1243,7 +1259,7 @@ class Terminos(LoginRequiredMixin):
             }
         return render(request, 'Dashboard/Componentes/TerminosCondiciones.html', context)
 
-class EnvioDeConsultas(LoginRequiredMixin):
+class EnvioDeConsultas(LoginRequiredMixin): 
     context_object_name = 'envioDeConsultas'
     def envioDeConsultas(request, id, status):
         user = request.user

@@ -58,7 +58,7 @@ class profesor(models.Model):
     numero_telefonico2 = models.IntegerField(default=0)
     correo_institucional = models.CharField(max_length=60)
     correo_personal = models.CharField(max_length=60)
-    nacionalidad = models.CharField(max_length=20)
+    nacionalidad = models.CharField(max_length=100)
     provincia = models.CharField(max_length=20)
     canton = models.CharField(max_length=20)
     distrito = models.CharField(max_length=20)
