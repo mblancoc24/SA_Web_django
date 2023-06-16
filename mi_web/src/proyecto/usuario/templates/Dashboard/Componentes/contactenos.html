@@ -74,7 +74,7 @@
                 <div class="col-12 col-lg-12 col-md-12 col-sm-12 order-md-last d-flex align-item-strech h-100">
                     <div class="w-100 p-3 card rounded ">
                         <form method="post" id="contactoForm" name="contactoForm" class="contactoForm p-2"
-                            novalidate="novalidate" action="{% url 'envioConsulta' id=id status=status %}">
+                            novalidate="novalidate" action="{% url 'envioConsulta' type=type id=id status=status %}">
                             {% csrf_token %}
                             <div class="row mb-3">
                                 <fieldset class="border mb-3">

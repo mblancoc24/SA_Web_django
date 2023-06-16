@@ -19,7 +19,7 @@
                         </div>
                         <div class="card-footer text-dark bg-primerIngreso">
                             <div>
-                                <a data-bs-toggle="modal" data-bs-target="#modal_primer_ingreso_instrucciones"
+                                <a id="instrucciones" data-bs-toggle="modal" data-bs-target="#modal_primer_ingreso_instrucciones"
                                     class="card-link">
                                     <i class="bi bi-info-circle" id="infoCardTextModal"> INSTRUCCIONES</i>
                                 </a>
@@ -38,7 +38,7 @@
                         </div>
                         <div class="card-footer bg-posgrado text-dark">
                             <div>
-                                <a data-bs-toggle="modal" data-bs-target="#modal_posgrado_instrucciones"
+                                <a id="instrucciones" data-bs-toggle="modal" data-bs-target="#modal_posgrado_instrucciones"
                                     class="card-link">
                                     <i class="bi bi-info-circle" id="infoCardTextModal">INSTRUCCIONES</i>
                                 </a>
@@ -56,7 +56,7 @@
                         </div>
                         <div class="card-footer bg-CursosLibres text-dark">
                             <div>
-                                <a data-bs-toggle="modal" data-bs-target="#modal_cursos_libres_instrucciones"
+                                <a id="instrucciones" data-bs-toggle="modal" data-bs-target="#modal_cursos_libres_instrucciones"
                                     class="card-link">
                                     <i class="bi bi-info-circle"> INSTRUCCIONES</i>
                                 </a>
@@ -80,7 +80,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="post" action="{% url 'enviar_archivo_a_odoo' id=id status=status %}" enctype="multipart/form-data">
+                <form method="post" action="{% url 'enviar_archivo_a_odoo' type=type id=id status=status %}" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="row ">
                         <div class="form-group col-12 col-sm-6 mb-3 ">

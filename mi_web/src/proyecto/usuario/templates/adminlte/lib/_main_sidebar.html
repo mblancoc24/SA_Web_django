@@ -20,13 +20,13 @@
             </div>
             <div class="info">
                 {% if status == 1 %}
-                <a href="{% url 'perfil' id=id status=status %}" class="d-block">
+                <a href="{% url 'perfil' type=type id=id status=status %}" class="d-block">
                     <i aria-hidden="true"></i> {{ user.first_name }}</a>
                 {% elif status == 4 %}
-                <a href="{% url 'perfil_prospecto' id=id status=status %}" class="d-block">
+                <a href="{% url 'perfil_prospecto' type=type id=id status=status %}" class="d-block">
                     <i  aria-hidden="true"></i> {{ user.first_name }}</a>
                 {% else %}
-                <a href="{% url 'perfil_profesor' id=id status=status %}" class="d-block">
+                <a href="{% url 'perfil_profesor' type=type id=id status=status %}" class="d-block">
                     <i aria-hidden="true"></i> {{ user.first_name }}</a>
                 {% endif %}
             </div>
@@ -40,11 +40,11 @@
                     {% block nav_links %}
                             <li class="nav-item">
                                 <a href="{% if status == 1 %}
-                                            {% url 'estudiante' id=id status=status %}
+                                            {% url 'estudiante' type=type id=id status=status %}
                                         {% elif status == 4 %}
-                                            {% url 'usuario_prospecto' id=id status=status %}
+                                            {% url 'usuario_prospecto' type=type id=id status=status %}
                                         {% else %}
-                                            {% url 'profesor' id=id status=status %}
+                                            {% url 'profesor' type=type id=id status=status %}
                                         {% endif %}
                                         " class="nav-link" onclick="ocultar()">
                                     <i class="fas fa-home"></i>
@@ -69,7 +69,7 @@
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a href="{% url 'revision_form' id=id status=status %}" class="nav-link">
+                            <a href="{% url 'revision_form' type=type id=id status=status %}" class="nav-link">
                                 <i class="bi bi-folder-fill"></i>
                                 <p>Ver proceso</p>
                             </a>
@@ -95,19 +95,19 @@
                                         </a>
                                         <ul class="nav nav-treeview menu-open">
                                             <li class="nav-item">
-                                                <a href="{% url 'misCursos' id=id status=status %}" class="nav-link">
+                                                <a href="{% url 'misCursos' type=type id=id status=status %}" class="nav-link">
                                                     <i class="nav-icon fas fa-book-open"></i>
                                                     <p>Mis Cursos</p>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
-                                                <a href="{% url 'horarioEstudiante' id=id status=status %}" class="nav-link">
+                                                <a href="{% url 'horarioEstudiante' type=type id=id status=status %}" class="nav-link">
                                                     <i class="nav-icon fas fa-clock"></i>
                                                     <p>Horario</p>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
-                                                <a href="{% url 'planEstudio' id=id status=status %}" class="nav-link">
+                                                <a href="{% url 'planEstudio' type=type id=id status=status %}" class="nav-link">
                                                     <i class="nav-icon fas fa-scroll"></i>
                                                     <p>Plan de Estudio</p>
                                                 </a>
@@ -115,7 +115,7 @@
                                         </ul>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="{% url 'matricula' id=id status=status %}" class="nav-link">
+                                        <a href="{% url 'matricula' type=type id=id status=status %}" class="nav-link">
                                             <i class="nav-icon fas fa-edit"></i>
                                             <p>Matricula</p>
                                         </a>
@@ -132,7 +132,7 @@
                                 </a>
                                 <ul class="nav nav-treeview menu-open">
                                     <li class="nav-item">
-                                        <a href="{% url 'suficiencia' id=id status=status %}"  class="nav-link">
+                                        <a href="{% url 'suficiencia' type=type id=id status=status %}"  class="nav-link">
                                             <i class="fa-solid fa-handshake-angle"></i>
                                             <p>Suficiencia</p>
                                         </a>
@@ -149,7 +149,7 @@
                                 </a>
                                 <ul class="nav nav-treeview menu-open">
                                     <li class="nav-item">
-                                        <a href="{% url 'estadoCuentaEstudiante' id=id status=status %}"  class="nav-link">
+                                        <a href="{% url 'estadoCuentaEstudiante' type=type id=id status=status %}"  class="nav-link">
                                             <i class="fas fa-list-alt"></i>
                                             <p>Estado de Cuenta</p>
                                         </a>
@@ -158,27 +158,27 @@
                             </li>
                         {% elif status == 2 %}
                         <li class="nav-item">
-                            <a href="{% url 'ubicacion' id=id status=status %}" class="nav-link">
+                            <a href="#" class="nav-link">
                                 <i class="fas fa-map-marker-alt"></i>
                                 <p>Profesor</p>
                             </a>
                         </li>
                         {% elif status == 3 %}
                         <li class="nav-item">
-                            <a href="{% url 'ubicacion' id=id status=status %}" class="nav-link">
+                            <a href="#" class="nav-link">
                                 <i class="fas fa-map-marker-alt"></i>
                                 <p>Estudiante/Profesor</p>
                             </a>
                         </li>
                         {% endif %}
                         <li class="nav-item">
-                            <a href="{% url 'ubicacion' id=id status=status %}" class="nav-link">
+                            <a href="{% url 'ubicacion' type=type id=id status=status %}" class="nav-link">
                                 <i class="fas fa-map-marker-alt"></i>
                                 <p>Ubíquenos</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{% url 'contactenos' id=id status=status %}" class="nav-link">
+                            <a href="{% url 'contactenos' type=type id=id status=status %}" class="nav-link">
                                 <i class="fas fa-envelope"></i>
                                 <p>Contáctenos</p>
                             </a>
@@ -193,13 +193,13 @@
                             </a>
                             <ul class="nav nav-treeview menu-open">
                                 <li class="nav-item">
-                                    <a href="{% url 'politicas' id=id status=status %}" class="nav-link">
+                                    <a href="{% url 'politicas' type=type id=id status=status %}" class="nav-link">
                                         <i class="fas fa-shield-alt"></i>
                                         <p>Política de Privacidad</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{% url 'terminos' id=id status=status %}" class="nav-link">
+                                    <a href="{% url 'terminos' type=type id=id status=status %}" class="nav-link">
                                         <i class="fas fa-file-contract"></i>
                                         <p>Términos y Condiciones</p>
                                     </a>
@@ -225,6 +225,12 @@
                                     <a href="https://e-campus.uia.ac.cr/" target="_blank" class="nav-link">
                                         <i class="fas fa-desktop"></i>
                                         <p>E-Campus</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="https://uiaradar.com/boleta/" target="_blank" class="nav-link">
+                                        <i class="fas fa-desktop"></i>
+                                        <p>Boleta</p>
                                     </a>
                                 </li>
                             </ul>

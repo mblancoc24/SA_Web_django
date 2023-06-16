@@ -118,8 +118,8 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
                path('usuario-estudiante-profesor/', DetalleUsuarioEstudianteProfesor.as_view(), name='usuario_estudiante_profesor'),
                path('usuario-profesor/', DetalleUsuarioProfesor.as_view(), name='usuario_profesor'),
                
-               path('prospecto/<int:id>/<int:status>', DetalleUsuarioProspecto.as_view(), name='usuario_prospecto'),
-               path('prospecto/<int:id>/<int:status>/perfil/', vistaPerfil.profile_view, name='perfil_prospecto'),
+               path('<str:type>/<int:id>/<int:status>', DetalleUsuarioProspecto.as_view(), name='usuario_prospecto'),
+               path('<str:type>/<int:id>/<int:status>/perfil/', vistaPerfil.profile_view, name='perfil_prospecto'),
                
                path('obtener-datos/', obtener_datos, name='obtener_datos'),
                path('obtener-provincia/', obtener_provincia, name='obtener_provincia'),
@@ -129,53 +129,53 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
 
                path('enviar-solicitud/', enviar_solicitud, name='enviar_solicitud'),
                
-               path('prospecto/<int:id>/<int:status>/enviar-archivo-a-odoo/', enviar_archivo_a_odoo, name='enviar_archivo_a_odoo'),
+               path('<str:type>/<int:id>/<int:status>/enviar-archivo-a-odoo/', enviar_archivo_a_odoo, name='enviar_archivo_a_odoo'),
                
                path('mostrar-foto/', mostrar_foto, name='mostrar_foto'),
                path('cambiar-foto/', cambiar_foto, name='cambiar_foto'),
                
-               path('estudiante/<int:id>/<int:status>/', DashboardEstudianteView.as_view(), name='estudiante'),
-               path('estudiante/<int:id>/<int:status>/perfil/', vistaPerfil.profile_view, name='perfil'),
+               path('<str:type>/<int:id>/<int:status>/', DashboardEstudianteView.as_view(), name='estudiante'),
+               path('<str:type>/<int:id>/<int:status>/perfil/', vistaPerfil.profile_view, name='perfil'),
                
-               path('profesor/<int:id>/<int:status>/', DashboardProfesorView.as_view(), name='profesor'),
-               path('profesor/<int:id>/<int:status>/perfil/', vistaPerfil.profile_view, name='perfil_profesor'),
+               path('<str:type>/<int:id>/<int:status>/', DashboardProfesorView.as_view(), name='profesor'),
+               path('<str:type>/<int:id>/<int:status>/perfil/', vistaPerfil.profile_view, name='perfil_profesor'),
                
                path('cambio-correo/', change_email, name='cambio_correo'),
                path('change-email-correct/', change_email_correct, name='change_email_correct'),
                
-               path("prospecto/<int:id>/<int:status>/revision-form/", RevisionFormView.as_view(), name="revision_form"),
+               path("<str:type>/<int:id>/<int:status>/revision-form/", RevisionFormView.as_view(), name="revision_form"),
 
                path("corregir-data/", corregirdata, name="corregir_data"),
                path("documents-status/", documents_status, name="documents_status"),
                path("user-update/", user_update, name="user_update"),
                path("solicitud-form/", solicitud_form, name="solicitud_form"),
 
-               path("prospecto/<int:id>/<int:status>/horario/", HorarioEstudianteView.horario_view, name='horarioEstudiante'),
-               path("prospecto/<int:id>/<int:status>/plan/", PlanDeEstudioView.as_view(), name='planEstudio'),
-               path("prospecto/<int:id>/<int:status>/plan/carrera/", DetallePlanDeEstudioView.getPlan, name='planEstudioCarrera'),
-               path("prospecto/<int:id>/<int:status>/misCursos/", MisCursos.misCursos_view, name='misCursos'),
-               path("prospecto/<int:id>/<int:status>/matricula/", MatriculaView.as_view(), name='matricula'),
-               path("prospecto/<int:id>/<int:status>/suficiencia/", SuficienciaView.as_view(), name='suficiencia'),
+               path("<str:type>/<int:id>/<int:status>/horario/", HorarioEstudianteView.horario_view, name='horarioEstudiante'),
+               path("<str:type>/<int:id>/<int:status>/plan/", PlanDeEstudioView.as_view(), name='planEstudio'),
+               path("<str:type>/<int:id>/<int:status>/plan/carrera/", DetallePlanDeEstudioView.getPlan, name='planEstudioCarrera'),
+               path("<str:type>/<int:id>/<int:status>/misCursos/", MisCursos.misCursos_view, name='misCursos'),
+               path("<str:type>/<int:id>/<int:status>/matricula/", MatriculaView.as_view(), name='matricula'),
+               path("<str:type>/<int:id>/<int:status>/suficiencia/", SuficienciaView.as_view(), name='suficiencia'),
                
                path("descargar-archivo/<int:id>/", descargar_archivo, name="descargar_archivo"),
-               path("prospecto/<int:id>/<int:status>/estadoCuenta/", EstadoDeCuentaEstudiante.as_view(), name='estadoCuentaEstudiante'),
+               path("<str:type>/<int:id>/<int:status>/estadoCuenta/", EstadoDeCuentaEstudiante.as_view(), name='estadoCuentaEstudiante'),
                path('codigoVerificacion/', codigoVerificacion, name='codigoVerificacion'),
 
-               path("prospecto/<int:id>/<int:status>/pagarMatricula/", PaymentProspecto.as_view(), name='payment_prospecto'),
-               path("estudiante/<int:id>/<int:status>/pagarMatricula/", PaymentEstudiante.as_view(), name='payment_estudiante'),
+               path("<str:type>/<int:id>/<int:status>/pagarMatricula/", PaymentProspecto.as_view(), name='payment_prospecto'),
+               path("<str:type>/<int:id>/<int:status>/pagarMatricula/", PaymentEstudiante.as_view(), name='payment_estudiante'),
                path("obtener-time/", obtener_fecha_unix, name='obtener_time'),
                path("obtener-key/", obtener_keyiD, name='obtener_key'),
                path("hash-entrada/", obtener_hash_entrada, name='hash_entrada'),
-               path("prospecto/<int:id>/<int:status>/pago-realizado/", PaymentApproved.as_view(), name='pago_realizado'),
+               path("<str:type>/<int:id>/<int:status>/pago-realizado/", PaymentApproved.as_view(), name='pago_realizado'),
 
-               path("prospecto/<int:id>/<int:status>/plan/cursoPlanHorario/", HorarioPlanDeEstudioView.getHorario, name='horarioCursoPlan'),
-               path("prospecto/<int:id>/<int:status>/ubicacion/", Ubicacion.ubicacion_view, name='ubicacion'),
-               path("prospecto/<int:id>/<int:status>/contactenos/", Contactenos.contactenos_view, name='contactenos'),
-               path("prospecto/<int:id>/<int:status>/plan/envioPrematricula/", EnvioPrematricula.envioPrematricula, name='envioPrematricula'),
+               path("estudiante/<int:id>/<int:status>/plan/cursoPlanHorario/", HorarioPlanDeEstudioView.getHorario, name='horarioCursoPlan'),
+               path("<str:type>/<int:id>/<int:status>/ubicacion/", Ubicacion.ubicacion_view, name='ubicacion'),
+               path("<str:type>/<int:id>/<int:status>/contactenos/", Contactenos.contactenos_view, name='contactenos'),
+               path("<str:type>/<int:id>/<int:status>/plan/envioPrematricula/", EnvioPrematricula.envioPrematricula, name='envioPrematricula'),
 
-               path("prospecto/<int:id>/pago-finalizado/", payment_update_user_prospecto, name='pago_finalizado'),
+               path("<str:type>/<int:id>/pago-finalizado/", payment_update_user_prospecto, name='pago_finalizado'),
                
-               path("prospecto/<int:id>/<int:status>/politicas/", Politicas.politicas_view, name='politicas'),
-               path("prospecto/<int:id>/<int:status>/terminos/", Terminos.terminos_view, name='terminos'),
-               path("prospecto/<int:id>/<int:status>/envioConsulta/", EnvioDeConsultas.envioDeConsultas, name='envioConsulta'),
+               path("<str:type>/<int:id>/<int:status>/politicas/", Politicas.politicas_view, name='politicas'),
+               path("<str:type>/<int:id>/<int:status>/terminos/", Terminos.terminos_view, name='terminos'),
+               path("<str:type>/<int:id>/<int:status>/envioConsulta/", EnvioDeConsultas.envioDeConsultas, name='envioConsulta'),
                ]
