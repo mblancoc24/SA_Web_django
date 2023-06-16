@@ -1,15 +1,8 @@
 {% extends 'adminlte/base.html' %}
-    {% block stylesheets %}
-        {% include 'adminlte/lib/_styles.html' %}
+{% load static %}
+{% block content %}
+{% block extra_js %}
 
-    {% endblock %}
-    {% block nav_header %}
-            {% include 'adminlte/lib/_main_header.html' %}
-    {% endblock %}
-    {% block nav_links_ul %}
-        {% include 'adminlte/lib/_main_sidebar.html' %}
-    {% endblock nav_links_ul %}
-
-    {% block nav_footer %}
-        {% include 'adminlte/lib/_main_footer.html' %}
-    {% endblock %}
+{% endblock %}
+<h1>Estudiante</h1>
+{% endblock %}

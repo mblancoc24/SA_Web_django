@@ -7,8 +7,9 @@ var horariosCurso = [];
 var cantidadCursos;
 var auxCantCursos;
 $(document).ready(function () {
-    const id = document.getElementById('idP');
-    const status = document.getElementById('StatusP');
+    const type = document.getElementById('typeE');
+    const id = document.getElementById('idE');
+    const status = document.getElementById('StatusE');
     var botonPrematricula = document.getElementById('prematriculaBtn');
     botonPrematricula.onclick = function () {
         mostrarPrematricula();
@@ -23,7 +24,7 @@ $(document).ready(function () {
         var plan = document.getElementById('carrera').value;
         // Enviar una petición AJAX al servidor
         //const url = `/prospecto/${id.textContent}/${status.textContent}/plan/carrera/?carrera=` + encodeURIComponent(plan);
-        const url = `/prospecto/${id.textContent}/${status.textContent}/plan/carrera/`;
+        const url = `/${type.textContent}/${id.textContent}/${status.textContent}/plan/carrera/`;
         const xhr = new XMLHttpRequest();
         xhr.open('GET', url, true);
         xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
@@ -495,9 +496,10 @@ function mostrarPrematricula() {
     trTotal.appendChild(tdTotalModal);
 
     tbodyModal.appendChild(trTotal);
-    const id = document.getElementById('idP');
-    const status = document.getElementById('StatusP');
-    const url = `/prospecto/${id.textContent}/${status.textContent}/plan/cursoPlanHorario/` + "?cursos=" + encodeURIComponent(horariosCurso);
+    const id = document.getElementById('idE');
+    const status = document.getElementById('StatusE');
+    const type = document.getElementById('typeE');
+    const url = `/${type.textContent}/${id.textContent}/${status.textContent}/plan/cursoPlanHorario/` + "?cursos=" + encodeURIComponent(horariosCurso);
     const xhr = new XMLHttpRequest();
     xhr.open('GET', url, true);
     xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
@@ -536,8 +538,9 @@ function quitarPrematricula(fila, checkId, credito) {
 
 function enviarPrematricula(id) {
     var tabla = document.getElementById("premTablaBody");
-    var identificacion = document.getElementById('idP');
-    var status = document.getElementById('StatusP');
+    var identificacion = document.getElementById('idE');
+    var status = document.getElementById('StatusE');
+    var type = document.getElementById('typeE');
     var cursos = [];
     for (var i = 0; i < tabla.rows.length - 1; i++) {
         var fila = tabla.rows[i];
@@ -556,7 +559,7 @@ function enviarPrematricula(id) {
     var jsonString = JSON.stringify(jsonData);
     console.log(jsonString);
     var xhr = new XMLHttpRequest();
-    var url = `/prospecto/${identificacion.textContent}/${status.textContent}/plan/envioPrematricula/`;
+    var url = `/${type.textContent}/${identificacion.textContent}/${status.textContent}/plan/envioPrematricula/`;
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json");
     

@@ -49,14 +49,16 @@ class PaymentApproved(LoginRequiredMixin, View):
                 'fotoperfil': imagen_url,
                 'status': self.kwargs['status'],
                 'pago': pago,
-                'id': self.kwargs['id']
+                'id': self.kwargs['id'],
+                'type': self.kwargs['type'],
             }
         except fotoperfil.DoesNotExist:
             context = {
                 'user': user,
                 'status': self.kwargs['status'],
                 'pago': pago,
-                'id': self.kwargs['id']
+                'id': self.kwargs['id'],
+                'type': self.kwargs['type'],
             }
         return context
         

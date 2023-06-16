@@ -12,8 +12,9 @@
     <div class="col-md-12 card cardPerfilCol">
         <div class="row p-2 mx-auto">
             <div class="form-group col-12 col-lg-12 col-md-12 col-sm-10  mx-auto">
-                <div id="idP" hidden>{{ id }}</div>
-                <div id="StatusP" hidden>{{ status }}</div>
+                <div id="idE" hidden>{{ id }}</div>
+                <div id="StatusE" hidden>{{ status }}</div>
+                <div id="typeE" hidden>{{ type }}</div>
                 <label for="carrera"><i class=""> Seleccione un Plan de Estudio</i></label>
                 <select id="carrera" class="form-select" name="carrera">
                     <option value="" disabled selected hidden>Seleccione un Plan de Estudio</option>
@@ -192,4 +193,12 @@
     </div>
 </div>
 {% endblock modal_levantamiento %}
+<style>
+    
+    option:checked,
+    option:hover {
+        box-shadow: 0 0 10px 100px #4ddc3b inset;
+    }
+
+</style>
 {% endblock content %}
