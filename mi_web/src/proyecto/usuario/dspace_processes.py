@@ -451,3 +451,11 @@ class dspace_processes():
         }
     
         return file_updated
+    
+    def content_process(data):
+        if 'pdf' in data:
+            return 'pdf'
+        elif 'jpeg' in data:
+            return 'jpeg'
+        elif 'png' in data:
+            return 'png'

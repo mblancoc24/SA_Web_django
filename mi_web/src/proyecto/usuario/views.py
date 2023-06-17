@@ -648,8 +648,8 @@ class RevisionFormView(LoginRequiredMixin, View):
             data_urls = get_urls(self.request)
             self.request.session['urls'] = data_urls
         
-        data_content = []
-        data_content_type = []
+        data_content = [0,1,2,3,4]
+        data_content_type = [0,1,2,3,4]
         
         if 'urlsContent' in self.request.session: 
             data_content = self.request.session.get('urlsContent')
@@ -658,17 +658,26 @@ class RevisionFormView(LoginRequiredMixin, View):
             responses = dspace_processes.dspace_docs_visualization(data_urls)
             
             for response in responses:
-                data_content.append(base64.b64encode(response.content).decode('utf-8'))
-                if 'pdf' in response.headers['Content-Type']:
-                    data_content_type.append('pdf')
-                elif 'jpeg' in response.headers['Content-Type']:
-                    data_content_type.append('jpeg')
-                elif 'png' in response.headers['Content-Type']:
-                    data_content_type.append('png')
+                content_type = dspace_processes.content_process(response.headers['Content-Type'])
+                if 'tituloeducacion' in response.headers['Content-Disposition']:
+                    data_content[0] = base64.b64encode(response.content).decode('utf-8')
+                    data_content_type[0] = content_type
+                elif 'identificacion' in response.headers['Content-Disposition']:
+                    data_content[1] = base64.b64encode(response.content).decode('utf-8')
+                    data_content_type[1] = content_type
+                elif 'fotoperfil' in response.headers['Content-Disposition']:
+                    data_content[2] = base64.b64encode(response.content).decode('utf-8')
+                    data_content_type[2] = content_type
+                elif 'record_academico' in response.headers['Content-Disposition']:
+                    data_content[3] = base64.b64encode(response.content).decode('utf-8')
+                    data_content_type[3] = content_type
+                elif 'plan_estudio' in response.headers['Content-Disposition']:
+                    data_content[4] = base64.b64encode(response.content).decode('utf-8')
+                    data_content_type[4] = content_type
                     
             if len(data_content) == 3:
-                data_content_type.append('N/A')
-                data_content_type.append('N/A')
+                data_content_type[4] = 'N/A'
+                data_content_type[4] = 'N/A'
         
             self.request.session['urlsContent'] = data_content
             self.request.session['urlsContentType'] = data_content_type
@@ -854,7 +863,7 @@ def enviar_archivo_a_odoo(request,type, id, status):
         if save_data_dspace is not None:
             if convalidacion == '':
                 formulariodata = [1, True,'Formulario Enviado Satisfactoriamente', user.pk]
-                formulariodocumentos = [user.pk, False, False, True, True, True, True]
+                formulariodocumentos = [user.pk, True, False, True, True, True, True]
             else:
                 formulariodata = [1, False,'Formulario Enviado Satisfactoriamente', user.pk]
                 formulariodocumentos = [user.pk, True, False, True, True, False, False]
@@ -1060,6 +1069,13 @@ class MatriculaView(LoginRequiredMixin, View):
             creditos_curso = curso['creditos']
             registros[str(i)] = {'curso':curso_cursos, 'nombre': nombre_curso, 'credito': creditos_curso}
             i+=1
+
+        datapago = {
+            'subtotal': self.request.session.get('subtotal'),
+            'descuentoTotal': self.request.session.get('descuentoTotal'),
+            'preMatricula': self.request.session.get('preMatricula'),
+            'ordenVenta': self.request.session.get('ordenVenta')
+        }
             
         try:
             fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
@@ -1070,6 +1086,7 @@ class MatriculaView(LoginRequiredMixin, View):
                 'fotoperfil': imagen_url,
                 'status': self.kwargs['status'],
                 'id': self.kwargs['id'],
+                'pago': datapago,
                 'type': self.kwargs['type'],
             }
         except fotoperfil.DoesNotExist:
@@ -1078,6 +1095,7 @@ class MatriculaView(LoginRequiredMixin, View):
                 'user': user,
                 'status': self.kwargs['status'],
                 'id': self.kwargs['id'],
+                'pago': datapago,
                 'type': self.kwargs['type'],
             }
         return context
@@ -1171,11 +1189,15 @@ class PaymentProspecto(LoginRequiredMixin, View):
     
     def get_context_data(self, **kwargs):
         user = self.request.user
+        datapago = {
+            'preMatricula': self.request.session.get('preMatricula')
+        }
+
         if 'orderid' in self.request.session:
-            orderid = self.request.session.get('orderid')
+            orderid = self.request.session.get('ordenVenta')
         else:
             orderid = ''+user.username+'-PagoMatricula'
-            self.request.session['orderid'] = orderid
+            self.request.session['ordenVenta'] = orderid
         try:
             fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
             imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
@@ -1185,6 +1207,7 @@ class PaymentProspecto(LoginRequiredMixin, View):
                 'status': self.kwargs['status'],
                 'orderid': orderid,
                 'id': self.kwargs['id'],
+                'pago': datapago,
                 'llamar_time': True,
                 'type': self.kwargs['type'],
             }
@@ -1194,6 +1217,7 @@ class PaymentProspecto(LoginRequiredMixin, View):
                 'status': self.kwargs['status'],
                 'orderid': orderid,
                 'id': self.kwargs['id'],
+                'pago': datapago,
                 'llamar_time': True,
                 'type': self.kwargs['type'],
             }

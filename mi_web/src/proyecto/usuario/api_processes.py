@@ -91,7 +91,7 @@ def user_update(request):
             
             if save:
                 # Procesar los datos y generar la respuesta en JSON
-                save_profile_processes.update_user_status(request, 'matricula', True)
+                save2 = save_profile_processes.update_user_status(id_value, 'matricula', True)
                 response_data = {'result': 'ok'}
                 return JsonResponse(response_data)
             else:

@@ -70,7 +70,7 @@ class PaymentApproved(LoginRequiredMixin, View):
 @login_required
 def obtener_hash_entrada(request):
     orderid = request.session.get('orderid')
-    amount = "5.00"
+    amount = request.session.get('preMatricula')
     time = request.session.get('timePy')
     key = obtener_key(request)
 
