@@ -68,7 +68,7 @@ class Logueo(LoginView):
             login(self.request, user)
             registrar_accion(user, 'El usuario {0} ha ingresado como prospecto.'.format(user.username))
             context = {'type':'prospecto','id': username, 'status': 4}
-            return redirect(reverse('usuario_prospecto', kwargs=context))
+            return redirect(reverse('inicio', kwargs=context))
         else:
             logout(self.request)
             return super().form_invalid(form)
@@ -96,18 +96,18 @@ def microsoft_auth(request):
                         if status.activo:
                             registrar_accion(user, 'El usuario {0} ha ingresado como estudiante.'.format(user.username))
                             context = {'type':'estudiante','id': user.username, 'status': 1}
-                            return redirect(reverse('estudiante', kwargs=context))
+                            return redirect(reverse('inicio', kwargs=context))
                         ##AGREGAR INFO
                     
                     elif tipo_user['tipo'] == 'profesor' or tipo_user['tipo'] == 'prospecto/profesor':
                         registrar_accion(user, 'El usuario {0} ha ingresado como profesor.'.format(user.username))
                         context = {'type':'profesor','id': user.username, 'status': 2}
-                        return redirect(reverse('profesor', kwargs=context))
+                        return redirect(reverse('inicio', kwargs=context))
                     
                     elif tipo_user['tipo'] == 'estudiante/profesor':
                         registrar_accion(user, 'El usuario {0} ha ingresado como estudiante/profesor.'.format(user.username))
                         context = {'type':'profesor-estudiante','id': user.username, 'status': 3}
-                        return redirect(reverse('profesor', kwargs=context))
+                        return redirect(reverse('inicio', kwargs=context))
         else:
             del request.session['access_token']
             return redirect('login')
@@ -157,18 +157,18 @@ def microsoft_callback(request):
                     if status.activo:
                         registrar_accion(user, 'El usuario {0} ha ingresado como estudiante.'.format(user.username))
                         context = {'type':'estudiante','id': user.username, 'status': 1}
-                        return redirect(reverse('estudiante', kwargs=context))
+                        return redirect(reverse('inicio', kwargs=context))
                     ##AGREGAR INFO
                 
                 elif tipo_user['tipo'] == 'profesor' or tipo_user['tipo'] == 'prospecto/profesor':
                     registrar_accion(user, 'El usuario {0} ha ingresado como profesor.'.format(user.username))
                     context = {'type':'profesor','id': user.username, 'status': 2}
-                    return redirect(reverse('profesor', kwargs=context))
+                    return redirect(reverse('inicio', kwargs=context))
                 
                 elif tipo_user['tipo'] == 'estudiante/profesor':
                     registrar_accion(user, 'El usuario {0} ha ingresado como estudiante/profesor.'.format(user.username))
                     context = {'type':'profesor-estudiante','id': user.username, 'status': 3}
-                    return redirect(reverse('profesor', kwargs=context))
+                    return redirect(reverse('inicio', kwargs=context))
     else:
         return redirect('login')
     
@@ -212,6 +212,9 @@ class PaginaRegistroEstudiante(FormView):
 
     def form_valid(self, form):
         username = form.cleaned_data['username']
+        if User.objects.filter(username=username).exists():
+            form.add_error('username', 'El nombre de usuario ya está en uso.')
+            return self.form_invalid(form)
         nombre_estudiante = self.request.POST.get('first_name')
         primerapellido = self.request.POST.get('last_name')
         segundoapellido = self.request.POST.get('segundoapellido')
@@ -271,37 +274,9 @@ class PaginaRegistroEstudiante(FormView):
             return redirect('registro_estudiantes')
         return super(PaginaRegistroEstudiante, self).get(*args, **kwargs)
 
-class DetalleUsuarioEstudiante(LoginRequiredMixin, ListView):
-    context_object_name = 'prueba_estudiante'
-    template_name = 'Dashboard/Estudiante/prueba_estudiante.html'
 
-class DetalleUsuarioProfesor(LoginRequiredMixin, ListView):
-    context_object_name = 'prueba_profesor'
-    template_name = 'Dashboard/Profesor/prueba_profesor.html'
-    def get(self, request,type, id, status):
-        user = request.user
-        try:
-            fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
-            imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
-            context = {
-                'type': type,
-                'id': id,
-                'status': status,
-                'user': user,
-                'fotoperfil': imagen_url,
-            }
-        except fotoperfil.DoesNotExist:
-
-            context = {
-                'type': type,
-                'id': id,
-                'status': status,
-                'user': user,
-            }
-        return render(request, 'Dashboard/Prospecto/prospecto.html', context)
-
-class DetalleUsuarioProspecto(LoginRequiredMixin, ListView):
-    context_object_name = 'prueba_prospecto'
+class EstudiaUIAView(LoginRequiredMixin, ListView):
+    context_object_name = 'estudiaUia'
     template_name = 'Dashboard/Prospecto/prospecto.html'
     def get(self, request,type, id, status):
         user = request.user
@@ -314,6 +289,7 @@ class DetalleUsuarioProspecto(LoginRequiredMixin, ListView):
                 'status': status,
                 'user': user,
                 'fotoperfil': imagen_url,
+                'formulario': request.session.get('formulario', 'NA'),
             }
         except fotoperfil.DoesNotExist:
 
@@ -322,12 +298,10 @@ class DetalleUsuarioProspecto(LoginRequiredMixin, ListView):
                 'id': id,
                 'status': status,
                 'user': user,
+                'formulario': request.session.get('formulario', 'NA'),
             }
         return render(request, 'Dashboard/Prospecto/prospecto.html', context)
 
-class DetalleUsuarioEstudianteProfesor(LoginRequiredMixin, ListView):
-    context_object_name = 'opciones_estudiante_profesor'
-    template_name = 'usuario/opciones_login.html'
 
 class DetalleArchivoOdoo(LoginRequiredMixin, ListView):
     context_object_name = 'envio_archivos_odoo'
@@ -353,7 +327,7 @@ def posgradosselect(request):
     return JsonResponse(list(valores), safe=False)
 
 class vistaPerfil (LoginRequiredMixin):
-    context_object_name = 'perfil_estudiante'
+    context_object_name = 'perfil'
     template_name = 'Dashboard/Componentes/perfil.html'
     
     def profile_view(request,type, id, status):
@@ -374,6 +348,7 @@ class vistaPerfil (LoginRequiredMixin):
                 'status': status,
                 'id': id,
                 'type': type,
+                'formulario': request.session.get('formulario', 'NA'),
             }
         except fotoperfil.DoesNotExist:
 
@@ -383,7 +358,9 @@ class vistaPerfil (LoginRequiredMixin):
                 'status': status,
                 'id': id,
                 'type': type,
+                'formulario': request.session.get('formulario', 'NA'),
             }
+        
         return render(request, 'Dashboard/Componentes/perfil.html', context)
 
 #Verificar
@@ -494,49 +471,32 @@ def cambiar_foto(request):
     return redirect(request.META.get('HTTP_REFERER'))
 
 @login_required
-def enviar_solicitud(request):
-    user = request.user
-    
-    user_data = request.session.get('user_info')
-    
-    provincia = request.POST.get('provincia')
-    canton = request.POST.get('canton')
-    distrito = request.POST.get('distrito')
-    direccion = request.POST.get('direccion_exacta')
-    telefono = request.POST.get('telefono')
-    telefono2 = request.POST.get('telefono2')
-    email = request.POST.get('email')
-    
-    data_request = {'id': user.username}
-    
-    if provincia != 'NA':
-        data_request['provincia'] = provincia
-        data_request['canton'] = canton
-        data_request['distrito'] = distrito
-        
-    if direccion != user_data['direccion_exacta']:
-        data_request['direccion_exacta'] = direccion
-        
-    if telefono != str(user_data['numero_telefonico']):
-        data_request['numero_telefonico'] = telefono
-    
-    if telefono2 != str(user_data['numero_telefonico2']):
-        data_request['numero_telefonico2'] = telefono2   
-        
-    if email != user_data['correo_personal']:
-        data_request['correo_personal'] = email   
-    
-    send = update_request(request, data_request)
-    
-    if send:
-        return redirect(request.META.get('HTTP_REFERER'))
+class EnvioSolicitud(LoginRequiredMixin, View):
+    context_object_name = 'envioSolicitud'
+    template_name = 'Dashboard/Componentes/perfil.html'
 
-class DashboardEstudianteView(LoginRequiredMixin, View):
-    context_object_name = 'estudiante'
-    template_name = 'Dashboard/Estudiante/estudiante.html'
+    def enviar_solicitud(request,type, id, status):
+        json_data = json.loads(request.body)
+        print(json_data)
+        # url = "http://192.168.11.196:8062/set_pre_matricula"
+        # headers = {'Content-Type': 'application/json'}
+        # payload = json.dumps(json_data)
+        # response = requests.request("POST", url, headers=headers, data=payload)
+        # data = json.loads(response.text)
 
+        return JsonResponse(200, safe=False)
+
+
+class DashboardView(LoginRequiredMixin, View):
+    context_object_name = 'inicio'
     def get(self, request,type, id, status):
         user = request.user
+        try:
+            formulario = user_status.objects.get(identificacion=user.username)
+            userStatus = formulario.form
+            request.session['formulario'] = userStatus
+        except user_status.DoesNotExist:
+            request.session['formulario'] = 'NA'
         try:
             fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
             imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
@@ -555,32 +515,15 @@ class DashboardEstudianteView(LoginRequiredMixin, View):
                 'status': status,
                 'user': user,
             }
-        return render(request, 'Dashboard/Estudiante/estudiante.html', context)
-
-class DashboardProfesorView(LoginRequiredMixin, View):
-    context_object_name = 'profesor'
-    template_name = 'Dashboard/Profesor/profesor.html'
-    def get(self, request,type, id, status):
-        user = request.user
-        try:
-            fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
-            imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
-            context = {
-                'type': type,
-                'id': id,
-                'status': status,
-                'user': user,
-                'fotoperfil': imagen_url,
-            }
-        except fotoperfil.DoesNotExist:
-
-            context = {
-                'type': type,
-                'id': id,
-                'status': status,
-                'user': user,
-            }
-        return render(request, 'Dashboard/Profesor/profesor.html', context)
+        if type == "estudiante":
+            context['formulario'] = request.session.get('formulario', 'NA')
+            return render(request, 'Dashboard/Estudiante/estudiante.html', context)
+        elif type == "prospecto":
+            context['formulario'] = request.session.get('formulario', 'NA')
+            return render(request, 'Dashboard/Prospecto/prospecto.html', context)
+        elif type == "profesor":
+            context['formulario'] = request.session.get('formulario', 'NA')
+            return render(request, 'Dashboard/Profesor/profesor.html', context)
 
 @login_required
 def change_email(request):
@@ -689,6 +632,7 @@ class RevisionFormView(LoginRequiredMixin, View):
                 'status': self.kwargs['status'],
                 'id': self.kwargs['id'],
                 'type': self.kwargs['type'],
+                'formulario': self.request.session.get('formulario', 'NA'),
             }
         except fotoperfil.DoesNotExist:
             context = {
@@ -701,6 +645,7 @@ class RevisionFormView(LoginRequiredMixin, View):
                 'status': self.kwargs['status'],
                 'id': self.kwargs['id'],
                 'type': self.kwargs['type'],
+                'formulario': self.request.session.get('formulario', 'NA'),
             }
         return context
             
@@ -940,6 +885,7 @@ class HorarioEstudianteView(LoginRequiredMixin):
                 'horarios': sorted(auxHora.items()),
                 'dias': dias,
                 'type': type,
+                'formulario': request.session.get('formulario', 'NA'),
             }
         except fotoperfil.DoesNotExist:
             context = {
@@ -949,6 +895,7 @@ class HorarioEstudianteView(LoginRequiredMixin):
                 'horarios': sorted(auxHora.items()),
                 'dias': dias,
                 'type': type,
+                'formulario': request.session.get('formulario', 'NA'),
             }
         return render(request, 'Dashboard/Estudiante/horarioEstudiante.html', context)
 
@@ -977,6 +924,7 @@ class PlanDeEstudioView(LoginRequiredMixin, View):
                 'id': self.kwargs['id'],
                 'carrera': data,
                 'type': self.kwargs['type'],
+                'formulario': self.request.session.get('formulario', 'NA'),
             }
         except fotoperfil.DoesNotExist:
             context = {
@@ -985,6 +933,7 @@ class PlanDeEstudioView(LoginRequiredMixin, View):
                 'id': self.kwargs['id'],
                 'carrera': data,
                 'type': self.kwargs['type'],
+                'formulario': self.request.session.get('formulario', 'NA'),
             }
         return context
     
@@ -1031,6 +980,7 @@ class MisCursos(LoginRequiredMixin):
                 'id': id,
                 'misCursos': data,
                 'type': type,
+                'formulario': request.session.get('formulario', 'NA'),
             }
         except fotoperfil.DoesNotExist:
             context = {
@@ -1039,6 +989,7 @@ class MisCursos(LoginRequiredMixin):
                 'id': id,
                 'misCursos': data,
                 'type': type,
+                'formulario': request.session.get('formulario', 'NA'),
             }
         return render(request, 'Dashboard/Estudiante/misCursos.html', context)
     
@@ -1071,6 +1022,7 @@ class MatriculaView(LoginRequiredMixin, View):
                 'status': self.kwargs['status'],
                 'id': self.kwargs['id'],
                 'type': self.kwargs['type'],
+                'formulario': self.request.session.get('formulario', 'NA'),
             }
         except fotoperfil.DoesNotExist:
             context = {
@@ -1079,6 +1031,7 @@ class MatriculaView(LoginRequiredMixin, View):
                 'status': self.kwargs['status'],
                 'id': self.kwargs['id'],
                 'type': self.kwargs['type'],
+                'formulario': self.request.session.get('formulario', 'NA'),
             }
         return context
     
@@ -1107,6 +1060,7 @@ class EstadoDeCuentaEstudiante(LoginRequiredMixin, View):
                 'id': self.kwargs['id'],
                 'financiamiento': data,
                 'type': self.kwargs['type'],
+                'formulario': self.request.session.get('formulario', 'NA'),
             }
         except fotoperfil.DoesNotExist:
             context = {
@@ -1115,6 +1069,7 @@ class EstadoDeCuentaEstudiante(LoginRequiredMixin, View):
                 'id': self.kwargs['id'],
                 'financiamiento': data,
                 'type': self.kwargs['type'],
+                'formulario': self.request.session.get('formulario', 'NA'),
             }
         return context
     
@@ -1151,6 +1106,7 @@ class SuficienciaView(LoginRequiredMixin, View):
                 'status': self.kwargs['status'],
                 'id': self.kwargs['id'],
                 'type': self.kwargs['type'],
+                'formulario': self.request.session.get('formulario', 'NA'),
             }
         except fotoperfil.DoesNotExist:
             context = {
@@ -1158,6 +1114,7 @@ class SuficienciaView(LoginRequiredMixin, View):
                 'status': self.kwargs['status'],
                 'id': self.kwargs['id'],
                 'type': self.kwargs['type'],
+                'formulario': self.request.session.get('formulario', 'NA'),
             }
         return context
     
@@ -1187,6 +1144,7 @@ class PaymentProspecto(LoginRequiredMixin, View):
                 'id': self.kwargs['id'],
                 'llamar_time': True,
                 'type': self.kwargs['type'],
+                'formulario': self.request.session.get('formulario', 'NA'),
             }
         except fotoperfil.DoesNotExist:
             context = {
@@ -1196,6 +1154,7 @@ class PaymentProspecto(LoginRequiredMixin, View):
                 'id': self.kwargs['id'],
                 'llamar_time': True,
                 'type': self.kwargs['type'],
+                'formulario': self.request.session.get('formulario', 'NA'),
             }
         return context
     
@@ -1220,6 +1179,7 @@ class PaymentEstudiante(LoginRequiredMixin, View):
                 'id': self.kwargs['id'],
                 'llamar_time': True,
                 'type': self.kwargs['type'],
+                'formulario': self.request.session.get('formulario', 'NA'),
             }
         except fotoperfil.DoesNotExist:
             context = {
@@ -1228,6 +1188,7 @@ class PaymentEstudiante(LoginRequiredMixin, View):
                 'id': self.kwargs['id'],
                 'llamar_time': True,
                 'type': self.kwargs['type'],
+                'formulario': self.request.session.get('formulario', 'NA'),
             }
         return context
     
@@ -1273,6 +1234,7 @@ class Ubicacion(LoginRequiredMixin):
                 'status': status,
                 'id': id,
                 'type': type,
+                'formulario': request.session.get('formulario', 'NA'),
             }
         except fotoperfil.DoesNotExist:
             context = {
@@ -1280,13 +1242,9 @@ class Ubicacion(LoginRequiredMixin):
                 'status': status,
                 'id': id,
                 'type': type,
+                'formulario': request.session.get('formulario', 'NA'),
             }
-        if type == "prospecto":
-            return render(request, 'Dashboard/Componentes/ubicacion.html', context)
-        elif type == "estudiante":
-            return render(request, 'Dashboard/Componentes/ubicacion.html', context)
-        elif type == "profesor":
-            return render(request, 'Dashboard/Componentes/ubicacion.html', context)
+        return render(request, 'Dashboard/Componentes/ubicacion.html', context)
         
 class EnvioPrematricula(LoginRequiredMixin, View):
     context_object_name = 'envioPrematricula'
@@ -1321,6 +1279,7 @@ class Contactenos(LoginRequiredMixin):
                 'status': status,
                 'id': id,
                 'type': type,
+                'formulario': request.session.get('formulario', 'NA'),
             }
         except fotoperfil.DoesNotExist:
             context = {
@@ -1328,6 +1287,7 @@ class Contactenos(LoginRequiredMixin):
                 'status': status,
                 'id': id,
                 'type': type,
+                'formulario': request.session.get('formulario', 'NA'),
             }
         return render(request, 'Dashboard/Componentes/contactenos.html', context)
     
@@ -1345,6 +1305,7 @@ class Politicas(LoginRequiredMixin):
                 'status': status,
                 'id': id,
                 'type': type,
+                'formulario': request.session.get('formulario', 'NA'),
             }
         except fotoperfil.DoesNotExist:
             context = {
@@ -1352,14 +1313,10 @@ class Politicas(LoginRequiredMixin):
                 'status': status,
                 'id': id,
                 'type': type,
+                'formulario': request.session.get('formulario', 'NA'),
             }
             
-        if type == "prospecto":
-            return render(request, 'Dashboard/Componentes/politicasPrivacidad.html', context)
-        elif type == "estudiante":
-            return render(request, 'Dashboard/Componentes/politicasPrivacidad.html', context)
-        elif type == "profesor":
-            return render(request, 'Dashboard/Componentes/politicasPrivacidad.html', context)
+        return render(request, 'Dashboard/Componentes/politicasPrivacidad.html', context)
     
 class Terminos(LoginRequiredMixin):
     context_object_name = 'terminos'
@@ -1374,6 +1331,7 @@ class Terminos(LoginRequiredMixin):
                 'status': status,
                 'id': id,
                 'type': type,
+                'formulario': request.session.get('formulario', 'NA'),
             }
         except fotoperfil.DoesNotExist:
             context = {
@@ -1381,62 +1339,30 @@ class Terminos(LoginRequiredMixin):
                 'status': status,
                 'id': id,
                 'type': type,
+                'formulario': request.session.get('formulario', 'NA'),
             }
-        if type == "prospecto":
-            return render(request, 'Dashboard/Componentes/TerminosCondiciones.html', context)
-        elif type == "estudiante":
-            return render(request, 'Dashboard/Componentes/TerminosCondiciones.html', context)
-        elif type == "profesor":
-            return render(request, 'Dashboard/Componentes/TerminosCondiciones.html', context)
+            
+        return render(request, 'Dashboard/Componentes/TerminosCondiciones.html', context)
     
 class EnvioDeConsultas(LoginRequiredMixin): 
-    context_object_name = 'envioDeConsultas'
+    context_object_name = 'contactenos'
     def envioDeConsultas(request,type, id, status):
-        user = request.user
-        correoSend = request.POST.get('correoSend')
-        nombre = request.POST.get('nombre')
-        correo = request.POST.get('correo')
-        radios = request.POST.get('departamento')
-        categoria = request.POST.get('categorias')
-        mensaje = request.POST.get('mensaje')
-        correoSend = ''
-        if correoSend == True:
-            if radios == 'Registro':
-                correoSend = 'victorfern27@gmail.com'
-            else:
-                correoSend = 'victorfern48@gmail.com'
-        else:
-            if radios == 'Registro':
-                correoSend = 'victor2722v@gmail.com'
-            else:
-                correoSend = 'victfern48@gmail.com'
+        json_data = json.loads(request.body)
+        print(json_data)
+        subject = json_data.get('categoria', '') 
+        nombre = json_data.get('nombre', '')
+        mensaje = json_data.get('mensaje', '') 
+        correo = json_data.get('correo', '') 
+        correoSend = json_data.get('correoSend', '') 
 
-        subject = categoria
         message = f'Hola soy, {nombre},\n\n{mensaje}'
         email_from = correo
-        recipient_list = [correoSend,]
+        recipient_list = [correoSend]
+        context = {}
         try:
             send_mail(subject, message, email_from, recipient_list)
-            mensaje_enviado = True
-        except Exception:
-            mensaje_enviado = False
-        try:
-            fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
-            imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
-            context = {
-                'user': user,
-                'fotoperfil': imagen_url,
-                'status': status,
-                'id': id,
-                'response' : mensaje_enviado,
-                'type': type,
-            }
-        except fotoperfil.DoesNotExist:
-            context = {
-                'user': user,
-                'status': status,
-                'id': id,
-                'response' : mensaje_enviado,
-                'type': type,
-            }
-        return render(request, 'Dashboard/Componentes/contactenos.html', context)
+            context['response'] = True
+        except Exception as e:
+            context['response'] = False
+            context['error_message'] = str(e)
+        return JsonResponse(context, safe=False)

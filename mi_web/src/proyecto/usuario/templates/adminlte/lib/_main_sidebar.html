@@ -19,16 +19,8 @@
                 {% endif %}
             </div>
             <div class="info">
-                {% if status == 1 %}
                 <a href="{% url 'perfil' type=type id=id status=status %}" class="d-block">
                     <i aria-hidden="true"></i> {{ user.first_name }}</a>
-                {% elif status == 4 %}
-                <a href="{% url 'perfil_prospecto' type=type id=id status=status %}" class="d-block">
-                    <i  aria-hidden="true"></i> {{ user.first_name }}</a>
-                {% else %}
-                <a href="{% url 'perfil_profesor' type=type id=id status=status %}" class="d-block">
-                    <i aria-hidden="true"></i> {{ user.first_name }}</a>
-                {% endif %}
             </div>
         </div>
         {% endblock %}
@@ -39,17 +31,9 @@
                 {% block nav_links_outer %}
                     {% block nav_links %}
                             <li class="nav-item">
-                                <a href="{% if status == 1 %}
-                                            {% url 'estudiante' type=type id=id status=status %}
-                                        {% elif status == 4 %}
-                                            {% url 'usuario_prospecto' type=type id=id status=status %}
-                                        {% elif status == 2 %}
-                                            {% url 'profesor' type=type id=id status=status %}
-                                        {% endif %}
-                                        " class="nav-link" onclick="ocultar()">
+                                <a href="{% url 'inicio' type=type id=id status=status %}" class="nav-link" onclick="ocultar()">
                                     <i class="fas fa-home"></i>
                                     <p>Inicio</p>
-                                    <p>{{ type }}{{ status }}</p>
                                 </a>
                             </li>
                         <li class="nav-item has-tree-view ">
@@ -69,13 +53,16 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="nav-item">
+                        {% if formulario == 'PI' or formulario == 'PP' or formulario == 'CL' %}
+                        <li class="nav-item" >
+                        {% else %}
+                        <li class="nav-item" style="display: none;">
+                        {% endif %}
                             <a href="{% url 'revision_form' type=type id=id status=status %}" class="nav-link">
                                 <i class="bi bi-folder-fill"></i>
                                 <p>Ver proceso</p>
                             </a>
                         </li>
-                        
                         {% if status == 1 %}
                             <li class="nav-item has-tree-view menu-open">
                                 <a href="#" class="nav-link">
@@ -158,11 +145,25 @@
                                 </ul>
                             </li>
                         {% elif status == 2 %}
-                        <li class="nav-item">
+                        <li class="nav-item has-tree-view menu-open">
                             <a href="#" class="nav-link">
-                                <i class="fas fa-map-marker-alt"></i>
-                                <p>Profesor</p>
+                                <i class="fas fa-cloud"></i>
+                                <p>Servicios en línea</p>
+                                <p>
+                                    <i class="right fas fa-angle-down"></i>
+                                </p>
                             </a>
+                            <ul class="nav nav-treeview menu-open">
+                                <li class="nav-item has-tree-view">
+                                    <a href="#" class="nav-link">
+                                        <i class="fas fa-chalkboard"></i>
+                                        <p>Cursos</p>
+                                        <p>
+                                            <i class="right fas fa-angle-down"></i>
+                                        </p>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                         {% elif status == 3 %}
                         <li class="nav-item">
@@ -238,7 +239,7 @@
                         </li>
                         {% if status == 2 %}
                         <li class="nav-item">
-                            <a href="{% url 'usuario_prospecto' type=type id=id status=status %}" class="nav-link">
+                            <a href="{% url 'estudiaUia' type=type id=id status=status %}" class="nav-link">
                                 <i class="fa-solid fa-graduation-cap"></i>
                                 <p>Estudiar en UIA</p>
                             </a>
