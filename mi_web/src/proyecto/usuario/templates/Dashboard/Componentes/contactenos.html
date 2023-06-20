@@ -1,5 +1,11 @@
 {% extends 'Dashboard/dashboard.html' %}
 {% load static %}
+{% block stylesheets %}
+{% include 'adminlte/lib/_styles.html' %}
+{% block style_sheets %}
+<script src="{% static 'js/correo.js' %}"></script>
+{% endblock %}
+{% endblock %}
 {% block content %}
 {% if response %}
 <div class="row d-flex justify-content-center mx-auto mb-0">
@@ -68,13 +74,16 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modal_contactenosTitle">Contáctenos</h5>
+                <div id="idE" hidden>{{ id }}</div>
+                <div id="StatusE" hidden>{{ status }}</div>
+                <div id="typeE" hidden>{{ type }}</div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="col-12 col-lg-12 col-md-12 col-sm-12 order-md-last d-flex align-item-strech h-100">
                     <div class="w-100 p-3 card rounded ">
-                        <form method="post" id="contactoForm" name="contactoForm" class="contactoForm p-2"
-                            novalidate="novalidate" action="{% url 'envioConsulta' type=type id=id status=status %}">
+                        <p id="correoSend" hidden>true</p>
+                        <form method="POST" id="contactoForm" name="contactoForm" class="contactoForm p-2" onsubmit="enviarCorreo(event);">
                             {% csrf_token %}
                             <div class="row mb-3">
                                 <fieldset class="border mb-3">
@@ -92,8 +101,7 @@
                                                 <label class="label" for="correo">Correo</label>
                                                 <input type="email" class="form-control" name="correo" id="correo"
                                                     placeholder="Correo">
-                                                <input type="email" class="form-control" name="correoSend"
-                                                    id="correoSend" placeholder="Correo" hidden value='true'>
+                                                
                                             </div>
                                         </div>
                                     </div>
@@ -163,6 +171,18 @@
     </div>
 </div>
 {% endblock modal_contactenos %}
+{% block toast_actualizacion%}
+<div class="toast-container position-fixed bottom-0 end-0 p-4" style="z-index: 9999;">
+    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            {% load static %}
+            <img id="img_check" src="{% static 'img/check.png' %}" class="rounded me-2" alt="...">
+            <strong class="me-auto" id="titleToast"> </strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+{% endblock toast_actualizacion %}
 <script>
     $(document).ready(function () {
         $('.nav-link').click(function () {
@@ -174,9 +194,9 @@
     function setEmail(id) {
         var correoSend = document.getElementById('correoSend');
         if (id === 'sendSanjose') {
-            correoSend.value = true;
+            correoSend.innerText = true;
         } else {
-            correoSend.value = false;
+            correoSend.innerText = false;
         }
     }
 </script>
