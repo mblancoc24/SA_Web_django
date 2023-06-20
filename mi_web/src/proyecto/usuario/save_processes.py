@@ -154,7 +154,7 @@ class save_profile_processes():
         else:
             return False
 
-    def update_user_status(id, data, value):
+    def update_user_status(request, id, data, value):
         user_s = get_object_or_404(user_status, identificacion=id)
 
         if data == 'activo':

@@ -16,6 +16,7 @@ from .api_processes import (
                     documents_status,
                     user_update,
                     solicitud_form,
+                    user_status,
                     )
 from .save_processes import(
                     payment_update_user_prospecto
@@ -33,6 +34,8 @@ from .views import (
                     posgradosselect,
                     guardar_perfil,
                     enviar_archivo_a_odoo,
+                    enviar_archivo_posgrado,
+                    enviar_archivo_cursolibre,
                     enviar_solicitud,
                     mostrar_foto,
                     cambiar_foto,
@@ -130,7 +133,9 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
                path('enviar-solicitud/', enviar_solicitud, name='enviar_solicitud'),
                
                path('<str:type>/<int:id>/<int:status>/enviar-archivo-a-odoo/', enviar_archivo_a_odoo, name='enviar_archivo_a_odoo'),
-               
+               path('<str:type>/<int:id>/<int:status>/enviar-archivo-posgrado/', enviar_archivo_posgrado, name='enviar_archivo_posgrado'),
+               path('<str:type>/<int:id>/<int:status>/enviar-archivo-cursolibre/', enviar_archivo_cursolibre, name='enviar_archivo_cursolibre'),
+
                path('mostrar-foto/', mostrar_foto, name='mostrar_foto'),
                path('cambiar-foto/', cambiar_foto, name='cambiar_foto'),
                
@@ -149,6 +154,7 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
                path("documents-status/", documents_status, name="documents_status"),
                path("user-update/", user_update, name="user_update"),
                path("solicitud-form/", solicitud_form, name="solicitud_form"),
+               path("user-status/", user_status, name="user_status"),
 
                path("<str:type>/<int:id>/<int:status>/horario/", HorarioEstudianteView.horario_view, name='horarioEstudiante'),
                path("<str:type>/<int:id>/<int:status>/plan/", PlanDeEstudioView.as_view(), name='planEstudio'),

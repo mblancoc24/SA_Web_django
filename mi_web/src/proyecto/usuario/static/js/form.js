@@ -2,6 +2,9 @@ $(document).ready(function () {
     $('.linkTitulo').hover(function () {
         $('#modalArchivoTitulo').modal('show');
     });
+    $('.linkTituloUniver').hover(function () {
+        $('#modalArchivoTituloUniver').modal('show');
+    });
     $('.linkIdentificacion').hover(function () {
         $('#modalArchivoIdentificacion').modal('show');
     });
@@ -21,8 +24,11 @@ document.addEventListener('DOMContentLoaded', () => {
     var valor;
     var estado = document.getElementById('estado');
     var convalidacion = document.getElementById('conv').value;
+    var universitario = document.getElementById('univer').value;
+    var tipoform = document.getElementById('tipoform').value;
 
     var doc_titulo = document.getElementById('tituloTF').value;
+    var doc_tituloU = document.getElementById('tituloTU').value;
     var doc_ident = document.getElementById('identificacionTF').value;
     var doc_pasaporte = document.getElementById('fotoTF').value;
     var doc_notas = document.getElementById('notaTF').value;
@@ -41,7 +47,13 @@ document.addEventListener('DOMContentLoaded', () => {
     var divconvalidacion = document.getElementById("div_convalidacion");
     var divconvalidacion2 = document.getElementById("div_convalidacion2");
 
+    var divtitUniversitario = document.getElementById("div_titUniversitario");
+
+    var divtitulo = document.getElementById("div_tituloEducacion");
+    var divfotoperfil = document.getElementById("div_fotopasaporte");
+
     var imgtitulo = document.getElementById("img_titulo");
+    var imgtituloU = document.getElementById("img_tituloU");
     var imgidentificacion = document.getElementById("img_ident");
     var imgpasaporte = document.getElementById("img_pasaporte");
     var imgnotas = document.getElementById("img_notas");
@@ -74,12 +86,14 @@ document.addEventListener('DOMContentLoaded', () => {
             progressBar.style.backgroundColor = "rgb(255, 80, 0)";
 
             var btnINT = document.getElementById('btnINT');
+            var btnINTU = document.getElementById('btnINTU');
             var btnINI = document.getElementById('btnINI');
             var btnINF = document.getElementById('btnINF');
             var btnINN = document.getElementById('btnINN');
             var btnINP = document.getElementById('btnINP');
 
             var btnCET = document.getElementById('btn_cambiarestado_titulo');
+            var btnCETU = document.getElementById('btn_cambiarestado_tituloU');
             var btnCEI = document.getElementById('btn_cambiarestado_ident');
             var btnCEF = document.getElementById('btn_cambiarestado_foto');
             var btnCEN = document.getElementById('btn_cambiarestado_notas');
@@ -87,6 +101,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             btnINT.onclick = function () {
                 cambiarInput('titulo');
+            }
+
+            btnINTU.onclick = function () {
+                cambiarInput('tituloU');
             }
 
             btnINI.onclick = function () {
@@ -110,6 +128,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log('entre 1')
                 documentocargado.value = "tituloeducacion";
                 cambiarestado('titulo');
+            }
+
+            btnCETU.onclick = function () {
+                console.log('entre 2')
+                documentocargado.value = "titulouniversitario";
+                cambiarestado('tituloU');
             }
 
             btnCEI.onclick = function () {
@@ -146,7 +170,17 @@ document.addEventListener('DOMContentLoaded', () => {
         divconvalidacion2.style.display = "block";
     }
 
+    if (universitario == "True") {
+        divtitUniversitario.style.display = "block";
+    }
+
+    if (tipoform == "CL"){
+        divtitulo.style.display = "none";
+        divfotoperfil.style.display = "none";
+    }
+
     function correccion() {
+        var spinner0 = document.getElementById("spinner0");
         var spinner1 = document.getElementById("spinner1");
         var spinner2 = document.getElementById("spinner2");
         var spinner3 = document.getElementById("spinner3");
@@ -154,6 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
         var spinner5 = document.getElementById("spinner5");
         
         var cardT = document.getElementById("cardT");
+        var cardTU = document.getElementById("cardTU");
         var cardI = document.getElementById("cardI");
         var cardF = document.getElementById("cardF");
         var cardN = document.getElementById("cardN");
@@ -167,6 +202,16 @@ document.addEventListener('DOMContentLoaded', () => {
             spinner1.style.display = "none";
             imgtitulo.width = 35;
             imgtitulo.height = 35;
+        }
+
+        if (doc_tituloU == "False") {
+
+            imgtituloU.src = "../../../../static/img/error.png";
+            imgtituloU.hidden = false;
+            cardTU.style.backgroundColor = '#FFA67E';
+            spinner0.style.display = "none";
+            imgtituloU.width = 35;
+            imgtituloU.height = 35;
         }
 
         if (doc_ident == "False") {
@@ -219,13 +264,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function aprobado() {
-
+        var spinner0 = document.getElementById("spinner0");
         var spinner1 = document.getElementById("spinner1");
         var spinner2 = document.getElementById("spinner2");
         var spinner3 = document.getElementById("spinner3");
         var spinner4 = document.getElementById("spinner4");
         var spinner5 = document.getElementById("spinner5");
         var cardT = document.getElementById("cardT");
+        var cardTU = document.getElementById("cardTU");
         var cardI = document.getElementById("cardI");
         var cardF = document.getElementById("cardF");
         var cardN = document.getElementById("cardN");
@@ -237,6 +283,13 @@ document.addEventListener('DOMContentLoaded', () => {
         spinner1.style.display = "none";
         imgtitulo.width = 50;
         imgtitulo.height = 50;
+
+        imgtituloU.src = "../../../../static/img/check.png";
+        imgtituloU.hidden = false;
+        cardTU.style.backgroundColor = '#7FFF7F';
+        spinner0.style.display = "none";
+        imgtituloU.width = 50;
+        imgtituloU.height = 50;
 
 
         imgidentificacion.src = "../../../../static/img/check.png";
@@ -280,6 +333,12 @@ document.addEventListener('DOMContentLoaded', () => {
             cardT.style.backgroundColor = '#FFFFFF';
         }
 
+        if (documento == "tituloU") {
+            imgtituloU.hidden = true;
+            spinner0.style.display = "block";
+            cardTU.style.backgroundColor = '#FFFFFF';
+        }
+
         if (documento == "identificacion") {
             imgidentificacion.hidden = true;
             spinner2.style.display = "block";
@@ -307,17 +366,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function cambiarInput(archivo) {
         var formularioT = document.getElementById("div_titulo");
+        var formularioTU = document.getElementById("div_tituloU");
         var formularioI = document.getElementById("div_identificacion");
         var formularioF = document.getElementById("div_pasaporte");
         var formularioN = document.getElementById("div_notas");
         var formularioP = document.getElementById("div_estudio");
         formularioT.style.display = "none";
+        formularioTU.style.display = "none";
         formularioI.style.display = "none";
         formularioF.style.display = "none";
         formularioN.style.display = "none";
         formularioP.style.display = "none";
         if (archivo === 'titulo') {
             formularioT.style.display = "block";
+        }
+        if (archivo === 'tituloU') {
+            formularioTU.style.display = "block";
         }
         else if (archivo === 'identificacion') {
             formularioI.style.display = "block";

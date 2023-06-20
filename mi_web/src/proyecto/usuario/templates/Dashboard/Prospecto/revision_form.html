@@ -12,7 +12,14 @@
     <div class="row justify-content-center mt-3">
         <!-- For demo purpose -->
         <div class="col-lg-12 mx-auto text-black text-center">
+            <input type="hidden" id="tipoform" value="{{ tipoform }}">
+            {% if tipoform == 'PI' %}
             <h1 class="display-8">Proceso de Admisión de Primer Ingreso</h1>
+            {% elif tipoform == 'PP' %}
+            <h1 class="display-8">Proceso de Admisión de Posgrados</h1>
+            {% elif tipoform == 'CL' %}
+            <h1 class="display-8">Proceso de Admisión de Cursos Libres</h1>
+            {% endif %}
             <p class="lead mb-0">Las barras de proceso indicaran la etapa y estado en el que se encuentra tu admisión.
             </p>
             <p class="lead">Para mas detalles, tramites y consultas, llame al: 2212-5500 ext: 600</p>
@@ -48,7 +55,7 @@
         <div class="container">
             <div class="row justify-content-center align-items-center">
 
-                <div class="col-xl-2 col-lg-6 mb-2">
+                <div class="col-xl-2 col-lg-6 mb-2" id="div_tituloEducacion" style="display: block;">
                     {% if documentos.tituloeducacion %}
                     <div class="card-deck" id="btnINT">
                         <div class="card shadow p-2" id="cardT">
@@ -91,6 +98,52 @@
                     </div>
                     {% endif %}
                 </div>
+
+                <div class="col-xl-2 col-lg-6 mb-2" id="div_titUniversitario" style="display: none;">
+                    <input type="hidden" id="univer" value="{{ titUniversitario }}">
+                    {% if documentos.titulouniversitario %}
+                    <div class="card-deck" id="btnINTU">
+                        <div class="card shadow p-2" id="cardTU">
+                            <h2 class="h6 font-weight-bold text-center mb-3">Tít. Universitario <span
+                                    class="bi bi-box-arrow-up-right linkTituloUniver"></h2>
+                            <input type="hidden" id="tituloTU" value="{{ documentos.titulouniversitario }}">
+                            <div
+                                class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
+                                <div class="h2 font-weight-bold d-flex align-items-center justify-content-center"
+                                    style="width: 10px; height: 10px;">
+                                    <img id="img_tituloU" class=" mb-2" src="" alt="">
+                                    <div id="spinner0" class="snippet" data-title="dot-flashing">
+                                        <div class="stage">
+                                            <div class="dot-flashing"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% else%}
+                    <div class="card-deck" id="btnINTU" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        <div class="card shadow p-2" id="cardTU">
+                            <h2 class="h6 font-weight-bold text-center mb-3">Tít. Universitario <span
+                                    class="bi bi-box-arrow-up-right linkTituloUniver"></h2>
+                            <input type="hidden" id="tituloTU" value="{{ documentos.titulouniversitario }}">
+                            <div
+                                class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
+                                <div class="h2 font-weight-bold d-flex align-items-center justify-content-center"
+                                    style="width: 10px; height: 10px;">
+                                    <img id="img_tituloU" class=" mb-2" src="" alt="">
+                                    <div id="spinner0" class="snippet" data-title="dot-flashing">
+                                        <div class="stage">
+                                            <div class="dot-flashing"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
                 <div class="col-xl-2 col-lg-6 mb-2">
                     {% if documentos.identificacion %}
                     <div class="card-deck" id="btnINI">
@@ -136,7 +189,7 @@
                     {% endif %}
                 </div>
 
-                <div class="col-xl-2 col-lg-6 mb-2">
+                <div class="col-xl-2 col-lg-6 mb-2" id="div_fotopasaporte" style="display: block;">
                     {% if documentos.foto %}
                     <div class="card-deck" id="btnINF">
                         <div class="card shadow p-2" id="cardF">
@@ -302,6 +355,15 @@
                                     class="btn btn-primary btn-sm rounded fw-bold">Cargar</button>
                             </div>
                         </div>
+                        <div class="row text-center mt-4" id="div_tituloU" style="display: none;">
+                            <h5 class="card-title text-center mb-5 fw-light fs-5 fw-bold"> Tít. Universitario</h5>
+                            <input class="form-control mb-2" style="opacity: 0.65" type="file" id="floatingFile"
+                                name="tituloUniver" />
+                            <div class="text-center">
+                                <button id="btn_cambiarestado_tituloU" type="submit"
+                                    class="btn btn-primary btn-sm rounded fw-bold">Cargar</button>
+                            </div>
+                        </div>
                         <div class="row text-center mt-4" id="div_identificacion" style="display: none;">
                             <h5 class="card-title text-center mb-5 fw-light fs-5 fw-bold">
                                 Identificación </h5>
@@ -377,6 +439,33 @@
         </div>
     </div>
 
+    <div class="modal fade" id="modalArchivoTituloUniver" tabindex="-1" aria-labelledby="modalArchivoTituloUniverTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+            <div class="modal-content rounded-0">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalArchivoTituloUniverTitle">
+                        Visualizar archivo
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><span class="icon-close2"></span></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h2>Tít. Universitario</h2>
+                    {% if data_type.1 == 'pdf' %}
+                        <iframe src="data:application/pdf;base64,{{ data_content.1 }}#toolbar=0" width="100%" height="600px"></iframe>
+                    {% endif %}
+                    {% if data_type.1 == 'jpeg' %}
+                        <img src="data:image/jpeg;base64,{{ data_content.1 }}" alt="Imagen JPEG">
+                    {% endif %}
+                    {% if data_type.1 == 'png' %}
+                        <img src="data:image/png;base64,{{ data_content.1 }}" alt="Imagen PNG">
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="modalArchivoIdentificacion" tabindex="-1" aria-labelledby="modalArchivoIdentificacionTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
             <div class="modal-content rounded-0">
@@ -390,14 +479,14 @@
                 </div>
                 <div class="modal-body">
                     <h2>Identificación</h2>
-                    {% if data_type.1 == 'pdf' %}
-                        <iframe src="data:application/pdf;base64,{{ data_content.1 }}#toolbar=0" width="100%" height="600px"></iframe>
+                    {% if data_type.2 == 'pdf' %}
+                        <iframe src="data:application/pdf;base64,{{ data_content.2 }}#toolbar=0" width="100%" height="600px"></iframe>
                     {% endif %}
-                    {% if data_type.1 == 'jpeg' %}
-                        <img src="data:image/jpeg;base64,{{ data_content.1 }}" alt="Imagen JPEG">
+                    {% if data_type.2 == 'jpeg' %}
+                        <img src="data:image/jpeg;base64,{{ data_content.2 }}" alt="Imagen JPEG">
                     {% endif %}
-                    {% if data_type.1 == 'png' %}
-                        <img src="data:image/png;base64,{{ data_content.1 }}" alt="Imagen PNG">
+                    {% if data_type.2 == 'png' %}
+                        <img src="data:image/png;base64,{{ data_content.2 }}" alt="Imagen PNG">
                     {% endif %}
                 </div>
             </div>
@@ -417,14 +506,14 @@
                 </div>
                 <div class="modal-body">
                     <h2>Foto Tipo Pasaporte</h2>
-                    {% if data_type.2 == 'pdf' %}
-                        <iframe src="data:application/pdf;base64,{{ data_content.2 }}#toolbar=0" width="100%" height="600px"></iframe>
+                    {% if data_type.3 == 'pdf' %}
+                        <iframe src="data:application/pdf;base64,{{ data_content.3 }}#toolbar=0" width="100%" height="600px"></iframe>
                     {% endif %}
-                    {% if data_type.2 == 'jpeg' %}
-                        <img src="data:image/jpeg;base64,{{ data_content.2 }}" alt="Imagen JPEG">
+                    {% if data_type.3 == 'jpeg' %}
+                        <img src="data:image/jpeg;base64,{{ data_content.3 }}" alt="Imagen JPEG">
                     {% endif %}
-                    {% if data_type.2 == 'png' %}
-                        <img src="data:image/png;base64,{{ data_content.2 }}" alt="Imagen PNG">
+                    {% if data_type.3 == 'png' %}
+                        <img src="data:image/png;base64,{{ data_content.3 }}" alt="Imagen PNG">
                     {% endif %}
                 </div>
             </div>
@@ -444,16 +533,16 @@
                 </div>
                 <div class="modal-body">
                     <h2>Certificación de Notas del Curso</h2>
-                    {% if data_type.3 == 'pdf' %}
-                        <iframe src="data:application/pdf;base64,{{ data_content.3 }}#toolbar=0" width="100%" height="600px"></iframe>
+                    {% if data_type.4 == 'pdf' %}
+                        <iframe src="data:application/pdf;base64,{{ data_content.4 }}#toolbar=0" width="100%" height="600px"></iframe>
                     {% endif %}
-                    {% if data_type.3 == 'jpeg' %}
-                        <img src="data:image/jpeg;base64,{{ data_content.3 }}" alt="Imagen JPEG">
+                    {% if data_type.4 == 'jpeg' %}
+                        <img src="data:image/jpeg;base64,{{ data_content.4 }}" alt="Imagen JPEG">
                     {% endif %}
-                    {% if data_type.3 == 'png' %}
-                        <img src="data:image/png;base64,{{ data_content.3 }}" alt="Imagen PNG">
+                    {% if data_type.4 == 'png' %}
+                        <img src="data:image/png;base64,{{ data_content.4 }}" alt="Imagen PNG">
                     {% endif %}
-                    {% if data_type.3 == 'N/A' %}
+                    {% if data_type.4 == 'N/A' %}
                         <h5>Sin Contenido</h5>
                     {% endif %}
                 </div>
@@ -474,16 +563,16 @@
                 </div>
                 <div class="modal-body">
                     <h2>Plan de Estudio - Contenido del Curso</h2>
-                    {% if data_type.4 == 'pdf' %}
-                        <iframe src="data:application/pdf;base64,{{ data_content.4 }}#toolbar=0" width="100%" height="600px"></iframe>
+                    {% if data_type.5 == 'pdf' %}
+                        <iframe src="data:application/pdf;base64,{{ data_content.5 }}#toolbar=0" width="100%" height="600px"></iframe>
                     {% endif %}
-                    {% if data_type.4 == 'jpeg' %}
-                        <img src="data:image/jpeg;base64,{{ data_content.4 }}" alt="Imagen JPEG">
+                    {% if data_type.5 == 'jpeg' %}
+                        <img src="data:image/jpeg;base64,{{ data_content.5 }}" alt="Imagen JPEG">
                     {% endif %}
-                    {% if data_type.4 == 'png' %}
-                        <img src="data:image/png;base64,{{ data_content.4 }}" alt="Imagen PNG">
+                    {% if data_type.5 == 'png' %}
+                        <img src="data:image/png;base64,{{ data_content.5 }}" alt="Imagen PNG">
                     {% endif %}
-                    {% if data_type.4 == 'N/A' %}
+                    {% if data_type.5 == 'N/A' %}
                         <h5>Sin Contenido</h5>
                     {% endif %}
                 </div>

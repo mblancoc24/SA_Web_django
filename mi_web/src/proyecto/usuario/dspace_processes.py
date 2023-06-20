@@ -6,7 +6,7 @@ from .api_queries import update_urls
 
 class dspace_processes():
     
-    def dspace_first_admission(request, files):
+    def dspace_first_admission(request, files, typeuser):
         session = requests.Session()
         user = request.user
         user = User.objects.get(username=user.username)
@@ -48,7 +48,7 @@ class dspace_processes():
                 break
 
         # Obtener el ID de la colección
-        collection_name = "PRIMER INGRESO"
+        collection_name = typeuser
         collection_url = "http://dspace.uia.ac.cr:8080/server/api/core/communities/" +community_id+"/collections"
         response = session.get(collection_url, headers=headers)
         collections = json.loads(response.text)
@@ -89,7 +89,7 @@ class dspace_processes():
         
         #Creacion de BUNDLE dentro de ITEM creado anteriormente
         bundle = {
-            "name": "PRIMER_INGRESO",
+            "name": typeuser,
             "metadata": {
             }
         }
@@ -132,7 +132,7 @@ class dspace_processes():
                 response_json = response.json()
                 bitstreams_id = response_json['id']
                 urls_dspace.append('http://dspace.uia.ac.cr:8080/server/api/core/bitstreams/'+bitstreams_id+'/content')
-                if 'tituloeducacion' in record['nombre']:
+                if 'tituloeducacion' in record['nombre'] and typeuser == 'PRIMER INGRESO':
                     urls_dspace.append('N/A')
             else:
                 print('Error al enviar el archivo')
@@ -144,11 +144,22 @@ class dspace_processes():
 
         if response.status_code == 204:
             print('Sesión cerrada exitosamente')
-            if len(urls_dspace) == 3:
+            if len(urls_dspace) == 1 and typeuser == 'CURSOS LIBRES':
+                urls_dspace.insert(0,'N/A')
+                urls_dspace.insert(0,'N/A')
+                urls_dspace.append('N/A')
                 urls_dspace.append('N/A')
                 urls_dspace.append('N/A')
                 return urls_dspace
-            else:
+            elif len(urls_dspace) == 3 and typeuser == 'PRIMER INGRESO':
+                urls_dspace.append('N/A')
+                urls_dspace.append('N/A')
+                return urls_dspace
+            elif len(urls_dspace) == 4 and typeuser == 'POSGRADOS':
+                urls_dspace.append('N/A')
+                urls_dspace.append('N/A')
+                return urls_dspace
+            else: 
                 return urls_dspace
         else:
             print('Error al cerrar la sesión')
@@ -324,7 +335,7 @@ class dspace_processes():
                     print('Error al enviar el archivo')
         return data_content
    
-    def name_standardization(request, files):
+    def name_standardization(request, files, typeuser):
         user = request.user
         
         if files['convalidacion'] == 1:
@@ -385,42 +396,107 @@ class dspace_processes():
                 }
             }
         else:
-            foto = files["foto"]
-            titulo = files["titulo"]
-            identificacion = files["identificacion"]
-            
-            foto_type = foto.name
-            titulo_type = titulo.name
-            identificacion_type = identificacion.name
-            
-            foto_termination = foto_type.split(".")
-            titulo_termination = titulo_type.split(".")
-            identificacion_termination = identificacion_type.split(".")
-            
-            new_foto = 'fotoperfil_'+ user.username +'.'+ foto_termination[1]
-            new_titulo = 'tituloeducacion_'+ user.username +'.'+ titulo_termination[1]
-            new_identificacion = 'identificacion_'+ user.username +'.'+ identificacion_termination[1]
-            
-            files_updated = {
-                'titulo': {
-                    'nombre': new_titulo,
-                    'archivo': titulo,
-                    'descripcion': 'Título de Educación Media',
-                    'tipo': titulo.content_type
-                },
-                'identificacion': {
-                    'nombre': new_identificacion,
-                    'archivo': identificacion,
-                    'descripcion': 'Identificación',
-                    'tipo': identificacion.content_type
-                },
-                'foto': {
-                    'nombre': new_foto,
-                    'archivo': foto,
-                    'descripcion': 'Foto de perfil tipo pasaporte',
-                    'tipo': foto.content_type
+            if typeuser == 'PRIMER INGRESO':
+                foto = files["foto"]
+                titulo = files["titulo"]
+                identificacion = files["identificacion"]
+                
+                foto_type = foto.name
+                titulo_type = titulo.name
+                identificacion_type = identificacion.name
+                
+                foto_termination = foto_type.split(".")
+                titulo_termination = titulo_type.split(".")
+                identificacion_termination = identificacion_type.split(".")
+                
+                new_foto = 'fotoperfil_'+ user.username +'.'+ foto_termination[1]
+                new_titulo = 'tituloeducacion_'+ user.username +'.'+ titulo_termination[1]
+                new_identificacion = 'identificacion_'+ user.username +'.'+ identificacion_termination[1]
+                
+                files_updated = {
+                    'titulo': {
+                        'nombre': new_titulo,
+                        'archivo': titulo,
+                        'descripcion': 'Título de Educación Media',
+                        'tipo': titulo.content_type
+                    },
+                    'identificacion': {
+                        'nombre': new_identificacion,
+                        'archivo': identificacion,
+                        'descripcion': 'Identificación',
+                        'tipo': identificacion.content_type
+                    },
+                    'foto': {
+                        'nombre': new_foto,
+                        'archivo': foto,
+                        'descripcion': 'Foto de perfil tipo pasaporte',
+                        'tipo': foto.content_type
+                    }
                 }
-            }
+            elif typeuser == 'POSGRADOS':
+                foto = files["foto"]
+                titulo = files["titulo"]
+                identificacion = files["identificacion"]
+                universidad = files["titulouni"]
+                
+                foto_type = foto.name
+                titulo_type = titulo.name
+                identificacion_type = identificacion.name
+                universidad_type = universidad.name
+                
+                foto_termination = foto_type.split(".")
+                titulo_termination = titulo_type.split(".")
+                identificacion_termination = identificacion_type.split(".")
+                universidad_termination = universidad_type.split(".")
+                
+                new_foto = 'fotoperfil_'+ user.username +'.'+ foto_termination[1]
+                new_titulo = 'tituloeducacion_'+ user.username +'.'+ titulo_termination[1]
+                new_identificacion = 'identificacion_'+ user.username +'.'+ identificacion_termination[1]
+                new_universidad = 'titulouniversitario_'+ user.username +'.'+ universidad_termination[1]
+                
+                files_updated = {
+                    'titulo': {
+                        'nombre': new_titulo,
+                        'archivo': titulo,
+                        'descripcion': 'Título de Educación Media',
+                        'tipo': titulo.content_type
+                    },
+                    'titulouniversitario': {
+                        'nombre': new_universidad,
+                        'archivo': universidad,
+                        'descripcion': 'Título Universitario',
+                        'tipo': universidad.content_type
+                    },
+                    'identificacion': {
+                        'nombre': new_identificacion,
+                        'archivo': identificacion,
+                        'descripcion': 'Identificación',
+                        'tipo': identificacion.content_type
+                    },
+                    'foto': {
+                        'nombre': new_foto,
+                        'archivo': foto,
+                        'descripcion': 'Foto de perfil tipo pasaporte',
+                        'tipo': foto.content_type
+                    }
+                }
+            elif typeuser == 'CURSOS LIBRES':
+                identificacion = files["identificacion"]
+                
+                identificacion_type = identificacion.name
+                
+                identificacion_termination = identificacion_type.split(".")
+                
+                new_identificacion = 'identificacion_'+ user.username +'.'+ identificacion_termination[1]
+                
+                files_updated = {
+                    'identificacion': {
+                        'nombre': new_identificacion,
+                        'archivo': identificacion,
+                        'descripcion': 'Identificación',
+                        'tipo': identificacion.content_type
+                    }
+                }
         
         return files_updated
     
