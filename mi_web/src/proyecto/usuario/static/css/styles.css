@@ -743,6 +743,10 @@ aside.accesibilidad.active {
   #noMatriculable {
     background-color: #d1d1cf;
   }
+  .half-screen {
+    width: 70%;
+    max-width: 70%;
+  }
 }
 
 #ubicacioT {
