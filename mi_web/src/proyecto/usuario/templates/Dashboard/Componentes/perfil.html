@@ -1,4 +1,11 @@
 {% extends 'Dashboard/dashboard.html' %}
+{% load static %}
+{% block stylesheets %}
+{% include 'adminlte/lib/_styles.html' %}
+{% block style_sheets %}
+<script src="{% static 'js/perfil.js' %}"></script>
+{% endblock %}
+{% endblock %}
 {% block content %}
 <div class="p-2">
     <div class="col-md-12 card cardPerfilCol">
@@ -25,14 +32,14 @@
                 <div class="col-md-10 mx-auto mb-2">
                     <div class="text-center">
                         <a href="{% url 'change_password' %}" class="text-info">
-                            <i class="fa-light fa-id-badge" aria-hidden="true"></i>
+                            <i class="fas fa-solid fa-key" aria-hidden="true"></i>
                             <span class="sr-only"></span> Cambiar Contraseña</a>
                     </div>
                 </div>
                 {% endif %}
                 <div class="col-md-10 mx-auto mb-2">
                     <div class="text-center mb-2">
-                        <a data-bs-toggle="modal" data-bs-target="#modal_foto" class="card-link">
+                        <a data-bs-toggle="modal" id="linkCambio" data-bs-target="#modal_foto" class="card-link">
                             <i class="fa fa-envelope" aria-hidden="true"></i>
                             <span class="sr-only"></span>Cambiar Foto de Perfil</a>
                         </a>
@@ -129,6 +136,9 @@
                             CAMBIO DE DATOS PERSONALES
                         </h5>
                     </div>
+                    <div id="idE" hidden>{{ id }}</div>
+                    <div id="StatusE" hidden>{{ status }}</div>
+                    <div id="typeE" hidden>{{ type }}</div>
                     <div class="col-12">
                         <p>
                             Cambie los cambios que desea actualizar. Los datos seran enviados como solicitud para ser
@@ -141,35 +151,44 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" class="row g-3" enctype="multipart/form-data" action="{% url 'enviar_solicitud' %}">
+                <form method="POST" class="row g-3" enctype="multipart/form-data" onsubmit="enviarFormulario(event)">
                     {% csrf_token %}
-
-                    <div class="form-floating mb-2 col-md-4" id="dis_provincia" style="display: block;">
+                    <div class="row mt-3">
+                        <div class="col-md-4 form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="habilitarDireccion">
+                            <label class="form-check-label" for="habilitarDireccion">Actualizar dirección</label>
+                        </div>
+                        <div class="col-md-4 form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="habilitarContactos">
+                            <label class="form-check-label" for="habilitarContactos">Actualizar Contactos</label>
+                        </div>
+                    </div>
+                    <div class="form-floating mb-2 col-md-4" id="dis_provincia" style="display: block;" >
                         <select id="provincia_select" class="form-select" name="provincia_select"
                             data-placeholder="Selecione Provincia" onchange="obtenerProvincia(this)"
-                            onclick="cargarProvincias()" style="height: 60px;">
+                            onclick="cargarProvincias()" style="height: 60px;" required disabled>
                             <option style="opacity: 0.65" value="" disabled selected hidden>Seleccione Provincia
                             </option>
                         </select>
                         <label for="tipo" style="opacity: .65;">Provincia</label>
-                        <input type="hidden" value="NA" id="provincia" name="provincia">
+                        <input type="hidden" value="NA" id="provincia" name="provincia" required>
                     </div>
                     <div class="form-floating mb-2 col-md-4" id="dis_canton" style="display: block;">
                         <select id="canton_select" class="form-select" name="canton_select"
-                            data-placeholder="Selecione Canton" onchange="obtenerCanton(this)" style="height: 60px;">
+                            data-placeholder="Selecione Canton" onchange="obtenerCanton(this)" style="height: 60px;" required disabled> 
                             <option style="opacity: 0.65" value="" disabled selected hidden>Seleccione Cantón</option>
                         </select>
                         <label for="tipo" style="opacity: .65;">Cantón</label>
-                        <input type="hidden" value="NA" id="canton" name="canton">
+                        <input type="hidden" value="NA" id="canton" name="canton" required disabled>
                     </div>
-                    <div class="form-floating mb-2 col-md-4" id="dis_distrito" style="display: block;">
+                    <div class="form-floating mb-2 col-md-4" id="dis_distrito" style="display: block;" >
                         <select id="distrito_select" class="form-select" name="distrito_select"
                             data-placeholder="Selecione Distrito" onchange="obtenerDistrito(this)"
-                            style="height: 60px;">
+                            style="height: 60px;" required disabled>
                             <option style="opacity: 0.65" value="" disabled selected hidden>Seleccione Distrito</option>
                         </select>
                         <label for="tipo" style="opacity: .65;">Distrito</label>
-                        <input type="hidden" value="NA" id="distrito" name="distrito">
+                        <input type="hidden" value="NA" id="distrito" name="distrito" required disabled>
                     </div>
 
                     <div class="form-floating mb-6 col-md-12">
@@ -186,7 +205,7 @@
                                 </svg>
                             </span>
                             <input type="text" class="form-control" value="{{ estudiante.direccion_exacta }}"
-                                id="direccion_exacta" placeholder="Direccion Exacta" name="direccion_exacta" required>
+                                id="direccion_exacta" placeholder="Direccion Exacta" name="direccion_exacta" required disabled>
                         </div>
                     </div>
 
@@ -204,7 +223,7 @@
                                 </svg>
                             </span>
                             <input type="text" class="form-control" value="{{ estudiante.numero_telefonico }}"
-                                id="telefono" placeholder="Número Telefónico" name="telefono">
+                                id="telefono" placeholder="Número Telefónico" name="telefono" disabled>
                         </div>
                     </div>
 
@@ -222,7 +241,7 @@
                                 </svg>
                             </span>
                             <input type="text" class="form-control" value="{{ estudiante.numero_telefonico2 }}"
-                                id="telefono2" placeholder="Segundo Número Telefónico" name="telefono2">
+                                id="telefono2" placeholder="Segundo Número Telefónico" name="telefono2" disabled>
                         </div>
                     </div>
 
@@ -240,13 +259,13 @@
                                 </svg>
                             </span>
                             <input type="email" value="{{ estudiante.correo_personal }}" class="form-control"
-                                id="correo" placeholder="Correo" name="email" required
+                                id="correo" placeholder="Correo" name="email" required disabled
                                 pattern="(?![_.-])((?![_.-][_.-])[a-zA-Z\d_.-]){0,63}[a-zA-Z\d]@((?!-)((?!--)[a-zA-Z\d-]){0,63}[a-zA-Z\d]\.){1,2}([a-zA-Z]{2,14}\.)?[a-zA-Z]{2,14}">
                         </div>
                     </div>
 
                     <div class="d-grid d-flex justify-content-center">
-                        <button type="submit" id="liveToastBtn" onclick="solicitud()"
+                        <button type="submit" id="liveToastBtn"
                             class="btn btn-lg btn-primary btn-sm rounded fw-bold" style="max-width: 300px;">
                             <i class="fa fa-paper-plane" aria-hidden="true"></i> Enviar Solicitud de Cambio de
                             Datos</button>
@@ -257,7 +276,21 @@
     </div>
 </div>
 {% endblock modal_actualizacion %}
-
+{% block toast_actualizacion%}
+<div class="toast-container position-fixed bottom-0 end-0 p-4">
+    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            {% load static %}
+            <img id="img_check" src="{% static 'img/check.png' %}" class="rounded me-2" alt="...">
+            <strong class="me-auto">Solicitud de actualizacion de informacion personal</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            
+        </div>
+    </div>
+</div>
+{% endblock toast_actualizacion %}
 <!-- Model de Cambio de foto -->
 {% block modal_foto%}
 <div class="modal fade" id="modal_foto" tabindex="-1" aria-labelledby="modal_fotoTitle" style="display: none"
@@ -279,7 +312,7 @@
                         <img class="rounded-circle mt-5" width="200px" height="200px" src="{% url 'mostrar_foto' %}">
                         {% else %}
                         {% load static %}
-                        <img class="rounded-circle mt-5" width="200px" height="200px" src="{% static 'img/user.png' %}">
+                        <img class="rounded-circle mt-5" id="perfilImg" width="200px" height="200px" src="{% static 'img/user.png' %}">
                         {% endif %}
                         <span class="font-weight-bold">{{ user.username }}</span>
                     </div>
@@ -293,7 +326,7 @@
                             <label for="floatingFile">
                                 <i class="fa fa-upload" aria-hidden="true"></i>Foto de Perfil</label>
                             <input class="form-control" type="file" id="floatingFile" style="opacity: 0.65"
-                                name="fotocambio" />
+                                name="fotocambio" onchange="imagePerfil();"/>
                         </div>
                         <div class="d-grid mb-2 d-flex justify-content-center">
                             <button type="submit" class="w-100 btn btn-lg btn-primary btn-sm rounded fw-bold"

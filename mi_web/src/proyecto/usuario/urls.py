@@ -24,19 +24,22 @@ from .save_processes import(
 from .views import (
                     Logueo, 
                     PaginaRegistroEstudiante,
-                    DetalleUsuarioEstudianteProfesor, 
-                    DetalleUsuarioEstudiante, 
-                    DetalleUsuarioProfesor, 
-                    DetalleUsuarioProspecto,
+
+                    EstudiaUIAView,
+                    DashboardView,
                     vistaPerfil,
                     carrerasselect,
                     colegiosselect,
                     posgradosselect,
                     guardar_perfil,
                     enviar_archivo_a_odoo,
+
                     enviar_archivo_posgrado,
                     enviar_archivo_cursolibre,
                     enviar_solicitud,
+
+                    EnvioSolicitud,
+
                     mostrar_foto,
                     cambiar_foto,
                     change_email,
@@ -45,8 +48,7 @@ from .views import (
                     microsoft_auth, 
                     microsoft_callback,
                     descargar_archivo,
-                    DashboardEstudianteView,
-                    DashboardProfesorView,
+
                     MicrosoftLogoutView,
                     HorarioEstudianteView,
                     PlanDeEstudioView,
@@ -117,12 +119,9 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
                 path('colegiosselect/', colegiosselect, name='colegiosselect'),
                 path('posgradosselect/', posgradosselect, name='posgradosselect'),
                
-               path('usuario-estudiante/', DetalleUsuarioEstudiante.as_view(), name='usuario_estudiante'),
-               path('usuario-estudiante-profesor/', DetalleUsuarioEstudianteProfesor.as_view(), name='usuario_estudiante_profesor'),
-               path('usuario-profesor/', DetalleUsuarioProfesor.as_view(), name='usuario_profesor'),
-               
-               path('<str:type>/<int:id>/<int:status>', DetalleUsuarioProspecto.as_view(), name='usuario_prospecto'),
-               path('<str:type>/<int:id>/<int:status>/perfil/', vistaPerfil.profile_view, name='perfil_prospecto'),
+                
+               path('<str:type>/<int:id>/<int:status>', DashboardView.as_view(), name='inicio'),
+               path('<str:type>/<int:id>/<int:status>/Estudiar', EstudiaUIAView.as_view(), name='estudiaUia'),
                
                path('obtener-datos/', obtener_datos, name='obtener_datos'),
                path('obtener-provincia/', obtener_provincia, name='obtener_provincia'),
@@ -130,7 +129,7 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
                path('obtener-distrito/', obtener_distrito, name='obtener_distrito'),
                path('obtener-nacionalidad/', obtener_nacionalidad, name='obtener_nacionalidad'),
 
-               path('enviar-solicitud/', enviar_solicitud, name='enviar_solicitud'),
+               path('<str:type>/<int:id>/<int:status>/enviar-solicitud/', EnvioSolicitud.enviar_solicitud, name='enviar_solicitud'),
                
                path('<str:type>/<int:id>/<int:status>/enviar-archivo-a-odoo/', enviar_archivo_a_odoo, name='enviar_archivo_a_odoo'),
                path('<str:type>/<int:id>/<int:status>/enviar-archivo-posgrado/', enviar_archivo_posgrado, name='enviar_archivo_posgrado'),
@@ -139,11 +138,7 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
                path('mostrar-foto/', mostrar_foto, name='mostrar_foto'),
                path('cambiar-foto/', cambiar_foto, name='cambiar_foto'),
                
-               path('<str:type>/<int:id>/<int:status>/', DashboardEstudianteView.as_view(), name='estudiante'),
                path('<str:type>/<int:id>/<int:status>/perfil/', vistaPerfil.profile_view, name='perfil'),
-               
-               path('<str:type>/<int:id>/<int:status>/', DashboardProfesorView.as_view(), name='profesor'),
-               path('<str:type>/<int:id>/<int:status>/perfil/', vistaPerfil.profile_view, name='perfil_profesor'),
                
                path('cambio-correo/', change_email, name='cambio_correo'),
                path('change-email-correct/', change_email_correct, name='change_email_correct'),

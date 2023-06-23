@@ -77,4 +77,10 @@ $(document).ready(function () {
     }
   });
   $('.select2').select2();
+  setTimeout(function() {
+    var alert = document.querySelector('.alert');
+    if (alert) {
+      alert.style.display = 'none';
+    }
+  }, 1000);
 });

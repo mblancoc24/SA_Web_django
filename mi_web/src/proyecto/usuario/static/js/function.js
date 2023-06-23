@@ -18,7 +18,7 @@ function datacedula() {
                     primer_apellido.readOnly = false;
                     segundo_apellido.readOnly = false;
                 }
-                else{
+                else {
                     var nombre = document.getElementById("nombre");
                     var primer_apellido = document.getElementById("primerapellido");
                     var segundo_apellido = document.getElementById("segundoapellido");
@@ -398,6 +398,7 @@ function habilitarStep4() {
 }
 
 function validatePasswords() {
+    const passwordErrorDiv = document.getElementById('messageDiv');
     const passwordError = document.getElementById('message');
     const passwordInput = document.getElementById('password1');
     const passwordInput2 = document.getElementById('password2');
@@ -406,19 +407,43 @@ function validatePasswords() {
     const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_.:;,\-\+\]\[\}\{\¡\¿\'\?=\´~\"!°¬|])[A-Za-z\d!@#$%^&*()_.:;,\-\+\]\[\}\{\¡\¿\'\?=\´~\"!°¬|]{8,}$/;
 
     if (password !== password2) {
+        passwordErrorDiv.style.display = 'block';
         passwordError.textContent = "Las contraseñas no coinciden";
         result = true;
         botonSiguienteCorreoP.classList.toggle('disabled', result);
         validarUl.classList.toggle('disabled', result);
+        setTimeout(function () {
+            passwordErrorDiv.style.display = 'none';
+        }, 8000);
     } else if (!passwordPattern.test(password)) {
+        passwordErrorDiv.style.display = 'block';
         passwordError.textContent = "La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula, un número y un carácter especial.";
         result = true;
         botonSiguienteCorreoP.classList.toggle('disabled', result);
         validarUl.classList.toggle('disabled', result);
+        setTimeout(function () {
+            passwordErrorDiv.style.display = 'none';
+        }, 8000);
     } else {
+        passwordErrorDiv.style.display = 'none';
         passwordError.textContent = "";
         result = false;
         botonSiguienteCorreoP.classList.toggle('disabled', result);
         validarUl.classList.toggle('disabled', result);
+    }
+}
+
+
+showPassword = (id, icono) => {
+    var password = document.getElementById(id);
+    const eyeButton = document.querySelector(icono);
+    if (password.type === "password") {
+        password.type = "text";
+        eyeButton.classList.remove("fa-eye-slash");
+        eyeButton.classList.add("fa-eye");
+    } else {
+        password.type = "password";
+        eyeButton.classList.remove("fa-eye");
+        eyeButton.classList.add("fa-eye-slash");
     }
 }
