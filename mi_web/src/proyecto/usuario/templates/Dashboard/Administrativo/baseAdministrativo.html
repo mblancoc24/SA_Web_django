@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>UIA Digital Campus</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    <link rel="stylesheet" href="{% static 'css/font-uia.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dark.css' %}">
+    <link href="{% static 'css/pluginCss/select2.min.css' %}" rel="stylesheet" />
+    <link rel='stylesheet' href="{% static 'css/pluginCss/bootstrap-icons.min.css' %}">
+    <link rel='stylesheet' href="{% static 'css/pluginCss/all.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/pluginCss/dark.css' %}">
+
+    <script src="{% static 'js/pluginJs/jquery.min.js' %}"></script>
+    <script src="{% static 'js/pluginJs/flatpickr.js' %}"></script>
+    {% bootstrap_javascript %}
+    <script src="{% static 'js/pluginJs/select2.min.js' %}"></script>
+    {% block extraJavaScript %}
+    {% endblock %}
+    <style>
+        .main-footer {
+            width: 100%;
+            position: fixed;
+            left: 0px;
+            bottom: 0px;
+        }
+    </style>
+</head>
+
+<body class="d-flex flex-column min-vh-100 ">
+    {% block barranavegacion %}
+    {% endblock barranavegacion %}
+    <div class="container">
+        {% block content %}
+
+        {% endblock content %}
+    </div>
+    {% block footer %}
+    {% include 'adminlte/lib/_main_footer.html' %}
+    {% endblock footer %}
+</body>
+
+</html>

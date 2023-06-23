@@ -48,7 +48,7 @@
               <div class="row">
                 <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-3">
                   <select id="tipo" class="form-select" onchange="change();">
-                    <option style="opacity: .65;" value="" disabled selected hidden>Tipo de identificación
+                    <option value="" disabled selected hidden>Tipo de identificación
                     </option>
                     <option value="Cédula">Cédula Física</option>
                     <option value="Dimex">DIMEX</option>
@@ -120,7 +120,6 @@
                 <div class="form-floating mb-3 col-12 col-sm-12 col-md-4 col-lg-4" id="dis_telefono"
                   style="display: block;">
                   <div class="input-group">
-                    <i class="fa-solid fa-phone-plus"></i>
                     <span class="input-group-text d-flex justify-content-center fas fa-solid fa-phone fa-lg"
                       id="basic-addon1"></span>
                     <input type="text" class="form-control" id="telefono" placeholder="Número Telefónico"
@@ -138,7 +137,7 @@
                 </div>
                 <div class="col-md-4 mb-3" id="dis_pais" style="display: block;">
                   <select id="pais_select" class="form-select select2" onchange="obtenerPais(this)" name="pais_select"
-                    data-placeholder="Seleccione Nacionalidad">
+                    data-placeholder="País de origen">
                   </select>
                   <input type="hidden" id="pais" name="pais">
                 </div>
@@ -337,6 +336,11 @@
   .select2-selection__arrow {
     height: 34px !important;
   }
+
+  .select2-container .select2-selection--single .select2-selection__rendered {
+    margin-top: 5px;
+  }
+  
 
   @media (max-width: 319px) {
     .d-flex {

@@ -24,6 +24,7 @@ from .save_processes import save_profile_processes
 from .api_queries import enviar_data_odoo, insert_urls, get_urls, update_request, get_professor
 import json
 import base64
+from django.http import Http404
 
 class Logueo(LoginView):
     template_name = 'usuario/login.html'
@@ -42,37 +43,54 @@ class Logueo(LoginView):
         password = form.cleaned_data.get('password')
         
         user = authenticate(self.request, username=username, password=password)
-        
-        prospecto_user = get_object_or_404(prospecto, identificacion=user.username)
-        prospecto_dict = {}
-        for field in prospecto._meta.get_fields():
-            field_name = field.name
-            if field_name != 'info_estudiantes' and field_name != 'fecha_nacimiento':
-                field_value = getattr(prospecto_user, field_name)
-                prospecto_dict[field_name] = field_value
-            elif field_name == 'fecha_nacimiento':
-                field_value = getattr(prospecto_user, field_name)
-                fecha_str = field_value.strftime('%Y-%m-%d')
-                prospecto_dict[field_name] = fecha_str
-        
-        prospecto_dict['tipo'] = 'prospecto'
+        validacion = True
+        try:
+            prospecto_user = get_object_or_404(prospecto, identificacion=user.username)
+        except Http404:
+            validacion = False
+        if validacion:
+            prospecto_dict = {}
+            for field in prospecto._meta.get_fields():
+                field_name = field.name
+                if field_name != 'info_estudiantes' and field_name != 'fecha_nacimiento':
+                    field_value = getattr(prospecto_user, field_name)
+                    prospecto_dict[field_name] = field_value
+                elif field_name == 'fecha_nacimiento':
+                    field_value = getattr(prospecto_user, field_name)
+                    fecha_str = field_value.strftime('%Y-%m-%d')
+                    prospecto_dict[field_name] = fecha_str
             
-        self.request.session['user_info'] = prospecto_dict
-        
-        status = get_object_or_404(user_status, identificacion=user.username)
-        
-        if user is None:
-            form.add_error('username', 'El usuario no existe en el sistema')
-            logout(self.request)
-            return super().form_invalid(form)
-        elif status.activo:
-            login(self.request, user)
-            registrar_accion(user, 'El usuario {0} ha ingresado como prospecto.'.format(user.username))
-            context = {'type':'prospecto','id': username, 'status': 4}
-            return redirect(reverse('inicio', kwargs=context))
+            prospecto_dict['tipo'] = 'prospecto'
+                
+            self.request.session['user_info'] = prospecto_dict
+            
+            status = get_object_or_404(user_status, identificacion=user.username)
+            
+            if user is None:
+                form.add_error('username', 'El usuario no existe en el sistema')
+                logout(self.request)
+                return super().form_invalid(form)
+            elif status.activo:
+                login(self.request, user)
+                registrar_accion(user, 'El usuario {0} ha ingresado como prospecto.'.format(user.username))
+                context = {'type':'prospecto','id': username, 'status': 4}
+                return redirect(reverse('inicio', kwargs=context))
+            else:
+                logout(self.request)
+                return super().form_invalid(form)
         else:
-            logout(self.request)
-            return super().form_invalid(form)
+            if user is None:
+                form.add_error('username', 'El usuario no existe en el sistema')
+                logout(self.request)
+                return super().form_invalid(form)
+            elif user.is_active:
+                login(self.request, user)
+                registrar_accion(user, 'El usuario {0} ha ingresado como administrador.'.format(user.username))
+                context = {'type':'administrador','id': username, 'status': 5}
+                return redirect(reverse('inicioAdministrativo', kwargs=context))
+            else:
+                logout(self.request)
+                return super().form_invalid(form)
 
 def microsoft_auth(request):
     # Comprobar si ya existe una sesión de usuario
@@ -556,6 +574,8 @@ class DashboardView(LoginRequiredMixin, View):
         elif type == "profesor":
             context['formulario'] = request.session.get('formulario', 'NA')
             return render(request, 'Dashboard/Profesor/profesor.html', context)
+        elif type == "administrador":
+            return render(request, 'Administrativo/mercadeo.html', context)
 
 @login_required
 def change_email(request):
@@ -1535,3 +1555,13 @@ class EnvioDeConsultas(LoginRequiredMixin):
             context['response'] = False
             context['error_message'] = str(e)
         return JsonResponse(context, safe=False)
+    
+class DashboardAdministrativoView(LoginRequiredMixin, View):
+    context_object_name = 'inicioAdministrativo'
+    def get(self, request,type, id, status):
+        context = {
+                'type': type,
+                'id': id,
+                'status': status,
+            }
+        return render(request, 'Dashboard/Administrativo/mercadeo.html', context)
