@@ -31,6 +31,7 @@ class Logueo(LoginView):
     redirect_authenticated_user = True
 
     def get_context_data(self, **kwargs):
+        logout(self.request)
         context = super().get_context_data(**kwargs)
         context['cuenta'] = self.request.GET.get('cuenta')
         return context
@@ -83,6 +84,7 @@ def microsoft_auth(request):
         }
         access_token = request.session['access_token']
         requests_response = requests.get(url, headers=headers)
+        request.session['moroso'] = False
         
         if requests_response.status_code == 200:
             user = MicrosoftGraphBackend.authenticate(request=request, access_token=access_token)
@@ -93,11 +95,25 @@ def microsoft_auth(request):
                     login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                     if tipo_user['tipo'] == 'estudiante':
                         status = get_object_or_404(user_status, identificacion=user.username)
-                        if status.activo:
+                        if status.activo and not status.moroso:
                             registrar_accion(user, 'El usuario {0} ha ingresado como estudiante.'.format(user.username))
                             context = {'type':'estudiante','id': user.username, 'status': 1}
+
+                            return redirect(reverse('estudiante', kwargs=context))
+                        elif status.moroso:
+                            request.session['moroso'] = True
+                            registrar_accion(user, 'El usuario {0} ha ingresado como estudiante. Ademas se le han bloqueado las opciones por status:moroso'.format(user.username))
+                            context = {'type':'estudiante','id': user.username, 'status': 1}
+                            return redirect(reverse('estudiante', kwargs=context))
+                            ##AGREGAR INFO
+                        else:
+                            registrar_accion(user, 'El usuario {0} ha ingresado como estudiante. Ademas se le han bloqueado las opciones por status:inactivo'.format(user.username))
+                            context = {'type':'estudiante','id': user.username, 'status': 1}
+                            return redirect(reverse('estudiante', kwargs=context))
+                            ##AGREGAR INFO
+
                             return redirect(reverse('inicio', kwargs=context))
-                        ##AGREGAR INFO
+
                     
                     elif tipo_user['tipo'] == 'profesor' or tipo_user['tipo'] == 'prospecto/profesor':
                         registrar_accion(user, 'El usuario {0} ha ingresado como profesor.'.format(user.username))
@@ -145,6 +161,7 @@ def microsoft_callback(request):
         request.session['access_token'] = response_json['access_token']
         access_token = response_json['access_token']
         token_type = requests_response.json().get('token_type')
+        request.session['moroso'] = False
         
         user = MicrosoftGraphBackend.authenticate(request=request, access_token=access_token)
         tipo_user = request.session.get('user_info')
@@ -154,11 +171,26 @@ def microsoft_callback(request):
                 login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                 if tipo_user['tipo'] == 'estudiante':
                     status = get_object_or_404(user_status, identificacion=user.username)
-                    if status.activo:
+                    if status.activo and not status.moroso:
                         registrar_accion(user, 'El usuario {0} ha ingresado como estudiante.'.format(user.username))
                         context = {'type':'estudiante','id': user.username, 'status': 1}
+
+                        return redirect(reverse('estudiante', kwargs=context))
+                    elif status.moroso:
+                        request.session['moroso'] = True
+                        registrar_accion(user, 'El usuario {0} ha ingresado como estudiante. Ademas se le han bloqueado las opciones por status:moroso'.format(user.username))
+                        context = {'type':'estudiante','id': user.username, 'status': 1}
+                        return redirect(reverse('estudiante', kwargs=context))
+                        ##AGREGAR INFO
+                    else:
+                        registrar_accion(user, 'El usuario {0} ha ingresado como estudiante. Ademas se le han bloqueado las opciones por status:inactivo'.format(user.username))
+                        context = {'type':'estudiante','id': user.username, 'status': 1}
+                        return redirect(reverse('estudiante', kwargs=context))
+                        ##AGREGAR INFO
+
                         return redirect(reverse('inicio', kwargs=context))
                     ##AGREGAR INFO
+
                 
                 elif tipo_user['tipo'] == 'profesor' or tipo_user['tipo'] == 'prospecto/profesor':
                     registrar_accion(user, 'El usuario {0} ha ingresado como profesor.'.format(user.username))
@@ -313,7 +345,7 @@ def registrar_accion(usuario, accion):
 
 @login_required
 def carrerasselect(request):
-    valores = carreras.objects.values_list('nombre_carrera', flat=True)
+    valores = carreras.objects.order_by('id').values_list('nombre_carrera', flat=True)
     return JsonResponse(list(valores), safe=False)
 
 @login_required
@@ -323,7 +355,7 @@ def colegiosselect(request):
 
 @login_required
 def posgradosselect(request):
-    valores = posgrados.objects.values_list('nombre_carrera', flat=True)
+    valores = posgrados.objects.order_by('id').values_list('nombre_carrera', flat=True)
     return JsonResponse(list(valores), safe=False)
 
 class vistaPerfil (LoginRequiredMixin):
@@ -584,37 +616,54 @@ class RevisionFormView(LoginRequiredMixin, View):
         estado = get_object_or_404(estados, id_estado=statusgeneral.estado_id)
 
         docs = get_object_or_404(documentos, usuario=user.pk)
-        
+
+        typeform = get_object_or_404(user_status, identificacion=user.username)
+
         if 'urls' in self.request.session:
             data_urls = self.request.session.get('urls')
         else:
             data_urls = get_urls(self.request)
             self.request.session['urls'] = data_urls
+            self.request.session['titUniversitario'] = False
+            titUniversitario = self.request.session.get('titUniversitario')
         
-        data_content = []
-        data_content_type = []
+        data_content = [0,1,2,3,4,5]
+        data_content_type = [0,1,2,3,4,5]
         
         if 'urlsContent' in self.request.session: 
             data_content = self.request.session.get('urlsContent')
             data_content_type = self.request.session.get('urlsContentType')
+            titUniversitario = self.request.session.get('titUniversitario')
         else:
             responses = dspace_processes.dspace_docs_visualization(data_urls)
             
             for response in responses:
-                data_content.append(base64.b64encode(response.content).decode('utf-8'))
-                if 'pdf' in response.headers['Content-Type']:
-                    data_content_type.append('pdf')
-                elif 'jpeg' in response.headers['Content-Type']:
-                    data_content_type.append('jpeg')
-                elif 'png' in response.headers['Content-Type']:
-                    data_content_type.append('png')
+                content_type = dspace_processes.content_process(response.headers['Content-Type'])
+                if 'tituloeducacion' in response.headers['Content-Disposition']:
+                    data_content[0] = base64.b64encode(response.content).decode('utf-8')
+                    data_content_type[0] = content_type
+                elif 'titulouniversitario' in response.headers['Content-Disposition']:
+                    data_content[1] = base64.b64encode(response.content).decode('utf-8')
+                    data_content_type[1] = content_type
+                    self.request.session['titUniversitario'] = True
+                    titUniversitario = self.request.session.get('titUniversitario')
+                elif 'identificacion' in response.headers['Content-Disposition']:
+                    data_content[2] = base64.b64encode(response.content).decode('utf-8')
+                    data_content_type[2] = content_type
+                elif 'fotoperfil' in response.headers['Content-Disposition']:
+                    data_content[3] = base64.b64encode(response.content).decode('utf-8')
+                    data_content_type[3] = content_type
+                elif 'record_academico' in response.headers['Content-Disposition']:
+                    data_content[4] = base64.b64encode(response.content).decode('utf-8')
+                    data_content_type[4] = content_type
+                elif 'plan_estudio' in response.headers['Content-Disposition']:
+                    data_content[5] = base64.b64encode(response.content).decode('utf-8')
+                    data_content_type[5] = content_type
                     
-            if len(data_content) == 3:
-                data_content_type.append('N/A')
-                data_content_type.append('N/A')
-        
             self.request.session['urlsContent'] = data_content
             self.request.session['urlsContentType'] = data_content_type
+
+            
             
         try:
             fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
@@ -626,6 +675,8 @@ class RevisionFormView(LoginRequiredMixin, View):
                 "comentario": statusgeneral.comentario,
                 "estado": estado.estado_nombre,
                 "convalidacion": statusgeneral.convalidacion,
+                'titUniversitario': titUniversitario,
+                'tipoform': typeform.form,
                 "documentos": docs,
                 "data_content": data_content,
                 "data_type":data_content_type,
@@ -639,6 +690,8 @@ class RevisionFormView(LoginRequiredMixin, View):
                 "comentario": statusgeneral.comentario,
                 "estado": estado.estado_nombre,
                 "convalidacion": statusgeneral.convalidacion,
+                'titUniversitario': titUniversitario,
+                'tipoform': typeform.form,
                 "documentos": docs,
                 "data_content": data_content,
                 "data_type":data_content_type,
@@ -792,14 +845,14 @@ def enviar_archivo_a_odoo(request,type, id, status):
                 'identificacion': request.FILES.get('cedulafotografia')
             }
             
-        files_updated = dspace_processes.name_standardization(request, files)
+        files_updated = dspace_processes.name_standardization(request, files, "PRIMER INGRESO")
         
-        save_data_dspace = dspace_processes.dspace_first_admission(request, files_updated)
+        save_data_dspace = dspace_processes.dspace_first_admission(request, files_updated, "PRIMER INGRESO")
         
         if save_data_dspace is not None:
             if convalidacion == '':
                 formulariodata = [1, True,'Formulario Enviado Satisfactoriamente', user.pk]
-                formulariodocumentos = [user.pk, False, False, True, True, True, True]
+                formulariodocumentos = [user.pk, True, False, True, True, True, True]
             else:
                 formulariodata = [1, False,'Formulario Enviado Satisfactoriamente', user.pk]
                 formulariodocumentos = [user.pk, True, False, True, True, False, False]
@@ -820,13 +873,114 @@ def enviar_archivo_a_odoo(request,type, id, status):
             save = save_profile_processes.save_documents(request, formulariodata, formulariodocumentos)
 
             if save and save_odoo:
-                save_profile_processes.update_user_status(request, 'form', 'PI')
+                save_profile_processes.update_user_status(request, user.username, 'form', 'PI')
                 data_urls = [save_data_dspace[0], save_data_dspace[1], save_data_dspace[2], save_data_dspace[3],
                              save_data_dspace[4], save_data_dspace[5]]
                 insert_urls(request,data_urls)
                 context = {'type':type,'id': user.username, 'status': 4}
                 return redirect(reverse('revision_form', kwargs=context))
     
+@login_required
+def enviar_archivo_posgrado(request,type, id, status):
+    if request.method == 'POST':
+        user = request.user
+
+        if status == 2:
+            prospecto_user = get_professor(user.username)
+            save_profile_processes.save_prospecto(request, list(prospecto_user.values()))
+            prospecto_user = get_object_or_404(prospecto, identificacion=user.username)
+            datos_estados = [prospecto_user.username, True, False, 'NA', False, False]
+            save_profile_processes.save_user_status(request, datos_estados)
+        elif status == 4:
+            prospecto_user = get_object_or_404(prospecto, identificacion=user.username)
+
+        asesor = request.POST.get('asesor')
+        files = {
+            'convalidacion': 0,
+            'foto': request.FILES.get('fotoperfil'),
+            'titulo':request.FILES.get('titulobachillerto'),
+            'identificacion': request.FILES.get('cedulafotografia'),
+            'titulouni':request.FILES.get('titulouniversitario')
+        }
+            
+        files_updated = dspace_processes.name_standardization(request, files, 'POSGRADOS')
+        
+        save_data_dspace = dspace_processes.dspace_first_admission(request, files_updated, "POSGRADOS")
+        
+        if save_data_dspace is not None:
+            formulariodata = [1, False,'Formulario Enviado Satisfactoriamente', user.pk]
+            formulariodocumentos = [user.pk, True, True, True, True, False, False]
+            save_data_dspace.append('N/A')#colegio
+            save_data_dspace.append('N/A')#miselect
+                
+            if asesor == '':
+                save_data_dspace.append(request.POST.get('asesor_select'))
+            else:
+                save_data_dspace.append('Asesor')
+            
+            save_data_dspace.append(request.POST.get('ingreso_economicoP'))
+            
+            #save_odoo = enviar_data_odoo(request, save_data_dspace, prospecto_user) ARREGLAR
+            
+            save = save_profile_processes.save_documents(request, formulariodata, formulariodocumentos)
+
+            if save:
+                save_profile_processes.update_user_status(request, user.username, 'form', 'PP')
+                data_urls = [save_data_dspace[0], save_data_dspace[1], save_data_dspace[2], save_data_dspace[3],
+                             save_data_dspace[4], save_data_dspace[5]]
+                insert_urls(request,data_urls)
+                context = {'type':type,'id': user.username, 'status': 4}
+                return redirect(reverse('revision_form', kwargs=context))
+
+@login_required
+def enviar_archivo_cursolibre(request,type, id, status):
+    if request.method == 'POST':
+        user = request.user
+
+        if status == 2:
+            prospecto_user = get_professor(user.username)
+            save_profile_processes.save_prospecto(request, list(prospecto_user.values()))
+            prospecto_user = get_object_or_404(prospecto, identificacion=user.username)
+            datos_estados = [prospecto_user.username, True, False, 'NA', False, False]
+            save_profile_processes.save_user_status(request, datos_estados)
+        elif status == 4:
+            prospecto_user = get_object_or_404(prospecto, identificacion=user.username)
+
+        asesor = request.POST.get('asesor')
+        files = {
+            'convalidacion': 0,
+            'identificacion': request.FILES.get('cedulafotografia'),
+        }
+            
+        files_updated = dspace_processes.name_standardization(request, files, 'CURSOS LIBRES')
+        
+        save_data_dspace = dspace_processes.dspace_first_admission(request, files_updated, "CURSOS LIBRES")
+        
+        if save_data_dspace is not None:
+            formulariodata = [1, False,'Formulario Enviado Satisfactoriamente', user.pk]
+            formulariodocumentos = [user.pk, False, False, True, False, False, False]
+            save_data_dspace.append('N/A')#colegio
+            save_data_dspace.append('N/A')#miselect
+                
+            if asesor == '':
+                save_data_dspace.append(request.POST.get('asesor_select'))
+            else:
+                save_data_dspace.append('Asesor')
+            
+            save_data_dspace.append('N/A')#IngresoEconomico
+            
+            #save_odoo = enviar_data_odoo(request, save_data_dspace, prospecto_user) ARREGLAR
+            
+            save = save_profile_processes.save_documents(request, formulariodata, formulariodocumentos)
+
+            if save:
+                save_profile_processes.update_user_status(request, user.username, 'form', 'CL')
+                data_urls = [save_data_dspace[0], save_data_dspace[1], save_data_dspace[2], save_data_dspace[3],
+                             save_data_dspace[4], save_data_dspace[5]]
+                insert_urls(request,data_urls)
+                context = {'type':type,'id': user.username, 'status': 4}
+                return redirect(reverse('revision_form', kwargs=context))
+
 class HorarioEstudianteView(LoginRequiredMixin):
     context_object_name = 'horarioEstudiante'
     template_name = 'Dashboard/Estudiante/horarioEstudiante.html'
@@ -1011,6 +1165,13 @@ class MatriculaView(LoginRequiredMixin, View):
             creditos_curso = curso['creditos']
             registros[str(i)] = {'curso':curso_cursos, 'nombre': nombre_curso, 'credito': creditos_curso}
             i+=1
+
+        datapago = {
+            'subtotal': self.request.session.get('subtotal'),
+            'descuentoTotal': self.request.session.get('descuentoTotal'),
+            'preMatricula': self.request.session.get('preMatricula'),
+            'ordenVenta': self.request.session.get('ordenVenta')
+        }
             
         try:
             fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
@@ -1021,6 +1182,7 @@ class MatriculaView(LoginRequiredMixin, View):
                 'fotoperfil': imagen_url,
                 'status': self.kwargs['status'],
                 'id': self.kwargs['id'],
+                'pago': datapago,
                 'type': self.kwargs['type'],
                 'formulario': self.request.session.get('formulario', 'NA'),
             }
@@ -1030,6 +1192,7 @@ class MatriculaView(LoginRequiredMixin, View):
                 'user': user,
                 'status': self.kwargs['status'],
                 'id': self.kwargs['id'],
+                'pago': datapago,
                 'type': self.kwargs['type'],
                 'formulario': self.request.session.get('formulario', 'NA'),
             }
@@ -1128,11 +1291,15 @@ class PaymentProspecto(LoginRequiredMixin, View):
     
     def get_context_data(self, **kwargs):
         user = self.request.user
+        datapago = {
+            'preMatricula': self.request.session.get('preMatricula')
+        }
+
         if 'orderid' in self.request.session:
-            orderid = self.request.session.get('orderid')
+            orderid = self.request.session.get('ordenVenta')
         else:
             orderid = ''+user.username+'-PagoMatricula'
-            self.request.session['orderid'] = orderid
+            self.request.session['ordenVenta'] = orderid
         try:
             fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
             imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
@@ -1142,6 +1309,7 @@ class PaymentProspecto(LoginRequiredMixin, View):
                 'status': self.kwargs['status'],
                 'orderid': orderid,
                 'id': self.kwargs['id'],
+                'pago': datapago,
                 'llamar_time': True,
                 'type': self.kwargs['type'],
                 'formulario': self.request.session.get('formulario', 'NA'),
@@ -1152,6 +1320,7 @@ class PaymentProspecto(LoginRequiredMixin, View):
                 'status': self.kwargs['status'],
                 'orderid': orderid,
                 'id': self.kwargs['id'],
+                'pago': datapago,
                 'llamar_time': True,
                 'type': self.kwargs['type'],
                 'formulario': self.request.session.get('formulario', 'NA'),

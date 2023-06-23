@@ -86,14 +86,14 @@ class save_profile_processes():
 
     def save_documents(request, data1, data2):
         form = FormularioPrimerIngreso({'estado': data1[0],
-                                        'convalidacion': data1[1], 'comentario': data1[2], 'usuario': data1[3]})
+                'convalidacion': data1[1], 'comentario': data1[2], 'usuario': data1[3]})
 
         if form.is_valid():
             form.save()
 
         form = FormularioDocumentos({'usuario': data2[0], 'tituloeducacion': data2[1],
-                                     'titulouniversitario': data2[2], 'identificacion': data2[3],
-                                     'foto': data2[4], 'notas': data2[5], 'plan': data2[6]})
+                'titulouniversitario': data2[2], 'identificacion': data2[3],
+                'foto': data2[4], 'notas': data2[5], 'plan': data2[6]})
 
         if form.is_valid():
             form.save()
@@ -125,6 +125,8 @@ class save_profile_processes():
 
     def update_user_prospecto(data):
         user = User.objects.get(username=data[0])
+
+
         
         user.email = data[1]
         user.is_active = True
@@ -133,6 +135,13 @@ class save_profile_processes():
 
         user_prospecto = get_object_or_404(prospecto, identificacion=user.username)
         user_prospecto.delete()
+
+        user_prospecto_docs = get_object_or_404(documentos, usuario=user.pk)
+        user_prospecto_docs.delete()
+
+        user_prospecto_form = get_object_or_404(primerIngreso, usuario=user.pk)
+        user_prospecto_form.delete()
+
         return True
 
     def save_user_status(request, data):
@@ -145,25 +154,19 @@ class save_profile_processes():
         else:
             return False
 
-    def update_user_status(request, data, value):
-        user = request.user
-        user_s = get_object_or_404(user_status, identificacion=user.username)
+    def update_user_status(request, id, data, value):
+        user_s = get_object_or_404(user_status, identificacion=id)
 
         if data == 'activo':
-            datos_estados = [user.username, value, user_s.moroso,
-                             user_s.form, user_s.prematricula, user_s.matricula]
+            datos_estados = [user_s.identificacion, value, user_s.moroso, user_s.form, user_s.prematricula, user_s.matricula]
         elif data == 'moroso':
-            datos_estados = [user.username, user_s.activo, value,
-                             user_s.form, user_s.prematricula, user_s.matricula]
+            datos_estados = [user_s.identificacion, user_s.activo, value, user_s.form, user_s.prematricula, user_s.matricula]
         elif data == 'form':
-            datos_estados = [user.username, user_s.activo, user_s.moroso,
-                             value, user_s.prematricula, user_s.matricula]
+            datos_estados = [user_s.identificacion, user_s.activo, user_s.moroso, value, user_s.prematricula, user_s.matricula]
         elif data == 'prematricula':
-            datos_estados = [user.username, user_s.activo,
-                             user_s.moroso, user_s.form, value, user_s.matricula]
+            datos_estados = [user_s.identificacion, user_s.activo, user_s.moroso, user_s.form, value, user_s.matricula]
         elif data == 'matricula':
-            datos_estados = [user_s.identificacion, user_s.activo,
-                             user_s.moroso, user_s.form, user_s.prematricula, value]
+            datos_estados = [user_s.identificacion, user_s.activo, user_s.moroso, user_s.form, user_s.prematricula, value]
 
         form = FormularioUserStatus({'identificacion': datos_estados[0], 'activo': datos_estados[1], 'moroso': datos_estados[2],
                                      'form': datos_estados[3], 'prematricula': datos_estados[4], 'matricula': datos_estados[5]}, instance=user_s)

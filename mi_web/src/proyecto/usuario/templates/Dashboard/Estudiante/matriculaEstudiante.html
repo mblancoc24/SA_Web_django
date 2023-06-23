@@ -74,16 +74,16 @@
             <div class="col-lg-4 payment-summary">
                 <p id="matriculaP" class="fw-bold pt-lg-0 pt-4 pb-2 titulo">Resumen de Pago</p>
                 <div class="card px-md-3 px-2 pt-4">
-                    <div class="unregistered mb-4"> <span class="py-1">117580049</span> </div>
+                    <div class="unregistered mb-4"> <span class="py-1">{{ user.username }}</span> </div>
                     <div class="d-flex flex-column b-bottom">
                         <div class="d-flex justify-content-between"> <small class="text-dark">Subtotal</small>
-                            <p id="matriculaP">₡132</p>
+                            <p id="matriculaP">₡{{ pago.subtotal }}</p>
                         </div>
                         <div class="d-flex justify-content-between py-3"> <small class="text-dark">Descuento Total</small>
-                            <p id="matriculaP">₡122</p>
+                            <p id="matriculaP">₡{{ pago.descuentoTotal }}</p>
                         </div>
                         <div class="d-flex justify-content-between"> <small class="smalltotal">Total</small>
-                            <p id="matriculaP" class="smalltotal">₡132</p>
+                            <p id="matriculaP" class="smalltotal">₡{{ pago.preMatricula }}</p>
                         </div>
                     </div>
                     <div class="sale my-3">

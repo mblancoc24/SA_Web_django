@@ -91,7 +91,7 @@ def user_update(request):
             
             if save:
                 # Procesar los datos y generar la respuesta en JSON
-                save_profile_processes.update_user_status(request, 'matricula', True)
+                save2 = save_profile_processes.update_user_status(id_value, 'matricula', True)
                 response_data = {'result': 'ok'}
                 return JsonResponse(response_data)
             else:
@@ -120,6 +120,49 @@ def solicitud_form(request):
         try:
             if data is not None:
                 print (data)
+                # Procesar los datos y generar la respuesta en JSON
+                response_data = {'result': 'ok'}
+                return JsonResponse(response_data)
+            else:
+                response_data = {'error': 'Invalid request method'}
+                return JsonResponse(response_data, status=400)
+            
+        except KeyError:
+            response_data = {'error': 'Invalid request method'}
+            return JsonResponse(response_data, status=400)
+    else:
+        # Si la petición no es POST, devuelve un error
+        response_data = {'error': 'Invalid request method'}
+        return JsonResponse(response_data, status=400)
+    
+@csrf_exempt
+def user_status(request):
+    #http://192.168.8.136:8000/user-status/
+    
+    # {
+    #     "data": {
+    #         "id": 117580049,
+    #         "status": "moroso",
+    #         "valor": True
+    #     }
+    # }
+    
+    user = request.user
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            response_data = {'error': 'Invalid JSON'}
+            return JsonResponse(response_data, status=400)
+            
+        try:
+            id_user = data['data']['id']
+            status = data['data']['status']
+            valor = data['data']['valor']
+            
+            save = save_profile_processes.update_user_status(request, id_user, status, valor)
+            
+            if save:
                 # Procesar los datos y generar la respuesta en JSON
                 response_data = {'result': 'ok'}
                 return JsonResponse(response_data)

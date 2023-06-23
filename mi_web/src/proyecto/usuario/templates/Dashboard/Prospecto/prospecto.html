@@ -196,148 +196,172 @@
     </div>
     {% endblock modal_primerIngreso %}
 
-    <!-- Model de Posgrado -->
-    {% block modal_posgrado %}
-    <div class="modal fade" id="modal_posgrado" tabindex="-1" aria-labelledby="modal_posgradoTitle">
-        <div class="modal-dialog modal-dialog-centered modal-xl modal_posgrado">
-            <div class="modal-content rounded-4">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modal_posgradoTitle">FORMULARIO DE POSGRADOS</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form method="POST">
-                        {% csrf_token %}
-                        <div class="row ">
-                            <div class="form-group col-12 col-sm-6 mb-3 ">
-                                <div class="mb-3">
-                                    <label for="floatingFile11">
-                                        <i class="fa fa-upload" aria-hidden="true"></i>Título Universitario</label>
-                                    <input class="form-control" type="file" id="floatingFile11" style="opacity: 0.65"
-                                        name="titulobachillerto" />
-                                </div>
-                            </div>
-
-                            <div class="form-group col-12 col-sm-6 mb-3 ">
-                                <div class="mb-3">
-                                    <label for="floatingFile12">
-                                        <i class="fa fa-upload" aria-hidden="true"></i> Identificación (fotografía
-                                        visible
-                                        por
-                                        ambos lados)
-                                    </label>
-                                    <input class="form-control" style="opacity: 0.65" type="file" id="floatingFile12"
-                                        name="cedulafotografia" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row ">
-                            <div class="form-group col-12 col-sm-6 mb-3 ">
-                                <div class="mb-3">
-                                    <label for="floatingFile22">
-                                        <i class="fa fa-upload" aria-hidden="true"></i>Foto de perfil visible</label>
-                                    <input class="form-control" type="file" id="floatingFile22" style="opacity: 0.65"
-                                        name="fotoperfil" />
-                                </div>
-                            </div>
-                            <div class="form-group col-12 col-sm-6 mb-3 ">
-                                <div class="mb-3">
-                                    <label for="tipo">Seleccione tipo de ingreso económico</label>
-                                    <select id="ingreso_economicoP" class="form-select select2"
-                                        name="ingreso_economicoP" required title="Ingreso Economico">
-                                        <option style="opacity: .65;" value="" disabled selected hidden>Tipos de Ingreso
-                                            Económico
-                                        </option>
-                                        <option value="Asalariado">Asalariado</option>
-                                        <option value="Independiente">Ingresos Propios</option>
-                                        <option value="Dependiente">Dependiente Economico</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row ">
-                            <div class="form-group col-12 col-sm-6 mb-3 dropdown-parent">
-                                <div class="mb-3">
-                                    <label for="tipo">Especialidad de Interes</label>
-                                    <select id="posgradoselect" class="form-select selectorbuscador"
-                                        name="posgradoselect" data-placeholder="Seleccione la Especialidad"
-                                        title="Especialidad">
-                                        <option style="opacity: 0.65" value="" disabled selected hidden>
-                                            Seleccione la Especialidad
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-sm-6 mb-3 form-check">
+<!-- Model de Posgrado -->
+{% block modal_posgrado %}
+<div class="modal fade" id="modal_posgrado" tabindex="-1" aria-labelledby="modal_posgradoTitle">
+    <div class="modal-dialog modal-dialog-centered modal-xl modal_posgrado">
+        <div class="modal-content rounded-4">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal_posgradoTitle">FORMULARIO DE POSGRADOS</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="{% url 'enviar_archivo_posgrado' type=type id=id status=status %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row ">
+                        <div class="form-group col-12 col-sm-6 mb-3 ">
                             <div class="mb-3">
-                                <input class="form-check-input" type="checkbox" value="" id="asesor2" name="asesor">
-                                <label class="form-check-label" for="asesor2">
-                                    ¿Fuiste atendido por un asesor?
+                                <label for="floatingFile11">
+                                    <i class="fa fa-upload" aria-hidden="true"></i>Título de Educación Media</label>
+                                <input class="form-control" type="file" id="floatingFile11" style="opacity: 0.65"
+                                    name="titulobachillerto" />
+                            </div>
+                        </div>
+
+                        <div class="form-group col-12 col-sm-6 mb-3 ">
+                            <div class="mb-3">
+                                <label for="floatingFile11">
+                                    <i class="fa fa-upload" aria-hidden="true"></i>Título Universitario</label>
+                                <input class="form-control" type="file" id="floatingFile11" style="opacity: 0.65"
+                                    name="titulouniversitario" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class="form-group col-12 col-sm-6 mb-3 ">
+                            <div class="mb-3">
+                                <label for="floatingFile12">
+                                    <i class="fa fa-upload" aria-hidden="true"></i> Identificación (fotografía visible por ambos lados)
                                 </label>
+                                <input class="form-control" style="opacity: 0.65" type="file" id="floatingFile12"
+                                    name="cedulafotografia" />
                             </div>
                         </div>
 
-                        <div class="form-group col-12 col-sm-6 dropdown-parent" id="select_asesor2"
-                            style="display: none;">
+                        <div class="form-group col-12 col-sm-6 mb-3 ">
                             <div class="mb-3">
-                                <label for="lblcarrera">Seleccione el asesor que te ha atendido</label>
-                                <select id="asesor_selectP" class="form-select selectorbuscador" name="asesor_selectP"
-                                    data-placeholder="Seleccione el asesor que te ha atendido" title="Asesor">
-                                    <option style="opacity: 0.65" value="" disabled selected hidden>Seleccion asesor
+                                <label for="floatingFile22">
+                                    <i class="fa fa-upload" aria-hidden="true"></i>Foto de perfil visible</label>
+                                <input class="form-control" type="file" id="floatingFile22" style="opacity: 0.65"
+                                    name="fotoperfil" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class="form-group col-12 col-sm-6 mb-3 ">
+                            <div class="mb-3">
+                                <label for="tipo">Seleccione tipo de ingreso económico</label>
+                                <select id="ingreso_economicoP" class="form-select select2" name="ingreso_economicoP"
+                                    required title="Ingreso Economico">
+                                    <option style="opacity: .65;" value="" disabled selected hidden>Tipos de Ingreso
+                                        Económico
                                     </option>
+                                    <option value="Asalariado">Asalariado</option>
+                                    <option value="Independiente">Ingresos Propios</option>
+                                    <option value="Dependiente">Dependiente Economico</option>
                                 </select>
                             </div>
                         </div>
 
-                        <div class="d-grid mb-2 d-flex justify-content-center">
-                            <a href="#" class="w-100 btn btn-lg btn-primary btn-sm rounded fw-bold"
-                                style="max-width: 175px;">
-                                <i class="fa fa-paper-plane" aria-hidden="true"></i> Enviar Formulario</a>
+                        <div class="form-group col-12 col-sm-6 mb-3 dropdown-parent">
+                            <div class="mb-3">
+                                <label for="tipo">Especialidad de Interes</label>
+                                <select id="posgradoselect" class="form-select selectorbuscador" name="posgradoselect"
+                                    data-placeholder="Seleccione la Especialidad" title="Especialidad">
+                                    <option style="opacity: 0.65" value="" disabled selected hidden>
+                                        Seleccione la Especialidad
+                                    </option>
+                                </select>
+                            </div>
                         </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    {% endblock modal_posgrado %}
-
-    <!-- Modal Curso Libres -->
-    {% block modal_cursolibres %}
-    <div class="modal fade" id="modal_cursolibres" tabindex="-1" aria-labelledby="modal_cursolibresTitle"
-        style="display: none" style="display: block;">
-        <div class="modal-dialog modal-dialog-centered modal-xl modal_cursolibres" role="document">
-            <div class="modal-content rounded-4">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modal_cursolibresTitle">
-                        FORMULARIO DE CURSO LIBRES
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true"><span class="icon-close2"></span></span>
-                    </button>
-                </div>
-                <div class="modal-body bg-4">
-                    <form method="POST">
-                        {% csrf_token %}
-                        <div class="form-group mb-3">
-                            <label for="floatingFileC">
-                                <i class="fa fa-upload" aria-hidden="true"></i>
-                                Identificación (fotografía visible por ambos lados)</label>
-
-                            <input class="form-control" style="opacity: 0.65" type="file" id="floatingFileC"
-                                name="cedulafotografia" />
-                        </div>
-                    </form>
-                    <div class="d-grid mb-2 d-flex justify-content-center">
-                        <a href="#" class="btn btn-primary btn-sm rounded fw-bold" style="max-width: 175px;"> <i
-                                class="fa fa-paper-plane" aria-hidden="true"></i> Enviar
-                            Formulario</a>
                     </div>
-                </div>
+                    <div class="col-12 col-sm-6 mb-3 form-check">
+                        <div class="mb-3">
+                            <input class="form-check-input" type="checkbox" value="" id="asesor2" name="asesor">
+                            <label class="form-check-label" for="asesor2">
+                                ¿Fuiste atendido por un asesor?
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-12 col-sm-6 dropdown-parent" id="select_asesor2" style="display: none;">
+                        <div class="mb-3">
+                            <label for="lblcarrera">Seleccione el asesor que te ha atendido</label>
+                            <select id="asesor_selectP" class="form-select selectorbuscador" name="asesor_selectP"
+                                data-placeholder="Seleccione el asesor que te ha atendido" title="Asesor">
+                                <option style="opacity: 0.65" value="" disabled selected hidden>Seleccion asesor
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="d-grid mb-2 d-flex justify-content-center">
+                        <button type="submit" class="btn btn-primary btn-sm rounded fw-bold" style="max-width: 175px;">
+                            <i class="fa fa-paper-plane" aria-hidden="true"></i> Enviar Formulario</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-    {% endblock modal_cursolibres %}
+</div>
+{% endblock modal_posgrado %}
+
+<!-- Modal Curso Libres -->
+{% block modal_cursolibres %}
+<div class="modal fade" id="modal_cursolibres" tabindex="-1" aria-labelledby="modal_cursolibresTitle"
+    style="display: none" style="display: block;">
+    <div class="modal-dialog modal-dialog-centered modal-xl modal_cursolibres" role="document">
+        <div class="modal-content rounded-4">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal_cursolibresTitle">
+                    FORMULARIO DE CURSO LIBRES
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><span class="icon-close2"></span></span>
+                </button>
+            </div>
+            <div class="modal-body bg-4">
+                <form method="post" action="{% url 'enviar_archivo_cursolibre' type=type id=id status=status %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group mb-3">
+                        <label for="floatingFileC">
+                            <i class="fa fa-upload" aria-hidden="true"></i>
+                            Identificación (fotografía visible por ambos lados)</label>
+
+                        <input class="form-control" style="opacity: 0.65" type="file" id="floatingFileC"
+                            name="cedulafotografia" />
+                    </div>
+                    <div class="col-12 col-sm-6 mb-3 form-check">
+                        <div class="mb-3">
+                            <input class="form-check-input" type="checkbox" value="" id="asesor2" name="asesor">
+                            <label class="form-check-label" for="asesor2">
+                                ¿Fuiste atendido por un asesor?
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-12 col-sm-6 dropdown-parent" id="select_asesor2" style="display: none;">
+                        <div class="mb-3">
+                            <label for="lblcarrera">Seleccione el asesor que te ha atendido</label>
+                            <select id="asesor_selectP" class="form-select selectorbuscador" name="asesor_selectP"
+                                data-placeholder="Seleccione el asesor que te ha atendido" title="Asesor">
+                                <option style="opacity: 0.65" value="" disabled selected hidden>Seleccion asesor
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                
+                    <div class="d-grid mb-2 d-flex justify-content-center">
+                        <button type="submit" class="btn btn-primary btn-sm rounded fw-bold" style="max-width: 175px;">
+                            <i class="fa fa-paper-plane" aria-hidden="true"></i> Enviar Formulario</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock modal_cursolibres %}
+<!-- Modal Curso Libres -->
     <!-- Modal Curso Libres -->
 
     <!-- Modal Instrucciones -->
