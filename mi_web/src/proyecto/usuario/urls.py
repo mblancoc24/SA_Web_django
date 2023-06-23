@@ -61,6 +61,7 @@ from .views import (
                     Politicas,
                     Terminos,
                     EnvioDeConsultas,
+                    DashboardAdministrativoView
                     )
 from django.contrib.auth.views import LogoutView
 from django.contrib.auth import views as auth_views
@@ -169,4 +170,5 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
                path("<str:type>/<int:id>/<int:status>/politicas/", Politicas.politicas_view, name='politicas'),
                path("<str:type>/<int:id>/<int:status>/terminos/", Terminos.terminos_view, name='terminos'),
                path("<str:type>/<int:id>/<int:status>/envioConsulta/", EnvioDeConsultas.envioDeConsultas, name='envioConsulta'),
+               path('<str:type>/<str:id>/<int:status>', DashboardAdministrativoView.as_view(), name='inicioAdministrativo'),
                ]

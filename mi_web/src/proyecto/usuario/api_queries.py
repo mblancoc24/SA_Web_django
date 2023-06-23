@@ -28,12 +28,12 @@ def obtener_distrito(request):
     return JsonResponse(data, safe=False)
 
 def obtener_nacionalidad(request):
-    url = 'https://restcountries.com/v3.1/all?fields=name'
+    url = 'https://restcountries.com/v3.1/all'
     response = requests.get(url)
     data = response.json()
     countries = []
     for country in data:
-        countries.append(country["name"]["common"])
+        countries.append(country["translations"]["spa"]["common"])
     return JsonResponse(sorted(countries), safe=False)
     
 def obtener_datos(request):

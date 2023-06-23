@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import profesor, estudiantes, RegistroLogsUser, documentos, user_status, carreras, colegios, posgrados, fotoperfil, estados, primerIngreso, prospecto
-from .forms import  CustomUserCreationForm
+from .forms import CustomUserCreationForm
 from django.views.generic.list import ListView
 from django.views.generic.edit import FormView
 from django.contrib.auth import login, authenticate, logout
@@ -24,6 +24,8 @@ from .save_processes import save_profile_processes
 from .api_queries import enviar_data_odoo, insert_urls, get_urls, update_request, get_professor
 import json
 import base64
+from django.http import Http404
+
 
 class Logueo(LoginView):
     template_name = 'usuario/login.html'
@@ -39,39 +41,64 @@ class Logueo(LoginView):
         logout(self.request)
         username = form.cleaned_data.get('username')
         password = form.cleaned_data.get('password')
-        
+
         user = authenticate(self.request, username=username, password=password)
-        
-        prospecto_user = get_object_or_404(prospecto, identificacion=user.username)
-        prospecto_dict = {}
-        for field in prospecto._meta.get_fields():
-            field_name = field.name
-            if field_name != 'info_estudiantes' and field_name != 'fecha_nacimiento':
-                field_value = getattr(prospecto_user, field_name)
-                prospecto_dict[field_name] = field_value
-            elif field_name == 'fecha_nacimiento':
-                field_value = getattr(prospecto_user, field_name)
-                fecha_str = field_value.strftime('%Y-%m-%d')
-                prospecto_dict[field_name] = fecha_str
-        
-        prospecto_dict['tipo'] = 'prospecto'
-            
-        self.request.session['user_info'] = prospecto_dict
-        
-        status = get_object_or_404(user_status, identificacion=user.username)
-        
-        if user is None:
-            form.add_error('username', 'El usuario no existe en el sistema')
-            logout(self.request)
-            return super().form_invalid(form)
-        elif status.activo:
-            login(self.request, user)
-            registrar_accion(user, 'El usuario {0} ha ingresado como prospecto.'.format(user.username))
-            context = {'type':'prospecto','id': username, 'status': 4}
-            return redirect(reverse('inicio', kwargs=context))
+        validacion = True
+        try:
+            prospecto_user = get_object_or_404(
+                prospecto, identificacion=user.username)
+        except Http404:
+            validacion = False
+        if validacion:
+            prospecto_dict = {}
+            for field in prospecto._meta.get_fields():
+                field_name = field.name
+                if field_name != 'info_estudiantes' and field_name != 'fecha_nacimiento':
+                    field_value = getattr(prospecto_user, field_name)
+                    prospecto_dict[field_name] = field_value
+                elif field_name == 'fecha_nacimiento':
+                    field_value = getattr(prospecto_user, field_name)
+                    fecha_str = field_value.strftime('%Y-%m-%d')
+                    prospecto_dict[field_name] = fecha_str
+
+            prospecto_dict['tipo'] = 'prospecto'
+
+            self.request.session['user_info'] = prospecto_dict
+
+            status = get_object_or_404(
+                user_status, identificacion=user.username)
+
+            if user is None:
+                form.add_error(
+                    'username', 'El usuario no existe en el sistema')
+                logout(self.request)
+                return super().form_invalid(form)
+            elif status.activo:
+                login(self.request, user)
+                registrar_accion(
+                    user, 'El usuario {0} ha ingresado como prospecto.'.format(user.username))
+                context = {'type': 'prospecto', 'id': username, 'status': 4}
+                return redirect(reverse('inicio', kwargs=context))
+            else:
+                logout(self.request)
+                return super().form_invalid(form)
         else:
-            logout(self.request)
-            return super().form_invalid(form)
+            if user is None:
+                form.add_error(
+                    'username', 'El usuario no existe en el sistema')
+                logout(self.request)
+                return super().form_invalid(form)
+            elif user.is_active:
+                login(self.request, user)
+                registrar_accion(
+                    user, 'El usuario {0} ha ingresado como administrador.'.format(user.username))
+                context = {'type': 'administrador',
+                           'id': username, 'status': 5}
+                return redirect(reverse('inicioAdministrativo', kwargs=context))
+            else:
+                logout(self.request)
+                return super().form_invalid(form)
+
 
 def microsoft_auth(request):
     # Comprobar si ya existe una sesión de usuario
@@ -83,51 +110,63 @@ def microsoft_auth(request):
         }
         access_token = request.session['access_token']
         requests_response = requests.get(url, headers=headers)
-        
+
         if requests_response.status_code == 200:
-            user = MicrosoftGraphBackend.authenticate(request=request, access_token=access_token)
+            user = MicrosoftGraphBackend.authenticate(
+                request=request, access_token=access_token)
             tipo_user = request.session.get('user_info')
-            
+
             if user is not None and tipo_user is not None:
                 if user.is_active:
-                    login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+                    login(request, user,
+                          backend='django.contrib.auth.backends.ModelBackend')
                     if tipo_user['tipo'] == 'estudiante':
-                        status = get_object_or_404(user_status, identificacion=user.username)
+                        status = get_object_or_404(
+                            user_status, identificacion=user.username)
                         if status.activo:
-                            registrar_accion(user, 'El usuario {0} ha ingresado como estudiante.'.format(user.username))
-                            context = {'type':'estudiante','id': user.username, 'status': 1}
+                            registrar_accion(
+                                user, 'El usuario {0} ha ingresado como estudiante.'.format(user.username))
+                            context = {'type': 'estudiante',
+                                       'id': user.username, 'status': 1}
                             return redirect(reverse('inicio', kwargs=context))
-                        ##AGREGAR INFO
-                    
+                        # AGREGAR INFO
+
                     elif tipo_user['tipo'] == 'profesor' or tipo_user['tipo'] == 'prospecto/profesor':
-                        registrar_accion(user, 'El usuario {0} ha ingresado como profesor.'.format(user.username))
-                        context = {'type':'profesor','id': user.username, 'status': 2}
+                        registrar_accion(
+                            user, 'El usuario {0} ha ingresado como profesor.'.format(user.username))
+                        context = {'type': 'profesor',
+                                   'id': user.username, 'status': 2}
                         return redirect(reverse('inicio', kwargs=context))
-                    
+
                     elif tipo_user['tipo'] == 'estudiante/profesor':
-                        registrar_accion(user, 'El usuario {0} ha ingresado como estudiante/profesor.'.format(user.username))
-                        context = {'type':'profesor-estudiante','id': user.username, 'status': 3}
+                        registrar_accion(
+                            user, 'El usuario {0} ha ingresado como estudiante/profesor.'.format(user.username))
+                        context = {'type': 'profesor-estudiante',
+                                   'id': user.username, 'status': 3}
                         return redirect(reverse('inicio', kwargs=context))
         else:
             del request.session['access_token']
             return redirect('login')
     else:
-        redirect_uri = request.build_absolute_uri(settings.MICROSOFT_AUTH_REDIRECT_URI)
+        redirect_uri = request.build_absolute_uri(
+            settings.MICROSOFT_AUTH_REDIRECT_URI)
         params = {
             'client_id': settings.MICROSOFT_CLIENT_ID,
             'redirect_uri': redirect_uri,
             'response_type': 'code',
             'scope': 'openid email profile',
             'response_mode': 'query',
-            'prompt':'login'
+            'prompt': 'login'
         }
         url = 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize'
         return redirect(f"{url}?client_id={params['client_id']}&redirect_uri={params['redirect_uri']}&response_type={params['response_type']}&scope={params['scope']}&response_mode={params['response_mode']}&prompt={params['prompt']}")
 
+
 def microsoft_callback(request):
     auth_code = request.GET.get('code')
     url = 'https://login.microsoftonline.com/common/oauth2/v2.0/token'
-    redirect_uri = request.build_absolute_uri(settings.MICROSOFT_AUTH_REDIRECT_URI)
+    redirect_uri = request.build_absolute_uri(
+        settings.MICROSOFT_AUTH_REDIRECT_URI)
     data = {
         'grant_type': 'authorization_code',
         'code': auth_code,
@@ -135,43 +174,53 @@ def microsoft_callback(request):
         'client_id': settings.MICROSOFT_CLIENT_ID,
         'client_secret': settings.MICROSOFT_CLIENT_SECRET,
         'scope': 'openid email profile',
-        'prompt':'login'
+        'prompt': 'login'
     }
     headers = {'Content-Type': 'application/x-www-form-urlencoded'}
     requests_response = requests.post(url, data=data, headers=headers)
     if requests_response.status_code == 200:
-        
+
         response_json = requests_response.json()
         request.session['access_token'] = response_json['access_token']
         access_token = response_json['access_token']
         token_type = requests_response.json().get('token_type')
-        
-        user = MicrosoftGraphBackend.authenticate(request=request, access_token=access_token)
+
+        user = MicrosoftGraphBackend.authenticate(
+            request=request, access_token=access_token)
         tipo_user = request.session.get('user_info')
-        
+
         if user is not None and tipo_user is not None:
             if user.is_active:
-                login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+                login(request, user,
+                      backend='django.contrib.auth.backends.ModelBackend')
                 if tipo_user['tipo'] == 'estudiante':
-                    status = get_object_or_404(user_status, identificacion=user.username)
+                    status = get_object_or_404(
+                        user_status, identificacion=user.username)
                     if status.activo:
-                        registrar_accion(user, 'El usuario {0} ha ingresado como estudiante.'.format(user.username))
-                        context = {'type':'estudiante','id': user.username, 'status': 1}
+                        registrar_accion(
+                            user, 'El usuario {0} ha ingresado como estudiante.'.format(user.username))
+                        context = {'type': 'estudiante',
+                                   'id': user.username, 'status': 1}
                         return redirect(reverse('inicio', kwargs=context))
-                    ##AGREGAR INFO
-                
+                    # AGREGAR INFO
+
                 elif tipo_user['tipo'] == 'profesor' or tipo_user['tipo'] == 'prospecto/profesor':
-                    registrar_accion(user, 'El usuario {0} ha ingresado como profesor.'.format(user.username))
-                    context = {'type':'profesor','id': user.username, 'status': 2}
+                    registrar_accion(
+                        user, 'El usuario {0} ha ingresado como profesor.'.format(user.username))
+                    context = {'type': 'profesor',
+                               'id': user.username, 'status': 2}
                     return redirect(reverse('inicio', kwargs=context))
-                
+
                 elif tipo_user['tipo'] == 'estudiante/profesor':
-                    registrar_accion(user, 'El usuario {0} ha ingresado como estudiante/profesor.'.format(user.username))
-                    context = {'type':'profesor-estudiante','id': user.username, 'status': 3}
+                    registrar_accion(
+                        user, 'El usuario {0} ha ingresado como estudiante/profesor.'.format(user.username))
+                    context = {'type': 'profesor-estudiante',
+                               'id': user.username, 'status': 3}
                     return redirect(reverse('inicio', kwargs=context))
     else:
         return redirect('login')
-    
+
+
 class MicrosoftLogoutView(LoginRequiredMixin, LogoutView):
     template_name = 'registration/logged_out.html'
     next_page = reverse_lazy('login')
@@ -180,15 +229,15 @@ class MicrosoftLogoutView(LoginRequiredMixin, LogoutView):
         if request.user.is_authenticated:
             if 'access_token' in request.session:
                 # Hacer una solicitud de cierre de sesión a través de la API de Microsoft Graph
-                    
+
                 headers = {
                     "Authorization": "Bearer " + request.session['access_token']
                 }
-                
+
                 revoke_url = f'https://graph.microsoft.com/v1.0/me/microsoft.graph.logout'
-                
+
                 response = requests.post(revoke_url, headers=headers)
-                
+
                 if response.status_code == 200:
                     request.session.flush()
                     logout(request)
@@ -204,6 +253,7 @@ class MicrosoftLogoutView(LoginRequiredMixin, LogoutView):
             return self.next_page
         else:
             return next_page
+
 
 class PaginaRegistroEstudiante(FormView):
     template_name = 'usuario/registro_estudiantes.html'
@@ -228,42 +278,46 @@ class PaginaRegistroEstudiante(FormView):
         distrito = self.request.POST.get('distrito')
         direccion_exacta = self.request.POST.get('direccion_exacta')
         sexo = self.request.POST.get('Genero_select')
-        
+
         trato = self.request.POST.get('trato')
         sexo2 = self.request.POST.get('sexo2')
-        
+
         if sexo == 'otro':
             dato_sexo = [username, sexo2, trato]
-            save_sexo = save_profile_processes.save_inclusivo(self.request, dato_sexo)
-        
+            save_sexo = save_profile_processes.save_inclusivo(
+                self.request, dato_sexo)
+
         Usuarios = form.save()
 
         datos_estudiante = [username, nombre_estudiante, primerapellido,
-            segundoapellido, fecha, telefono, telefono2, 'No Asignado', correo_personal, 
-            nacionalidad, provincia, canton, distrito, direccion_exacta, sexo]
+                            segundoapellido, fecha, telefono, telefono2, 'No Asignado', correo_personal,
+                            nacionalidad, provincia, canton, distrito, direccion_exacta, sexo]
 
-        save = save_profile_processes.save_prospecto(self.request, datos_estudiante)
-        
+        save = save_profile_processes.save_prospecto(
+            self.request, datos_estudiante)
+
         if save:
             user = User.objects.get(username=username)
-            
+
             datos_estados = [username, True, False, 'NA', False, False]
-            save_profile_processes.save_user_status(self.request, datos_estados)
-            
+            save_profile_processes.save_user_status(
+                self.request, datos_estados)
+
             if user is not None:
-                
+
                 subject = 'Se ha creado su cuenta satisfactoriamente'
                 message = f'Bienvenido al portal academico UIA, su cuenta se ha creado satisfactoriamente con el usuario {user.username}, Saludos cordiales.'
                 email_from = settings.EMAIL_HOST_USER
                 recipient_list = [user.email, ]
                 send_mail(subject, message, email_from, recipient_list)
-                
+
                 login(self.request, user)
-                
-                registrar_accion(user, 'El usuario '+ username +' se ha creado una cuenta como prospecto.')
-                
+
+                registrar_accion(user, 'El usuario ' + username +
+                                 ' se ha creado una cuenta como prospecto.')
+
                 logout(self.request)
-                
+
                 # Agrega el contexto con el valor 'cuenta' para enviarlo junto con la redirección.
                 url = reverse('login') + '?cuenta=True'
                 return redirect(url)
@@ -278,7 +332,8 @@ class PaginaRegistroEstudiante(FormView):
 class EstudiaUIAView(LoginRequiredMixin, ListView):
     context_object_name = 'estudiaUia'
     template_name = 'Dashboard/Prospecto/prospecto.html'
-    def get(self, request,type, id, status):
+
+    def get(self, request, type, id, status):
         user = request.user
         try:
             fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
@@ -307,37 +362,42 @@ class DetalleArchivoOdoo(LoginRequiredMixin, ListView):
     context_object_name = 'envio_archivos_odoo'
     template_name = 'usuario/mmgv.html'
 
+
 def registrar_accion(usuario, accion):
     registro = RegistroLogsUser(usuario=usuario, accion=accion)
     registro.save()
+
 
 @login_required
 def carrerasselect(request):
     valores = carreras.objects.values_list('nombre_carrera', flat=True)
     return JsonResponse(list(valores), safe=False)
 
+
 @login_required
 def colegiosselect(request):
     valores = colegios.objects.values_list('nombre_colegio', flat=True)
     return JsonResponse(list(valores), safe=False)
+
 
 @login_required
 def posgradosselect(request):
     valores = posgrados.objects.values_list('nombre_carrera', flat=True)
     return JsonResponse(list(valores), safe=False)
 
+
 class vistaPerfil (LoginRequiredMixin):
     context_object_name = 'perfil'
     template_name = 'Dashboard/Componentes/perfil.html'
-    
-    def profile_view(request,type, id, status):
+
+    def profile_view(request, type, id, status):
         user = request.user
-        
+
         login = request.session.get('user_info')
-        
+
         if login['tipo'] == 'prospecto':
             login = get_object_or_404(prospecto, identificacion=user.username)
-        
+
         try:
             fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
             imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
@@ -360,10 +420,12 @@ class vistaPerfil (LoginRequiredMixin):
                 'type': type,
                 'formulario': request.session.get('formulario', 'NA'),
             }
-        
+
         return render(request, 'Dashboard/Componentes/perfil.html', context)
 
-#Verificar
+# Verificar
+
+
 def guardar_perfil(request):
     if request.method == 'POST':
         user = request.user
@@ -374,31 +436,35 @@ def guardar_perfil(request):
         distrito = request.POST.get('distrito')
 
         user = User.objects.get(username=user.username)
-        
+
         user_type = MicrosoftGraphBackend.user_type(request)
-    
+
         if user_type == 'estudiante/profesor':
-            estudiante = get_object_or_404(estudiantes, identificacion=user.username)
-            
+            estudiante = get_object_or_404(
+                estudiantes, identificacion=user.username)
+
             if estudiante is not None:
                 datos_estudiante = [estudiante.identificacion, estudiante.nombre, estudiante.primer_apellido,
-                                estudiante.segundo_apellido, estudiante.fecha_nacimiento, numero_telefonico, numero_telefonico2, estudiante.correo_institucional, estudiante.correo_personal, estudiante.nacionalidad, provincia, canton, distrito, estudiante.sexo]
+                                    estudiante.segundo_apellido, estudiante.fecha_nacimiento, numero_telefonico, numero_telefonico2, estudiante.correo_institucional, estudiante.correo_personal, estudiante.nacionalidad, provincia, canton, distrito, estudiante.sexo]
 
-                save = save_profile_processes.update_student(request, datos_estudiante)
-                
+                save = save_profile_processes.update_student(
+                    request, datos_estudiante)
+
                 if save:
                     pass
                 else:
                     print('Error en el guardado')
-                    
-            profesores = get_object_or_404(profesor, identificacion=user.username)
-            
+
+            profesores = get_object_or_404(
+                profesor, identificacion=user.username)
+
             if profesores is not None:
                 datos_profesor = [profesores.identificacion, profesores.nombre, profesores.primer_apellido,
-                              profesores.segundo_apellido, profesores.fecha_nacimiento, numero_telefonico, numero_telefonico2, profesores.correo_institucional, profesores.correo_personal, profesores.nacionalidad, provincia, canton, distrito, profesores.sexo, profesores.puesto_educativo]
+                                  profesores.segundo_apellido, profesores.fecha_nacimiento, numero_telefonico, numero_telefonico2, profesores.correo_institucional, profesores.correo_personal, profesores.nacionalidad, provincia, canton, distrito, profesores.sexo, profesores.puesto_educativo]
 
-                save = save_profile_processes.update_professor(request, datos_profesor)
-                
+                save = save_profile_processes.update_professor(
+                    request, datos_profesor)
+
                 if save:
                     pass
                 else:
@@ -407,39 +473,43 @@ def guardar_perfil(request):
             return redirect(request.META.get('HTTP_REFERER'))
 
         elif user_type == 'prospecto/profesor':
-            prospecto_user = get_object_or_404(prospecto, identificacion=user.username)
-            
+            prospecto_user = get_object_or_404(
+                prospecto, identificacion=user.username)
+
             if prospecto_user is not None:
                 datos_prospecto = [prospecto_user.user, prospecto_user.identificacion, prospecto_user.nombre, prospecto_user.primer_apellido,
-                                    prospecto_user.segundo_apellido, prospecto_user.fecha_nacimiento, numero_telefonico, numero_telefonico2, prospecto_user.correo_institucional,
-                                    prospecto_user.correo_personal, prospecto_user.nacionalidad, provincia, canton, distrito, prospecto_user.sexo]
+                                   prospecto_user.segundo_apellido, prospecto_user.fecha_nacimiento, numero_telefonico, numero_telefonico2, prospecto_user.correo_institucional,
+                                   prospecto_user.correo_personal, prospecto_user.nacionalidad, provincia, canton, distrito, prospecto_user.sexo]
 
-                save = save_profile_processes.update_prospecto(request, datos_prospecto)
-                
+                save = save_profile_processes.update_prospecto(
+                    request, datos_prospecto)
+
                 if save:
                     pass
                 else:
                     print('Error en el guardado')
-                
-                
-            profesores = get_object_or_404(profesor, identificacion=user.username)
+
+            profesores = get_object_or_404(
+                profesor, identificacion=user.username)
 
             if profesores is not None:
                 datos_profesor = [profesores.identificacion, profesores.nombre, profesores.primer_apellido,
-                                profesores.segundo_apellido, profesores.fecha_nacimiento, numero_telefonico, numero_telefonico2, profesores.correo_institucional, profesores.correo_personal, profesores.nacionalidad, provincia, canton, distrito, profesores.sexo, profesores.puesto_educativo]
+                                  profesores.segundo_apellido, profesores.fecha_nacimiento, numero_telefonico, numero_telefonico2, profesores.correo_institucional, profesores.correo_personal, profesores.nacionalidad, provincia, canton, distrito, profesores.sexo, profesores.puesto_educativo]
 
-                save = save_profile_processes.update_professor(request, datos_profesor)
-                
+                save = save_profile_processes.update_professor(
+                    request, datos_profesor)
+
                 if save:
                     pass
                 else:
                     print('Error en el guardado')
-                    
+
             return redirect(request.META.get('HTTP_REFERER'))
         else:
             return HttpResponse(status=400)
     else:
         return HttpResponse(status=400)
+
 
 @login_required
 def mostrar_foto(request):
@@ -448,19 +518,20 @@ def mostrar_foto(request):
     foto_bytes = bytes(foto_perfil.archivo)
     return HttpResponse(foto_bytes, content_type='image/png')
 
+
 @login_required
 def cambiar_foto(request):
     user = request.user
     foto = request.FILES.get('fotocambio')
-        
+
     img_data = foto.read()
-        
+
     # Convertir la imagen a bytes
     img_bytes = bytearray(img_data)
 
     # Crear el objeto UserFile y guardarlo en la base de datos
     user_file = fotoperfil(user=user, archivo=img_bytes)
-    
+
     try:
         img_validation = get_object_or_404(fotoperfil, user=user.pk)
         if img_validation is not None:
@@ -470,12 +541,13 @@ def cambiar_foto(request):
         user_file.save()
     return redirect(request.META.get('HTTP_REFERER'))
 
+
 @login_required
 class EnvioSolicitud(LoginRequiredMixin, View):
     context_object_name = 'envioSolicitud'
     template_name = 'Dashboard/Componentes/perfil.html'
 
-    def enviar_solicitud(request,type, id, status):
+    def enviar_solicitud(request, type, id, status):
         json_data = json.loads(request.body)
         print(json_data)
         # url = "http://192.168.11.196:8062/set_pre_matricula"
@@ -489,7 +561,8 @@ class EnvioSolicitud(LoginRequiredMixin, View):
 
 class DashboardView(LoginRequiredMixin, View):
     context_object_name = 'inicio'
-    def get(self, request,type, id, status):
+
+    def get(self, request, type, id, status):
         user = request.user
         try:
             formulario = user_status.objects.get(identificacion=user.username)
@@ -524,6 +597,9 @@ class DashboardView(LoginRequiredMixin, View):
         elif type == "profesor":
             context['formulario'] = request.session.get('formulario', 'NA')
             return render(request, 'Dashboard/Profesor/profesor.html', context)
+        elif type == "administrador":
+            return render(request, 'Administrativo/mercadeo.html', context)
+
 
 @login_required
 def change_email(request):
@@ -540,41 +616,46 @@ def change_email(request):
 
     return render(request, 'usuario/cambio_correo_codigo.html', {'codigo': codigo})
 
+
 @login_required
 def change_email_correct(request):
     if request.method == 'POST':
         user = request.user
 
         nuevo_correo = request.POST.get('nuevo_correo2')
-        
-        user_type = request.session.get('user_info')
-        
-        if user_type['tipo'] == "prospecto" or user_type['tipo'] == "prospecto/profesor":
-            prospecto_user = get_object_or_404(prospecto, identificacion=user.username)
-            datos_prospecto = [prospecto_user.identificacion, prospecto_user.nombre, prospecto_user.primer_apellido,
-                            prospecto_user.segundo_apellido, prospecto_user.fecha_nacimiento, prospecto_user.numero_telefonico, prospecto_user.numero_telefonico2, prospecto_user.correo_institucional,
-                            nuevo_correo, prospecto_user.nacionalidad, prospecto_user.provincia, prospecto_user.canton, prospecto_user.distrito, prospecto_user.sexo]
 
-            save = save_profile_processes.update_prospecto(request, datos_prospecto)
-                    
+        user_type = request.session.get('user_info')
+
+        if user_type['tipo'] == "prospecto" or user_type['tipo'] == "prospecto/profesor":
+            prospecto_user = get_object_or_404(
+                prospecto, identificacion=user.username)
+            datos_prospecto = [prospecto_user.identificacion, prospecto_user.nombre, prospecto_user.primer_apellido,
+                               prospecto_user.segundo_apellido, prospecto_user.fecha_nacimiento, prospecto_user.numero_telefonico, prospecto_user.numero_telefonico2, prospecto_user.correo_institucional,
+                               nuevo_correo, prospecto_user.nacionalidad, prospecto_user.provincia, prospecto_user.canton, prospecto_user.distrito, prospecto_user.sexo]
+
+            save = save_profile_processes.update_prospecto(
+                request, datos_prospecto)
+
             if save:
-                #ENVIAR A API ACTUALIZACION
+                # ENVIAR A API ACTUALIZACION
                 return redirect('perfil_prospecto')
             else:
                 print('Error en el guardado')
         elif user_type['tipo'] == "estudiante":
-            #ENVIAR A API ACTUALIZACION
+            # ENVIAR A API ACTUALIZACION
             return redirect('perfil_prospecto')
         elif user_type['tipo'] == "profesor":
-            #ENVIAR A API ACTUALIZACION
+            # ENVIAR A API ACTUALIZACION
             return redirect('perfil_prospecto')
-        
-        prospecto_user = get_object_or_404(prospecto, identificacion=user.username)
- 
+
+        prospecto_user = get_object_or_404(
+            prospecto, identificacion=user.username)
+
+
 class RevisionFormView(LoginRequiredMixin, View):
     context_object_name = 'revision_form'
     template_name = 'Dashboard/Prospecto/revision_form.html'
-    
+
     def get_context_data(self, **kwargs):
         user = self.request.user
 
@@ -584,38 +665,39 @@ class RevisionFormView(LoginRequiredMixin, View):
         estado = get_object_or_404(estados, id_estado=statusgeneral.estado_id)
 
         docs = get_object_or_404(documentos, usuario=user.pk)
-        
+
         if 'urls' in self.request.session:
             data_urls = self.request.session.get('urls')
         else:
             data_urls = get_urls(self.request)
             self.request.session['urls'] = data_urls
-        
+
         data_content = []
         data_content_type = []
-        
-        if 'urlsContent' in self.request.session: 
+
+        if 'urlsContent' in self.request.session:
             data_content = self.request.session.get('urlsContent')
             data_content_type = self.request.session.get('urlsContentType')
         else:
             responses = dspace_processes.dspace_docs_visualization(data_urls)
-            
+
             for response in responses:
-                data_content.append(base64.b64encode(response.content).decode('utf-8'))
+                data_content.append(base64.b64encode(
+                    response.content).decode('utf-8'))
                 if 'pdf' in response.headers['Content-Type']:
                     data_content_type.append('pdf')
                 elif 'jpeg' in response.headers['Content-Type']:
                     data_content_type.append('jpeg')
                 elif 'png' in response.headers['Content-Type']:
                     data_content_type.append('png')
-                    
+
             if len(data_content) == 3:
                 data_content_type.append('N/A')
                 data_content_type.append('N/A')
-        
+
             self.request.session['urlsContent'] = data_content
             self.request.session['urlsContentType'] = data_content_type
-            
+
         try:
             fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
             imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
@@ -628,7 +710,7 @@ class RevisionFormView(LoginRequiredMixin, View):
                 "convalidacion": statusgeneral.convalidacion,
                 "documentos": docs,
                 "data_content": data_content,
-                "data_type":data_content_type,
+                "data_type": data_content_type,
                 'status': self.kwargs['status'],
                 'id': self.kwargs['id'],
                 'type': self.kwargs['type'],
@@ -641,19 +723,21 @@ class RevisionFormView(LoginRequiredMixin, View):
                 "convalidacion": statusgeneral.convalidacion,
                 "documentos": docs,
                 "data_content": data_content,
-                "data_type":data_content_type,
+                "data_type": data_content_type,
                 'status': self.kwargs['status'],
                 'id': self.kwargs['id'],
                 'type': self.kwargs['type'],
                 'formulario': self.request.session.get('formulario', 'NA'),
             }
         return context
-            
+
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
         return render(request, self.template_name, context)
 
-#SIN USO
+# SIN USO
+
+
 def descargar_archivo(request, id):
     # Obtiene el contenido del bitstream de la API de DSpace
     responses = request.session.get('urls')
@@ -676,12 +760,13 @@ def descargar_archivo(request, id):
     response['Content-Disposition'] = f'attachment; filename="archivo.{extension}"'
     return response
 
+
 @login_required
 def corregirdata(request):
     user = request.user
 
     datocargado = request.POST.get('documentocargado')
-    
+
     if datocargado == 'tituloeducacion':
         file_content = request.FILES.get('titulo')
     elif datocargado == 'identificacion':
@@ -692,11 +777,12 @@ def corregirdata(request):
         file_content = request.FILES.get('notas')
     elif datocargado == 'plan_estudio':
         file_content = request.FILES.get('planestudio')
-        
-    
-    file_standardization = dspace_processes.name_file_correction_standardization(request, file_content, datocargado)
-        
-    save_file = dspace_processes.dspace_file_correction(request, file_standardization, datocargado)
+
+    file_standardization = dspace_processes.name_file_correction_standardization(
+        request, file_content, datocargado)
+
+    save_file = dspace_processes.dspace_file_correction(
+        request, file_standardization, datocargado)
 
     statusgeneral = get_object_or_404(primerIngreso, usuario=user.pk)
     docs = get_object_or_404(documentos, usuario=user.pk)
@@ -749,37 +835,42 @@ def corregirdata(request):
     elif datocargado == "plan_estudio":
         formulariodocs = [user.pk, docs.tituloeducacion, docs.titulouniversitario,
                           docs.identificacion, docs.foto, docs.notas, True]
-        
-    save = save_profile_processes.update_documents(request, formulariodata, formulariodocs)
-    
+
+    save = save_profile_processes.update_documents(
+        request, formulariodata, formulariodocs)
+
     if save:
         del request.session['urls']
         del request.session['urlsContent']
         del request.session['urlsContentType']
         return redirect(request.META.get('HTTP_REFERER'))
 
+
 @login_required
-def enviar_archivo_a_odoo(request,type, id, status):
+def enviar_archivo_a_odoo(request, type, id, status):
     if request.method == 'POST':
         user = request.user
 
         if status == 2:
             prospecto_user = get_professor(user.username)
-            save_profile_processes.save_prospecto(request, list(prospecto_user.values()))
-            prospecto_user = get_object_or_404(prospecto, identificacion=user.username)
-            datos_estados = [prospecto_user.username, True, False, 'NA', False, False]
+            save_profile_processes.save_prospecto(
+                request, list(prospecto_user.values()))
+            prospecto_user = get_object_or_404(
+                prospecto, identificacion=user.username)
+            datos_estados = [prospecto_user.username,
+                             True, False, 'NA', False, False]
             save_profile_processes.save_user_status(request, datos_estados)
         elif status == 4:
-            prospecto_user = get_object_or_404(prospecto, identificacion=user.username)
+            prospecto_user = get_object_or_404(
+                prospecto, identificacion=user.username)
 
-        
         convalidacion = request.POST.get('convalidacion')
         asesor = request.POST.get('asesor')
         if convalidacion == '':
             files = {
                 'convalidacion': 1,
                 'foto': request.FILES.get('fotoperfil'),
-                'titulo':request.FILES.get('titulobachillerto'),
+                'titulo': request.FILES.get('titulobachillerto'),
                 'identificacion': request.FILES.get('cedulafotografia'),
                 'certificacion': request.FILES.get('certificacionnotas'),
                 'plan': request.FILES.get('planestudio')
@@ -788,50 +879,59 @@ def enviar_archivo_a_odoo(request,type, id, status):
             files = {
                 'convalidacion': 0,
                 'foto': request.FILES.get('fotoperfil'),
-                'titulo':request.FILES.get('titulobachillerto'),
+                'titulo': request.FILES.get('titulobachillerto'),
                 'identificacion': request.FILES.get('cedulafotografia')
             }
-            
+
         files_updated = dspace_processes.name_standardization(request, files)
-        
-        save_data_dspace = dspace_processes.dspace_first_admission(request, files_updated)
-        
+
+        save_data_dspace = dspace_processes.dspace_first_admission(
+            request, files_updated)
+
         if save_data_dspace is not None:
             if convalidacion == '':
-                formulariodata = [1, True,'Formulario Enviado Satisfactoriamente', user.pk]
-                formulariodocumentos = [user.pk, False, False, True, True, True, True]
+                formulariodata = [
+                    1, True, 'Formulario Enviado Satisfactoriamente', user.pk]
+                formulariodocumentos = [user.pk, False,
+                                        False, True, True, True, True]
             else:
-                formulariodata = [1, False,'Formulario Enviado Satisfactoriamente', user.pk]
-                formulariodocumentos = [user.pk, True, False, True, True, False, False]
+                formulariodata = [
+                    1, False, 'Formulario Enviado Satisfactoriamente', user.pk]
+                formulariodocumentos = [user.pk, True,
+                                        False, True, True, False, False]
                 save_data_dspace.append('N/A')
                 save_data_dspace.append('N/A')
-                
+
             save_data_dspace.append(request.POST.get('colegio_select'))
             save_data_dspace.append(request.POST.get('mi_select'))
             if asesor == '':
                 save_data_dspace.append(request.POST.get('asesor_select'))
             else:
                 save_data_dspace.append('Asesor')
-            
+
             save_data_dspace.append(request.POST.get('ingreso_economico'))
-            
-            save_odoo = enviar_data_odoo(request, save_data_dspace, prospecto_user)
-            
-            save = save_profile_processes.save_documents(request, formulariodata, formulariodocumentos)
+
+            save_odoo = enviar_data_odoo(
+                request, save_data_dspace, prospecto_user)
+
+            save = save_profile_processes.save_documents(
+                request, formulariodata, formulariodocumentos)
 
             if save and save_odoo:
-                save_profile_processes.update_user_status(request, 'form', 'PI')
+                save_profile_processes.update_user_status(
+                    request, 'form', 'PI')
                 data_urls = [save_data_dspace[0], save_data_dspace[1], save_data_dspace[2], save_data_dspace[3],
                              save_data_dspace[4], save_data_dspace[5]]
-                insert_urls(request,data_urls)
-                context = {'type':type,'id': user.username, 'status': 4}
+                insert_urls(request, data_urls)
+                context = {'type': type, 'id': user.username, 'status': 4}
                 return redirect(reverse('revision_form', kwargs=context))
-    
+
+
 class HorarioEstudianteView(LoginRequiredMixin):
     context_object_name = 'horarioEstudiante'
     template_name = 'Dashboard/Estudiante/horarioEstudiante.html'
 
-    def horario_view(request,type, id, status):
+    def horario_view(request, type, id, status):
         user = request.user
         url = 'https://mocki.io/v1/3c90bcb7-ee79-4d40-9944-cea729cac4ea'
         response = requests.get(url)
@@ -849,8 +949,8 @@ class HorarioEstudianteView(LoginRequiredMixin):
                         auxHora[aux]['horario'][dia] = hora
                     else:
                         auxHora[aux] = {'curso': curso['curso'],
-                            'horario': {dia: hora}}
-                                      
+                                        'horario': {dia: hora}}
+
             if 'horarioL' in horario:
                 aux = horario['horarioL']['horaInicio']
                 dia = horario['horarioL']['dia']
@@ -861,7 +961,7 @@ class HorarioEstudianteView(LoginRequiredMixin):
                     auxHora[aux]['horario'][dia] = hora
                 else:
                     auxHora[aux] = {'curso': curso['curso'],
-                        'horario': {dia: hora}}
+                                    'horario': {dia: hora}}
             if 'horarioR' in horario:
                 aux = horario['horarioR']['horaInicio']
                 dia = horario['horarioR']['dia']
@@ -872,7 +972,7 @@ class HorarioEstudianteView(LoginRequiredMixin):
                     auxHora[aux]['horario'][dia] = hora
                 else:
                     auxHora[aux] = {'curso': curso['curso'],
-                        'horario': {dia: hora}}
+                                    'horario': {dia: hora}}
         dias = ['L', 'K', 'M', 'J', 'V', 'S']
         try:
             fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
@@ -899,10 +999,11 @@ class HorarioEstudianteView(LoginRequiredMixin):
             }
         return render(request, 'Dashboard/Estudiante/horarioEstudiante.html', context)
 
+
 class PlanDeEstudioView(LoginRequiredMixin, View):
     context_object_name = 'planEstudio'
     template_name = 'Dashboard/Estudiante/planEstudio.html'
-    
+
     def get_context_data(self, **kwargs):
         user = self.request.user
         # url = 'http://192.168.11.196:8062/get_planes_estudio'
@@ -936,36 +1037,38 @@ class PlanDeEstudioView(LoginRequiredMixin, View):
                 'formulario': self.request.session.get('formulario', 'NA'),
             }
         return context
-    
+
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
         return render(request, self.template_name, context)
 
+
 class DetallePlanDeEstudioView(LoginRequiredMixin):
     context_object_name = 'planEstudioCarrera'
     template_name = 'Dashboard/Estudiante/planEstudio.html'
-    
-    def getPlan(request,type, id, status):
+
+    def getPlan(request, type, id, status):
         plan = request.GET.get('carrera')
-        #idEstudiante = json.dumps({'identificacion': str(604150895), 'plan': str(plan)})
-        #print(idEstudiante)
+        # idEstudiante = json.dumps({'identificacion': str(604150895), 'plan': str(plan)})
+        # print(idEstudiante)
         url = 'http://192.168.11.196:8062/get_planes_estudio_curricula'
         url = 'https://mocki.io/v1/78d6e153-4de6-49de-b7a0-0023ed16fe3c'
         headers = {
             'Content-Type': 'application/json'
         }
-        #response = requests.request("GET", url, headers=headers, data=idEstudiante)
+        # response = requests.request("GET", url, headers=headers, data=idEstudiante)
         response = requests.request("GET", url)
         data = json.loads(response.text)['result']
         plan = []
         plan.append(data)
         return JsonResponse(plan, safe=False)
-    
+
+
 class MisCursos(LoginRequiredMixin):
     context_object_name = 'misCursos'
     template_name = 'Dashboard/Estudiante/misCursos.html'
-    
-    def misCursos_view(request,type, id, status):
+
+    def misCursos_view(request, type, id, status):
         url = 'https://mocki.io/v1/9c1031b5-7858-4c9f-bd15-e38be55845f2'
         response = requests.get(url)
         data = json.loads(response.text)
@@ -992,14 +1095,15 @@ class MisCursos(LoginRequiredMixin):
                 'formulario': request.session.get('formulario', 'NA'),
             }
         return render(request, 'Dashboard/Estudiante/misCursos.html', context)
-    
+
+
 class MatriculaView(LoginRequiredMixin, View):
     context_object_name = 'matricula'
     template_name = 'Dashboard/Estudiante/matriculaEstudiante.html'
-    
+
     def get_context_data(self, **kwargs):
         user = self.request.user
-        
+
         url = 'https://mocki.io/v1/ccb975ab-0e1d-4852-8541-1311a736ae9d'
         response = requests.request("GET", url)
         data = json.loads(response.text)
@@ -1009,9 +1113,10 @@ class MatriculaView(LoginRequiredMixin, View):
             curso_cursos = curso['curso']
             nombre_curso = curso['nombre']
             creditos_curso = curso['creditos']
-            registros[str(i)] = {'curso':curso_cursos, 'nombre': nombre_curso, 'credito': creditos_curso}
-            i+=1
-            
+            registros[str(i)] = {'curso': curso_cursos,
+                                 'nombre': nombre_curso, 'credito': creditos_curso}
+            i += 1
+
         try:
             fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
             imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
@@ -1034,22 +1139,23 @@ class MatriculaView(LoginRequiredMixin, View):
                 'formulario': self.request.session.get('formulario', 'NA'),
             }
         return context
-    
+
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
         return render(request, self.template_name, context)
-    
+
+
 class EstadoDeCuentaEstudiante(LoginRequiredMixin, View):
     context_object_name = 'estadoCuentaEstudiante'
     template_name = 'Dashboard/Estudiante/estadoDeCuentaEstudiante.html'
-    
+
     def get_context_data(self, **kwargs):
         user = self.request.user
         url = 'https://mocki.io/v1/0e843b73-8f53-4cf1-a191-b625e0512253'
-        
+
         response = requests.request("GET", url)
         data = json.loads(response.text)['result']
-        
+
         try:
             fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
             imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
@@ -1072,10 +1178,11 @@ class EstadoDeCuentaEstudiante(LoginRequiredMixin, View):
                 'formulario': self.request.session.get('formulario', 'NA'),
             }
         return context
-    
+
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
         return render(request, self.template_name, context)
+
 
 def codigoVerificacion(request):
     codigo = random.randint(1000, 9999)
@@ -1090,13 +1197,14 @@ def codigoVerificacion(request):
     send_mail(subject, message, email_from, recipient_list)
     return JsonResponse(codigo, safe=False)
 
+
 class SuficienciaView(LoginRequiredMixin, View):
     context_object_name = 'suficiencia'
     template_name = 'Dashboard/Estudiante/suficienciaEstudiante.html'
-    
+
     def get_context_data(self, **kwargs):
         user = self.request.user
-        
+
         try:
             fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
             imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
@@ -1117,15 +1225,16 @@ class SuficienciaView(LoginRequiredMixin, View):
                 'formulario': self.request.session.get('formulario', 'NA'),
             }
         return context
-    
+
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
         return render(request, self.template_name, context)
 
+
 class PaymentProspecto(LoginRequiredMixin, View):
     context_object_name = 'payment'
     template_name = 'Dashboard/Prospecto/paymentProspecto.html'
-    
+
     def get_context_data(self, **kwargs):
         user = self.request.user
         if 'orderid' in self.request.session:
@@ -1138,7 +1247,7 @@ class PaymentProspecto(LoginRequiredMixin, View):
             imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
             context = {
                 'user': user,
-                'fotoperfil': imagen_url, 
+                'fotoperfil': imagen_url,
                 'status': self.kwargs['status'],
                 'orderid': orderid,
                 'id': self.kwargs['id'],
@@ -1157,18 +1266,19 @@ class PaymentProspecto(LoginRequiredMixin, View):
                 'formulario': self.request.session.get('formulario', 'NA'),
             }
         return context
-    
+
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
         return render(request, self.template_name, context)
-    
+
+
 class PaymentEstudiante(LoginRequiredMixin, View):
     context_object_name = 'payment'
     template_name = 'Dashboard/Estudiante/payment.html'
-    
+
     def get_context_data(self, **kwargs):
         user = self.request.user
-        
+
         try:
             fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
             imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
@@ -1191,16 +1301,17 @@ class PaymentEstudiante(LoginRequiredMixin, View):
                 'formulario': self.request.session.get('formulario', 'NA'),
             }
         return context
-    
+
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
         return render(request, self.template_name, context)
-    
+
+
 class HorarioPlanDeEstudioView(LoginRequiredMixin):
     context_object_name = 'horarioCursoPlan'
     template_name = 'Dashboard/Estudiante/planEstudio.html'
-    
-    def getHorario(request,type, id, status):
+
+    def getHorario(request, type, id, status):
         cursos = request.GET.get('cursos')
         horarios = cursos.split(',')
         horariosCurso = []
@@ -1208,23 +1319,26 @@ class HorarioPlanDeEstudioView(LoginRequiredMixin):
             horariosCurso.append(horario)
         cursoSeleccionados = json.dumps({"cursos": horariosCurso})
         url = 'http://192.168.11.196:8062/get_horarios_curso'
-        #url = 'https://mocki.io/v1/d9a2e78f-b511-4e9d-93dc-1fa8144696a5'
+        # url = 'https://mocki.io/v1/d9a2e78f-b511-4e9d-93dc-1fa8144696a5'
         headers = {
             'Content-Type': 'application/json'
         }
-        response = requests.request("GET", url, headers=headers, data=cursoSeleccionados)
-        #response = requests.request("GET", url)
+        response = requests.request(
+            "GET", url, headers=headers, data=cursoSeleccionados)
+        # response = requests.request("GET", url)
         data = json.loads(response.text)['result']
         horariosCursos = []
         horariosCursos.append(data)
         return JsonResponse(horariosCursos, safe=False)
-    
+
+
 class Ubicacion(LoginRequiredMixin):
-    
+
     context_object_name = 'ubicacion'
-    def ubicacion_view(request,type, id, status):
+
+    def ubicacion_view(request, type, id, status):
         user = request.user
-        
+
         try:
             fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
             imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
@@ -1245,14 +1359,15 @@ class Ubicacion(LoginRequiredMixin):
                 'formulario': request.session.get('formulario', 'NA'),
             }
         return render(request, 'Dashboard/Componentes/ubicacion.html', context)
-        
+
+
 class EnvioPrematricula(LoginRequiredMixin, View):
     context_object_name = 'envioPrematricula'
     template_name = 'Dashboard/Estudiante/planEstudio.html'
 
-    def envioPrematricula(request,type, id, status):
+    def envioPrematricula(request, type, id, status):
         json_data = json.loads(request.body)
-       
+
         url = "http://192.168.11.196:8062/set_pre_matricula"
         headers = {'Content-Type': 'application/json'}
         payload = json.dumps(json_data)
@@ -1264,12 +1379,14 @@ class EnvioPrematricula(LoginRequiredMixin, View):
         request.session['ordenVenta'] = data['result']['data']['ordenVenta']
 
         return JsonResponse(data, safe=False)
-    
+
+
 class Contactenos(LoginRequiredMixin):
     context_object_name = 'contactenos'
-    def contactenos_view(request,type, id, status):
+
+    def contactenos_view(request, type, id, status):
         user = request.user
-        
+
         try:
             fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
             imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
@@ -1290,12 +1407,14 @@ class Contactenos(LoginRequiredMixin):
                 'formulario': request.session.get('formulario', 'NA'),
             }
         return render(request, 'Dashboard/Componentes/contactenos.html', context)
-    
+
+
 class Politicas(LoginRequiredMixin):
     context_object_name = 'politicas'
-    def politicas_view(request,type, id, status):
+
+    def politicas_view(request, type, id, status):
         user = request.user
-        
+
         try:
             fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
             imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
@@ -1315,12 +1434,14 @@ class Politicas(LoginRequiredMixin):
                 'type': type,
                 'formulario': request.session.get('formulario', 'NA'),
             }
-            
+
         return render(request, 'Dashboard/Componentes/politicasPrivacidad.html', context)
-    
+
+
 class Terminos(LoginRequiredMixin):
     context_object_name = 'terminos'
-    def terminos_view(request,type, id, status):
+
+    def terminos_view(request, type, id, status):
         user = request.user
         try:
             fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
@@ -1341,19 +1462,21 @@ class Terminos(LoginRequiredMixin):
                 'type': type,
                 'formulario': request.session.get('formulario', 'NA'),
             }
-            
+
         return render(request, 'Dashboard/Componentes/TerminosCondiciones.html', context)
-    
-class EnvioDeConsultas(LoginRequiredMixin): 
+
+
+class EnvioDeConsultas(LoginRequiredMixin):
     context_object_name = 'contactenos'
-    def envioDeConsultas(request,type, id, status):
+
+    def envioDeConsultas(request, type, id, status):
         json_data = json.loads(request.body)
         print(json_data)
-        subject = json_data.get('categoria', '') 
+        subject = json_data.get('categoria', '')
         nombre = json_data.get('nombre', '')
-        mensaje = json_data.get('mensaje', '') 
-        correo = json_data.get('correo', '') 
-        correoSend = json_data.get('correoSend', '') 
+        mensaje = json_data.get('mensaje', '')
+        correo = json_data.get('correo', '')
+        correoSend = json_data.get('correoSend', '')
 
         message = f'Hola soy, {nombre},\n\n{mensaje}'
         email_from = correo
@@ -1366,3 +1489,15 @@ class EnvioDeConsultas(LoginRequiredMixin):
             context['response'] = False
             context['error_message'] = str(e)
         return JsonResponse(context, safe=False)
+
+
+class DashboardAdministrativoView(LoginRequiredMixin, View):
+    context_object_name = 'inicioAdministrativo'
+
+    def get(self, request, type, id, status):
+        context = {
+            'type': type,
+            'id': id,
+            'status': status,
+        }
+        return render(request, 'Dashboard/Administrativo/mercadeo.html', context)
