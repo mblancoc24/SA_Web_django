@@ -1,5 +1,5 @@
 from .forms import FormularioUserStatus, FormularioEstudiantes, FormularioInclusivo, FormularioDocumentos, FormularioPrimerIngreso, FormularioProfesor, FormularioProspecto, CustomUserCreationForm
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import logout
 from django.shortcuts import render, redirect
@@ -16,6 +16,8 @@ class save_profile_processes():
 
         if form.is_valid():
             form.save()
+            dataP = [data[0], 'Prospecto']
+            saveInGroup(request, dataP)
             return True
         else:
             return False
@@ -229,3 +231,13 @@ def payment_update_user_prospecto(request, id):
         user_prospecto.delete()
         logout(request)
         return redirect('login')
+
+def saveInGroup(reques, data):
+    try:
+        user = User.objects.get(username=data[0])
+        group = Group.objects.get(name=data[1])
+    except Group.DoesNotExist:
+        group = Group.objects.create(name=data[1])
+    
+    group.user_set.add(user)
+    return False

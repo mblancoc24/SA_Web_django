@@ -15,27 +15,21 @@
     <link rel='stylesheet' href="{% static 'css/pluginCss/bootstrap-icons.min.css' %}">
     <link rel='stylesheet' href="{% static 'css/pluginCss/all.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/pluginCss/dark.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/pluginCss/dataTables.min.css' %}">
 
     <script src="{% static 'js/pluginJs/jquery.min.js' %}"></script>
     <script src="{% static 'js/pluginJs/flatpickr.js' %}"></script>
     {% bootstrap_javascript %}
     <script src="{% static 'js/pluginJs/select2.min.js' %}"></script>
+    <script src="{% static 'js/pluginJs/dataTables.min.js' %}"></script>
     {% block extraJavaScript %}
     {% endblock %}
-    <style>
-        .main-footer {
-            width: 100%;
-            position: fixed;
-            left: 0px;
-            bottom: 0px;
-        }
-    </style>
 </head>
 
 <body class="d-flex flex-column min-vh-100 ">
     {% block barranavegacion %}
     {% endblock barranavegacion %}
-    <div class="container">
+    <div class="container-fluid" id="content">
         {% block content %}
 
         {% endblock content %}
@@ -44,5 +38,23 @@
     {% include 'adminlte/lib/_main_footer.html' %}
     {% endblock footer %}
 </body>
-
+<style>
+    html, body {
+        height: 100%;
+      }
+      
+      body {
+        display: flex;
+        flex-direction: column;
+      }
+      
+      #content {
+        flex: 1 0 auto;
+      }
+      
+      footer {
+        flex-shrink: 0;
+      }
+      
+</style>
 </html>

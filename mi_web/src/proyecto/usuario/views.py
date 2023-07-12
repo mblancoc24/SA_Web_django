@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
+import pytz
+from usuario.administrativo import ImagenNoticias, Noticias
 from .models import profesor, estudiantes, RegistroLogsUser, documentos, user_status, carreras, colegios, posgrados, fotoperfil, estados, primerIngreso, prospecto
 from .forms import  CustomUserCreationForm
 from django.views.generic.list import ListView
@@ -9,7 +11,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.http import JsonResponse, HttpResponse
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.core.files.base import ContentFile
 from PIL import Image
 import requests
@@ -25,6 +27,9 @@ from .api_queries import enviar_data_odoo, insert_urls, get_urls, update_request
 import json
 import base64
 from django.http import Http404
+from django.core.files.base import ContentFile
+import datetime
+from datetime import time
 
 class Logueo(LoginView):
     template_name = 'usuario/login.html'
@@ -83,7 +88,7 @@ class Logueo(LoginView):
                 form.add_error('username', 'El usuario no existe en el sistema')
                 logout(self.request)
                 return super().form_invalid(form)
-            elif user.is_active:
+            elif user.is_active and user.username == 'soporte':
                 login(self.request, user)
                 registrar_accion(user, 'El usuario {0} ha ingresado como administrador.'.format(user.username))
                 context = {'type':'administrador','id': username, 'status': 5}
@@ -117,21 +122,18 @@ def microsoft_auth(request):
                             registrar_accion(user, 'El usuario {0} ha ingresado como estudiante.'.format(user.username))
                             context = {'type':'estudiante','id': user.username, 'status': 1}
 
-                            return redirect(reverse('estudiante', kwargs=context))
+                            return redirect(reverse('inicio', kwargs=context))
                         elif status.moroso:
                             request.session['moroso'] = True
                             registrar_accion(user, 'El usuario {0} ha ingresado como estudiante. Ademas se le han bloqueado las opciones por status:moroso'.format(user.username))
                             context = {'type':'estudiante','id': user.username, 'status': 1}
-                            return redirect(reverse('estudiante', kwargs=context))
+                            return redirect(reverse('inicio', kwargs=context))
                             ##AGREGAR INFO
                         else:
                             registrar_accion(user, 'El usuario {0} ha ingresado como estudiante. Ademas se le han bloqueado las opciones por status:inactivo'.format(user.username))
                             context = {'type':'estudiante','id': user.username, 'status': 1}
-                            return redirect(reverse('estudiante', kwargs=context))
-                            ##AGREGAR INFO
-
                             return redirect(reverse('inicio', kwargs=context))
-
+                            ##AGREGAR INFO
                     
                     elif tipo_user['tipo'] == 'profesor' or tipo_user['tipo'] == 'prospecto/profesor':
                         registrar_accion(user, 'El usuario {0} ha ingresado como profesor.'.format(user.username))
@@ -193,20 +195,18 @@ def microsoft_callback(request):
                         registrar_accion(user, 'El usuario {0} ha ingresado como estudiante.'.format(user.username))
                         context = {'type':'estudiante','id': user.username, 'status': 1}
 
-                        return redirect(reverse('estudiante', kwargs=context))
+                        return redirect(reverse('inicio', kwargs=context))
                     elif status.moroso:
                         request.session['moroso'] = True
                         registrar_accion(user, 'El usuario {0} ha ingresado como estudiante. Ademas se le han bloqueado las opciones por status:moroso'.format(user.username))
                         context = {'type':'estudiante','id': user.username, 'status': 1}
-                        return redirect(reverse('estudiante', kwargs=context))
+                        return redirect(reverse('inicio', kwargs=context))
                         ##AGREGAR INFO
                     else:
                         registrar_accion(user, 'El usuario {0} ha ingresado como estudiante. Ademas se le han bloqueado las opciones por status:inactivo'.format(user.username))
                         context = {'type':'estudiante','id': user.username, 'status': 1}
-                        return redirect(reverse('estudiante', kwargs=context))
-                        ##AGREGAR INFO
-
                         return redirect(reverse('inicio', kwargs=context))
+                        ##AGREGAR INFO
                     ##AGREGAR INFO
 
                 
@@ -567,15 +567,17 @@ class DashboardView(LoginRequiredMixin, View):
             }
         if type == "estudiante":
             context['formulario'] = request.session.get('formulario', 'NA')
+            context['imagenes_estudiante'] = ImagenNoticias.mostrarFotosNoticiasU(request,'estudiante')
+            context['noticia_estudiante'] = Noticias.mostrarNoticiasU(request,'estudiante')
             return render(request, 'Dashboard/Estudiante/estudiante.html', context)
         elif type == "prospecto":
             context['formulario'] = request.session.get('formulario', 'NA')
             return render(request, 'Dashboard/Prospecto/prospecto.html', context)
         elif type == "profesor":
             context['formulario'] = request.session.get('formulario', 'NA')
-            return render(request, 'Dashboard/Profesor/profesor.html', context)
-        elif type == "administrador":
-            return render(request, 'Administrativo/mercadeo.html', context)
+            context['imagenes_profesor'] = ImagenNoticias.mostrarFotosNoticiasU(request,'profesor')
+            context['noticia_profesor'] = Noticias.mostrarNoticiasU(request,'profesor')
+            return render(request, 'Dashboard/Profesor/profesor.html', context) 
 
 @login_required
 def change_email(request):
@@ -1140,9 +1142,10 @@ class MisCursos(LoginRequiredMixin):
     template_name = 'Dashboard/Estudiante/misCursos.html'
     
     def misCursos_view(request,type, id, status):
-        url = 'https://mocki.io/v1/9c1031b5-7858-4c9f-bd15-e38be55845f2'
+        url = 'https://mocki.io/v1/41206e95-afa6-4489-b732-05593bff72b8'
         response = requests.get(url)
         data = json.loads(response.text)
+        
         user = request.user
         try:
             fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
@@ -1545,7 +1548,7 @@ class EnvioDeConsultas(LoginRequiredMixin):
         correoSend = json_data.get('correoSend', '') 
 
         message = f'Hola soy, {nombre},\n\n{mensaje}'
-        email_from = correo
+        email_from = settings.EMAIL_HOST_USER
         recipient_list = [correoSend]
         context = {}
         try:
@@ -1554,14 +1557,92 @@ class EnvioDeConsultas(LoginRequiredMixin):
         except Exception as e:
             context['response'] = False
             context['error_message'] = str(e)
-        return JsonResponse(context, safe=False)
+        return JsonResponse(context, safe=False)      
     
-class DashboardAdministrativoView(LoginRequiredMixin, View):
-    context_object_name = 'inicioAdministrativo'
-    def get(self, request,type, id, status):
-        context = {
-                'type': type,
-                'id': id,
+class MiscursosP(LoginRequiredMixin, View):
+    
+    def misCursos_view(request,type, id, status):
+        url = 'https://mocki.io/v1/d6873340-de28-4968-8c22-9aca2f313066'
+        #url = 'http://192.168.8.221:8062/get_docente_periodos'
+        idProfesor = json.dumps({'identificacion': str(604150895)})
+        headers = {
+            'Content-Type': 'application/json'
+        }
+        #response = requests.request("POST", url, headers=headers, data=idProfesor)
+        response = requests.request("GET", url)
+        data = json.loads(response.text)['result']
+        dataP = []
+        for curso in data['data']['periodos']:
+            dataP.append(curso['periodo'])
+        request.session['misCursoP'] = data
+        user = request.user
+        try:
+            fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
+            imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
+            context = {
+                'user': user,
+                'fotoperfil': imagen_url,
                 'status': status,
+                'id': id,
+                'misCursos': dataP,
+                'type': type,
+                'formulario': request.session.get('formulario', 'NA'),
             }
-        return render(request, 'Dashboard/Administrativo/mercadeo.html', context)
+        except fotoperfil.DoesNotExist:
+            context = {
+                'user': user,
+                'status': status,
+                'id': id,
+                'misCursos': dataP,
+                'type': type,
+                'formulario': request.session.get('formulario', 'NA'),
+            }
+        return render(request, 'Dashboard/Profesor/misCursos.html', context)
+    
+    def detalleCursos(request,type, id, status):
+        periodo = request.GET.get("periodo")
+        cursos = request.session.get('misCursoP')
+        list=[]
+        for curso in cursos['data']['periodos']:
+            if curso['periodo'] == periodo:
+                list = curso['horarios']
+        user = request.user
+        try:
+            fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
+            imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
+            context = {
+                'user': user,
+                'fotoperfil': imagen_url,
+                'status': status,
+                'cursosP': list,
+                'id': id,
+                'type': type,
+                'formulario': request.session.get('formulario', 'NA'),
+            }
+        except fotoperfil.DoesNotExist:
+            context = {
+                'user': user,
+                'status': status,
+                'cursosP': list,
+                'id': id,
+                'type': type,
+                'formulario': request.session.get('formulario', 'NA'),
+            }
+        return render(request, 'Dashboard/Profesor/misCursos.html', context)
+    
+    def detalleCursoPeriodo(request):
+        data = request.session.get('misCursoP')
+        return JsonResponse(data, safe=False)
+    
+    def listEstudiante(request):
+        url = 'https://api.npoint.io/3946c4a7aa2d5513e0ac'
+        response = requests.request("GET", url)
+        data = json.loads(response.text)['result']
+        dataE = []
+        for curso in data['data']['estudiantes']:
+            dataE.append(curso)
+        request.session['listEstudiante'] = data
+        user = request.user
+        return JsonResponse(dataE, safe=False)
+
+        

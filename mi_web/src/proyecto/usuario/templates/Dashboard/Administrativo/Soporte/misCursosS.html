@@ -1,0 +1,117 @@
+{% extends 'Dashboard/Administrativo/baseAdministrativo.html' %}
+{% load static %}
+{% block extraJavaScript %}
+
+{% endblock %}
+{% block barranavegacion %}
+{% include 'Dashboard/Administrativo/Componentes/navbarAdministrativoS.html' %}
+{% endblock barranavegacion %}
+
+{% block content %}
+
+<div class="p-2 mt-5">
+    {% for carrera in misCursos.carreras %}
+    <section class="news section-padding mt-5 mb-3" id="miscursos">
+        <div class="col-md-12 card cardPerfilCol">
+            <div class="row p-2">
+                <div class="mb-3">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <a class="card-title btn-md buttonCarrera fw-bold" id="infoCardTitle">{{carrera.carrera}}</a>
+                        </div>
+                        <div class="col-md-8">
+                            <h5 class="card-title fw-bold" id="infoCardTitle">{{carrera.cuatrimestre}}</h5>
+                        </div>
+                    </div>
+                    <div class="card-body table-responsive px-md-4 px-2 pt-3">
+                        <div class="table-responsive-sm">
+                            <table class="table  misCursoTabla">
+                                {% for curso in carrera.cursos %}
+                                <tbody>
+                                    <tr>
+                                        <td id="datosHeader" colspan="6">
+                                            {{curso.curso}}: {{curso.nombre}} 
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td id="datos" style="width: 50px;">Sede:</td>
+                                        <td style="width: 50px;">{{curso.sede}} </td>
+                                        <td id="datos" style="width: 50px;">Grupo:</td>
+                                        <td colspan="3" style="width: 80px;">{{curso.grupo}} </td>
+                                    </tr>
+                                    <tr>
+                                        <td id="datos" style="width: 50px;">Horario:</td>
+                                        {% for horario in curso.horarios %}
+                                        <td colspan="5">
+                                            {% if horario.horario %}
+                                                Teoría: {{horario.horario.diaT}} ({{horario.horario.horaInicioT}}:{{horario.horario.minutoInicioT}}-{{horario.horario.horaFinT}}:{{horario.horario.minutoFinT}})
+                                            {% endif %}
+                                            {% if horario.horarioL %}
+                                            Laboratorio: {{horario.horarioL.diaL}} ({{horario.horarioL.horaInicioL}}:{{horario.horarioL.minutoInicioL}}-{{horario.horarioL.horaFinL}}:{{horario.horarioL.minutoFinL}})
+                                            {% endif %}
+                                            {% if horario.horarioR %}
+                                            Rotación: {{horario.horarioR.diaR}} ({{horario.horarioR.horaInicioR}}:{{horario.horarioR.minutoInicioR}}-{{horario.horarioR.horaFinR}}:{{horario.horarioR.minutoFinR}})
+                                            {% endif %}
+                                        </td>
+                                        {% endfor %}
+                                    </tr>
+                                    <tr>
+                                        <td id="datos" style="width: 50px;">Profesor:</td>
+                                        <td colspan="6" style="width: 50px;">
+                                            {% if curso.profesor %}
+                                            {{curso.profesor}}
+                                            {%else%}
+                                            --
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td id="datos" style="width: 50px;">1 Parcial:</td>
+                                        <td style="width: 50px;">{{curso.primerP}} </td>
+                                        <td id="datos" style="width: 50px;">2 Parcial:</td>
+                                        <td style="width: 50px;">{{curso.segundoP}} </td>
+                                        <td id="datos" style="width: 120px;">Examen Final:</td>
+                                        <td style="width: 50px;">{{curso.examenF}} </td>
+                                    </tr>
+                                    <tr>
+                                        <td id="datos" style="width: 50px;">Nota Preliminar:</td>
+                                        
+                                        <td style="width: 50px;">
+                                            {% if curso.notaP %}
+                                            {{curso.primerP}} 
+                                            {%else%}
+                                            MAT
+                                            {% endif %}
+                                        </td> 
+                                        <td id="datos" style="width: 50px;">Examen Extraordinario:</td>    
+                                        <td style="width: 50px;" colspan="3">
+                                            {% if curso.examenE %}
+                                            {{curso.examenE}} 
+                                            {%else%}
+                                            --
+                                            {% endif %}
+                                        </td>                           
+                                    </tr>
+                                    <tr>
+                                        <td id="datos" style="width: 50px;">Nota Final:</td>
+                                        <td style="width: 50px;" colspan="6">
+                                            {% if curso.notaF %}
+                                            {{curso.notaF}} 
+                                            {%else%}
+                                            --
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% endfor %}
+</div>
+
+{% endblock %}

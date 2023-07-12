@@ -146,3 +146,26 @@ class carreras (models.Model):
     class Meta:
         db_table = 'primer_ingreso'
         
+class imagenNoticia(models.Model):
+    id = models.AutoField(primary_key=True)
+    imagen = models.BinaryField(null=True, blank=True)
+    imagen_nombre = models.CharField(max_length=255, null=True, blank=True)
+    estudiante = models.BooleanField(default=False)
+    profesor = models.BooleanField(default=False)
+    fecha_inicio = models.DateField(null=True, blank=True)
+    fecha_fin = models.DateField(null=True, blank=True)
+    hora_inicio = models.TimeField(null=True, blank=True)
+    hora_fin = models.TimeField(null=True, blank=True)
+    
+class noticias(models.Model):
+    id = models.AutoField(primary_key=True)
+    imagen = models.BinaryField(null=True, blank=True)
+    imagen_nombre = models.CharField(max_length=255, null=True, blank=True)
+    titulo = models.TextField(null=True, blank=True)
+    descripcion = models.TextField(null=True, blank=True)
+    estudiante = models.BooleanField(default=False)
+    profesor = models.BooleanField(default=False)
+    fecha_inicio = models.DateField(null=True, blank=True)
+    fecha_fin = models.DateField(null=True, blank=True)
+    hora_inicio = models.TimeField(null=True, blank=True)
+    hora_fin = models.TimeField(null=True, blank=True)
