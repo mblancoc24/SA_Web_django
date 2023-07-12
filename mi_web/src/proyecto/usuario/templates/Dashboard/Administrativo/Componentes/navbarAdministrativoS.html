@@ -1,0 +1,119 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg shadow-lg navbar-dark bg-dark fixed-top">
+    <div class="container-fluid">
+        <a href="#" class="navbar-brand" loading="lazy">
+            <img src="{% static 'img/uia_logo.png' %}" width="100" height="60" />
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-collapse collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                {%if type == 'administrador' %}
+                <li class="nav-item ">
+                    <a class="nav-link "
+                        href="#inicio">
+                        Inicio
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link " href="#historial" onclick="scroll(event);">
+                        Historial
+                    </a>
+                </li>
+                {%endif%}
+                {%if type == 'Estudiante'%}
+                <li class="nav-item ">
+                    <a class="nav-link " href="{% url 'inspeccionar' type=type id=id status=status %}">
+                        Plan Estudio
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="{% url 'misCursosS' type=type id=id status=status %}">
+                        Mis Cursos
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="{% url 'horarioS' type=type id=id status=status %}">
+                        Horario
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="{% url 'estadoCuentaS' type=type id=id status=status %}">
+                        Estado de cuenta
+                    </a>
+                </li>
+                {%elif type == 'Profesor'%}
+                <li class="nav-item ">
+                    <a class="nav-link" href="#">
+                        Holas
+                    </a>
+                </li>
+                {%endif%}
+                {%if type == 'Estudiante' or type == 'Profesor' or type == 'Prospecto'%}
+                <li class="nav-item ">
+                    <a class="nav-link" href="{% url 'perfilS' type=type id=id status=status %}">
+                        Perfil
+                    </a>
+                </li>
+                {%endif%}
+                {%if type == 'Prospecto'%}
+                <li class="nav-item ">
+                    <a class="nav-link" href="{% url 'correo' type=type id=id status=status %}">
+                        Correo
+                    </a>
+                </li>
+                {%endif%}
+            </ul>
+            <div class="d-flex align-items-center">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    {%if type == 'administrador' %}
+                    <li class="nav-item ">
+                        <a class="btn btn-danger" href="{% url 'logout' %}" type="button">
+                            <span>
+                                <i class="fa fa-power-off text-white"></i>
+                                <p class="d-inline text-white">Cerrar sesión</p>
+                            </span>
+                        </a>
+                    </li>
+                    {%else%}
+                    <li class="nav-item ">
+                        <a class="btn btn-warning" href="{% url 'inicioAdministrativo' type='administrador' id='soporte' status=5 %}" type="button">
+                            <span>
+                                <i class="fa fa-power-off text-black"></i>
+                                <p class="d-inline text-black">Salir inspeccionar</p>
+                            </span>
+                        </a>
+                    </li>
+                    {%endif%}
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<script>
+    function scroll(event){
+        var navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+        navLinks.forEach(function(link) {
+
+            event.preventDefault(); // Evitar la acción predeterminada de navegación
+            var targetId = this.getAttribute('href');
+            var targetElement = document.querySelector(targetId);
+            if (targetElement) {
+              window.scrollTo({
+                top: targetElement.offsetTop,
+                behavior: 'smooth'
+              });
+            }
+          });
+    }
+    document.addEventListener("DOMContentLoaded", function() {
+      // Inicializar el scrollspy de Bootstrap
+
+
+      // Controladores de eventos para los enlaces del navbar
+      
+    });
+  </script>
