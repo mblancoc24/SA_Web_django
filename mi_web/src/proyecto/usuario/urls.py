@@ -69,8 +69,14 @@ from .views import (
                     Politicas,
                     Terminos,
                     EnvioDeConsultas,
-                    DashboardAdministrativoView,
+                    MiscursosP,
                     )
+from .administrativo import(
+                            DashboardAdministrativoView,
+                            ImagenNoticias,
+                            Noticias,
+                            Soporte,
+                        )
 from django.contrib.auth.views import LogoutView
 from django.contrib.auth import views as auth_views
 
@@ -184,4 +190,27 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
                path("<str:type>/<int:id>/<int:status>/terminos/", Terminos.terminos_view, name='terminos'),
                path("<str:type>/<int:id>/<int:status>/envioConsulta/", EnvioDeConsultas.envioDeConsultas, name='envioConsulta'),
                path('<str:type>/<str:id>/<int:status>', DashboardAdministrativoView.as_view(), name='inicioAdministrativo'),
+               path('guardarImagen/', ImagenNoticias.guardarImagenNoticia, name='guadarImagenes'),
+               path('eliminarImageNoticia/', ImagenNoticias.borrarFotosNoticias, name='eliminarImageNoticia'),
+               path('buscarImageNoticia/', ImagenNoticias.mostrarFotosNoticiasId, name='buscarImageNoticia'),
+               path('actualizarImageNoticia/', ImagenNoticias.actualizarFotosNoticias, name='actualizarImageNoticia'),
+               
+               path('guardarNoticia/', Noticias.guardarNoticia, name='guardarNoticia'),
+               path('eliminarNoticia/', Noticias.borrarNoticias, name='eliminarNoticia'),
+               path('buscarNoticia/', Noticias.mostrarNoticiasId, name='buscarNoticia'),
+               path('actualizarNoticia/', Noticias.actualizarNoticias, name='actualizarNoticia'),
+               
+               path('mostrarAjaxI/<str:id>/', ImagenNoticias.mostrarFotosNoticiasU, name='mostrarAjaxI'),
+               path('mostrarAjaxN/<str:id>/', Noticias.mostrarNoticiasU, name='mostrarAjaxN'),
+               path('inspeccionar/<str:type>/<int:id>/<int:status>/', Soporte.getPlan, name='inspeccionar'),
+               path('inspeccionar/misCursos/<str:type>/<int:id>/<int:status>/', Soporte.misCursos, name='misCursosS'),
+               path('inspeccionar/horario/<str:type>/<int:id>/<int:status>/', Soporte.horarios, name='horarioS'),
+               path('inspeccionar/estadoCuenta/<str:type>/<int:id>/<int:status>/', Soporte.estadoCuenta, name='estadoCuentaS'),
+               path('inspeccionar/perfil/<str:type>/<int:id>/<int:status>/', Soporte.perfil, name='perfilS'),
+               path('inspeccionarProspecto/<str:type>/<int:id>/<int:status>/', Soporte.perfil, name='inspeccionarPr'),
+               path('inspeccionarProspecto/correo/<str:type>/<int:id>/<int:status>/', Soporte.correo, name='correo'),
+               path('correoSendS/', Soporte.sendCorreo, name='correoSend'),
+               path("<str:type>/<int:id>/<int:status>/misCursosP/", MiscursosP.misCursos_view, name='misCursosP'),
+               path("getCurso/", MiscursosP.detalleCursoPeriodo, name='detalleCursosP'),
+               path("getListaEstudiantes/", MiscursosP.listEstudiante, name='listaEstudiante'),
                ]
