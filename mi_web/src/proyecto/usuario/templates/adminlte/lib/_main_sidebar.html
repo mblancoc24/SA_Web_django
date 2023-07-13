@@ -51,24 +51,17 @@
                                         <p>Preguntas Frecuentes</p>
                                     </a>
                                 </li>
-                                <li class="nav-item">
-                                    <a href="{% url 'matricula' type=type id=id status=status %}" class="nav-link">
-                                        <i class="nav-icon fas fa-edit"></i>
-                                        <p>Matricula</p>
-                                    </a>
-                                </li>
                             </ul>
                         </li>
-                        {% if formulario == 'PI' or formulario == 'PP' or formulario == 'CL' %}
+                        {% if status == 4 %}
                         <li class="nav-item" >
-                        {% else %}
-                        <li class="nav-item" style="display: none;">
-                        {% endif %}
+                      
                             <a href="{% url 'revision_form' type=type id=id status=status %}" class="nav-link">
                                 <i class="bi bi-folder-fill"></i>
                                 <p>Ver proceso</p>
                             </a>
                         </li>
+                        {% endif %}
                         {% if status == 1 %}
                             <li class="nav-item has-tree-view menu-open">
                                 <a href="#" class="nav-link">

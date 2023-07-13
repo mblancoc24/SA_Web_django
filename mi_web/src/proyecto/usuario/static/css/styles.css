@@ -1446,6 +1446,10 @@ text-transform: uppercase;
   border-radius: 50px;
 }
 
+
+.scroll-horizontal {
+  overflow-x: hidden;
+
 .navAdmin{
   position: -webkit-sticky;
   position: sticky;
