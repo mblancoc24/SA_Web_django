@@ -1449,7 +1449,7 @@ text-transform: uppercase;
 
 .scroll-horizontal {
   overflow-x: hidden;
-
+}
 .navAdmin{
   position: -webkit-sticky;
   position: sticky;
