@@ -1441,3 +1441,7 @@ text-transform: uppercase;
   font-weight: 600;
   border-radius: 50px;
 }
+
+.scroll-horizontal {
+  overflow-x: hidden;
+}

@@ -83,14 +83,30 @@ class Logueo(LoginView):
                 form.add_error('username', 'El usuario no existe en el sistema')
                 logout(self.request)
                 return super().form_invalid(form)
-            elif user.is_active:
+            # elif user.is_active:
+            #     login(self.request, user)
+            #     registrar_accion(user, 'El usuario {0} ha ingresado como administrador.'.format(user.username))
+            #     context = {'type':'administrador','id': username, 'status': 5}
+            #     return redirect(reverse('inicioAdministrativo', kwargs=context))
+            elif user.is_active and (user.username == 'mercadeo' or user.username == 'soporte'):
                 login(self.request, user)
                 registrar_accion(user, 'El usuario {0} ha ingresado como administrador.'.format(user.username))
                 context = {'type':'administrador','id': username, 'status': 5}
                 return redirect(reverse('inicioAdministrativo', kwargs=context))
+            elif user.is_active and user.username == '305050789':
+                login(self.request, user)
+                registrar_accion(user, 'El usuario {0} ha ingresado como estudiante.'.format(user.username))
+                context = {'type':'estudiante','id': username, 'status': 1}
+                return redirect(reverse('inicio', kwargs=context))
+            elif user.is_active and user.username == '305050987':
+                login(self.request, user)
+                registrar_accion(user, 'El usuario {0} ha ingresado como profesor.'.format(user.username))
+                context = {'type':'profesor','id': username, 'status': 2}
+                return redirect(reverse('inicio', kwargs=context))
             else:
                 logout(self.request)
                 return super().form_invalid(form)
+
 
 def microsoft_auth(request):
     # Comprobar si ya existe una sesión de usuario
@@ -117,21 +133,18 @@ def microsoft_auth(request):
                             registrar_accion(user, 'El usuario {0} ha ingresado como estudiante.'.format(user.username))
                             context = {'type':'estudiante','id': user.username, 'status': 1}
 
-                            return redirect(reverse('estudiante', kwargs=context))
+                            return redirect(reverse('inicio', kwargs=context))
                         elif status.moroso:
                             request.session['moroso'] = True
                             registrar_accion(user, 'El usuario {0} ha ingresado como estudiante. Ademas se le han bloqueado las opciones por status:moroso'.format(user.username))
                             context = {'type':'estudiante','id': user.username, 'status': 1}
-                            return redirect(reverse('estudiante', kwargs=context))
+                            return redirect(reverse('inicio', kwargs=context))
                             ##AGREGAR INFO
                         else:
                             registrar_accion(user, 'El usuario {0} ha ingresado como estudiante. Ademas se le han bloqueado las opciones por status:inactivo'.format(user.username))
                             context = {'type':'estudiante','id': user.username, 'status': 1}
-                            return redirect(reverse('estudiante', kwargs=context))
-                            ##AGREGAR INFO
-
                             return redirect(reverse('inicio', kwargs=context))
-
+                            ##AGREGAR INFO
                     
                     elif tipo_user['tipo'] == 'profesor' or tipo_user['tipo'] == 'prospecto/profesor':
                         registrar_accion(user, 'El usuario {0} ha ingresado como profesor.'.format(user.username))
@@ -193,21 +206,18 @@ def microsoft_callback(request):
                         registrar_accion(user, 'El usuario {0} ha ingresado como estudiante.'.format(user.username))
                         context = {'type':'estudiante','id': user.username, 'status': 1}
 
-                        return redirect(reverse('estudiante', kwargs=context))
+                        return redirect(reverse('inicio', kwargs=context))
                     elif status.moroso:
                         request.session['moroso'] = True
                         registrar_accion(user, 'El usuario {0} ha ingresado como estudiante. Ademas se le han bloqueado las opciones por status:moroso'.format(user.username))
                         context = {'type':'estudiante','id': user.username, 'status': 1}
-                        return redirect(reverse('estudiante', kwargs=context))
+                        return redirect(reverse('inicio', kwargs=context))
                         ##AGREGAR INFO
                     else:
                         registrar_accion(user, 'El usuario {0} ha ingresado como estudiante. Ademas se le han bloqueado las opciones por status:inactivo'.format(user.username))
                         context = {'type':'estudiante','id': user.username, 'status': 1}
-                        return redirect(reverse('estudiante', kwargs=context))
-                        ##AGREGAR INFO
-
                         return redirect(reverse('inicio', kwargs=context))
-                    ##AGREGAR INFO
+                        ##AGREGAR INFO
 
                 
                 elif tipo_user['tipo'] == 'profesor' or tipo_user['tipo'] == 'prospecto/profesor':
@@ -324,7 +334,6 @@ class PaginaRegistroEstudiante(FormView):
             return redirect('registro_estudiantes')
         return super(PaginaRegistroEstudiante, self).get(*args, **kwargs)
 
-
 class EstudiaUIAView(LoginRequiredMixin, ListView):
     context_object_name = 'estudiaUia'
     template_name = 'Dashboard/Prospecto/prospecto.html'
@@ -351,7 +360,6 @@ class EstudiaUIAView(LoginRequiredMixin, ListView):
                 'formulario': request.session.get('formulario', 'NA'),
             }
         return render(request, 'Dashboard/Prospecto/prospecto.html', context)
-
 
 class DetalleArchivoOdoo(LoginRequiredMixin, ListView):
     context_object_name = 'envio_archivos_odoo'
@@ -1565,3 +1573,4 @@ class DashboardAdministrativoView(LoginRequiredMixin, View):
                 'status': status,
             }
         return render(request, 'Dashboard/Administrativo/mercadeo.html', context)
+    

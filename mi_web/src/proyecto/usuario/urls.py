@@ -3,6 +3,8 @@ from .payment import(
                     obtener_keyiD,
                     obtener_hash_entrada,
                     PaymentApproved,
+                    PaymentApproved2,
+                    PaymentApproved3,
                     )
 from .api_queries import(
                     obtener_datos,
@@ -36,7 +38,6 @@ from .views import (
 
                     enviar_archivo_posgrado,
                     enviar_archivo_cursolibre,
-                    enviar_solicitud,
 
                     EnvioSolicitud,
 
@@ -68,7 +69,7 @@ from .views import (
                     Politicas,
                     Terminos,
                     EnvioDeConsultas,
-                    DashboardAdministrativoView
+                    DashboardAdministrativoView,
                     )
 from django.contrib.auth.views import LogoutView
 from django.contrib.auth import views as auth_views
@@ -169,6 +170,8 @@ urlpatterns = [path('', Logueo.as_view(), name='login'),
                path("obtener-key/", obtener_keyiD, name='obtener_key'),
                path("hash-entrada/", obtener_hash_entrada, name='hash_entrada'),
                path("<str:type>/<int:id>/<int:status>/pago-realizado/", PaymentApproved.as_view(), name='pago_realizado'),
+               path("<str:type>/<int:id>/<int:status>/pago-realizado2/", PaymentApproved2.as_view(), name='pago_realizado2'),
+               path("<str:type>/<int:id>/<int:status>/pago-realizado3/", PaymentApproved3.as_view(), name='pago_realizado3'),
 
                path("estudiante/<int:id>/<int:status>/plan/cursoPlanHorario/", HorarioPlanDeEstudioView.getHorario, name='horarioCursoPlan'),
                path("<str:type>/<int:id>/<int:status>/ubicacion/", Ubicacion.ubicacion_view, name='ubicacion'),

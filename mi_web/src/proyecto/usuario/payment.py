@@ -16,21 +16,143 @@ class PaymentApproved(LoginRequiredMixin, View):
     def get_context_data(self, **kwargs):
         user = self.request.user
 
-        response = self.request.GET.get('response')
-        responsetext = self.request.GET.get('responsetext')
-        authcode = self.request.GET.get('authcode')
-        transactionid = self.request.GET.get('transactionid')
-        avsresponse = self.request.GET.get('avsresponse')
-        cvvresponse = self.request.GET.get('cvvresponse')
-        orderid = self.request.GET.get('orderid')
-        response_code = self.request.GET.get('response_code')
-        time = self.request.GET.get('time')
-        amount = self.request.GET.get('amount')
-        hash = self.request.GET.get('hash')
+        # response = self.request.GET.get('response')
+        # responsetext = self.request.GET.get('responsetext')
+        # authcode = self.request.GET.get('authcode')
+        # transactionid = self.request.GET.get('transactionid')
+        # avsresponse = self.request.GET.get('avsresponse')
+        # cvvresponse = self.request.GET.get('cvvresponse')
+        # orderid = self.request.GET.get('orderid')
+        response_code = '100'
+        # time = self.request.GET.get('time')
+        # amount = self.request.GET.get('amount')
+        # hash = self.request.GET.get('hash')
 
-        hash_respuesta = calcular_hash_respuesta(self.request, orderid, amount, response, transactionid, avsresponse, cvvresponse, time)
+        # hash_respuesta = calcular_hash_respuesta(self.request, orderid, amount, response, transactionid, avsresponse, cvvresponse, time)
 
-        verification = verificar_hash_respuesta(self.request, hash, hash_respuesta)
+        # verification = verificar_hash_respuesta(self.request, hash, hash_respuesta)
+
+        verification = True
+
+        if verification and response_code == '100':
+            pago = 100
+        elif response_code == '200' or response_code == '202':
+            pago = 200
+        elif response_code == '300':
+           pago = 300
+        else:
+            pago = 300
+
+        try:
+            fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
+            imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
+            context = {
+                'user': user,
+                'fotoperfil': imagen_url,
+                'status': self.kwargs['status'],
+                'pago': pago,
+                'id': self.kwargs['id'],
+                'type': self.kwargs['type'],
+            }
+        except fotoperfil.DoesNotExist:
+            context = {
+                'user': user,
+                'status': self.kwargs['status'],
+                'pago': pago,
+                'id': self.kwargs['id'],
+                'type': self.kwargs['type'],
+            }
+        return context
+        
+    
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        return render(request, self.template_name, context)
+    
+class PaymentApproved2(LoginRequiredMixin, View):
+    context_object_name = 'payment'
+    template_name = 'Dashboard/Prospecto/pago_realizado2.html'
+
+    def get_context_data(self, **kwargs):
+        user = self.request.user
+
+        # response = self.request.GET.get('response')
+        # responsetext = self.request.GET.get('responsetext')
+        # authcode = self.request.GET.get('authcode')
+        # transactionid = self.request.GET.get('transactionid')
+        # avsresponse = self.request.GET.get('avsresponse')
+        # cvvresponse = self.request.GET.get('cvvresponse')
+        # orderid = self.request.GET.get('orderid')
+        response_code = "200"
+        # time = self.request.GET.get('time')
+        # amount = self.request.GET.get('amount')
+        # hash = self.request.GET.get('hash')
+
+        # hash_respuesta = calcular_hash_respuesta(self.request, orderid, amount, response, transactionid, avsresponse, cvvresponse, time)
+
+        # verification = verificar_hash_respuesta(self.request, hash, hash_respuesta)
+
+        verification = True
+
+        if verification and response_code == '100':
+            pago = 100
+        elif response_code == '200' or response_code == '202':
+            pago = 200
+        elif response_code == '300':
+           pago = 300
+        else:
+            pago = 300
+
+        try:
+            fotoperfil_obj = fotoperfil.objects.get(user=user.pk)
+            imagen_url = Image.open(ContentFile(fotoperfil_obj.archivo))
+            context = {
+                'user': user,
+                'fotoperfil': imagen_url,
+                'status': self.kwargs['status'],
+                'pago': pago,
+                'id': self.kwargs['id'],
+                'type': self.kwargs['type'],
+            }
+        except fotoperfil.DoesNotExist:
+            context = {
+                'user': user,
+                'status': self.kwargs['status'],
+                'pago': pago,
+                'id': self.kwargs['id'],
+                'type': self.kwargs['type'],
+            }
+        return context
+        
+    
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        return render(request, self.template_name, context)
+    
+class PaymentApproved3(LoginRequiredMixin, View):
+    context_object_name = 'payment'
+    template_name = 'Dashboard/Prospecto/pago_realizado3.html'
+
+    def get_context_data(self, **kwargs):
+        user = self.request.user
+
+        # response = self.request.GET.get('response')
+        # responsetext = self.request.GET.get('responsetext')
+        # authcode = self.request.GET.get('authcode')
+        # transactionid = self.request.GET.get('transactionid')
+        # avsresponse = self.request.GET.get('avsresponse')
+        # cvvresponse = self.request.GET.get('cvvresponse')
+        # orderid = self.request.GET.get('orderid')
+        response_code = '300'
+        # time = self.request.GET.get('time')
+        # amount = self.request.GET.get('amount')
+        # hash = self.request.GET.get('hash')
+
+        # hash_respuesta = calcular_hash_respuesta(self.request, orderid, amount, response, transactionid, avsresponse, cvvresponse, time)
+
+        # verification = verificar_hash_respuesta(self.request, hash, hash_respuesta)
+
+        verification = True
 
         if verification and response_code == '100':
             pago = 100

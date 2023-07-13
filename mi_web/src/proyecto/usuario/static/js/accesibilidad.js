@@ -100,10 +100,12 @@ function googleTranslateElementInit() {
 function changeColor() {
     var type = document.getElementById('daltonismType').value;
     var body = document.getElementById('bodyUia');
+    body.classList.add('scroll-horizontal');
     if (type === 'normal') {
         console.log('Hola1');
         body.style.filter = 'none';
-    } else if (type === 'protanopia') {
+        body.classList.remove('scroll-horizontal');
+    }else if (type === 'protanopia') {
         console.log('Hola2');
         body.style.filter = 'url(#protanopia)';
     } else if (type === 'deuteranopia') {
