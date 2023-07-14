@@ -214,7 +214,7 @@ function detalle(data) {
 
                 // ... Código HTML para los botones ...
                 var divbutton0 = document.createElement('div');
-                divbutton0.className = 'btn-group mr-2';
+                divbutton0.className = 'btn-group mr-2 col-md-2 mb-3';
                 divbutton0.role = 'group';
                 var btnEstudiantes = document.createElement('button');
                 btnEstudiantes.className = 'btn btn-secondary';
@@ -229,7 +229,7 @@ function detalle(data) {
                 tabPane.appendChild(divbutton0);
                 if (subhorarioAux.asistencia) {
                     var divbutton1 = document.createElement('div');
-                    divbutton1.className = 'btn-group mr-2';
+                    divbutton1.className = 'btn-group mr-2 col-md-2 mb-3';
                     divbutton1.role = 'group';
                     var btnAsistencia = document.createElement('button');
                     btnAsistencia.className = 'btn btn-secondary';
@@ -246,7 +246,7 @@ function detalle(data) {
 
                 if (subhorarioAux.nota) {
                     var divbutton2 = document.createElement('div');
-                    divbutton2.className = 'btn-group mr-2';
+                    divbutton2.className = 'btn-group mr-2 col-md-2 mb-3';
                     divbutton2.role = 'group';
                     var btnNota = document.createElement('button');
                     btnNota.className = 'btn btn-secondary';
@@ -265,7 +265,7 @@ function detalle(data) {
 
                 if (subhorarioAux.actas) {
                     var divbutton3 = document.createElement('div');
-                    divbutton3.className = 'btn-group mr-2';
+                    divbutton3.className = 'btn-group mr-2 col-md-2 mb-3';
                     divbutton3.role = 'group';
                     var btnActas = document.createElement('button');
                     btnActas.className = 'btn btn-secondary';
@@ -616,6 +616,18 @@ function notas(id, nombre) {
 
                 divSelect.appendChild(label);
                 divSelect.appendChild(select);
+                var divinfo = document.createElement('div');
+                divinfo.className = 'form-group col-12 col-lg-12 col-md-12 col-sm-12';
+                var span = document.createElement('span');
+                span.innerText = 'Detalle de nota ';
+                var iSpan = document.createElement('i');
+                iSpan.className = 'bi bi-info-circle-fill';
+                iSpan.style.cursor = 'pointer';
+                iSpan.addEventListener('click', function(){
+                    mostrarInfo();
+                });
+                span.appendChild(iSpan);
+                divinfo.appendChild(span);
                 // var divInput = document.createElement('div');
                 // divInput.className = 'form-group col-12 col-lg-4 col-md-6 col-sm-12';
                 // divInput.style.display = 'none';
@@ -677,7 +689,7 @@ function notas(id, nombre) {
                 var divInfo = document.createElement('div');
                 divInfo.className = 'alert alert-info';
                 divInfo.role = 'alert';
-                divInfo.style.display = 'block';
+                divInfo.style.display = 'none';
                 divInfo.id = 'infoNota';
                 var pInfo = document.createElement('p');
                 pInfo.innerText = 'Valores permidos son: ';
@@ -706,6 +718,7 @@ function notas(id, nombre) {
                 divAlert.appendChild(divInfo);
                 divAlert.appendChild(divError);
                 divRow.appendChild(divSelect);
+                divRow.appendChild(divinfo);
                 divRowAlert.appendChild(divAlert);
                 // divRow.appendChild(divInput);
                 // divRow.appendChild(divInputII);
@@ -779,7 +792,7 @@ function notas(id, nombre) {
 
                     var td_P1 = document.createElement('td');
                     var inputP1 = document.createElement('input');
-                    inputP1.className = 'form-control';
+                    inputP1.className = 'form-control form-control-sm';
                     inputP1.id = 'par1' + estudiante.carné;
                     inputP1.readOnly = true;
                     inputP1.addEventListener('change', function () {
@@ -792,7 +805,7 @@ function notas(id, nombre) {
 
                     var td_P2 = document.createElement('td');
                     var inputP2 = document.createElement('input');
-                    inputP2.className = 'form-control';
+                    inputP2.className = 'form-control form-control-sm';
                     inputP2.id = 'par2' + estudiante.carné;
                     inputP2.readOnly = true;
                     inputP2.addEventListener('change', function () {
@@ -802,7 +815,7 @@ function notas(id, nombre) {
 
                     var td_P3 = document.createElement('td');
                     var inputP3 = document.createElement('input');
-                    inputP3.className = 'form-control';
+                    inputP3.className = 'form-control form-control-sm';
                     inputP3.id = 'par3' + estudiante.carné;
                     inputP3.readOnly = true;
                     inputP3.addEventListener('change', function () {
@@ -812,7 +825,7 @@ function notas(id, nombre) {
 
                     var td_P4 = document.createElement('td');
                     var inputP4 = document.createElement('input');
-                    inputP4.className = 'form-control';
+                    inputP4.className = 'form-control form-control-sm';
                     inputP4.id = 'par4' + estudiante.carné;
                     inputP4.readOnly = true;
                     inputP4.addEventListener('change', function () {
@@ -955,6 +968,7 @@ function habilitarInput(index) {
         examenData = [];
         $('#parcialdiv1, #parcialdiv2, #parcialdiv3').hide();
     }
+    verificarCamposLlenos()
 }
 
 function calcular(idP, idIn) {
@@ -963,6 +977,7 @@ function calcular(idP, idIn) {
 
     var porcentaje = (por.value * nota.value) / 100;
     console.log(porcentaje);
+    verificarCamposLlenos()
 }
 
 let examenData = [];
@@ -993,18 +1008,21 @@ function validarData(id ,idI, tipo, nombre) {
     } else {
         // El valor no es válido, mostrar un mensaje de error
         document.getElementById('errorNota').style.display = 'block';
-        document.getElementById('infoNota').style.display = 'none';
         setTimeout(function () {
             document.getElementById('errorNota').style.display = 'none';
-            document.getElementById('infoNota').style.display = 'block';
         }, 5000);
         inputElement.setCustomValidity("Valor no válido: " + inputValue)
         inputElement.value = "";
         console.log("Valor no válido: " + inputValue);
     }
+    verificarCamposLlenos();
 }
 
 function saveData(id, nota, tipo, nombre){
+    const storedData = localStorage.getItem(nombre);
+    if (storedData) {
+        examenData = JSON.parse(storedData);
+    }
     var nota = {
         'parcial': tipo,
         "identificacion": id,
@@ -1024,3 +1042,25 @@ function obtenerValorNota(id, tipo, nombre){
     });
     return notaEncontrada ? notaEncontrada.nota : '';
 }
+
+function mostrarInfo(){
+    document.getElementById('infoNota').style.display = 'block';
+    setTimeout(function () {
+        document.getElementById('infoNota').style.display = 'none';
+    }, 6000);
+}
+
+function verificarCamposLlenos() {
+    const columns = $('#tablaLista tr').find('td:nth-child(4), td:nth-child(5), td:nth-child(6)');
+  
+    columns.each(function() {
+      const column = $(this);
+      const inputs = column.find('input');
+  
+      const allInputsFilled = inputs.toArray().every(input => input.value.trim() !== '');
+      const columnIndex = column.index();
+      const buttonId = '#parcialdiv' + (columnIndex - 2);
+  
+      $(buttonId).find('button').prop('disabled', !allInputsFilled);
+    });
+  }
